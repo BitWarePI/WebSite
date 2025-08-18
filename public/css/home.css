@@ -1,5 +1,5 @@
 .section-heroi{
-    width: 100dvw;
+    width: 100%;
     height: 100dvh;
     display: flex;
     flex-direction: column;
@@ -27,11 +27,16 @@
     z-index: 1;
     font-size: 2em;
 }
+.section-heroi .container .texto-heroi p{
+    text-shadow:
+        1px 1px 2px var(--bg-color),
+        0 0 1em var(--bg-color),
+        0 0 0.2em var(--bg-color);
+}
 .section-heroi .container .texto-heroi p span{
-    background-color: var(--low-secondary-color);
-    padding: 6px;
+    color: var(--low-secondary-color);
     border-radius: 8px;
-    font-weight: bold;
+    font-weight: 800;
 }
 .section-heroi .container .texto-heroi .btn{
     color: var(--main-text-color);
@@ -40,19 +45,21 @@
     border-radius: 8px;
     text-decoration: none;
 }
-.section-heroi .container .img-heroi{
-    width: 90%;
+.img-heroi{
+    width: calc(100% - 360px);
     height: 100%;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     position: absolute;
-    right: -360px;
-    bottom: -260px;
+    top: 200px;
+    z-index: 2;
+    right: 0;
 }
-.section-heroi .container .img-heroi img{
+.img-heroi img{
     width: 100%;
     object-fit: cover;
+    object-position: left;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
 }
 .section-heroi .wave{
@@ -65,21 +72,157 @@
     z-index: 0;
 }
 
+.section-projeto{
+    width: 100%;
+    background-color: #421455;
+}
+
+.section-projeto .container{
+    height: 80%;
+}
+.section-projeto .container .texto{
+    padding: 24px 42px;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: rgba(184, 179, 179, 0.219) 0px 50px 100px -20px, rgb(0, 0, 0) 0px 30px 60px -30px, rgba(0, 0, 0, 0.966) 0px -6px 90px 0px inset;
+    border-radius: 12px;
+    text-shadow:
+        1px 1px 2px var(--bg-color),
+        0 0 1em var(--bg-color),
+        0 0 0.2em var(--bg-color);
+}
+.section-projeto .container .texto h1{
+    margin-bottom: 4px;
+    font-size: 1.75em;
+}
+.section-projeto .container .texto p{
+    margin-top: 0;
+}
+.section-projeto .container .texto .btn{
+    font-size: 1em;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.171);
+    color: var(--main-text-color);
+    border: 1px solid var(--main-text-color);
+    cursor: pointer;
+    transition: all 1s;
+    transition: background 2s;
+}
+.section-projeto .container .texto .btn:hover{
+    background-position: bottom;
+    font-weight: bold;
+}
+.section-projeto .container video{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.wave-projeto{
+    rotate: 180deg;
+    margin-top: -12dvw;
+    z-index: -2;
+}
+
+.section-sobre{
+    height: 100%;
+}
+.section-sobre .container{
+    flex-direction: column;
+}
+.section-sobre .container .cards{
+    display: flex;
+    gap: 24px;
+}
+.section-sobre .container .cards .card{
+    background: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    padding: 24px;
+    position: relative;
+    transition: .3s;
+}
+.section-sobre .container .cards .card h2{
+    margin-top: 12px;
+}
+.section-sobre .container .cards .card .icon{
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: var(--secondary-color);
+    color: var(--main-text-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+.section-sobre h1{
+    margin-bottom: 124px;
+}
+.section-sobre h1 span{
+    font-size: 2.5em;
+    padding-left: 4px;
+    color: var(--primary-color);
+}
+.section-sobre .container .cards .card:hover{
+    background: var(--bg-color);
+    color: var(--main-text-color);
+    outline: 2px solid var(--bg-inverse-color);
+}
+
 @media screen and (max-width: 768px) {
-    .section-heroi .container .img-heroi{
+    .img-heroi{
         width: 90%;
         height: 100%;
         display: flex;
         align-items: flex-end;
         justify-content: center;
         position: absolute;
-        right: -60px;
-        bottom: -0px;
+        right: 0px;
+        top: 0px;
+        overflow: hidden;
+    }
+    .img-heroi img{
+        left: 20px;
+    }
+    .section-heroi .container .texto-heroi{
+        width: 80%;
     }
     .section-heroi .wave{
         position: absolute;
         bottom: 0px;
         left: 0;
         z-index: 1;
+    }
+    .section-projeto .container{
+        width: 100%;
+        height: 100%;
+    }
+    .section-projeto .container video{
+        border-radius: 0px;
+    }
+    .section-projeto .container .texto{
+        border-radius: 0px;
+    }
+    .section-sobre .container .cards{
+        flex-direction: column;
+    }
+    .wave-projeto{
+        display: none;
+    }
+    .section-sobre{
+        padding: 42px 0;
+    }
+    .section-sobre h1 span{
+        font-size: 1.5em;
+        padding-left: 4px;
+        color: var(--primary-color);
     }
 }

@@ -3,26 +3,30 @@
 :root {
     --primary-color: hsl(283, 87%, 36%);
     --low-primary-color: hsla(283, 87%, 36%, 0.411);
-    --secondary-color: hsl(209, 85%, 29%);
-    --low-secondary-color: hsla(327, 73%, 68%, 0.411);
+    --secondary-color: hsl(49, 73%, 50%);
+    --low-secondary-color: hsl(49, 83%, 42%);;
     --bg-color: #181818;
     --bg-inverse-color: #f3f3f3;
     --main-text-color: #f0f0f0;
     --main-text-inverse-color: #1d1c1c;
 }
 
-/* Nav */
+*{
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+}
 body{
     margin: 0;
     padding: 0;
-    font-family: 'Inter', Arial, Helvetica, sans-serif;
     background-color: var(--bg-color);
     color: var(--main-text-color);
     max-width: 100dvw;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
+
+/* Nav */
 nav{
     z-index: 1000;
     position: fixed;
@@ -169,11 +173,15 @@ nav #nav-menu-icon.open span:nth-child(4) {
 
 /* Sessões */
 section{
-    width: 80dvw;
+    width: 100%;
     height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 section .container{
-    width: 100%;
+    width: 80%;
     height: 100%;
     display: flex;
     align-items: center;
