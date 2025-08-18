@@ -33,7 +33,7 @@ nav{
     top: 24px;
     width: 80dvw;
     box-sizing: border-box;
-    padding: 12px 42px;
+    padding: 4px 42px;
 
     /*https://css.glass*/
     background: rgba(14, 13, 13, 0.2);
@@ -55,7 +55,7 @@ nav .logo img{
 nav .links{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 82px;
     list-style: none;
     padding: 0;
 }
@@ -70,6 +70,7 @@ nav a{
 nav .links li a{
     color: var(--main-text-color);
     transition: color 0.3s ease;
+    font-size: 1.25em;
 }
 nav .links li a:hover{
     color: var(--secondary-color);
