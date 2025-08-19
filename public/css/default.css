@@ -4,7 +4,7 @@
     --primary-color: hsl(283, 87%, 36%);
     --low-primary-color: hsla(283, 87%, 36%, 0.411);
     --secondary-color: hsl(49, 73%, 50%);
-    --low-secondary-color: hsl(49, 83%, 42%);;
+    --low-secondary-color: hsla(49, 83%, 42%, 0.534);;
     --bg-color: #181818;
     --bg-inverse-color: #f3f3f3;
     --main-text-color: #f0f0f0;
