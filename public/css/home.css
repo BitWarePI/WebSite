@@ -87,7 +87,7 @@
     height: 80%;
 }
 .section-projeto .container .texto{
-    padding: 24px 42px;
+    padding: 24px 0;
     z-index: 1;
     width: 100%;
     height: 100%;
@@ -245,22 +245,14 @@
         left: 0;
         z-index: 1;
     }
-    .section-projeto .container{
-        width: 100%;
-        height: 100%;
-    }
-    .section-projeto .container video{
-        border-radius: 0px;
-    }
-    .section-projeto .container .texto{
-        border-radius: 0px;
-    }
     .section-projeto .container .texto .cards{
         background: transparent;
+        gap: 24px;
     }
     .section-projeto .container .texto .cards .card{
         flex-direction: column-reverse;
         height: 100%;
+        padding: 0;
     }
     .section-projeto .container .texto .cards .card.inverso{
         flex-direction: column;
@@ -270,6 +262,10 @@
         height: fit-content;
         align-self: center;
         top: 0;
+        width: 60%;
+    }
+    .section-projeto .container .texto .cards .card .card-img img{
+        width: 100%;
     }
     .section-sobre{
         padding: 42px 0;
