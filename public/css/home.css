@@ -123,7 +123,7 @@
     transition: .3s;
     height: 100dvh;
     align-items: center;
-    gap: 20px;
+    gap: 82px;
 }
 .section-projeto .container .texto .cards .card .card-texto h2{
     text-shadow: var(--secondary-color) 0 0 5px;
@@ -181,28 +181,68 @@
     flex-direction: column;
 }
 .section-sobre .container .cards{
+    width: 100%;
+    height: 100%;
     display: flex;
     gap: 24px;
 }
-.section-sobre .container .cards .card{
-    background: var(--bg-inverse-color);
+.section-sobre .container .cards .flip-card{
+    flex: 1;
+    background-color: transparent;
     color: var(--main-text-inverse-color);
-    padding: 24px;
     position: relative;
     transition: .3s;
 }
-.section-sobre .container .cards .card h2{
+.section-sobre .container .cards .flip-card .flip-card-container{
+    position: relative;
+    width: 100%;
+    height: 240px;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d; /* para rotacionar o elemento e realmente virar*/
+}
+.section-sobre .container .cards .flip-card .flip-card-container .flip-card-front, 
+.section-sobre .container .cards .flip-card .flip-card-container .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    padding: 24px;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+.section-sobre .container .cards .flip-card .flip-card-container .flip-card-back {
+    background-color: var(--low-primary-color);
+    color:var(--main-text-color);
+    transform: rotateY(180deg);
+}
+.section-sobre .container .cards .flip-card .flip-card-container .flip-card-front {
+    background-color: var(--bg-inverse-color);
+    color: black;
+}
+.section-sobre .container .cards .flip-card .flip-card-container .flip-card-front h1{
+    margin-bottom: 0px;
+}
+.section-sobre .container .cards .flip-card .flip-card-back h2{
     margin-top: 12px;
 }
-.section-sobre .container .cards .card .icon{
-    position: absolute;
-    top: 24px;
-    right: 24px;
+.section-sobre .container .cards .flip-card .icon{
     background: var(--secondary-color);
     color: var(--main-text-color);
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.452);
+}
+.section-sobre .container .cards .flip-card .flip-card-front .icon{
+    font-size: 3em;
+}
+.flip-card:hover .flip-card-container {
+    transform: rotateY(180deg);
 }
 .section-sobre h1{
     margin-bottom: 124px;
