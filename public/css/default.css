@@ -175,7 +175,7 @@ nav #nav-menu-icon.open span:nth-child(4) {
 /* Sessões */
 section{
     width: 100%;
-    height: 100dvh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
