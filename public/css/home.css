@@ -112,7 +112,6 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
 }
 .section-projeto .container .texto .cards .card{
     position: relative;
@@ -261,6 +260,98 @@
     box-shadow: 0 0 8px var(--secondary-color);
 }
 
+.section-contato{
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+}
+.section-contato .container{
+    justify-content: space-between;
+    gap: 42px;
+}
+.section-contato .container .texto{
+    width: 100%;
+}
+.section-contato .container .texto h1{
+    font-size: 3em;
+    color: var(--primary-color);
+}
+.section-contato .container .formulario{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+}
+.section-contato .container .formulario .ipt_label{
+    position: relative;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+.section-contato .container .formulario .ipt_label label{
+    position: absolute;
+    top: 6px;
+    left: 14px;
+    scale: 0.9;
+    transition: .3s;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+.section-contato .container .formulario .ipt_label input,
+.section-contato .container .formulario .ipt_label textarea{
+    width: 100%;
+    padding: 10px 16px;
+    padding-top: 24px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 1em;
+}
+.section-contato .container .formulario .ipt_label input:focus,
+.section-contato .container .formulario .ipt_label textarea:focus{
+    outline: 0px;
+}
+.section-contato .container .ipt_label textarea{
+    resize: none;
+    height: 130px;
+    margin-top: 24px !important;
+    padding-top: 0 !important;
+}
+.section-contato .container .formulario .ipt_label:has(textarea:placeholder-shown) label,
+.section-contato .container .formulario .ipt_label:has(input:placeholder-shown) label{
+    top: 16px;
+    left: 14px;
+    scale: 1;
+    color: var(--main-text-inverse-color);
+    font-weight: normal;
+}
+.section-contato .container .formulario .ipt_label:has(textarea:focus) label,
+.section-contato .container .formulario .ipt_label:has(input:focus) label{
+    top: 6px;
+    left: 14px;
+    scale: 0.9;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+.section-contato .container .formulario .ipt_label:has(textarea:focus),
+.section-contato .container .formulario .ipt_label:has(input:focus){
+    outline: 1px solid var(--secondary-color);
+}
+.section-contato .container .formulario .btn.submit{
+    padding: 8px;
+    font-size: 1em;
+    background-color: var(--secondary-color);
+    border: none;
+    cursor: pointer;
+}
+.section-contato .container .formulario .btn.submit:hover{
+    font-weight: bold;
+}
+.section-contato .container .imagem{
+    width: 100%;
+}
+.section-contato .container .imagem img{
+    width: 100%;
+}
+
 @media screen and (max-width: 768px) {
     .img-heroi{
         width: 90%;
@@ -317,5 +408,9 @@
         font-size: 1.5em;
         padding-left: 4px;
         color: var(--primary-color);
+    }
+    .section-contato .container{
+        flex-direction: column-reverse;
+        justify-content: center;
     }
 }

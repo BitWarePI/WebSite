@@ -68,7 +68,7 @@ nav a{
     text-decoration: none;
 }
 nav .links li a{
-    color: var(--main-text-color);
+    color: #ffffff;
     transition: color 0.3s ease;
     font-size: 1.25em;
 }
