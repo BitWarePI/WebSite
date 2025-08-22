@@ -190,6 +190,79 @@ section .container{
     position: relative;
 }
 
+/* Formulario */
+.formulario{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+}
+.formulario .ipt_label{
+    position: relative;
+    width: 100%;
+    background-color: #FFFFFF;
+}
+.formulario .ipt_label label{
+    position: absolute;
+    top: 6px;
+    left: 14px;
+    scale: 0.9;
+    transition: .3s;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.formulario .ipt_label input,
+.formulario .ipt_label textarea{
+    width: 100%;
+    padding: 10px 16px;
+    padding-top: 24px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 1em;
+}
+.formulario .ipt_label input:focus,
+.formulario .ipt_label textarea:focus{
+    outline: 0px;
+}
+.ipt_label textarea{
+    resize: none;
+    height: 130px;
+    margin-top: 24px;
+    padding-top: 0px;
+}
+.formulario .ipt_label:has(textarea:placeholder-shown) label,
+.formulario .ipt_label:has(input:placeholder-shown) label{
+    top: 16px;
+    left: 14px;
+    scale: 1;
+    color: var(--main-text-inverse-color);
+    font-weight: normal;
+}
+.formulario .ipt_label:has(textarea:focus) label,
+.formulario .ipt_label:has(input:focus) label{
+    top: 6px;
+    left: 14px;
+    scale: 0.9;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.formulario .ipt_label:has(textarea:focus),
+.formulario .ipt_label:has(input:focus){
+    outline: 1px solid var(--primary-color);
+}
+.formulario .btn.submit{
+    padding: 8px;
+    font-size: 1em;
+    background-color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    color: var(--main-text-color);
+}
+.formulario .btn.submit:hover{
+    font-weight: bold;
+}
+
 /* Footer */
 .footer{
     display: flex;
