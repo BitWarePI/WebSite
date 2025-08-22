@@ -293,7 +293,7 @@
     left: 14px;
     scale: 0.9;
     transition: .3s;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     font-weight: bold;
 }
 .section-contato .container .formulario .ipt_label input,
@@ -313,8 +313,8 @@
 .section-contato .container .ipt_label textarea{
     resize: none;
     height: 130px;
-    margin-top: 24px !important;
-    padding-top: 0 !important;
+    margin-top: 24px;
+    padding-top: 0px;
 }
 .section-contato .container .formulario .ipt_label:has(textarea:placeholder-shown) label,
 .section-contato .container .formulario .ipt_label:has(input:placeholder-shown) label{
@@ -329,19 +329,20 @@
     top: 6px;
     left: 14px;
     scale: 0.9;
-    color: var(--secondary-color);
+    color: var(--primary-color);
     font-weight: bold;
 }
 .section-contato .container .formulario .ipt_label:has(textarea:focus),
 .section-contato .container .formulario .ipt_label:has(input:focus){
-    outline: 1px solid var(--secondary-color);
+    outline: 1px solid var(--primary-color);
 }
 .section-contato .container .formulario .btn.submit{
     padding: 8px;
     font-size: 1em;
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
     border: none;
     cursor: pointer;
+    color: var(--main-text-color);
 }
 .section-contato .container .formulario .btn.submit:hover{
     font-weight: bold;

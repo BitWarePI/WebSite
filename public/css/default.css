@@ -189,3 +189,30 @@ section .container{
     justify-content: center;
     position: relative;
 }
+
+/* Footer */
+.footer{
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--low-primary-color);
+    width: 100%;
+    color: var(--main-text-color);
+    padding: 62px 0;
+}
+.footer .logo{
+    width: 248px;
+}
+.footer ul{
+    list-style: none;
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+}
+.footer ul .titulo{
+    font-weight: bold;
+    font-size: 1.15em;
+    margin-bottom: 8px;
+}
+.footer ul li a{
+    color: var(--main-text-color);
+}
