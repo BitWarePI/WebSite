@@ -33,6 +33,7 @@
                 <div class="ipt_label">
                     <label for="senha_input">Senha</label>
                     <input id="senha_input" type="password" placeholder="">
+                    <span class="show-icon" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">show</span>
                 </div>
                 <button class="btn submit" onclick="entrar()">Entrar</button>
                 <a href="#" class="btn-cadastrar">Cadastrar-se</a>
@@ -54,7 +55,17 @@
 </html>
 
 <script>
-
+    function mostrarSenha(inputId, iconId){
+        input = document.getElementById(inputId);
+        icon = document.getElementById(iconId);
+        if(icon.innerText == "show"){
+            input.type = "text";
+            icon.innerText = "hide";
+        } else{
+            input.type = "password";
+            icon.innerText = "show";
+        }
+    }
 
     function entrar() {
         aguardar();

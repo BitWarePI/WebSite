@@ -10,34 +10,45 @@
 
   <script src="./js/sessao.js"></script>
 
-  <link rel="stylesheet" href="./css/estilo.css" />
-  <link rel="icon" href="./assets/icon/favicon2.ico" />
+  <link rel="stylesheet" href="./css/default.css" />
+  <link rel="stylesheet" href="./css/animacao.css" />
+  <link rel="stylesheet" href="./css/login.css" />
+  <link rel="icon" href="./assets/icon/favicon2.png" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 </head>
 
 <body onload="listar()">
-  <!--header inicio-->
-  <div class="header">
-    <div class="container">
-      <h1 class="titulo">AquaTech</h1>
-      <ul class="navbar">
-        <li>
-          <a href="index.html">Inicial</a>
-        </li>
-        <li>
-          <a href="simulador.html">Simulador</a>
-        </li>
-        <li>|</li>
-        <li>
-          <a href="login.html">Login</a>
-        </li>
-        <li class="agora">
-          <a href="#">Cadastro</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <!--header fim-->
+    
+    <section class="sessao-login">
+        <div class="container">
+            <a href="index.html"><img src="./assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
+            <div class="formulario slide-in-bottom">
+                <div class="header">
+                    <h1>Cadastro</h1>
+                    <p>Faça parte e gerencie sua mineração!</p>
+                </div>
+                <div class="ipt_label">
+                    <label for="email_input">E-mail</label>
+                    <input id="email_input" type="text" placeholder="">
+                </div>
+                <div class="ipt_label">
+                    <label for="senha_input">Senha</label>
+                    <input id="senha_input" type="password" placeholder="">
+                    <span class="show-icon" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">show</span>
+                </div>
+                <div class="ipt_label">
+                    <label for="senha_confirm_input">Confirmar Senha</label>
+                    <input id="senha_confirm_input" type="password" placeholder="">
+                    <span class="show-icon" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">show</span>
+                </div>
+                <button class="btn submit" onclick="entrar()">Entrar</button>
+                <a href="#" class="btn-cadastrar">Cadastrar-se</a>
+            </div>
+
+            <div class="bg-light"></div>
+            <div class="bg-light2"></div>
+        </div>
+    </section>
 
   <div class="login">
     <div class="alerta_erro">
@@ -45,58 +56,23 @@
         <span id="mensagem_erro"></span>
       </div>
     </div>
-    <div class="container">
-      <div class="card card-cadastro">
-        <h2>Bem-vindo!</h2>
-        <div class="formulario">
-          <!--
-                         Para inserir mais um campo, copie uma das inputs abaixo.
-                         Assim que inserir vá para o script abaixo.
-                     -->
-          <div class="campo">
-            <span>Código de ativação:</span>
-            <input id="codigo_input" type="text" placeholder="Insira aqui seu código" />
-          </div>
-          <div class="campo">
-            <span>Nome:</span>
-            <input id="nome_input" type="text" placeholder="Seu nome" />
-          </div>
-          <div class="campo">
-            <span>E-mail:</span>
-            <input id="email_input" type="text" placeholder="meuemail@provedor.com" />
-          </div>
-          <div class="campo">
-            <span>Senha:</span>
-            <input id="senha_input" type="password" placeholder="******" />
-          </div>
-          <div class="campo">
-            <span>Confirmação da Senha:</span>
-            <input id="confirmacao_senha_input" type="password" placeholder="******" />
-          </div>
-          <button class="botao" onclick="cadastrar()">Cadastrar</button>
-        </div>
-        <div id="div_aguardar" class="loading-div">
-          <img src="./assets/circle-loading.gif" id="loading-gif" />
-        </div>
-
-        <div id="div_erros_login"></div>
-      </div>
-    </div>
   </div>
-
-  <!--footer inicio-->
-  <div class="footer">
-    <div class="container">
-      <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
-      <span class="version">v1.0.0</span>
-    </div>
-  </div>
-  <!--footer fim-->
 </body>
 
 </html>
 
 <script>
+  function mostrarSenha(inputId, iconId){
+    input = document.getElementById(inputId);
+    icon = document.getElementById(iconId);
+    if(icon.innerText == "show"){
+        input.type = "text";
+        icon.innerText = "hide";
+    } else{
+        input.type = "password";
+        icon.innerText = "show";
+    }
+  }
 
   // Array para armazenar empresas cadastradas para validação de código de ativação 
   let listaEmpresasCadastradas = [];
