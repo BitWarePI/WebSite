@@ -63,6 +63,9 @@ nav .links li{
     font-size: 16px;
     color: #333;
 }
+nav .links li .link.ativo{
+    font-weight: bold;
+}
 nav a{
     text-emphasis: none;
     text-decoration: none;
@@ -199,8 +202,9 @@ section .container{
 }
 .formulario .ipt_label{
     position: relative;
+    border-radius: 12px;
     width: 100%;
-    background-color: #FFFFFF;
+    transition: .3s;
 }
 .formulario .ipt_label label{
     position: absolute;
@@ -220,6 +224,8 @@ section .container{
     box-sizing: border-box;
     border: 0;
     font-size: 1em;
+    background-color: #FFFFFF;
+    border-radius: 12px;
 }
 .formulario .ipt_label input:focus,
 .formulario .ipt_label textarea:focus{
@@ -252,12 +258,14 @@ section .container{
     outline: 1px solid var(--primary-color);
 }
 .formulario .btn.submit{
-    padding: 8px;
+    padding: 12px;
     font-size: 1em;
     background-color: var(--primary-color);
     border: none;
     cursor: pointer;
     color: var(--main-text-color);
+    border-radius: 12px;
+    width: 100%;
 }
 .formulario .btn.submit:hover{
     font-weight: bold;
