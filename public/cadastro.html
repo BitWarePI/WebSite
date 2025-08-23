@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="./css/animacao.css" />
   <link rel="stylesheet" href="./css/login.css" />
   <link rel="icon" href="./assets/icon/favicon2.png" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
 </head>
 
 <body onload="listar()">
@@ -34,15 +34,15 @@
                 <div class="ipt_label">
                     <label for="senha_input">Senha</label>
                     <input id="senha_input" type="password" placeholder="">
-                    <span class="show-icon" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">show</span>
+                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility</span>
                 </div>
                 <div class="ipt_label">
                     <label for="senha_confirm_input">Confirmar Senha</label>
                     <input id="senha_confirm_input" type="password" placeholder="">
-                    <span class="show-icon" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">show</span>
+                    <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility</span>
                 </div>
                 <button class="btn submit" onclick="entrar()">Entrar</button>
-                <a href="#" class="btn-cadastrar">Cadastrar-se</a>
+                <a href="login.html" class="btn-cadastrar">Já possuo conta</a>
             </div>
 
             <div class="bg-light"></div>
@@ -65,12 +65,12 @@
   function mostrarSenha(inputId, iconId){
     input = document.getElementById(inputId);
     icon = document.getElementById(iconId);
-    if(icon.innerText == "show"){
+    if(icon.innerText == "visibility"){
         input.type = "text";
-        icon.innerText = "hide";
+        icon.innerText = "visibility_off";
     } else{
         input.type = "password";
-        icon.innerText = "show";
+        icon.innerText = "visibility";
     }
   }
 
