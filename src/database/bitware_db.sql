@@ -2,13 +2,13 @@ CREATE DATABASE bitware_db;
 USE bitware_db;
 
 CREATE TABLE bitware_db.Empresa (
-  idEmpresa INT NOT NULL,
+  idEmpresa INT NOT NULL AUTO_INCREMENT,
   cnpj VARCHAR(14) NOT NULL,
   PRIMARY KEY (idEmpresa)
 );
 
 CREATE TABLE bitware_db.Cargo (
-  idCargo INT NOT NULL,
+  idCargo INT NOT NULL AUTO_INCREMENT,
   descricao VARCHAR(100) NOT NULL,
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idCargo),
@@ -18,7 +18,7 @@ CREATE TABLE bitware_db.Cargo (
 );
 
 CREATE TABLE bitware_db.Funcionario (
-  idUsuario INT NOT NULL,
+  idUsuario INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(60) NOT NULL,
   sobrenome VARCHAR(100) NULL,
   email VARCHAR(200) NOT NULL UNIQUE,
