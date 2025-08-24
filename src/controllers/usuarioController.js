@@ -30,13 +30,13 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    var nome = req.body.nomeServer;
-    var sobrenome = req.body.sobrenomeServer;
-    var email = req.body.emailServer;
-    var senha = req.body.senhaServer;
-    var foto = req.body.fotoServer; // isso aqui não vai ficar assim se realmente usar um arquivo
-    var fkEmpresa = req.body.idEmpresaVincularServer;
-    var fkCargo = req.body.fkCargoServer;
+    var nome = req.body.nome;
+    var sobrenome = req.body.sobrenome;
+    var email = req.body.email;
+    var senha = req.body.senha;
+    var foto = req.body.foto; // isso aqui não vai ficar assim se realmente usar um arquivo
+    var fkEmpresa = req.body.fkEmpresa;
+    var fkCargo = req.body.fkCargo;
     var usuarioSessao = req.body.usuarioSessao; // aqui vai ser para depois confirmar se aquele usuário pode fazer aquela ação
     // Faça as validações dos valores
     if (nome == undefined) {
