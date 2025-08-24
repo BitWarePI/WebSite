@@ -107,6 +107,10 @@ nav .nav-links-cell{
     nav #nav-menu-icon{
         display: block;
     }
+    .footer{
+        flex-direction: column-reverse;
+        align-items: center;
+    }
 }
 
 #nav-menu-icon {
@@ -288,6 +292,7 @@ section .container{
     gap: 4px;
     display: flex;
     flex-direction: column;
+    width: 80%;
 }
 .footer ul .titulo{
     font-weight: bold;
