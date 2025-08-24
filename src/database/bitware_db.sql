@@ -21,7 +21,7 @@ CREATE TABLE bitware_db.Funcionario (
   idUsuario INT NOT NULL,
   nome VARCHAR(60) NOT NULL,
   sobrenome VARCHAR(100) NULL,
-  email VARCHAR(200) NOT NULL,
+  email VARCHAR(200) NOT NULL UNIQUE,
   senha VARCHAR(200) NOT NULL,
   foto VARCHAR(100),
   validado BIT(1),
