@@ -34,12 +34,12 @@
                 <div class="ipt_label">
                     <label for="senha_input">Senha</label>
                     <input id="senha_input" type="password" placeholder="">
-                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility</span>
+                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
                 </div>
                 <div class="ipt_label">
                     <label for="senha_confirm_input">Confirmar Senha</label>
                     <input id="senha_confirm_input" type="password" placeholder="">
-                    <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility</span>
+                    <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
                 </div>
                 <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
                 <a href="login.html" class="btn-cadastrar">Já possuo conta</a>
@@ -65,12 +65,12 @@
   function mostrarSenha(inputId, iconId){
     input = document.getElementById(inputId);
     icon = document.getElementById(iconId);
-    if(icon.innerText == "visibility"){
+    if(icon.innerText == "visibility_off"){
         input.type = "text";
-        icon.innerText = "visibility_off";
+        icon.innerText = "visibility";
     } else{
         input.type = "password";
-        icon.innerText = "visibility";
+        icon.innerText = "visibility_off";
     }
   }
 
