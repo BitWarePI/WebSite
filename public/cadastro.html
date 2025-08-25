@@ -28,6 +28,14 @@
                     <p>Faça parte e gerencie sua mineração!</p>
                 </div>
                 <div class="ipt_label">
+                    <label for="nome_input">Nome</label>
+                    <input id="nome_input" type="text" placeholder="">
+                </div>
+                <div class="ipt_label">
+                    <label for="sobrenome_input">Sobrenome</label>
+                    <input id="sobrenome_input" type="text" placeholder="">
+                </div>
+                <div class="ipt_label">
                     <label for="email_input">E-mail</label>
                     <input id="email_input" type="text" placeholder="">
                 </div>
@@ -83,6 +91,7 @@
     //Recupere o valor da nova input pelo nome do id
     // Agora vá para o método fetch logo abaixo
     var nomeVar = nome_input.value;
+    var sobrenomeVar = sobrenome_input.value;
     var emailVar = email_input.value;
     var senhaVar = senha_input.value;
     var confirmacaoSenhaVar = confirmacao_senha_input.value;
@@ -92,6 +101,7 @@
     // Verificando se há algum campo em branco
     if (
       nomeVar == "" ||
+      sobrenomeVar == "" ||
       emailVar == "" ||
       senhaVar == "" ||
       confirmacaoSenhaVar == "" ||
@@ -130,6 +140,7 @@
         // crie um atributo que recebe o valor recuperado aqui
         // Agora vá para o arquivo routes/usuario.js
         nomeServer: nomeVar,
+        sobrenomeServer: sobrenomeVar,
         emailServer: emailVar,
         senhaServer: senhaVar,
         idEmpresaVincularServer: idEmpresaVincular
