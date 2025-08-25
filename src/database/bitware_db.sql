@@ -3,7 +3,13 @@ USE bitware_db;
 
 CREATE TABLE bitware_db.Empresa (
   idEmpresa INT NOT NULL AUTO_INCREMENT,
+  nome varchar(100) NOT NULL,
+  email varchar(200) NOT NULL,
+  senha varchar(200) NOT NULL,
   cnpj VARCHAR(14) NOT NULL,
+  dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+  cep CHAR(8),
+  ativo BIT(1),
   PRIMARY KEY (idEmpresa)
 );
 
