@@ -56,5 +56,6 @@ function buscarCargos(req, res) {
 }
 
 module.exports = {
-    cadastrarCargo
+    cadastrarCargo,
+    buscarCargos
 }
