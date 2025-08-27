@@ -25,17 +25,8 @@
     margin-bottom: 24px;
 }
 .sessao-login .container .formulario .header{
-    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    margin-bottom: 12px;
-}
-.sessao-login .container .formulario h1{
-    margin: 0;
-}
-.sessao-login .container .formulario p{
-    margin: 0;
 }
 .sessao-login .container .formulario .btn-cadastrar{
     align-self: center;

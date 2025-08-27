@@ -6,9 +6,11 @@
     --secondary-color: hsl(49, 73%, 50%);
     --low-secondary-color: hsla(49, 83%, 42%, 0.534);;
     --bg-color: #181818;
+    --low-bg-color: #1818188a;
     --bg-inverse-color: #f3f3f3;
     --main-text-color: #f0f0f0;
     --main-text-inverse-color: #1d1c1c;
+    --error-color: #ff3f3f;
 }
 
 *{
@@ -28,7 +30,7 @@ body{
 
 /* Nav */
 nav{
-    z-index: 1000;
+    z-index: 100;
     position: fixed;
     top: 24px;
     width: 80dvw;
@@ -204,13 +206,13 @@ section .container{
     width: 100%;
     gap: 12px;
 }
-.formulario .ipt_label{
+.ipt_label{
     position: relative;
     border-radius: 12px;
     width: 100%;
     transition: .3s;
 }
-.formulario .ipt_label label{
+.ipt_label label{
     position: absolute;
     top: 6px;
     left: 14px;
@@ -219,8 +221,8 @@ section .container{
     color: var(--primary-color);
     font-weight: bold;
 }
-.formulario .ipt_label input,
-.formulario .ipt_label textarea{
+.ipt_label input,
+.ipt_label textarea{
     width: 100%;
     padding: 10px 16px;
     padding-top: 24px;
@@ -231,8 +233,34 @@ section .container{
     background-color: #FFFFFF;
     border-radius: 12px;
 }
-.formulario .ipt_label input:focus,
-.formulario .ipt_label textarea:focus{
+.selectFiltro{
+    padding: 10px 16px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 1em;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding-left: 42px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+.selectFiltro select{
+    border: none;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    font-size: 1em;
+    width: max-content;
+}
+.selectFiltro .icon{
+    position: absolute;
+    left: 12px;
+}
+.ipt_label input:focus,
+.ipt_label textarea:focus{
     outline: 0px;
 }
 .ipt_label textarea{
@@ -241,25 +269,37 @@ section .container{
     margin-top: 24px;
     padding-top: 0px;
 }
-.formulario .ipt_label:has(textarea:placeholder-shown) label,
-.formulario .ipt_label:has(input:placeholder-shown) label{
+.ipt_label:has(textarea:placeholder-shown) label,
+.ipt_label:has(input:placeholder-shown) label{
     top: 16px;
     left: 14px;
     scale: 1;
     color: var(--main-text-inverse-color);
     font-weight: normal;
 }
-.formulario .ipt_label:has(textarea:focus) label,
-.formulario .ipt_label:has(input:focus) label{
+.ipt_label:has(textarea:focus) label,
+.ipt_label:has(input:focus) label{
     top: 6px;
     left: 14px;
     scale: 0.9;
     color: var(--primary-color);
     font-weight: bold;
 }
-.formulario .ipt_label:has(textarea:focus),
-.formulario .ipt_label:has(input:focus){
+.ipt_label:has(textarea:focus),
+.ipt_label:has(input:focus){
     outline: 1px solid var(--primary-color);
+}
+.formulario .header{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+.formulario h1{
+    margin: 0;
+}
+.formulario p{
+    margin: 0;
 }
 .formulario .btn.submit{
     padding: 12px;
@@ -273,6 +313,50 @@ section .container{
 }
 .formulario .btn.submit:hover{
     font-weight: bold;
+}
+
+.modal{
+    z-index: 101;
+    position: absolute;
+    width: 100dvw;
+    height: 100dvh;
+    box-sizing: border-box;
+    padding: 42px;
+    background-color: var(--low-bg-color);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal.open{
+    display: flex;
+}
+.modal-container{
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.modal-container .header{
+    display: flex;
+    justify-content: space-between;
+}
+.modal-container .header .close-icon{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 2em;
+    color: var(--main-text-inverse-color);
+}
+.modal-container .header .close-icon:hover{
+    color: var(--error-color);
+}
+.modal-container .body{
+    width: 80dvw;
+    height: 60dvh;
+    overflow-y: auto;
 }
 
 /* Footer */

@@ -1,0 +1,163 @@
+table{
+    width: 100%;
+    background-color: #fff;
+    border-collapse: collapse;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 12px;
+}
+table tr{
+    width: 100%;
+    display: flex;
+}
+table tr th,
+table tr td{
+    text-align: start;
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+table tr:hover{
+    background: #00000036;
+}
+table thead{
+    position: sticky;
+    width: 100%;
+    min-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    background-color: var(--bg-color);
+    color: var(--main-text-color);
+}
+table tbody{
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+table tr td.estado{
+    width: 118px;
+}
+table tr td.estado span{
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+table .ativo{
+    background: #00e94e;
+    color: var(--main-text-color);
+}
+table .inativo{
+    background: #ec3939;
+    color: var(--main-text-color);
+}
+table tr td.acao{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+table tr td.acao button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+table tr td.acao button.ver-mais{
+    background: #636363;
+    color: var(--main-text-color);
+}
+
+.container .requisicao{
+    width: 80%;
+    padding: 12px;
+    background-color: var(--secondary-color);
+    font-size: 1.25em;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+}
+
+.container .pesquisa{
+    display: flex;
+    width: 100%;
+    gap: 12px;
+}
+
+.modal.cadastro .modal-container .body{
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.modal.cadastro .modal-container .body .header-body{
+    display: flex;
+    padding: 8px;
+    background-color: var(--bg-inverse-color);
+    position: sticky;
+    top: -1px;
+}
+.modal.cadastro .modal-container .body .header-body h2{
+    width: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.modal.cadastro .modal-container .body .card{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 12px 24px;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #FFF;
+}
+.modal.cadastro .modal-container .body .card .info .nome{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.modal.cadastro .modal-container .body .card .info .nome span{
+    font-size: 0.7em;
+    font-weight: normal;
+}
+.modal.cadastro .modal-container .body .card .botoes{
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 155px;
+    margin-left: auto;
+}
+.modal.cadastro .modal-container .body .card .botoes button{
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+}
+.modal.cadastro .modal-container .body .card .botoes .aprovar{
+    background-color: #00e94e;
+}
+.modal.cadastro .modal-container .body .card .botoes .reprovar{
+    background-color: var(--error-color);
+}
+
+@media screen and (max-width: 768px) {
+    
+    table{
+        overflow: auto;
+    }
+    table tbody{
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+}
