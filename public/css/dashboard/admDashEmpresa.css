@@ -2,7 +2,7 @@ table{
     width: 100%;
     background-color: #fff;
     border-collapse: collapse;
-    height: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -11,6 +11,7 @@ table{
 table tr{
     width: 100%;
     display: flex;
+    transition: .2s;
 }
 table tr th,
 table tr td{
@@ -19,9 +20,6 @@ table tr td{
     flex: 1;
     display: flex;
     align-items: center;
-}
-table tr:hover{
-    background: #00000036;
 }
 table thead{
     position: sticky;
@@ -38,6 +36,12 @@ table tbody{
     flex-direction: column;
     overflow: auto;
 }
+tbody tr:nth-child(odd) {
+  background-color: #bdbdbd;
+}
+tbody tr:hover{
+    background-color:  #dbacf7;
+}
 table tr td.estado{
     width: 118px;
 }
@@ -47,11 +51,11 @@ table tr td.estado span{
     font-weight: bold;
 }
 table .ativo{
-    background: #00e94e;
+    background: var(--sucess-color);
     color: var(--main-text-color);
 }
 table .inativo{
-    background: #ec3939;
+    background: var(--error-color);
     color: var(--main-text-color);
 }
 table tr td.acao{
@@ -96,6 +100,7 @@ table tr td.acao button.ver-mais{
     display: flex;
     flex-direction: column;
     gap: 8px;
+    scrollbar-color: var(--bg-color) transparent;
 }
 .modal.cadastro .modal-container .body .header-body{
     display: flex;
@@ -144,7 +149,7 @@ table tr td.acao button.ver-mais{
     cursor: pointer;
 }
 .modal.cadastro .modal-container .body .card .botoes .aprovar{
-    background-color: #00e94e;
+    background-color: var(--sucess-color);
 }
 .modal.cadastro .modal-container .body .card .botoes .reprovar{
     background-color: var(--error-color);

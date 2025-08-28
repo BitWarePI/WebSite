@@ -11,6 +11,7 @@
     --main-text-color: #f0f0f0;
     --main-text-inverse-color: #1d1c1c;
     --error-color: #ff3f3f;
+    --sucess-color:rgb(137, 190, 77);
 }
 
 *{
@@ -266,8 +267,7 @@ section .container{
 .ipt_label textarea{
     resize: none;
     height: 130px;
-    margin-top: 24px;
-    padding-top: 0px;
+    padding-top: 24px;
 }
 .ipt_label:has(textarea:placeholder-shown) label,
 .ipt_label:has(input:placeholder-shown) label{
@@ -366,7 +366,8 @@ section .container{
     background-color: var(--low-primary-color);
     width: 100%;
     color: var(--main-text-color);
-    padding: 62px 0;
+    box-sizing: border-box;
+    padding: 62px 52px;
 }
 .footer .logo{
     width: 248px;

@@ -86,7 +86,7 @@ nav .btn-sair:hover{
 }
 
 section{
-    background-color: var(--bg-inverse-color);
+    background-color: #7e7e7e;
     flex-direction: row;
     color: var(--main-text-inverse-color);
 }
