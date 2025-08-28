@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/default.css">
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
-    <link rel="stylesheet" href="../css/dashboard/admDashEmpresa.css">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
     <link rel="stylesheet" href="../css/animacao.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,menu,open_in_full,remove,search" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,menu,open_in_full,remove,search,visibility,visibility_off,work" />
     <link rel="icon" href="../assets/icon/favicon2.png">
     <title>Dashboard | BitWare</title>
 </head>
@@ -24,9 +24,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link ativo" href="dashEmpresa.html">
-                            <span class="material-symbols-outlined icon">apartment</span>
-                            <span class="titulo">Empresas</span>
+                        <a class="link ativo" href="dashFuncionario.html">
+                            <span class="material-symbols-outlined icon">work</span>
+                            <span class="titulo">Funcionários</span>
                         </a>
                     </li>
                 </ul>
@@ -42,7 +42,7 @@
             </div>
             <ul class="links nav-links-cell">
                     <li><a class="link" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Inicio</a></li>
-                    <li><a class="link ativo" href="dashEmpresa.html"><span class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
+                    <li><a class="link ativo" href="dashFuncionario.html"><span class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
                     <li>
                         <a href="../index.html" class="btn btn-sair">        
                             Sair
@@ -53,20 +53,11 @@
         <div class="container">
             <div class="kpi-container">
                 <div class="kpi-card">
-                    <h3 class="titulo">Empresas<br>Cadastradas</h3>
+                    <h3 class="titulo">Funcionários<br>Cadastrados</h3>
                     <p class="quantidade">12</p>
                     <span class="material-symbols-outlined icon cadastrada">apartment</span>
                 </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Empresas<br>Ativas</h3>
-                    <p class="quantidade">12</p>
-                    <span class="material-symbols-outlined icon ativo">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Qtde.<br>Solicitações</h3>
-                    <p class="quantidade">12</p>
-                    <span class="material-symbols-outlined icon solicitacao">apartment</span>
-                </div>
+                <button class="requisicao" onclick="abrirModal()">Cadastrar Funcionário (+)</button>
             </div>
             <div class="listaEmpresa">
                 <div class="pesquisa">
@@ -83,37 +74,36 @@
                             <option value="inativo">Inativos</option>
                         </select>
                     </div>
-                    <button class="requisicao" onclick="abrirModal()">Ver Solicitações (+)</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th class="nome">Nome</th>
                             <th class="email">Email</th>
-                            <th class="cnpj">CNPJ</th>
+                            <th class="cpf">CPF</th>
                             <th class="dt_cadastro">Dt.Cadastro</th>
-                            <th class="estado">Estado</th>
+                            <th class="funcao">Cargo</th>
                             <th class="acao">Ações</th>
                         </tr>
                     </thead>
                     <tbody class="">
                         <tr>
-                            <td class="nome"> <p>Arthur INC.</p></td>
-                            <td class="email">arthur.inc@gmail.com</td>
-                            <td class="cnpj"></td>
+                            <td class="nome"> <p>Arthur Félix</p></td>
+                            <td class="email">arthurfelix@gmail.com</td>
+                            <td class="cpf">124.234.125-66</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="estado"><span class="ativo">Ativo</span></td>
+                            <td class="funcao"><span class="gerente">Gerente</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                                 <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
                             </td>
                         </tr>
                         <tr>
-                            <td class="nome"><p>Miner BitMiner BitMiner BitMiner Bit</p></td>
-                            <td class="email">bitmineeeeeeeee@gmail.com</td>
-                            <td class="cnpj">00.623.904/0001-73</td>
+                            <td class="nome"><p>James Paul</p></td>
+                            <td class="email">james.paul@gmail.com</td>
+                            <td class="cpf">123.421.221-44</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="estado"><span class="inativo">Inativo</span></td>
+                            <td class="funcao"><span class="analista">Analísta</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                                 <button class="material-symbols-outlined ativo" title="Ativar">check</button>
@@ -128,59 +118,36 @@
     <div class="modal cadastro" id="modal_solicitacoes">
         <div class="modal-container" id="modal_container_solicitacoes">
             <div class="header">
-                <h1>Solicitações</h1>
+                <h1>Cadastro Funcionário</h1>
                 <button class="material-symbols-outlined close-icon" onclick="abrirModal()">
                     close
                 </button>
             </div>
             <div class="body">
-                <div class="header-body">
-                    <h2>Total (4)</h2>
+                <div class="formulario">
                     <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
+                        <label for="nome_input">Nome</label>
+                        <input id="nome_input" type="text" placeholder="">
                     </div>
-                </div>
-                <div class="card">
-                    <div class="info">
-                        <h2 class="nome">Empresa 1 <span class="contato">empresa@email.com</span></h2>
-                        <h3 class="cnpj">00.623.904/0001-73</h3>
+                    <div class="ipt_label">
+                        <label for="sobrenome_input">Sobrenome</label>
+                        <input id="sobrenome_input" type="text" placeholder="">
                     </div>
-                    <div class="botoes">
-                        <button class="aprovar">Aprovar</button>
-                        <button class="reprovar">Reprovar</button>
+                    <div class="ipt_label">
+                        <label for="email_input">E-mail</label>
+                        <input id="email_input" type="text" placeholder="">
                     </div>
-                </div>
-                <div class="card">
-                    <div class="info">
-                        <h2 class="nome">Empresa 1 <span class="contato">empresa@email.com</span></h2>
-                        <h3 class="cnpj">00.623.904/0001-73</h3>
+                    <div class="ipt_label">
+                        <label for="senha_input">Senha</label>
+                        <input id="senha_input" type="password" placeholder="">
+                        <span class="btn-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
                     </div>
-                    <div class="botoes">
-                        <button class="aprovar">Aprovar</button>
-                        <button class="reprovar">Reprovar</button>
+                    <div class="ipt_label">
+                        <label for="senha_confirm_input">Confirmar Senha</label>
+                        <input id="senha_confirm_input" type="password" placeholder="">
+                        <span class="btn-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="info">
-                        <h2 class="nome">Empresa 1 <span class="contato">empresa@email.com</span></h2>
-                        <h3 class="cnpj">00.623.904/0001-73</h3>
-                    </div>
-                    <div class="botoes">
-                        <button class="aprovar">Aprovar</button>
-                        <button class="reprovar">Reprovar</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="info">
-                        <h2 class="nome">Empresa 1 <span class="contato">empresa@email.com</span></h2>
-                        <h3 class="cnpj">00.623.904/0001-73</h3>
-                    </div>
-                    <div class="botoes">
-                        <button class="aprovar">Aprovar</button>
-                        <button class="reprovar">Reprovar</button>
-                    </div>
+                    <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
                 </div>
             </div>
         </div>
@@ -234,7 +201,7 @@
     }
 
     function pesquisarEmpresa(){
-        
+
     }
 
 
