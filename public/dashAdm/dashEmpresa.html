@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/admDashEmpresa.css">
     <link rel="stylesheet" href="../css/animacao.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,menu,open_in_full,remove" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,menu,open_in_full,remove,search" />
     <link rel="icon" href="../assets/icon/favicon2.png">
     <title>Dashboard | BitWare</title>
 </head>
@@ -51,165 +51,77 @@
             </ul>
         </nav>    
         <div class="container">
-            <div class="pesquisa">
-                <div class="ipt_label">
-                    <label for="pesquisa_input">Pesquisar</label>
-                    <input id="pesquisa_input" type="text" placeholder="">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <h3 class="titulo">Empresas<br>Cadastradas</h3>
+                    <p class="quantidade">12</p>
+                    <span class="material-symbols-outlined icon cadastrada">apartment</span>
                 </div>
-                <div class="selectFiltro">
-                    <span class="material-symbols-outlined icon">filter_alt</span>
-                    <select id="filtroPesquisa">
-                        <option value="todos">Todos</option>
-                        <option value="ativo">Ativos</option>
-                        <option value="inativo">Inativos</option>
-                    </select>
+                <div class="kpi-card">
+                    <h3 class="titulo">Empresas<br>Ativas</h3>
+                    <p class="quantidade">12</p>
+                    <span class="material-symbols-outlined icon ativo">apartment</span>
                 </div>
-                <button class="requisicao" onclick="abrirModal()">Visualizar Solicitações (+)</button>
+                <div class="kpi-card">
+                    <h3 class="titulo">Qtde.<br>Solicitações</h3>
+                    <p class="quantidade">12</p>
+                    <span class="material-symbols-outlined icon solicitacao">apartment</span>
+                </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>CNPJ</th>
-                        <th>Dt.Cadastro</th>
-                        <th>Estado</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="ativo">Ativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Arthur INC.</td>
-                    <td>arthur.inc@gmail.com</td>
-                    <td>00.623.904/0001-73</td>
-                    <td>05/01/2026</td>
-                    <td class="estado"><span class="inativo">Inativo</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined ativo" title="Ativar">check</button>
-                    </td>
-                </tr>
-            </table>
+            <div class="listaEmpresa">
+                <div class="pesquisa">
+                    <div class="ipt_label">
+                        <label for="pesquisa_input">Pesquisar</label>
+                        <input id="pesquisa_input" type="text" placeholder="">
+                        <button class="material-symbols-outlined btn-icon">search</button>
+                    </div>
+                    <div class="selectFiltro">
+                        <span class="material-symbols-outlined icon">filter_alt</span>
+                        <select id="filtroPesquisa">
+                            <option value="todos">Todos</option>
+                            <option value="ativo">Ativos</option>
+                            <option value="inativo">Inativos</option>
+                        </select>
+                    </div>
+                    <button class="requisicao" onclick="abrirModal()">Ver Solicitações (+)</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="nome">Nome</th>
+                            <th class="email">Email</th>
+                            <th class="cnpj">CNPJ</th>
+                            <th class="dt_cadastro">Dt.Cadastro</th>
+                            <th class="estado">Estado</th>
+                            <th class="acao">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        <tr>
+                            <td class="nome"> <p>Arthur INC.</p></td>
+                            <td class="email">arthur.inc@gmail.com</td>
+                            <td class="cnpj"></td>
+                            <td class="dt_cadastro">05/01/2026</td>
+                            <td class="estado"><span class="ativo">Ativo</span></td>
+                            <td class="acao">
+                                <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
+                                <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="nome"><p>Miner BitMiner BitMiner BitMiner Bit</p></td>
+                            <td class="email">bitmineeeeeeeee@gmail.com</td>
+                            <td class="cnpj">00.623.904/0001-73</td>
+                            <td class="dt_cadastro">05/01/2026</td>
+                            <td class="estado"><span class="inativo">Inativo</span></td>
+                            <td class="acao">
+                                <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
+                                <button class="material-symbols-outlined ativo" title="Ativar">check</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
@@ -227,6 +139,7 @@
                     <div class="ipt_label">
                         <label for="pesquisa_input">Pesquisar</label>
                         <input id="pesquisa_input" type="text" placeholder="">
+                        <button class="material-symbols-outlined btn-icon">search</button>
                     </div>
                 </div>
                 <div class="card">
@@ -293,4 +206,36 @@
             modalContainer.classList.add("slide-in-top");
         }
     }
+
+    function carregarEmpresas(){
+        empresas = [
+            {
+                "nome": 'Arthur INC.',
+                "email": 'arthur@gmail.com',
+                "cpnj": '00.623.904/0001-73',
+                "dtCadastro": '05/06/2025',
+                "estado": 'ativo'
+            },
+            {
+                "nome": 'bitcorp.',
+                "email": 'bitcorp@gmail.com',
+                "cpnj": '00.626.914/0001-73',
+                "dtCadastro": '12/06/2025',
+                "estado": 'ativo'
+            },
+            {
+                "nome": 'pyWatch',
+                "email": 'py.watch@gmail.com',
+                "cpnj": '00.526.916/0001-73',
+                "dtCadastro": '15/06/2025',
+                "estado": 'inativo'
+            },
+        ];
+    }
+
+    function pesquisarEmpresa(){
+
+    }
+
+
 </script>

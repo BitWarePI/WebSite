@@ -212,6 +212,8 @@ section .container{
     border-radius: 12px;
     width: 100%;
     transition: .3s;
+    flex: 1;
+    outline: 1px solid #8b8b8b;
 }
 .ipt_label label{
     position: absolute;
@@ -234,6 +236,23 @@ section .container{
     background-color: #FFFFFF;
     border-radius: 12px;
 }
+.ipt_label .btn-icon{
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--main-text-inverse-color);
+    transition: .3s;
+}
+.ipt_label .btn-icon:hover{
+    color: var(--low-primary-color);
+}
+.ipt_label:has(.btn-icon) input{
+    padding-right: 42px;
+}
 .selectFiltro{
     padding: 10px 16px;
     margin: 0;
@@ -247,6 +266,7 @@ section .container{
     display: flex;
     align-items: center;
     width: fit-content;
+    outline: 1px solid #8b8b8b;
 }
 .selectFiltro select{
     border: none;
