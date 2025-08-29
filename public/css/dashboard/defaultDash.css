@@ -1,0 +1,129 @@
+nav{
+    height: 100dvh;
+    width: 156px;
+    border-radius: 0;
+    padding: 42px;
+    position:static;
+
+    background: rgb(36, 35, 35);
+    box-shadow: 0 4px 30px rgba(181, 3, 235, 0.1);
+    border: none;
+    outline: 1px solid rgba(234, 0, 255, 0.3);
+    transition: .3s;
+    box-sizing: border-box;
+}
+nav:hover{
+    width: 320px;
+}
+nav .main-nav{
+    flex-direction: column;
+    height: 100%;
+}
+nav .main-nav .logo{
+    margin: 0;
+    object-fit: cover;
+    width: 42px;
+    overflow: hidden;
+    transition: .3s;
+}
+nav:hover .main-nav .logo{
+    width: 142px;
+}
+nav .links{
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    box-sizing: border-box;
+}
+nav .links li{
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+nav .links li:has(.link.ativo){
+    background-color: var(--primary-color);
+}
+nav .links .link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-left: 42px;
+    box-sizing: border-box;
+    position: relative;
+    transition: .3s;
+}
+nav .links .link .icon{
+    font-size: 1.15em;
+    position: absolute;
+    left: 8px;
+    background-color: var(--bg-color);
+    padding: 4px;
+    border-radius: 6px;
+}
+nav .links .link .titulo{
+    width: 0px;
+    transition: .3s;
+    overflow: hidden;
+}
+nav:hover .links .link .titulo{
+    width: fit-content;
+}
+nav .btn-sair{
+    color: var(--main-text-color);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 8px;
+    transition: .3s;
+}
+nav .btn-sair:hover{
+    background: #eb2e2e;
+}
+
+section{
+    max-width: 100dvw;
+    background-color: #7e7e7e;
+    flex-direction: row;
+    color: var(--main-text-inverse-color);
+}
+section .container{
+    width: 100%;
+    height: 100dvh;
+    padding: 24px;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media screen and (max-width: 1000px) {
+    nav{
+        height: fit-content;
+        width: 100dvw !important;
+        border-radius: 0;
+    }
+    nav .main-nav .logo{
+        width: 142px;
+    }
+    nav .main-nav{
+        flex-direction: row;
+    }
+    nav .nav-links-pc{
+        display: none;
+    }
+    nav #nav-menu-icon{
+        display: block;
+    }
+
+
+    section{
+        flex-direction: column;
+    }
+    section .container{
+        height: calc(100dvh - 123px);
+    }
+}

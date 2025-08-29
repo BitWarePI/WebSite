@@ -1,6 +1,4 @@
-drop database bitware_db;
 CREATE DATABASE bitware_db;
-USE bitware_db;
 
 CREATE TABLE bitware_db.Usuario (
 	idUsuario INT AUTO_INCREMENT,
@@ -46,6 +44,3 @@ CREATE TABLE bitware_db.Funcionario (
     FOREIGN KEY (fkEmpresa)
     REFERENCES bitware_db.Empresa (idEmpresa)
 );
-
-
-

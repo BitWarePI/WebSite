@@ -4,7 +4,7 @@ const nav_links_cell = document.querySelector('.nav-links-cell');
 nav_hamburger.addEventListener('click', function() {
   this.classList.toggle('open');
   if(nav_links_cell.style.height === '0px' || nav_links_cell.style.height === '') {
-    nav_links_cell.style.height = '140px';
+    nav_links_cell.style.height = '380px';
     nav_links_cell.style.padding = '24px';
   } else{
     nav_links_cell.style.height = '0px';

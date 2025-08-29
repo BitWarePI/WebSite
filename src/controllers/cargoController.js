@@ -29,6 +29,33 @@ function cadastrarCargo(req, res) {
     }
 }
 
+function buscarCargos(req, res) {
+    var fkEmpresa = req.query.fkEmpresa;
+    var usuarioSessao = req.query.body;
+
+    if (fkEmpresa == undefined) {
+        res.status(400).send("A fkEmpresa está undefined!");
+    } else {
+
+        cargoModel.buscarCargos(fkEmpresa)
+            .then(
+                function (resultado) {
+                    res.json(resultado);
+                }
+            ).catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log(
+                        "\nHouve um erro ao buscar os cargos! Erro: ",
+                        erro.sqlMessage
+                    );
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+    }
+}
+
 module.exports = {
-    cadastrarCargo
+    cadastrarCargo,
+    buscarCargos
 }

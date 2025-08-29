@@ -1,0 +1,100 @@
+.sessao-login{
+    height: 100dvh;
+    overflow: hidden;
+    position: relative;
+}
+.sessao-login .container{
+    flex-direction: column;
+    gap: 12px;
+}
+.sessao-login .container .logo{
+    max-width: 240px;
+    cursor: pointer;
+    transition: .3s;
+}
+.sessao-login .container .logo:hover{
+    filter: brightness(0.8);
+}
+.sessao-login .container .formulario{
+    max-width: 390px;
+    align-items: center;
+    padding: 42px 24px;
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+.sessao-login .container .formulario .header{
+    flex-direction: column;
+    align-items: center;
+}
+.sessao-login .container .formulario .btn-cadastrar{
+    align-self: center;
+    color: var(--main-text-inverse-color);
+    text-decoration: none;
+    transition: .3s;
+}
+.sessao-login .container .formulario .btn-cadastrar:hover{
+    scale: 1.1;
+    font-weight: bold;
+}
+.sessao-login .container .formulario .ipt_label .show-icon{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(0, 0, 0, 0.534);
+    transition: .2s;
+}
+.sessao-login .container .formulario .ipt_label .show-icon:hover{
+    color: var(--low-primary-color);
+    cursor: pointer;
+}
+
+.sessao-login .bg-light{
+    position: absolute;
+    bottom: -300px;
+    width: 800px;
+    left: -400px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(var(--primary-color) 10%, transparent 50%);
+    z-index: -1;
+    animation: bgLightAnimation 8s infinite;
+    transition: .3s;
+}
+.sessao-login .bg-light2{
+    position: absolute;
+    top: -300px;
+    width: 800px;
+    right: -400px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(var(--secondary-color) 10%, transparent 50%);
+    z-index: -1;
+    opacity: 0;
+    animation: bgLightAnimation 6s infinite;
+    animation-delay: 0.5s;
+    transition: .3s;
+}
+@keyframes bgLightAnimation {
+    0%{
+        opacity: 0%;
+    }
+    30%{
+        opacity: 100%;
+    }
+    70%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0%;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .sessao-login .bg-light,
+    .sessao-login .bg-light2{
+        scale: .75;
+    }
+}

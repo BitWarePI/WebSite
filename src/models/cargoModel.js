@@ -8,6 +8,15 @@ function cadastrarCargo(descricao, fkEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarCargos(fkEmpresa) {   
+    var instrucaoSql = `
+        select idCargo, descricao from Cargo where fkEmpresa=${fkEmpresa} order by descricao;
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
-    cadastrarCargo
+    cadastrarCargo,
+    buscarCargos
 };
