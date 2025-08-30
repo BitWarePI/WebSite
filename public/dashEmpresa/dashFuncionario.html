@@ -64,14 +64,14 @@
                     <div class="ipt_label">
                         <label for="pesquisa_input">Pesquisar</label>
                         <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
+                        <button class="material-symbols-outlined btn-icon" onclick="pesquisarFuncionario()">search</button>
                     </div>
                     <div class="selectFiltro">
                         <span class="material-symbols-outlined icon">filter_alt</span>
                         <select id="filtroPesquisa">
                             <option value="todos">Todos</option>
-                            <option value="ativo">Ativos</option>
-                            <option value="inativo">Inativos</option>
+                            <option value="analista">Analista</option>
+                            <option value="técnico">Técnico</option>
                         </select>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                             <th class="acao">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="">
+                    <tbody class="" id="tableConteiner">
                         <tr>
                             <td class="nome"> <p>Arthur Félix</p></td>
                             <td class="email">arthurfelix@gmail.com</td>
@@ -174,34 +174,114 @@
         }
     }
 
-    function carregarEmpresas(){
-        empresas = [
+    function carregarFuncionarios(){
+        // empresas = [
+        //     {
+        //         "nome": 'Arthur INC.',
+        //         "email": 'arthur@gmail.com',
+        //         "cpnj": '00.623.904/0001-73',
+        //         "dtCadastro": '05/06/2025',
+        //         "estado": 'ativo'
+        //     },
+        //     {
+        //         "nome": 'bitcorp.',
+        //         "email": 'bitcorp@gmail.com',
+        //         "cpnj": '00.626.914/0001-73',
+        //         "dtCadastro": '12/06/2025',
+        //         "estado": 'ativo'
+        //     },
+        //     {
+        //         "nome": 'pyWatch',
+        //         "email": 'py.watch@gmail.com',
+        //         "cpnj": '00.526.916/0001-73',
+        //         "dtCadastro": '15/06/2025',
+        //         "estado": 'inativo'
+        //     },
+        // ];
+
+        let funcionarios = [
             {
-                "nome": 'Arthur INC.',
-                "email": 'arthur@gmail.com',
-                "cpnj": '00.623.904/0001-73',
-                "dtCadastro": '05/06/2025',
-                "estado": 'ativo'
+                "nome": "Rafael Nogueira",
+                "email": "rafael.nogueira@example.com",
+                "data_cadastro": "2025-08-29",
+                "cpf": "123.456.789-00",
+                "cargo": "Analista"
             },
             {
-                "nome": 'bitcorp.',
-                "email": 'bitcorp@gmail.com',
-                "cpnj": '00.626.914/0001-73',
-                "dtCadastro": '12/06/2025',
-                "estado": 'ativo'
+                "nome": "Juliana Alves",
+                "email": "juliana.alves@example.com",
+                "data_cadastro": "2025-08-28",
+                "cpf": "987.654.321-00",
+                "cargo": "Técnico"
             },
             {
-                "nome": 'pyWatch',
-                "email": 'py.watch@gmail.com',
-                "cpnj": '00.526.916/0001-73',
-                "dtCadastro": '15/06/2025',
-                "estado": 'inativo'
+                "nome": "Carlos Mendes",
+                "email": "carlos.mendes@example.com",
+                "data_cadastro": "2025-08-25",
+                "cpf": "456.789.123-99",
+                "cargo": "Analista"
             },
-        ];
+            {
+                "nome": "Fernanda Silva",
+                "email": "fernanda.silva@example.com",
+                "data_cadastro": "20-08-2025",
+                "cpf": "321.654.987-11",
+                "cargo": "Técnico"
+            }
+        ]
+
+        tbody = document.getElementById('tableConteiner');
+        tbody.innerHTML = '';
+        for(i = 0; i < funcionarios.length; i++){
+            linha = `
+                <tr>
+                    <td class="nome"><p>${funcionarios[i].nome}</p></td>
+                    <td class="email">${funcionarios[i].email}</td>
+                    <td class="cpf">${funcionarios[i].cpf}</td>
+                    <td class="dt_cadastro">${funcionarios[i].data_cadastro.split('-').join('/')}</td>
+                    <td class="funcao"><span class="${funcionarios[i].cargo.toLowerCase()}">${funcionarios[i].cargo}</span></td>
+                    <td class="acao">
+                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
+                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += linha;
+        }
     }
 
-    function pesquisarEmpresa(){
+    function pesquisarFuncionario(){
+        const filtro = document.getElementById('filtroPesquisa').value;
+        const pesquisa = document.getElementById('pesquisa_input').value.toLowerCase();
 
+        const tbody = document.getElementById('tableConteiner');
+        const linhas = tbody.getElementsByTagName('tr');
+
+        console.log(filtro);
+
+        for (let i = 0; i < linhas.length; i++) {
+            const row = linhas[i];
+
+            
+            const nome = (row.querySelector('.nome').innerText || '').toLowerCase();
+            const email = (row.querySelector('.email').innerText || '').toLowerCase();
+            const cpf = (row.querySelector('.cpf').innerText || '').toLowerCase();
+            const cargo = (row.querySelector('.funcao').innerText || '').toLowerCase();
+            const estado = (row.querySelector('.estado')?.innerText || '').toLowerCase();
+            const matchesFiltro = (filtro == 'todos') ? true : (estado == filtro);
+            
+            console.log(row);
+
+            if ((nome.includes(pesquisa) || email.includes(pesquisa) || cpf.includes(pesquisa) || cargo.includes(pesquisa)) && matchesFiltro) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+
+    window.onload = function(){
+        carregarFuncionarios();
     }
 
 
