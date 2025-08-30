@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
 </head>
 
-<body onload="listar()">
+<body >
     
     <section class="sessao-login">
         <div class="container">
@@ -28,25 +28,25 @@
                     <p>Faça parte e gerencie sua mineração!</p>
                 </div>
                 <div class="ipt_label">
-                    <label for="nome_input">Nome</label>
-                    <input id="nome_input" type="text" placeholder="">
+                    <label for="nome_empresa_input">Nome Empresa</label>
+                    <input id="nome_empresa_input" type="text">
                 </div>
                 <div class="ipt_label">
-                    <label for="sobrenome_input">Sobrenome</label>
-                    <input id="sobrenome_input" type="text" placeholder="">
+                    <label for="cnpj_input">CNPJ</label>
+                    <input id="cnpj_input" type="text" >
                 </div>
                 <div class="ipt_label">
                     <label for="email_input">E-mail</label>
-                    <input id="email_input" type="text" placeholder="">
+                    <input id="email_input" type="text" >
                 </div>
                 <div class="ipt_label">
                     <label for="senha_input">Senha</label>
-                    <input id="senha_input" type="password" placeholder="">
+                    <input id="senha_input" type="password" >
                     <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
                 </div>
                 <div class="ipt_label">
                     <label for="senha_confirm_input">Confirmar Senha</label>
-                    <input id="senha_confirm_input" type="password" placeholder="">
+                    <input id="senha_confirm_input" type="password" >
                     <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
                 </div>
                 <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
@@ -82,68 +82,46 @@
     }
   }
 
-  // Array para armazenar empresas cadastradas para validação de código de ativação 
-  let listaEmpresasCadastradas = [];
 
-  function cadastrar() {
-    // aguardar();
-
-    //Recupere o valor da nova input pelo nome do id
-    // Agora vá para o método fetch logo abaixo
-    var nomeVar = nome_input.value;
-    var sobrenomeVar = sobrenome_input.value;
+  async function cadastrar() {
+    var nomeEmpresaVar = nome_empresa_input.value;
+    var cnpjVar = cnpj_input.value;
     var emailVar = email_input.value;
     var senhaVar = senha_input.value;
-    var confirmacaoSenhaVar = confirmacao_senha_input.value;
-    var codigoVar = codigo_input.value;
-    var idEmpresaVincular
+    var confirmacaoSenhaVar = senha_confirm_input.value;
+    
 
-    // Verificando se há algum campo em branco
+    
     if (
-      nomeVar == "" ||
-      sobrenomeVar == "" ||
+      nomeEmpresaVar == "" ||
+      cnpjVar == "" ||
       emailVar == "" ||
       senhaVar == "" ||
-      confirmacaoSenhaVar == "" ||
-      codigoVar == ""
-    ) {
+      confirmacaoSenhaVar == "" 
+    ){
       cardErro.style.display = "block";
       mensagem_erro.innerHTML =
         "(Mensagem de erro para todos os campos em branco)";
 
       finalizarAguardar();
       return false;
-    } else {
+    } else if(senhaVar != confirmacaoSenhaVar){
+      mensagem_erro.innerHTML = "As senhas não coincidem.";
+    }
+    else {
       setInterval(sumirMensagem, 5000);
     }
 
-    // Verificando se o código de ativação é de alguma empresa cadastrada
-    for (let i = 0; i < listaEmpresasCadastradas.length; i++) {
-      if (listaEmpresasCadastradas[i].codigo_ativacao == codigoVar) {
-        idEmpresaVincular = listaEmpresasCadastradas[i].id
-        console.log("Código de ativação válido.");
-        break;
-      } else {
-        cardErro.style.display = "block";
-        mensagem_erro.innerHTML = "(Mensagem de erro para código inválido)";
-        finalizarAguardar();
-      }
-    }
-
-    // Enviando o valor da nova input
-    fetch("/usuarios/cadastrar", {
+     respone = await fetch(`/cadastrarEmpresa/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // crie um atributo que recebe o valor recuperado aqui
-        // Agora vá para o arquivo routes/usuario.js
-        nomeServer: nomeVar,
-        sobrenomeServer: sobrenomeVar,
+        nomeEmpresaServer: nomeEmpresaVar,
+        cnpjServer: cnpjVar,
         emailServer: emailVar,
-        senhaServer: senhaVar,
-        idEmpresaVincularServer: idEmpresaVincular
+        senhaServer: senhaVar
       }),
     })
       .then(function (resposta) {
@@ -173,26 +151,7 @@
     return false;
   }
 
-  // Listando empresas cadastradas 
-  function listar() {
-    fetch("/empresas/listar", {
-      method: "GET",
-    })
-      .then(function (resposta) {
-        resposta.json().then((empresas) => {
-          empresas.forEach((empresa) => {
-            listaEmpresasCadastradas.push(empresa);
-
-            console.log("listaEmpresasCadastradas")
-            console.log(listaEmpresasCadastradas[0].codigo_ativacao)
-          });
-        });
-      })
-      .catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);
-      });
-  }
-
+  
   function sumirMensagem() {
     cardErro.style.display = "none";
   }
