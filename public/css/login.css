@@ -38,6 +38,15 @@
     scale: 1.1;
     font-weight: bold;
 }
+
+.popuerro{
+
+    font-size: 12px !important;
+    width: 387px;
+    height: 88px;
+    color: red !important;
+        
+}
 .sessao-login .container .formulario .ipt_label .show-icon{
     position: absolute;
     right: 12px;
@@ -97,4 +106,12 @@
     .sessao-login .bg-light2{
         scale: .75;
     }
+}
+@media screen  and (max-width: 768px){
+.popuerro {
+        font-size: 12px !important;
+        width: 278px;
+        height: 88px;
+        color: red !important;
+}
 }

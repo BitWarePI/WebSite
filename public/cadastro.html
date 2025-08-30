@@ -14,49 +14,57 @@
   <link rel="stylesheet" href="./css/animacao.css" />
   <link rel="stylesheet" href="./css/login.css" />
   <link rel="icon" href="./assets/icon/favicon2.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
 </head>
 
-<body >
-    
-    <section class="sessao-login">
-        <div class="container">
-            <a href="index.html"><img src="./assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
-            <div class="formulario slide-in-bottom">
-                <div class="header">
-                    <h1>Cadastro</h1>
-                    <p>Faça parte e gerencie sua mineração!</p>
-                </div>
-                <div class="ipt_label">
-                    <label for="nome_empresa_input">Nome Empresa</label>
-                    <input id="nome_empresa_input" type="text">
-                </div>
-                <div class="ipt_label">
-                    <label for="cnpj_input">CNPJ</label>
-                    <input id="cnpj_input" type="text" >
-                </div>
-                <div class="ipt_label">
-                    <label for="email_input">E-mail</label>
-                    <input id="email_input" type="text" >
-                </div>
-                <div class="ipt_label">
-                    <label for="senha_input">Senha</label>
-                    <input id="senha_input" type="password" >
-                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
-                </div>
-                <div class="ipt_label">
-                    <label for="senha_confirm_input">Confirmar Senha</label>
-                    <input id="senha_confirm_input" type="password" >
-                    <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
-                </div>
-                <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
-                <a href="login.html" class="btn-cadastrar">Já possuo conta</a>
-            </div>
+<body>
 
-            <div class="bg-light"></div>
-            <div class="bg-light2"></div>
+  <section class="sessao-login">
+    <div class="container">
+      <a href="index.html"><img src="./assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
+      <div class="formulario slide-in-bottom">
+        <div class="header">
+          <h1>Cadastrar empresa</h1>
+          <p>Faça parte e gerencie sua mineração!</p>
         </div>
-    </section>
+        <div class="ipt_label">
+          <label for="nome_empresa_input">Nome Empresa</label>
+          <input id="nome_empresa_input" type="text" 
+          oninput="verificarCampos()">
+        </div>
+        <div class="ipt_label">
+          <label for="cnpj_input">CNPJ</label>
+          <input id="cnpj_input" type="text" 
+          oninput="verificarCampos()">
+        </div>
+        <div class="ipt_label">
+          <label for="email_input">E-mail</label>
+          <input id="email_input" type="text" 
+          oninput="verificarCampos()">
+        </div>
+        <div class="ipt_label">
+          <label for="senha_input">Senha</label>
+          <input id="senha_input" type="password" 
+          oninput="verificarCampos()">
+          <span class="show-icon material-symbols-outlined" id="senha_input_icon"
+            onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
+        </div>
+        <div class="ipt_label">
+          <label for="senha_confirm_input">Confirmar Senha</label>
+          <input id="senha_confirm_input" type="password" oninput="verificarCampos()">
+          <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon"
+            onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
+        </div>
+        <div class="popuerro" id="popuperro"></div>
+        <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
+        <a href="login.html" class="btn-cadastrar">Já possuo conta</a>
+      </div>
+
+      <div class="bg-light"></div>
+      <div class="bg-light2"></div>
+    </div>
+  </section>
 
   <div class="login">
     <div class="alerta_erro">
@@ -70,49 +78,98 @@
 </html>
 
 <script>
-  function mostrarSenha(inputId, iconId){
+
+    function verificarCampos() {
+    let pop = document.getElementById('popuperro');
+    
+    let nome = document.getElementById('nome_empresa_input').value;
+    let cnpj = document.getElementById('cnpj_input').value;
+    let email = document.getElementById('email_input').value;
+    let senha = document.getElementById('senha_input').value;
+    let confirmSenha = document.getElementById('senha_confirm_input').value;
+    pop.innerHTML = "";
+    
+    for (let i = 0; i < nome.length; i++) {
+        if (nome[i] >= '0' && nome[i] <= '9') {
+            pop.innerHTML = "Nome não pode conter números<br>";
+          
+          }
+        else{
+          pop.innerHTML=""
+        }
+    }
+
+    if (cnpj) {
+        for (let i = 0; i < cnpj.length; i++) {
+            if (!(cnpj[i] >= '0' && cnpj[i] <= '9')) {
+                pop.innerHTML += "CNPJ deve conter apenas números<br>";
+             
+              }
+            else{
+          pop.innerHTML=""
+        }
+        }
+    }
+
+    if (email && (!email.includes('@') || !email.includes('.com'))) {
+        pop.innerHTML += "Digite um email válido<br>";
+    }else{
+          pop.innerHTML=""
+        }
+
+    if (senha && senha.length < 8) {
+        pop.innerHTML += "Senha deve ter no mínimo 8 caracteres<br>";
+    }else{
+          pop.innerHTML=""
+        }
+
+    }
+
+function mostrarSenha(inputId, iconId) {
     input = document.getElementById(inputId);
     icon = document.getElementById(iconId);
-    if(icon.innerText == "visibility_off"){
-        input.type = "text";
-        icon.innerText = "visibility";
-    } else{
-        input.type = "password";
-        icon.innerText = "visibility_off";
+    if (icon.innerText == "visibility_off") {
+      input.type = "text";
+      icon.innerText = "visibility";
+    } else {
+      input.type = "password";
+      icon.innerText = "visibility_off";
     }
   }
 
 
-  async function cadastrar() {
-    var nomeEmpresaVar = nome_empresa_input.value;
-    var cnpjVar = cnpj_input.value;
-    var emailVar = email_input.value;
-    var senhaVar = senha_input.value;
-    var confirmacaoSenhaVar = senha_confirm_input.value;
-    
 
-    
+  async function cadastrar() {
+
+
+    let nomeEmpresaVar = nome_empresa_input.value;
+    let cnpjVar = cnpj_input.value;
+    let emailVar = email_input.value;
+    let senhaVar = senha_input.value;
+    let confirmacaoSenhaVar = senha_confirm_input.value;
+
     if (
       nomeEmpresaVar == "" ||
       cnpjVar == "" ||
       emailVar == "" ||
       senhaVar == "" ||
-      confirmacaoSenhaVar == "" 
-    ){
+      confirmacaoSenhaVar == ""
+    ) {
       cardErro.style.display = "block";
       mensagem_erro.innerHTML =
         "(Mensagem de erro para todos os campos em branco)";
 
       finalizarAguardar();
       return false;
-    } else if(senhaVar != confirmacaoSenhaVar){
+    } else if (senhaVar != confirmacaoSenhaVar) {
       mensagem_erro.innerHTML = "As senhas não coincidem.";
     }
     else {
       setInterval(sumirMensagem, 5000);
     }
 
-     respone = await fetch(`/cadastrarEmpresa/`, {
+
+    respone = await fetch(`/cadastrarEmpresa/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -151,7 +208,10 @@
     return false;
   }
 
-  
+
+
+
+
   function sumirMensagem() {
     cardErro.style.display = "none";
   }
