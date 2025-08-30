@@ -257,22 +257,17 @@
         const tbody = document.getElementById('tableConteiner');
         const linhas = tbody.getElementsByTagName('tr');
 
-        console.log(filtro);
-
         for (let i = 0; i < linhas.length; i++) {
             const row = linhas[i];
 
-            
             const nome = (row.querySelector('.nome').innerText || '').toLowerCase();
             const email = (row.querySelector('.email').innerText || '').toLowerCase();
             const cpf = (row.querySelector('.cpf').innerText || '').toLowerCase();
             const cargo = (row.querySelector('.funcao').innerText || '').toLowerCase();
-            const estado = (row.querySelector('.estado')?.innerText || '').toLowerCase();
-            const matchesFiltro = (filtro == 'todos') ? true : (estado == filtro);
-            
-            console.log(row);
+            const dtCadastro = (row.querySelector('.dt_cadastro').innerText || '').toLowerCase();
+            const matchesFiltro = (filtro == 'todos') ? true : (cargo == filtro);
 
-            if ((nome.includes(pesquisa) || email.includes(pesquisa) || cpf.includes(pesquisa) || cargo.includes(pesquisa)) && matchesFiltro) {
+            if ((nome.includes(pesquisa) || email.includes(pesquisa) || cpf.includes(pesquisa) || dtCadastro.includes(pesquisa)) && matchesFiltro) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
