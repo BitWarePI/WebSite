@@ -175,97 +175,59 @@
     }
 
     function carregarFuncionarios(){
-        // empresas = [
-        //     {
-        //         "nome": 'Arthur INC.',
-        //         "email": 'arthur@gmail.com',
-        //         "cpnj": '00.623.904/0001-73',
-        //         "dtCadastro": '05/06/2025',
-        //         "estado": 'ativo'
-        //     },
-        //     {
-        //         "nome": 'bitcorp.',
-        //         "email": 'bitcorp@gmail.com',
-        //         "cpnj": '00.626.914/0001-73',
-        //         "dtCadastro": '12/06/2025',
-        //         "estado": 'ativo'
-        //     },
-        //     {
-        //         "nome": 'pyWatch',
-        //         "email": 'py.watch@gmail.com',
-        //         "cpnj": '00.526.916/0001-73',
-        //         "dtCadastro": '15/06/2025',
-        //         "estado": 'inativo'
-        //     },
-        // ];
+        var empresaId = localStorage.getItem('fkEmpresa') || 1;
+        fetch('/funcionarios/empresa/' + empresaId)
+            .then(function(res){
+                if (!res.ok) throw new Error('Erro ao buscar funcionários');
+                return res.json();
+            })
+            .then(function(funcionarios){
+                var tbody = document.getElementById('tableConteiner');
+                tbody.innerHTML = '';
 
-        let funcionarios = [
-            {
-                "nome": "Rafael Nogueira",
-                "email": "rafael.nogueira@example.com",
-                "data_cadastro": "2025-08-29",
-                "cpf": "123.456.789-00",
-                "cargo": "Analista"
-            },
-            {
-                "nome": "Juliana Alves",
-                "email": "juliana.alves@example.com",
-                "data_cadastro": "2025-08-28",
-                "cpf": "987.654.321-00",
-                "cargo": "Técnico"
-            },
-            {
-                "nome": "Carlos Mendes",
-                "email": "carlos.mendes@example.com",
-                "data_cadastro": "2025-08-25",
-                "cpf": "456.789.123-99",
-                "cargo": "Analista"
-            },
-            {
-                "nome": "Fernanda Silva",
-                "email": "fernanda.silva@example.com",
-                "data_cadastro": "20-08-2025",
-                "cpf": "321.654.987-11",
-                "cargo": "Técnico"
-            }
-        ]
+                for (var i = 0; i < funcionarios.length; i++) {
+                    var f = funcionarios[i];
+                    var dataFormat = f.data_cadastro ? f.data_cadastro : '';
+                    var cargoClass = (f.cargo).toLowerCase().replace(/\s+/g, '-');
+                    var linha = `
+                        <tr>
+                            <td class="nome"><p>${f.nome}</p></td>
+                            <td class="email">${f.email}</td>
+                            <td class="cpf">${f.cpf}</td>
+                            <td class="dt_cadastro">${dataFormat}</td>
+                            <td class="funcao"><span class="${cargoClass}">${f.cargo}</span></td>
+                            <td class="acao">
+                                <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
+                                <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
+                            </td>
+                        </tr>`;
+                    tbody.innerHTML += linha;
+                }
 
-        tbody = document.getElementById('tableConteiner');
-        tbody.innerHTML = '';
-        for(i = 0; i < funcionarios.length; i++){
-            linha = `
-                <tr>
-                    <td class="nome"><p>${funcionarios[i].nome}</p></td>
-                    <td class="email">${funcionarios[i].email}</td>
-                    <td class="cpf">${funcionarios[i].cpf}</td>
-                    <td class="dt_cadastro">${funcionarios[i].data_cadastro.split('-').join('/')}</td>
-                    <td class="funcao"><span class="${funcionarios[i].cargo.toLowerCase()}">${funcionarios[i].cargo}</span></td>
-                    <td class="acao">
-                        <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                        <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
-                    </td>
-                </tr>
-            `;
-            tbody.innerHTML += linha;
-        }
+                var kpiQuantidade = document.querySelector('.kpi-card .quantidade');
+                if (kpiQuantidade) kpiQuantidade.textContent = funcionarios.length;
+            })
+            .catch(function(err){
+                console.warn(err);
+            });
     }
 
     function pesquisarFuncionario(){
-        const filtro = document.getElementById('filtroPesquisa').value;
-        const pesquisa = document.getElementById('pesquisa_input').value.toLowerCase();
+        var filtro = document.getElementById('filtroPesquisa').value;
+        var pesquisa = document.getElementById('pesquisa_input').value.toLowerCase();
 
-        const tbody = document.getElementById('tableConteiner');
-        const linhas = tbody.getElementsByTagName('tr');
+        var tbody = document.getElementById('tableConteiner');
+        var linhas = tbody.getElementsByTagName('tr');
 
         for (let i = 0; i < linhas.length; i++) {
-            const row = linhas[i];
+            var row = linhas[i];
 
-            const nome = (row.querySelector('.nome').innerText || '').toLowerCase();
-            const email = (row.querySelector('.email').innerText || '').toLowerCase();
-            const cpf = (row.querySelector('.cpf').innerText || '').toLowerCase();
-            const cargo = (row.querySelector('.funcao').innerText || '').toLowerCase();
-            const dtCadastro = (row.querySelector('.dt_cadastro').innerText || '').toLowerCase();
-            const matchesFiltro = (filtro == 'todos') ? true : (cargo == filtro);
+            var nome = (row.querySelector('.nome').innerText).toLowerCase();
+            var email = (row.querySelector('.email').innerText).toLowerCase();
+            var cpf = (row.querySelector('.cpf').innerText).toLowerCase();
+            var cargo = (row.querySelector('.funcao').innerText).toLowerCase();
+            var dtCadastro = (row.querySelector('.dt_cadastro').innerText).toLowerCase();
+            var matchesFiltro = (filtro == 'todos') ? true : (cargo == filtro);
 
             if ((nome.includes(pesquisa) || email.includes(pesquisa) || cpf.includes(pesquisa) || dtCadastro.includes(pesquisa)) && matchesFiltro) {
                 row.style.display = '';
