@@ -69,7 +69,7 @@
     }
 
     function entrar() {
-        aguardar();
+        // aguardar();
 
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
@@ -107,12 +107,18 @@
                     console.log(JSON.stringify(json));
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.ID_USUARIO = json.id;
-                    sessionStorage.AQUARIOS = JSON.stringify(json.aquarios)
+                    sessionStorage.FK_CARGO = json.fkCargo;
+                    sessionStorage.ID_USUARIO = json.idfuncionario
 
-                    setTimeout(function () {
-                        window.location = "./dashboard/cards.html";
-                    }, 1000); // apenas para exibir o loading
+                    if (sessionStorage.FK_CARGO == 1) {
+                        setTimeout(function () {
+                            window.location = "../dashAdm/dashHome.html";
+                        }, 1000);
+                    } else {
+                        setTimeout(function () {
+                            window.location = "../dashEmpresa/dashHome.html";
+                        }, 1000); // apenas para exibir o loading
+                    }
 
                 });
 
