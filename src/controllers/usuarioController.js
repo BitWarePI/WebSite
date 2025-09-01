@@ -16,6 +16,24 @@ function autenticar(req, res) {
                 function (resultadoAutenticar) {
                     console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
                     console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
+
+                    if (resultadoAutenticar.length == 1) {
+                        console.log(resultadoAutenticar);
+
+                        res.json({
+                            idfuncionarios: resultadoAutenticar[0].idfuncionario,
+                            email: resultadoAutenticar[0].email,
+                            nome: resultadoAutenticar[0].nome,
+                            senha: resultadoAutenticar[0].senha,
+                            fkEmpresa: resultadoAutenticar[0].fkEmpresa,
+                            fkCargo: resultadoAutenticar[0].fkCargo
+                        });
+
+                    } else if (resultadoAutenticar.length == 0) {
+                        res.status(403).send("Email e/ou senha inválido(s)");
+                    } else {
+                        res.status(403).send("Mais de um usuário com o mesmo login e senha!");
+                    }
                 }
             ).catch(
                 function (erro) {
@@ -30,14 +48,13 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    var nome = req.body.nome;
-    var sobrenome = req.body.sobrenome;
-    var email = req.body.email;
-    var senha = req.body.senha;
-    var foto = req.body.foto; // isso aqui não vai ficar assim se realmente usar um arquivo
-    var fkEmpresa = req.body.fkEmpresa;
-    var fkCargo = req.body.fkCargo;
-    var usuarioSessao = req.body.usuarioSessao; // aqui vai ser para depois confirmar se aquele usuário pode fazer aquela ação
+    var nome = req.body.nomeServer;
+    var sobrenome = req.body.sobrenomeServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+    var fkCargo = req.body.fkCargoServer;
+    var fkEmpresa = req.body.fkEmpresaServer;
+    // var usuarioSessao = req.body.usuarioSessao; // aqui vai ser para depois confirmar se aquele usuário pode fazer aquela ação
     // Faça as validações dos valores
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
@@ -54,7 +71,7 @@ function cadastrar(req, res) {
     } else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, sobrenome, email, senha, foto, fkCargo, fkEmpresa)
+        usuarioModel.cadastrar(nome, sobrenome, email, senha, fkCargo, fkEmpresa)
             .then(
                 function (resultado) {
                     res.json(resultado);
