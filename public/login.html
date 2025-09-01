@@ -107,10 +107,9 @@
                     console.log(JSON.stringify(json));
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.FK_CARGO = json.fkCargo;
-                    sessionStorage.ID_USUARIO = json.idfuncionario
+                    sessionStorage.NIVEL_ACESSO = json.nivelAcesso
 
-                    if (sessionStorage.FK_CARGO == 1) {
+                    if (sessionStorage.NIVEL_ACESSO == 1) {
                         setTimeout(function () {
                             window.location = "../dashAdm/dashHome.html";
                         }, 1000);

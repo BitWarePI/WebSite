@@ -21,12 +21,9 @@ function autenticar(req, res) {
                         console.log(resultadoAutenticar);
 
                         res.json({
-                            idfuncionarios: resultadoAutenticar[0].idfuncionario,
                             email: resultadoAutenticar[0].email,
-                            nome: resultadoAutenticar[0].nome,
                             senha: resultadoAutenticar[0].senha,
-                            fkEmpresa: resultadoAutenticar[0].fkEmpresa,
-                            fkCargo: resultadoAutenticar[0].fkCargo
+                            nivelAcesso: resultadoAutenticar[0].nivelAcesso
                         });
 
                     } else if (resultadoAutenticar.length == 0) {
