@@ -53,13 +53,13 @@ table tr .email{
     width: 100%;
     box-sizing: border-box;
 }
-table tr .funcao{
+table tr .funcao , table tr .estado{
     flex: 1;
     min-width: fit-content;
     max-width: 100px;
     box-sizing: border-box;
 }
-table tr td.funcao span{
+table tr td.funcao span, table tr .estado span{
     padding: 8px;
     box-sizing: border-box;
     border-radius: 8px;
