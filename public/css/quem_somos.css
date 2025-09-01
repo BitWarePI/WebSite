@@ -64,3 +64,18 @@
     object-position: right;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
 }
+
+.section-equipe{
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    justify-content: start;
+}
+.section-equipe .container{
+    gap: 42px;
+    padding: 42px 0px;
+}
+
+.section-equipe .container .texto-equipe{
+    color: purple;
+    font-size: 2em
+}
