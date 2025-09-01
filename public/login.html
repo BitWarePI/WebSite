@@ -44,13 +44,6 @@
             <div class="bg-light2"></div>
         </div>
     </section>
-    <div class="login">
-        <div class="alerta_erro">
-            <div class="card_erro" id="cardErro">
-                <span id="mensagem_erro"></span>
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>
@@ -75,8 +68,7 @@
         var senhaVar = senha_input.value;
 
         if (emailVar == "" || senhaVar == "") {
-            cardErro.style.display = "block"
-            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
+            console.log("Há pelo menos um campo em branco!")
             finalizarAguardar();
             return false;
         }
