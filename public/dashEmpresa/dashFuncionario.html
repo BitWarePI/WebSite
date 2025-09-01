@@ -69,12 +69,12 @@
                 <div class="pesquisa">
                     <div class="ipt_label">
                         <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
+                        <input id="pesquisa_input" type="text" placeholder="" oninput="pesquisarFuncionario()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarFuncionario()">search</button>
                     </div>
                     <div class="selectFiltro">
                         <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa">
+                        <select id="filtroPesquisa" onchange="pesquisarFuncionario()">
                             <option value="todos">Todos</option>
                             <option value="analista">Analista</option>
                             <option value="técnico">Técnico</option>
@@ -98,7 +98,7 @@
                             <td class="email">arthurfelix@gmail.com</td>
                             <td class="cpf">124.234.125-66</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="funcao"><span class="gerente">Gerente</span></td>
+                            <td class="funcao"><span class="técnico">Técnico</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                                 <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
@@ -109,7 +109,7 @@
                             <td class="email">james.paul@gmail.com</td>
                             <td class="cpf">123.421.221-44</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="funcao"><span class="analista">Analísta</span></td>
+                            <td class="funcao"><span class="analista">Analista</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                                 <button class="material-symbols-outlined ativo" title="Ativar">check</button>
