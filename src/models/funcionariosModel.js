@@ -2,13 +2,14 @@ var database = require('../database/config');
 
 function listarFuncionariosPorEmpresa(empresaId) {
     var instrucaoSql = `
-        SELECT u.id, u.nome, u.email, u.cpf,
+        SELECT u.idUsuario, f.nome, f.sobrenome, u.email, f.validado+0 AS estado,
                DATE_FORMAT(u.data_cadastro, "%d/%m/%Y") AS data_cadastro,
-               c.nome AS cargo
-        FROM usuarios u
-        LEFT JOIN cargos c ON u.cargo_id = c.id
-        WHERE u.empresa_id = ?
-        ORDER BY u.nome
+               c.descricao AS cargo
+        FROM Usuario u
+        INNER JOIN Funcionario f ON u.idUsuario = f.fkUsuario
+        LEFT JOIN Cargo c ON f.fkCargo = c.idCargo
+        WHERE f.fkEmpresa = ${empresaId}
+        ORDER BY f.nome;
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
