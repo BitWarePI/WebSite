@@ -19,6 +19,7 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 //var empresaRouter = require("./src/routes/empresas");
 var cargoRouter = require("./src/routes/cargos");
+var funcionariosRouter = require("./src/routes/funcionarios");
 //var emailRouter = require("./src/routes/emails");
 
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
+app.use("/funcionarios", funcionariosRouter);
 //app.use("/empresas", empresaRouter);
 app.use("/cargos", cargoRouter);
 //app.use("/emails", emailRouter);
