@@ -8,4 +8,8 @@ router.get("/empresa/:id", function (req, res) {
     funcionariosController.listarFuncionariosPorEmpresa(req, res);
 });
 
+router.post("/cadastrar", function (req, res) {
+    funcionariosController.cadastrarFuncionario(req, res);
+});
+
 module.exports = router;

@@ -187,6 +187,69 @@
         }
     }
 
+  function mostrarSenha(inputId, iconId){
+        input = document.getElementById(inputId);
+        icon = document.getElementById(iconId);
+        if(icon.innerText == "visibility_off"){
+            input.type = "text";
+            icon.innerText = "visibility";
+        } else{
+            input.type = "password";
+            icon.innerText = "visibility_off";
+        }
+    }
+
+    function cadastrarFunconario(){
+        var nome = document.getElementById('nome_input').value;
+        var sobrenome = document.getElementById('sobrenome_input').value;
+        var email = document.getElementById('email_input').value;
+        var senha = document.getElementById('senha_input').value;
+        var senhaConfirm = document.getElementById('senha_confirm_input').value;
+        var cargo = document.getElementById('cargo_select').value;
+        var empresaId = sessionStorage.getItem('idEmpresa');
+
+        if (!nome || !sobrenome || !email || !senha || !senhaConfirm || !cargo) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (senha !== senhaConfirm) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+
+        var funcionarioData = {
+            nomeServer: nome,
+            sobrenomeServer: sobrenome,
+            emailServer: email,
+            senhaServer: senha,
+            cargoServer: cargo,
+            empresaIdServer: 1 // Usando 1 temporariamente
+        };
+
+
+        fetch('/funcionarios/cadastrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(funcionarioData)
+        })
+        .then(function(res){
+            if (!res.ok) throw new Error('Erro ao cadastrar funcionário');
+            return res.json();
+        })
+        .then(function(response){
+            alert('Funcionário cadastrado com sucesso!');
+            abrirModal();
+            carregarFuncionarios();
+        })
+        .catch(function(err){
+            console.warn(err);
+            alert('Erro ao cadastrar funcionário. Verifique os dados e tente novamente.');
+        });
+    }
+
     function capitalizarPrimeiraLetra(str) {
         if (str.length === 0) {
             return ""; // Retorna string vazia se a entrada for vazia

@@ -19,6 +19,31 @@ function listarFuncionariosPorEmpresa(req, res) {
     }
 }
 
+function cadastrarFuncionario(req, res) {
+    var nome = req.body.nomeServer;
+    var sobrenome = req.body.sobrenomeServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+    var cargo = req.body.cargoServer;
+    var empresaId = req.body.empresaIdServer;
+    console.log(nome, sobrenome, email, senha, cargo, empresaId);
+
+    if (nome == undefined) {
+        res.status(400).send("O nome do funcionário está undefined!");
+    } else {
+        // Adicione aqui a lógica para cadastrar o funcionário usando funcionariosModel
+        funcionariosModel.cadastrarFuncionario(nome, sobrenome, email, senha, cargo, empresaId)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao cadastrar o funcionário! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
-    listarFuncionariosPorEmpresa
+    listarFuncionariosPorEmpresa,
+    cadastrarFuncionario
 }
