@@ -1,10 +1,12 @@
 CREATE DATABASE bitware_db;
+USE bitware_db;
 
 CREATE TABLE bitware_db.Usuario (
 	idUsuario INT AUTO_INCREMENT,
 	email VARCHAR(200) NOT NULL UNIQUE,
     senha VARCHAR(200) NOT NULL,
-    nivelAcesso INT NOT NULL,
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    nivelAcesso INT NOT NULL DEFAULT 2,
     PRIMARY KEY (idUsuario)
 );
 

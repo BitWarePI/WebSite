@@ -224,7 +224,7 @@
             emailServer: email,
             senhaServer: senha,
             cargoServer: cargo,
-            empresaIdServer: 1 // Usando 1 temporariamente
+            empresaIdServer: empresaId 
         };
 
 
@@ -259,7 +259,7 @@
 
     function carregarFuncionarios(){
         var empresaId = sessionStorage.getItem('idEmpresa');
-        fetch('/funcionarios/empresa/' + 1)
+        fetch('/funcionarios/empresa/' + empresaId)
             .then(function(res){
                 if (!res.ok) throw new Error('Erro ao buscar funcionários');
                 return res.json();
