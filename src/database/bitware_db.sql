@@ -15,6 +15,7 @@ CREATE TABLE bitware_db.Empresa (
   cnpj VARCHAR(14) NOT NULL,
   nome VARCHAR(200) NOT NULL,
   fkUsuario INT NOT NULL,
+  chave BINARY(16), -- isso aqui tem que deixar not null depois
   PRIMARY KEY (idEmpresa),
   CONSTRAINT fk_Usuario_Empresa
     FOREIGN KEY (fkUsuario)
@@ -45,4 +46,35 @@ CREATE TABLE bitware_db.Funcionario (
   CONSTRAINT fk_Empresa_Funcionario
     FOREIGN KEY (fkEmpresa)
     REFERENCES bitware_db.Empresa (idEmpresa)
+);
+
+CREATE TABLE bitware_db.Maquina (
+	idMaquina INT AUTO_INCREMENT,
+    hostname VARCHAR(50) NOT NULL,
+    fkEmpresa INT NOT NULL,
+    PRIMARY KEY (idMaquina),
+    CONSTRAINT fk_Empresa_Maquina
+		FOREIGN KEY (fkEmpresa)
+		REFERENCES bitware_db.Empresa (idEmpresa)
+);
+
+CREATE TABLE bitware_db.Componente (
+	idComponente INT AUTO_INCREMENT,
+    descricao VARCHAR(70),
+    PRIMARY KEY (idComponente)
+);
+
+CREATE TABLE bitware_db.Parametro (
+	fkEmpresa INT,
+    fkComponente INT,
+    valor INT,
+    unidadeMedia VARCHAR(20),
+    PRIMARY KEY (fkEmpresa, fkComponente),
+    CONSTRAINT fk_Empresa_Parametro
+		FOREIGN KEY (fkEmpresa)
+		REFERENCES bitware_db.Empresa (idEmpresa),
+	CONSTRAINT fk_Componente_Parametro
+		FOREIGN KEY (fkComponente)
+		REFERENCES bitware_db.Componente (idComponente)
+
 );
