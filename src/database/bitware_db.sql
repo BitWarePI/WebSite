@@ -1,25 +1,14 @@
+drop DATABASE bitware_db;
 CREATE DATABASE bitware_db;
 USE bitware_db;
 
-CREATE TABLE bitware_db.Usuario (
-	idUsuario INT AUTO_INCREMENT,
-	email VARCHAR(200) NOT NULL UNIQUE,
-    senha VARCHAR(200) NOT NULL,
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    nivelAcesso INT NOT NULL DEFAULT 2,
-    PRIMARY KEY (idUsuario)
-);
 
 CREATE TABLE bitware_db.Empresa (
   idEmpresa INT NOT NULL AUTO_INCREMENT,
   cnpj VARCHAR(14) NOT NULL,
   nome VARCHAR(200) NOT NULL,
-  fkUsuario INT NOT NULL,
   chave BINARY(16), -- isso aqui tem que deixar not null depois
-  PRIMARY KEY (idEmpresa),
-  CONSTRAINT fk_Usuario_Empresa
-    FOREIGN KEY (fkUsuario)
-    REFERENCES bitware_db.Usuario (idUsuario)
+  PRIMARY KEY (idEmpresa)
 );
 
 CREATE TABLE bitware_db.Cargo (
@@ -32,17 +21,16 @@ CREATE TABLE bitware_db.Funcionario (
   idFuncionario INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(60) NOT NULL,
   sobrenome VARCHAR(100) NOT NULL,
+  email VARCHAR(200) NOT NULL UNIQUE,
+  senha VARCHAR(200) NOT NULL,
+  dataCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   validado BIT(1),
   fkCargo INT NOT NULL,
-  fkUsuario INT NOT NULL,
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idFuncionario),
   CONSTRAINT fk_Funcionario_Cargo
     FOREIGN KEY (fkCargo)
     REFERENCES bitware_db.Cargo (idCargo),
-  CONSTRAINT fk_Usuario_Funcionario
-    FOREIGN KEY (fkUsuario)
-    REFERENCES bitware_db.Usuario (idUsuario),
   CONSTRAINT fk_Empresa_Funcionario
     FOREIGN KEY (fkEmpresa)
     REFERENCES bitware_db.Empresa (idEmpresa)
@@ -78,3 +66,9 @@ CREATE TABLE bitware_db.Parametro (
 		REFERENCES bitware_db.Componente (idComponente)
 
 );
+
+/*CREATE TRIGGER bitware_db.cadastrarAdmin AFTER INSERT ON bitware_db.Empresa FOR EACH ROW
+BEGIN
+	-- INSERT INTO bitware_db.Funcionario
+    -- depois termino
+END*/
