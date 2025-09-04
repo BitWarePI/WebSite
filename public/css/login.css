@@ -92,6 +92,11 @@
     }
 }
 
+.modal-container .body{
+    width: fit-content;
+    height: fit-content;
+}
+
 @media screen and (max-width: 768px){
     .sessao-login .bg-light,
     .sessao-login .bg-light2{
