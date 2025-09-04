@@ -1,6 +1,5 @@
 drop DATABASE bitware_db;
 CREATE DATABASE bitware_db;
-USE bitware_db;
 
 
 CREATE TABLE bitware_db.Empresa (
@@ -20,11 +19,11 @@ CREATE TABLE bitware_db.Cargo (
 CREATE TABLE bitware_db.Funcionario (
   idFuncionario INT NOT NULL AUTO_INCREMENT,
   nome VARCHAR(60) NOT NULL,
-  sobrenome VARCHAR(100) NOT NULL,
+  sobrenome VARCHAR(100),
   email VARCHAR(200) NOT NULL UNIQUE,
   senha VARCHAR(200) NOT NULL,
-  dataCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-  validado BIT(1),
+  dataCadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  validado BIT(1) NOT NULL DEFAULT 0,
   fkCargo INT NOT NULL,
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idFuncionario),
@@ -48,15 +47,15 @@ CREATE TABLE bitware_db.Maquina (
 
 CREATE TABLE bitware_db.Componente (
 	idComponente INT AUTO_INCREMENT,
-    descricao VARCHAR(70),
+    descricao VARCHAR(70) NOT NULL,
     PRIMARY KEY (idComponente)
 );
 
 CREATE TABLE bitware_db.Parametro (
 	fkEmpresa INT,
     fkComponente INT,
-    valor INT,
-    unidadeMedia VARCHAR(20),
+    valor INT NOT NULL,
+    unidadeMedia VARCHAR(10) NOT NULL,
     PRIMARY KEY (fkEmpresa, fkComponente),
     CONSTRAINT fk_Empresa_Parametro
 		FOREIGN KEY (fkEmpresa)
@@ -66,9 +65,4 @@ CREATE TABLE bitware_db.Parametro (
 		REFERENCES bitware_db.Componente (idComponente)
 
 );
-
-/*CREATE TRIGGER bitware_db.cadastrarAdmin AFTER INSERT ON bitware_db.Empresa FOR EACH ROW
-BEGIN
-	-- INSERT INTO bitware_db.Funcionario
-    -- depois termino
-END*/
+INSERT INTO bitware_db.Cargo (descricao) VALUE ("Administrador");
