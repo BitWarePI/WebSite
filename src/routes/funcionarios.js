@@ -12,4 +12,12 @@ router.post("/cadastrar", function (req, res) {
     funcionariosController.cadastrarFuncionario(req, res);
 });
 
+router.put("/inativar/:id", function (req, res) {
+    funcionariosController.inativarFuncionario(req, res);
+});
+
+router.put("/ativar/:id", function (req, res) {
+    funcionariosController.ativarFuncionario(req, res);
+});
+
 module.exports = router;

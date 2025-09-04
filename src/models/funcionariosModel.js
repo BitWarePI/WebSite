@@ -2,7 +2,7 @@ var database = require('../database/config');
 
 function listarFuncionariosPorEmpresa(empresaId) {
     var instrucaoSql = `
-        SELECT f.nome, f.sobrenome, f.email, f.validado+0 AS estado,
+        SELECT f.idFuncionario, f.nome, f.sobrenome, f.email, f.validado+0 AS estado,
                DATE_FORMAT(f.dataCadastro, "%d/%m/%Y") AS data_cadastro,
                c.descricao AS cargo
         FROM Funcionario f
@@ -25,8 +25,30 @@ function cadastrarFuncionario(nome, sobrenome, email, senha, cargo, empresaId) {
     return database.executar(instrucaoFuncionario);
 }
 
+function inativarFuncionario(funcionarioId) {
+    var instrucaoSql = `
+        UPDATE Funcionario 
+        SET validado = 0
+        WHERE idFuncionario = ${funcionarioId};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function ativarFuncionario(funcionarioId) {
+    var instrucaoSql = `
+        UPDATE Funcionario
+        SET validado = 1
+        WHERE idFuncionario = ${funcionarioId};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 
 module.exports = {
     listarFuncionariosPorEmpresa,
-    cadastrarFuncionario
+    cadastrarFuncionario,
+    inativarFuncionario,
+    ativarFuncionario
 };

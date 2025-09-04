@@ -43,7 +43,39 @@ function cadastrarFuncionario(req, res) {
     }
 }
 
+function inativarFuncionario(req, res) {
+    var funcionarioId = req.params.id;
+    if (funcionarioId == undefined) {
+        res.status(400).send("O id do funcionário está undefined!");
+    } else {
+        funcionariosModel.inativarFuncionario(funcionarioId)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }   
+}
+
+function ativarFuncionario(req, res) {
+    var funcionarioId = req.params.id;
+    if (funcionarioId == undefined) {
+        res.status(400).send("O id do funcionário está undefined!");
+    } else {
+        funcionariosModel.ativarFuncionario(funcionarioId)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     listarFuncionariosPorEmpresa,
-    cadastrarFuncionario
+    cadastrarFuncionario,
+    inativarFuncionario,
+    ativarFuncionario
 }

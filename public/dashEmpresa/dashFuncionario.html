@@ -101,7 +101,7 @@
                             <td class="funcao"><span class="técnico">Técnico</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                                <button class="material-symbols-outlined inativo" title="Inativar" id="inativarFuncionario">remove</button>
+                                <button class="material-symbols-outlined inativo" title="Inativar" onclick="inativarFuncionario()">remove</button>
                             </td>
                         </tr>
                         <tr>
@@ -112,7 +112,7 @@
                             <td class="funcao"><span class="analista">Analista</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                                <button class="material-symbols-outlined ativo" title="Ativar" id="ativarFuncionario">check</button>
+                                <button class="material-symbols-outlined ativo" title="Ativar" onclick="ativarFuncionario()">check</button>
                             </td>
                         </tr>
                     </tbody>
@@ -284,7 +284,11 @@
                             <td class="estado"><span class="${estadoClass}">${f.estado == 1 ? 'Ativo' : 'Inativo'}</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                                <button class="material-symbols-outlined ${f.estado == 1 ? 'inativo' : 'ativo'}" title="${f.estado == 1 ? 'Inativo' : 'Ativo'}" id="${f.estado == 1 ? 'inativarFuncionario' : 'ativarFuncionario'}">${f.estado == 1 ? 'remove' : 'check'}</button>
+                                <button class="material-symbols-outlined ${f.estado == 1 ? 'inativo' : 'ativo'}" 
+                                    title="${f.estado == 1 ? 'Inativar' : 'Ativar'}" 
+                                    onclick="${f.estado == 1 ? `inativarFuncionario(${f.idFuncionario})` : `ativarFuncionario(${f.idFuncionario})`}">
+                                    ${f.estado == 1 ? 'remove' : 'check'}
+                                </button>
                             </td>
                         </tr>`;
                     tbody.innerHTML += linha;
@@ -297,6 +301,53 @@
                 console.warn(err);
             });
     }
+
+    function inativarFuncionario(funcionarioId) {
+        console.log("Inativando funcionário ID:", funcionarioId);
+        fetch(`/funcionarios/inativar/${funcionarioId}`, {
+            method: 'PUT'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao inativar funcionário");
+            return res.json();
+        })
+        .then(() => {
+            alert("Funcionário inativado com sucesso!");
+            carregarFuncionarios();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro ao inativar funcionário.");
+        });
+    }
+
+    function ativarFuncionario(funcionarioId) {
+        fetch(`/funcionarios/ativar/${funcionarioId}`, {
+            method: 'PUT'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao ativar funcionário");
+            return res.json();
+        })
+        .then(() => {
+            alert("Funcionário ativado com sucesso!");
+            carregarFuncionarios();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro ao ativar funcionário.");
+        });
+    }
+
+    // function inativarFuncionario(){
+    //     alert('Função de inativar funcionário ainda não implementada.');
+    //     window.location.reload();
+    // }
+
+    // function ativarFuncionario(){
+    //     alert('Função de ativar funcionário ainda não implementada.');
+    //     window.location.reload();
+    // }
 
     function pesquisarFuncionario(){
         var filtro = document.getElementById('filtroPesquisa').value;
