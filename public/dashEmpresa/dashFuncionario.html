@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
     <link rel="stylesheet" href="../css/animacao.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,menu,open_in_full,remove,search,visibility,visibility_off,work" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=apartment,check,close,filter_alt,home,lock,menu,open_in_full,remove,search,visibility,visibility_off,work" />
     <link rel="icon" href="../assets/icon/favicon2.png">
     <title>Dashboard | BitWare</title>
 </head>
@@ -27,6 +27,12 @@
                         <a class="link ativo" href="dashFuncionario.html">
                             <span class="material-symbols-outlined icon">work</span>
                             <span class="titulo">Funcionários</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="atualizar-senha.html">
+                            <span class="material-symbols-outlined icon">lock</span>
+                            <span class="titulo">Atualizar senha</span>
                         </a>
                     </li>
                 </ul>
@@ -63,15 +69,15 @@
                 <div class="pesquisa">
                     <div class="ipt_label">
                         <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
+                        <input id="pesquisa_input" type="text" placeholder="" oninput="pesquisarFuncionario()">
+                        <button class="material-symbols-outlined btn-icon" onclick="pesquisarFuncionario()">search</button>
                     </div>
                     <div class="selectFiltro">
                         <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa">
+                        <select id="filtroPesquisa" onchange="pesquisarFuncionario()">
                             <option value="todos">Todos</option>
-                            <option value="ativo">Ativos</option>
-                            <option value="inativo">Inativos</option>
+                            <option value="analista">Analista</option>
+                            <option value="técnico">Técnico</option>
                         </select>
                     </div>
                 </div>
@@ -80,22 +86,22 @@
                         <tr>
                             <th class="nome">Nome</th>
                             <th class="email">Email</th>
-                            <th class="cpf">CPF</th>
                             <th class="dt_cadastro">Dt.Cadastro</th>
                             <th class="funcao">Cargo</th>
+                            <th class="estado">Estado</th>
                             <th class="acao">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="">
+                    <tbody class="" id="tableConteiner">
                         <tr>
                             <td class="nome"> <p>Arthur Félix</p></td>
                             <td class="email">arthurfelix@gmail.com</td>
                             <td class="cpf">124.234.125-66</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="funcao"><span class="gerente">Gerente</span></td>
+                            <td class="funcao"><span class="técnico">Técnico</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                                <button class="material-symbols-outlined inativo" title="Inativar">remove</button>
+                                <button class="material-symbols-outlined inativo" title="Inativar" onclick="inativarFuncionario()">remove</button>
                             </td>
                         </tr>
                         <tr>
@@ -103,10 +109,10 @@
                             <td class="email">james.paul@gmail.com</td>
                             <td class="cpf">123.421.221-44</td>
                             <td class="dt_cadastro">05/01/2026</td>
-                            <td class="funcao"><span class="analista">Analísta</span></td>
+                            <td class="funcao"><span class="analista">Analista</span></td>
                             <td class="acao">
                                 <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                                <button class="material-symbols-outlined ativo" title="Ativar">check</button>
+                                <button class="material-symbols-outlined ativo" title="Ativar" onclick="ativarFuncionario()">check</button>
                             </td>
                         </tr>
                     </tbody>
@@ -147,7 +153,14 @@
                         <input id="senha_confirm_input" type="password" placeholder="">
                         <span class="btn-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
                     </div>
-                    <button class="btn submit" onclick="cadastrar()">Cadastrar</button>
+                    <div>
+                        <select class="ipt_label" id="cargo_select">
+                            <option value="#" selected disabled>Cargo</option>
+                            <option value="analista">Analista</option>
+                            <option value="técnico">Técnico</option>
+                        </select>
+                    </div>
+                    <button class="btn submit" onclick="cadastrarFunconario()">Cadastrar</button>
                 </div>
             </div>
         </div>
@@ -174,34 +187,194 @@
         }
     }
 
-    function carregarEmpresas(){
-        empresas = [
-            {
-                "nome": 'Arthur INC.',
-                "email": 'arthur@gmail.com',
-                "cpnj": '00.623.904/0001-73',
-                "dtCadastro": '05/06/2025',
-                "estado": 'ativo'
-            },
-            {
-                "nome": 'bitcorp.',
-                "email": 'bitcorp@gmail.com',
-                "cpnj": '00.626.914/0001-73',
-                "dtCadastro": '12/06/2025',
-                "estado": 'ativo'
-            },
-            {
-                "nome": 'pyWatch',
-                "email": 'py.watch@gmail.com',
-                "cpnj": '00.526.916/0001-73',
-                "dtCadastro": '15/06/2025',
-                "estado": 'inativo'
-            },
-        ];
+  function mostrarSenha(inputId, iconId){
+        input = document.getElementById(inputId);
+        icon = document.getElementById(iconId);
+        if(icon.innerText == "visibility_off"){
+            input.type = "text";
+            icon.innerText = "visibility";
+        } else{
+            input.type = "password";
+            icon.innerText = "visibility_off";
+        }
     }
 
-    function pesquisarEmpresa(){
+    function cadastrarFunconario(){
+        var nome = document.getElementById('nome_input').value;
+        var sobrenome = document.getElementById('sobrenome_input').value;
+        var email = document.getElementById('email_input').value;
+        var senha = document.getElementById('senha_input').value;
+        var senhaConfirm = document.getElementById('senha_confirm_input').value;
+        var cargo = document.getElementById('cargo_select').value;
+        var empresaId = sessionStorage.getItem('idEmpresa');
 
+        if (!nome || !sobrenome || !email || !senha || !senhaConfirm || !cargo) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (senha !== senhaConfirm) {
+            alert('As senhas não coincidem.');
+            return;
+        }
+
+        var funcionarioData = {
+            nomeServer: nome,
+            sobrenomeServer: sobrenome,
+            emailServer: email,
+            senhaServer: senha,
+            cargoServer: cargo,
+            empresaIdServer: empresaId 
+        };
+
+
+        fetch('/funcionarios/cadastrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(funcionarioData)
+        })
+        .then(function(res){
+            if (!res.ok) throw new Error('Erro ao cadastrar funcionário');
+            return res.json();
+        })
+        .then(function(response){
+            alert('Funcionário cadastrado com sucesso!');
+            abrirModal();
+            carregarFuncionarios();
+        })
+        .catch(function(err){
+            console.warn(err);
+            alert('Erro ao cadastrar funcionário. Verifique os dados e tente novamente.');
+        });
+    }
+
+    function capitalizarPrimeiraLetra(str) {
+        if (str.length === 0) {
+            return ""; // Retorna string vazia se a entrada for vazia
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+    function carregarFuncionarios(){
+        var empresaId = sessionStorage.getItem('idEmpresa');
+        fetch('/funcionarios/empresa/' + empresaId)
+            .then(function(res){
+                if (!res.ok) throw new Error('Erro ao buscar funcionários');
+                return res.json();
+            })
+            .then(function(funcionarios){
+                var tbody = document.getElementById('tableConteiner');
+                tbody.innerHTML = '';
+
+                for (var i = 0; i < funcionarios.length; i++) {
+                    var f = funcionarios[i];
+                    var dataFormat = f.data_cadastro ? f.data_cadastro : '';
+                    var cargoClass = (f.cargo).toLowerCase().replace(/\s+/g, '-');
+                    var estadoClass = (f.estado == 1) ? ' ativo' : 'inativo';
+
+                    console.log(f);
+                    var linha = `
+                        <tr>
+                            <td class="nome"><p>${f.nome} ${f.sobrenome}</p></td>
+                            <td class="email">${f.email}</td>
+                            <td class="dt_cadastro">${dataFormat}</td>
+                            <td class="funcao"><span class="${cargoClass}">${capitalizarPrimeiraLetra(f.cargo)}</span></td>
+                            <td class="estado"><span class="${estadoClass}">${f.estado == 1 ? 'Ativo' : 'Inativo'}</span></td>
+                            <td class="acao">
+                                <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
+                                <button class="material-symbols-outlined ${f.estado == 1 ? 'inativo' : 'ativo'}" 
+                                    title="${f.estado == 1 ? 'Inativar' : 'Ativar'}" 
+                                    onclick="${f.estado == 1 ? `inativarFuncionario(${f.idFuncionario})` : `ativarFuncionario(${f.idFuncionario})`}">
+                                    ${f.estado == 1 ? 'remove' : 'check'}
+                                </button>
+                            </td>
+                        </tr>`;
+                    tbody.innerHTML += linha;
+                }
+
+                var kpiQuantidade = document.querySelector('.kpi-card .quantidade');
+                if (kpiQuantidade) kpiQuantidade.textContent = funcionarios.length;
+            })
+            .catch(function(err){
+                console.warn(err);
+            });
+    }
+
+    function inativarFuncionario(funcionarioId) {
+        console.log("Inativando funcionário ID:", funcionarioId);
+        fetch(`/funcionarios/inativar/${funcionarioId}`, {
+            method: 'PUT'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao inativar funcionário");
+            return res.json();
+        })
+        .then(() => {
+            alert("Funcionário inativado com sucesso!");
+            carregarFuncionarios();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro ao inativar funcionário.");
+        });
+    }
+
+    function ativarFuncionario(funcionarioId) {
+        fetch(`/funcionarios/ativar/${funcionarioId}`, {
+            method: 'PUT'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao ativar funcionário");
+            return res.json();
+        })
+        .then(() => {
+            alert("Funcionário ativado com sucesso!");
+            carregarFuncionarios();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro ao ativar funcionário.");
+        });
+    }
+
+    // function inativarFuncionario(){
+    //     alert('Função de inativar funcionário ainda não implementada.');
+    //     window.location.reload();
+    // }
+
+    // function ativarFuncionario(){
+    //     alert('Função de ativar funcionário ainda não implementada.');
+    //     window.location.reload();
+    // }
+
+    function pesquisarFuncionario(){
+        var filtro = document.getElementById('filtroPesquisa').value;
+        var pesquisa = document.getElementById('pesquisa_input').value.toLowerCase();
+
+        var tbody = document.getElementById('tableConteiner');
+        var linhas = tbody.getElementsByTagName('tr');
+
+        for (let i = 0; i < linhas.length; i++) {
+            var row = linhas[i];
+
+            var nome = (row.querySelector('.nome').innerText).toLowerCase();
+            var email = (row.querySelector('.email').innerText).toLowerCase();
+            var cargo = (row.querySelector('.funcao').innerText).toLowerCase();
+            var dtCadastro = (row.querySelector('.dt_cadastro').innerText).toLowerCase();
+            var matchesFiltro = (filtro == 'todos') ? true : (cargo == filtro);
+
+            if ((nome.includes(pesquisa) || email.includes(pesquisa) || dtCadastro.includes(pesquisa)) && matchesFiltro) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    }
+
+    window.onload = function(){
+        carregarFuncionarios();
     }
 
 

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bitware | Atualizar senha</title>
+
+  <script src="./js/sessao.js"></script>
+
+  <link rel="stylesheet" href="../css/default.css" />
+  <link rel="stylesheet" href="../css/animacao.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="icon" href="../assets/icon/favicon2.png" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
+</head>
+
+<body onload="listar()">
+    
+    <section class="sessao-login">
+        <div class="container">
+            <a href="index.html"><img src="../assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
+            <div class="formulario slide-in-bottom">
+                <div class="header">
+                    <h1>Atualize sua senha</h1>
+                </div>
+                <div class="ipt_label">
+                    <label for="senha_atual_input">Senha atual</label>
+                    <input id="senha_atual_input" type="text" placeholder="">
+                </div>
+                <div class="ipt_label">
+                    <label for="senha_input">Nova senha</label>
+                    <input id="senha_input" type="password" placeholder="">
+                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
+                </div>
+                <div class="ipt_label">
+                    <label for="senha_confirm_input">Confirmar Senha</label>
+                    <input id="senha_confirm_input" type="password" placeholder="">
+                    <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
+                </div>
+                <button class="btn submit" onclick="atualizar()">Atualizar</button>
+                <!-- <h3><a href="dashFuncionario.html" style="text-decoration: none;">Voltar para a dash</a></h3> -->
+            </div>
+
+            <div class="bg-light"></div>
+            <div class="bg-light2"></div>
+        </div>
+    </section>
+
+  <div class="login">
+    <div class="alerta_erro">
+      <div class="card_erro" id="cardErro">
+        <span id="mensagem_erro"></span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+
+  function mostrarSenha(inputId, iconId){
+    input = document.getElementById(inputId);
+    icon = document.getElementById(iconId);
+    if(icon.innerText == "visibility_off"){
+        input.type = "text";
+        icon.innerText = "visibility";
+    } else{
+        input.type = "password";
+        icon.innerText = "visibility_off";
+    }
+  }
+
+  // Array para armazenar empresas cadastradas para validação de código de ativação 
+  let listaEmpresasCadastradas = [];
+
+  function atualizar() {
+    // aguardar();
+
+    //Recupere o valor da nova input pelo nome do id
+    // Agora vá para o método fetch logo abaixo
+    var senhaAtualVar = senha_atual_input.value;
+    var senhaVar = senha_input.value;
+    var confirmacaoSenhaVar = confirmacao_senha_input.value;
+    var idEmpresaVincular
+
+    // Verificando se há algum campo em branco
+    if (
+      senhaAtualVar == "" ||
+      senhaVar == "" ||
+      confirmacaoSenhaVar == "" 
+    ) {
+      cardErro.style.display = "block";
+      mensagem_erro.innerHTML =
+        "(Mensagem de erro para todos os campos em branco)";
+
+      finalizarAguardar();
+      return false;
+    } else {
+      setInterval(sumirMensagem, 5000);
+    }
+
+  
+
+    return false;
+  }
+
+
+  function sumirMensagem() {
+    cardErro.style.display = "none";
+  }
+</script>
