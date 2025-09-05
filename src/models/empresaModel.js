@@ -1,27 +1,28 @@
 var database = require("../database/config");
 
-function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServer) {    
-    var nivelAcesso = 1;
+function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServer) {
 
-    var instrucaoSqlUsuario = `
-        INSERT INTO bitware_db.Usuario (email, senha, nivelAcesso)
-        VALUES ('${emailServer}', '${senhaServer}', ${nivelAcesso});
+
+    var instrucaoSqlEmpresa = `
+        INSERT INTO bitware_db.Empresa (cnpj, nome)
+        VALUES ('${cnpjServer}', '${nomeEmpresaServer}');
     `;
 
-    console.log("Executando a instrução SQL do usuário: \n" + instrucaoSqlUsuario);
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
 
-    return database.executar(instrucaoSqlUsuario)
-        .then((resultadoUsuario) => {
-            var idUsuario = resultadoUsuario.insertId;
+    return database.executar(instrucaoSqlEmpresa)
+        .then((resultadoEmpresa) => {
+            var idEmpresa = resultadoEmpresa.insertId;
+            const fkCargo = 1;
 
-            var instrucaoSqlEmpresa = `
-                INSERT INTO bitware_db.Empresa (cnpj, nome, fkUsuario)
-                VALUES ('${cnpjServer}', '${nomeEmpresaServer}', ${idUsuario});
+            var instrucaoSqlFuncionario = `
+                INSERT INTO bitware_db.Funcionario (nome, email, senha, fkCargo, fkEmpresa)
+                VALUES ('Admin${nomeEmpresaServer}', '${emailServer}', '${senhaServer}', ${fkCargo}, ${idEmpresa});
             `;
 
-            console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+            console.log("Executando a instrução SQL do funcionário: \n" + instrucaoSqlFuncionario);
 
-            return database.executar(instrucaoSqlEmpresa);
+            return database.executar(instrucaoSqlFuncionario);
         });
 }
 
