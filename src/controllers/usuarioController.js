@@ -21,9 +21,10 @@ function autenticar(req, res) {
                         console.log(resultadoAutenticar);
 
                         res.json({
+                            idFuncionario: resultadoAutenticar[0].idFuncionario,
                             email: resultadoAutenticar[0].email,
                             senha: resultadoAutenticar[0].senha,
-                            nivelAcesso: resultadoAutenticar[0].nivelAcesso
+                            fkCargo: resultadoAutenticar[0].fkCargo
                         });
 
                     } else if (resultadoAutenticar.length == 0) {
@@ -86,7 +87,36 @@ function cadastrar(req, res) {
     }
 }
 
+function atualizarSenha(req, res) {
+    var idFuncionario = req.body.idFuncionario;
+    var senhaAtual = req.body.senhaAtual;
+    var novaSenha = req.body.senha;
+
+    usuarioModel.verificarSenhaAtual(idFuncionario, senhaAtual)
+        .then(resultado => {
+            if (resultado.length > 0) {
+                // Senha atual confere, pode atualizar
+                usuarioModel.atualizarSenha(idFuncionario, novaSenha)
+                    .then(() => {
+                        res.status(200).json({ mensagem: "Senha atualizada com sucesso!" });
+                    })
+                    .catch(erro => {
+                        console.error("Erro ao atualizar senha:", erro);
+                        res.status(500).json(erro.sqlMessage);
+                    });
+            } else {
+                res.status(401).json({ mensagem: "Senha atual incorreta!" });
+            }
+        })
+        .catch(erro => {
+            console.error("Erro ao verificar senha:", erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
+
 module.exports = {
+    cadastrar,
     autenticar,
-    cadastrar
+    atualizarSenha
 }

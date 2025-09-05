@@ -12,4 +12,8 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
+router.post("/atualizarSenha", function (req, res) {
+    usuarioController.atualizarSenha(req, res);
+});
+
 module.exports = router;
