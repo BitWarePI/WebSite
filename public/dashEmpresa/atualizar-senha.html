@@ -8,16 +8,17 @@
 
   <title>Bitware | Atualizar senha</title>
 
-  <script src="./js/sessao.js"></script>
+  <script src="../js/sessao.js"></script>
 
   <link rel="stylesheet" href="../css/default.css" />
   <link rel="stylesheet" href="../css/animacao.css" />
   <link rel="stylesheet" href="../css/login.css" />
   <link rel="icon" href="../assets/icon/favicon2.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close,visibility,visibility_off" />
+
 </head>
 
-<body onload="listar()">
+<body>
     
     <section class="sessao-login">
         <div class="container">
@@ -29,6 +30,7 @@
                 <div class="ipt_label">
                     <label for="senha_atual_input">Senha atual</label>
                     <input id="senha_atual_input" type="text" placeholder="">
+                    <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_atual_input', 'senha_atual_input_icon')">visibility_off</span>
                 </div>
                 <div class="ipt_label">
                     <label for="senha_input">Nova senha</label>
@@ -41,7 +43,6 @@
                     <span class="show-icon material-symbols-outlined" id="senha_confirm_input_icon" onclick="mostrarSenha('senha_confirm_input', 'senha_confirm_input_icon')">visibility_off</span>
                 </div>
                 <button class="btn submit" onclick="atualizar()">Atualizar</button>
-                <!-- <h3><a href="dashFuncionario.html" style="text-decoration: none;">Voltar para a dash</a></h3> -->
             </div>
 
             <div class="bg-light"></div>
@@ -49,18 +50,52 @@
         </div>
     </section>
 
-  <div class="login">
-    <div class="alerta_erro">
-      <div class="card_erro" id="cardErro">
-        <span id="mensagem_erro"></span>
-      </div>
+    <div class="modal">
+        <div class="modal-container" id="modal_container_solicitacoes">
+            <div class="header">
+                <h1 id="card-title"></h1>
+                <button class="material-symbols-outlined close-icon" onclick="abrirModal()">
+                    close
+                </button>
+            </div>
+            <div class="body" id="cardErro">
+                <p id="card-text"></p>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
 
 </html>
 
 <script>
+  var idFuncionario = sessionStorage.ID_USUARIO; 
+  console.log(idFuncionario)
+
+
+  function abrirModal(titulo, texto, tipo) {
+    const modal = document.querySelector('.modal');
+    const modalContainer = document.querySelector('.modal-container');
+    if(!modal.classList.contains('open')){
+      if(tipo == 'sucesso'){            
+        document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #4BB543";
+      } else if(tipo == 'erro'){
+          document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #FF0000";
+        } else{
+            document.getElementById('modal_container_solicitacoes').style.borderLeft = "none";
+          }
+          document.getElementById('card-title').innerText = titulo;
+          document.getElementById('card-text').innerText = texto;
+          modal.classList.remove("fade-out-flex");
+          modal.classList.add('open');
+          modal.classList.add("fade-in");
+          modalContainer.classList.add("slide-in-top");
+    } else{
+        modal.classList.remove("fade-in");
+        modalContainer.classList.remove("slide-in-top");
+        modal.classList.remove('open');
+        modal.classList.add("fade-out-flex");
+        }
+  }
 
   function mostrarSenha(inputId, iconId){
     input = document.getElementById(inputId);
@@ -78,38 +113,56 @@
   let listaEmpresasCadastradas = [];
 
   function atualizar() {
-    // aguardar();
-
-    //Recupere o valor da nova input pelo nome do id
-    // Agora vá para o método fetch logo abaixo
     var senhaAtualVar = senha_atual_input.value;
     var senhaVar = senha_input.value;
-    var confirmacaoSenhaVar = confirmacao_senha_input.value;
-    var idEmpresaVincular
+    var confirmacaoSenhaVar = senha_confirm_input.value;
 
-    // Verificando se há algum campo em branco
-    if (
-      senhaAtualVar == "" ||
-      senhaVar == "" ||
-      confirmacaoSenhaVar == "" 
-    ) {
-      cardErro.style.display = "block";
-      mensagem_erro.innerHTML =
-        "(Mensagem de erro para todos os campos em branco)";
 
-      finalizarAguardar();
+
+    // Verificar se nova senha e confirmação batem
+    if (senhaVar != confirmacaoSenhaVar) {
+      console.log("As senhas não batem!!!!!")
       return false;
-    } else {
-      setInterval(sumirMensagem, 5000);
     }
 
+    console.log("Atualizando senha para usuário ID:", idFuncionario);
+
   
+    fetch(`/usuarios/atualizarSenha`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idFuncionario: idFuncionario,
+        senhaAtual: senhaAtualVar,
+        senha: senhaVar
+      })
+    }).then(resposta => {
+      if (resposta.ok) {
+        abrirModal("Sucesso!", "Senha atualizada com sucesso!", "sucesso");
+
+        setTimeout(() => {
+          window.location = "../login.html"; 
+        }, 2000);
+
+      } else {
+        if(senhaAtualVar == "" || senhaVar == "" || confirmacaoSenhaVar == ""){
+          resposta.text().then(texto => {
+          abrirModal("Erro!", "Existem campos em branco", 'erro');
+        });
+        } else{
+          resposta.text().then(texto => {
+            abrirModal("Erro!", "Não foi possível atualizar a senha!\nSenha atual inválida!", 'erro');
+          });
+        }
+      }
+    }).catch(function (erro) {
+      console.log("Erro na requisição de atualizar senha:", erro);
+      abrirModal("Erro!", "Ocorreu um erro no servidor!", "erro");
+    });
 
     return false;
   }
 
-
-  function sumirMensagem() {
-    cardErro.style.display = "none";
-  }
 </script>
