@@ -79,3 +79,18 @@
     color: purple;
     font-size: 2em
 }
+
+.section-equipe .img-equipe{
+    display: flex;
+    flex-direction: row;
+}
+
+.section-equipe .img-equipe img{
+    height: 250px;
+}
+
+.section-equipe .img-equipe div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
