@@ -128,7 +128,6 @@
                 senhaServer: senhaVar
             })
         }).then(function (resposta) {
-            abrirModal("Sucesso!", "Login efetuado com Sucesso!", "sucesso");
 
             if (resposta.ok) {
                 console.log(resposta);
@@ -136,11 +135,14 @@
                 resposta.json().then(json => {
                     console.log(json);
                     console.log(JSON.stringify(json));
+                    sessionStorage.ID_USUARIO = json.idFuncionario;
                     sessionStorage.EMAIL_USUARIO = json.email;
                     sessionStorage.NOME_USUARIO = json.nome;
-                    sessionStorage.NIVEL_ACESSO = json.nivelAcesso
+                    sessionStorage.FK_CARGO = json.fkCargo
 
-                    if (sessionStorage.NIVEL_ACESSO == 1) {
+                    abrirModal("Sucesso!", "Login efetuado com Sucesso!", "sucesso");
+
+                    if (sessionStorage.fkCargo == 1) {
                         setTimeout(function () {
                             window.location = "../dashAdm/dashHome.html";
                         }, 1000);
@@ -154,10 +156,9 @@
 
             } else {
 
-                abrirModal("Erro no Login!", "Houve um erro ao tentar realizar o login!", "erro");
-
                 resposta.text().then(texto => {
                     console.error(texto);
+                    abrirModal("Erro no Login!", "Email ou senha inválidos!", "erro");
                     finalizarAguardar(texto);
                 });
             }
