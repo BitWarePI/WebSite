@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="./css/login.css" />
   <link rel="icon" href="./assets/icon/favicon2.png" />
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=visibility,visibility_off" />
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close,visibility,visibility_off" />
 </head>
 
 <body>
@@ -33,16 +33,28 @@
           <input id="nome_empresa_input" type="text" 
           oninput="verificarCampos()">
         </div>
+        <span class="campo-info" id="info_campo_nome">
+          <p>Campo Obrigatório*</p>
+          <p>Não pode conter números</p>
+        </span>
         <div class="ipt_label">
           <label for="cnpj_input">CNPJ</label>
           <input id="cnpj_input" type="text" 
-          oninput="verificarCampos()">
+          oninput="formatarCpnj(document.getElementById('cnpj_input'))">
         </div>
+        <span class="campo-info" id="info_campo_cnpj">
+          <p>Campo Obrigatório*</p>
+          <p>CNPJ Inválido</p>
+        </span>
         <div class="ipt_label">
           <label for="email_input">E-mail</label>
           <input id="email_input" type="text" 
           oninput="verificarCampos()">
         </div>
+        <span class="campo-info" id="info_campo_email">
+          <p>Campo Obrigatório*</p>
+          <p>Email Inválido</p>
+        </span>
         <div class="ipt_label">
           <label for="senha_input">Senha</label>
           <input id="senha_input" type="password" 
@@ -50,6 +62,10 @@
           <span class="show-icon material-symbols-outlined" id="senha_input_icon"
             onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
         </div>
+        <span class="campo-info" id="info_campo_senha">
+          <p>Campo Obrigatório*</p>
+          <p>Senha deve conter mais de 8 caracteres</p>
+        </span>
         <div class="ipt_label">
           <label for="senha_confirm_input">Confirmar Senha</label>
           <input id="senha_confirm_input" type="password" oninput="verificarCampos()">
@@ -66,64 +82,153 @@
     </div>
   </section>
 
-  <div class="login">
-    <div class="alerta_erro">
-      <div class="card_erro" id="cardErro">
-        <span id="mensagem_erro"></span>
-      </div>
+  <div class="modal">
+        <div class="modal-container" id="modal_container_solicitacoes">
+            <div class="header">
+                <h1 id="card-title"></h1>
+                <button class="material-symbols-outlined close-icon" onclick="abrirModal()">
+                    close
+                </button>
+            </div>
+            <div class="body" id="cardErro">
+                <p id="card-text"></p>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
 
 </html>
 
 <script>
-
-    function verificarCampos() {
-    let pop = document.getElementById('popuperro');
-    
-    let nome = document.getElementById('nome_empresa_input').value;
-    let cnpj = document.getElementById('cnpj_input').value;
-    let email = document.getElementById('email_input').value;
-    let senha = document.getElementById('senha_input').value;
-    let confirmSenha = document.getElementById('senha_confirm_input').value;
-    pop.innerHTML = "";
-    
-    for (let i = 0; i < nome.length; i++) {
-        if (nome[i] >= '0' && nome[i] <= '9') {
-            pop.innerHTML = "Nome não pode conter números<br>";
-          
-          }
-        else{
-          pop.innerHTML=""
+  function abrirModal(titulo, texto, tipo) {
+    const modal = document.querySelector('.modal');
+    const modalContainer = document.querySelector('.modal-container');
+    if(!modal.classList.contains('open')){
+        if(tipo == 'sucesso'){
+            document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #4BB543";
+        } else if(tipo == 'erro'){
+            document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #FF0000";
+        } else{
+            document.getElementById('modal_container_solicitacoes').style.borderLeft = "none";
         }
+        document.getElementById('card-title').innerText = titulo;
+        document.getElementById('card-text').innerText = texto;
+        modal.classList.remove("fade-out-flex");
+        modal.classList.add('open');
+        modal.classList.add("fade-in");
+        modalContainer.classList.add("slide-in-top");
+    } else{
+        modal.classList.remove("fade-in");
+        modalContainer.classList.remove("slide-in-top");
+        modal.classList.remove('open');
+        modal.classList.add("fade-out-flex");
+    }
+  }
+
+
+  function formatarCpnj(campo) {
+    let valor = campo.value.replace(/\D/g, '');
+    if (valor.length > 14) {
+      valor = valor.slice(0, 14);
+    }
+    valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+    valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+    valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
+    valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+    campo.value = valor;
+    verificarCampos();
+  }
+  
+  let requisitos = true;
+
+  function verificarCampos() {
+    requisitos = true;
+
+    const nome = document.getElementById('nome_empresa_input');
+    const nomeInfo = document.getElementById('info_campo_nome');
+    const condicaoNome = nomeInfo.querySelectorAll('p');
+    const cnpj = document.getElementById('cnpj_input');
+    const cnpjInfo = document.getElementById('info_campo_cnpj');
+    const condicaoCnpj = cnpjInfo.querySelectorAll('p');
+    const email = document.getElementById('email_input');
+    const emailInfo = document.getElementById('info_campo_email');
+    const condicaoEmail = emailInfo.querySelectorAll('p');
+    const senha = document.getElementById('senha_input');
+    const senhaInfo = document.getElementById('info_campo_senha');
+    const condicaoSenha = senhaInfo.querySelectorAll('p');
+
+    if(!nome.value){
+      condicaoNome[0].style.color = "red";
+      requisitos = false;
+      nome.style.border = "1px solid red";
+    } else{
+      condicaoNome[0].style.color = "green";
+    } 
+    for (let i = 0; i < nome.value.length; i++) {
+      if (nome.value[i] >= '0' && nome.value[i] <= '9') {
+        condicaoNome[1].style.color = "red";
+        requisitos = false;
+        break;
+      } else{
+        nome.style.border = "1px solid green";
+        condicaoNome[1].style.color = "green";
+      }
     }
 
-    if (cnpj) {
-        for (let i = 0; i < cnpj.length; i++) {
-            if (!(cnpj[i] >= '0' && cnpj[i] <= '9')) {
-                pop.innerHTML += "CNPJ deve conter apenas números<br>";
-             
-              }
-            else{
-          pop.innerHTML=""
-        }
-        }
+    regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
+    if (cnpj.value) {
+      condicaoCnpj[0].style.color = "green";
+      if(!regexCNPJ.test(cnpj.value)){
+        condicaoCnpj[1].style.color = "red";
+        requisitos = false;
+        condicaoCnpj[1].innerText = "CNPJ Inválido";
+      } else{
+        condicaoCnpj[1].style.color = "green";
+        condicaoCnpj[1].innerText = "CNPJ Válido";
+        cnpj.style.border = "1px solid green";
+      }
+    } else{
+      condicaoCnpj[0].style.color = "red";
+      requisitos = false;
+      cnpj.style.border = "1px solid red";
     }
 
-    if (email && (!email.includes('@') || !email.includes('.com'))) {
-        pop.innerHTML += "Digite um email válido<br>";
-    }else{
-          pop.innerHTML=""
-        }
-
-    if (senha && senha.length < 8) {
-        pop.innerHTML += "Senha deve ter no mínimo 8 caracteres<br>";
-    }else{
-          pop.innerHTML=""
-        }
-
+    regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!email.value){
+      condicaoEmail[0].style.color = "red";
+      requisitos = false;
+      email.style.border = "1px solid red";
+    } else{
+      condicaoEmail[0].style.color = "green";
+      if(!regexEmail.test(email.value)){
+        condicaoEmail[1].style.color = "red";
+        requisitos = false;
+        condicaoEmail[1].innerText = "Email Inválido";
+        email.style.border = "1px solid red";
+      } else{
+        condicaoEmail[1].style.color = "green";
+        condicaoEmail[1].innerText = "Email Válido";
+        email.style.border = "1px solid green";
+      }
     }
+
+    if(!senha.value){
+      condicaoSenha[0].style.color = "red";
+      requisitos = false;
+      senha.style.border = "1px solid red";
+    } else{
+      condicaoSenha[0].style.color = "green";
+      if(senha.value.length < 8){
+        condicaoSenha[1].style.color = "red";
+        requisitos = false;
+        senha.style.border = "1px solid red";
+      } else{
+        condicaoSenha[1].style.color = "green";
+        senha.style.border = "1px solid green";
+      }
+    }
+
+  }
 
 function mostrarSenha(inputId, iconId) {
     input = document.getElementById(inputId);
@@ -140,13 +245,11 @@ function mostrarSenha(inputId, iconId) {
 
 
   async function cadastrar() {
-
-
-    let nomeEmpresaVar = nome_empresa_input.value;
-    let cnpjVar = cnpj_input.value;
-    let emailVar = email_input.value;
-    let senhaVar = senha_input.value;
-    let confirmacaoSenhaVar = senha_confirm_input.value;
+    const nomeEmpresaVar = nome_empresa_input.value;
+    const cnpjVar = cnpj_input.value;
+    const emailVar = email_input.value;
+    const senhaVar = senha_input.value;
+    const confirmacaoSenhaVar = senha_confirm_input.value;
 
     if (
       nomeEmpresaVar == "" ||
@@ -155,19 +258,18 @@ function mostrarSenha(inputId, iconId) {
       senhaVar == "" ||
       confirmacaoSenhaVar == ""
     ) {
-      cardErro.style.display = "block";
-      mensagem_erro.innerHTML =
-        "(Mensagem de erro para todos os campos em branco)";
-
-      finalizarAguardar();
+      abrirModal('Erro', 'Preencha todos os campos para se cadastrar!', 'erro');
       return false;
-    } else if (senhaVar != confirmacaoSenhaVar) {
-      mensagem_erro.innerHTML = "As senhas não coincidem.";
     }
-    else {
-      setInterval(sumirMensagem, 5000);
+    if (senhaVar != confirmacaoSenhaVar) {
+      abrirModal('Erro', 'Senhas não coincidem', 'erro');
+      return false;
     }
 
+    if(!requisitos){
+      abrirModal('Erro', 'Preencha os campos corretamente para se cadastrar!', 'erro');
+      return false;
+    }
 
     respone = await fetch(`/cadastrarEmpresa/`, {
       method: "POST",

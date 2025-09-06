@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 :root {
-    --primary-color: hsl(283, 87%, 36%);
+    --primary-color: #7e0cac;
     --low-primary-color: hsla(283, 87%, 36%, 0.411);
     --secondary-color: hsl(49, 73%, 50%);
     --low-secondary-color: hsla(49, 83%, 42%, 0.534);;
@@ -321,6 +321,26 @@ section .container{
 .formulario p{
     margin: 0;
 }
+.formulario span.campo-info{
+    height: 0px;
+    transition: .3s;
+    overflow: hidden;
+    margin: 0;
+    margin-top: -12px;
+    font-size: 0em;
+    padding: 0;
+    box-sizing: border-box;
+    width: 90%;
+}
+.formulario .ipt_label:has(input:focus) + span.campo-info{
+    font-size: 0.85em;
+    color: #555;
+    margin: 0;
+    margin-bottom: 12px;
+    transition: .3s;
+    height: fit-content;
+    color: var(--error-color);
+}
 .formulario .btn.submit{
     padding: 12px;
     font-size: 1em;
@@ -357,6 +377,7 @@ section .container{
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    border-radius: 12px;
 }
 .modal-container .header{
     display: flex;
