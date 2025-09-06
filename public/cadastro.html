@@ -246,7 +246,7 @@ function mostrarSenha(inputId, iconId) {
 
   async function cadastrar() {
     const nomeEmpresaVar = nome_empresa_input.value;
-    const cnpjVar = cnpj_input.value;
+    let cnpjVar = cnpj_input.value;
     const emailVar = email_input.value;
     const senhaVar = senha_input.value;
     const confirmacaoSenhaVar = senha_confirm_input.value;
@@ -271,6 +271,8 @@ function mostrarSenha(inputId, iconId) {
       return false;
     }
 
+    cnpjVar = cnpjVar.replace(/\D/g, '');
+    
     respone = await fetch(`/cadastrarEmpresa/`, {
       method: "POST",
       headers: {
@@ -287,10 +289,7 @@ function mostrarSenha(inputId, iconId) {
         console.log("resposta: ", resposta);
 
         if (resposta.ok) {
-          cardErro.style.display = "block";
-
-          mensagem_erro.innerHTML =
-            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+          abrirModal('Sucesso', 'Cadastro realizado com sucesso! Redirecionando para tela de Login...', 'sucesso');
 
           setTimeout(() => {
             window.location = "login.html";
