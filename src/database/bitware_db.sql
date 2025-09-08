@@ -23,7 +23,7 @@ CREATE TABLE bitware_db.Funcionario (
   email VARCHAR(200) NOT NULL UNIQUE,
   senha VARCHAR(200) NOT NULL,
   dataCadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  validado BIT(1) NOT NULL DEFAULT 0,
+  validado BIT(1) NOT NULL DEFAULT 1,
   fkCargo INT NOT NULL,
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idFuncionario),

@@ -208,3 +208,8 @@ table tr td.acao button.ver-mais{
         margin: 4px 0;
     }
 }
+
+.modal.fb .modal-container .body{
+    width: fit-content;
+    height: fit-content;
+}
