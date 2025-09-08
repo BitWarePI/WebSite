@@ -66,6 +66,10 @@ nav .links .link .titulo{
     width: 0px;
     transition: .3s;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 nav:hover .links .link .titulo{
     width: fit-content;
