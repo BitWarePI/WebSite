@@ -65,4 +65,4 @@ CREATE TABLE bitware_db.Parametro (
 		REFERENCES bitware_db.Componente (idComponente)
 
 );
-INSERT INTO bitware_db.Cargo (descricao) VALUE ("Administrador", "Analista", "Técnico");
+INSERT INTO bitware_db.Cargo (descricao) VALUE ("Administrador"), ("Analista"), ("Técnico");
