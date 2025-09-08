@@ -253,6 +253,21 @@ section .container{
 .ipt_label:has(.btn-icon) input{
     padding-right: 42px;
 }
+.select{
+    padding: 10px 16px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 1em;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    outline: 1px solid #8b8b8b;
+    padding: 12px;
+}
 .selectFiltro{
     padding: 10px 16px;
     margin: 0;
