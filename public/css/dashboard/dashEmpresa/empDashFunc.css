@@ -65,6 +65,9 @@ table tr td.funcao span, table tr .estado span{
     border-radius: 8px;
     font-weight: bold;
 }
+table tr td.funcao .admin{
+    background: #6ed1ff;
+}
 table tr td.funcao .técnico{
     background: #ffcc6e;
 }
