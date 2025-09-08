@@ -9,7 +9,7 @@
     overflow: hidden;
 }
 .section-heroi .container{
-    width: 80dvw;
+    width: 70dvw;
     height: 100dvh;
     display: flex;
     flex-direction: row;
@@ -22,14 +22,16 @@
 .section-heroi .container .texto-heroi{
     width: 50%;
     min-width: 200px;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     z-index: 1;
-    font-size: 2em;
-    position: absolute;
-    top: 30dvh;
+    font-size: 1.5em;
+}
+.section-heroi .container .texto-heroi h2{
+    margin: 0;
 }
 .section-heroi .container .texto-heroi p{
     text-shadow:
@@ -50,7 +52,7 @@
     text-decoration: none;
 }
 .img-heroi{
-    width: calc(100% - 360px);
+    width: 50%;
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -65,14 +67,49 @@
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
 }
 
+.section-epigrafe{
+    min-height: fit-content;
+    margin: 0;
+    padding: 0;
+}
+.section-epigrafe .container{
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+.section-epigrafe .container svg{
+    margin-bottom: -2px;
+}
+.section-epigrafe .container .frase {
+    font-size: 2em;
+    display: flex;
+    flex-direction: column;
+    padding: 82px;
+}
+.section-epigrafe .container .frase p{
+    margin: 0;
+}
+.section-epigrafe .container .frase .texto-frase span{
+margin: 0;
+    font-weight: bold;
+    background-color: var(--primary-color);
+    padding: 6px;
+    border-radius: 8px;
+}
+.section-epigrafe .container .frase .autor{
+    align-self: flex-end;
+    font-weight: bold ;
+}
+
 .section-equipe{
     background-color: var(--bg-inverse-color);
     color: var(--main-text-inverse-color);
-    justify-content: start;
+    justify-content: center;
 }
 .section-equipe .container{
     gap: 42px;
     padding: 42px 0px;
+    flex-direction: column;
 }
 
 .section-equipe .container .texto-equipe{
@@ -83,14 +120,38 @@
 .section-equipe .img-equipe{
     display: flex;
     flex-direction: row;
-}
-
-.section-equipe .img-equipe img{
-    height: 250px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
 }
 
 .section-equipe .img-equipe div{
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-weight: bold;
+}
+.section-equipe .img-equipe img{
+    width: 180px;
+    height: 190px;
+    object-fit: cover;
+}
+
+@media screen and (max-width: 768px) {
+    .section-heroi .container{
+        flex-direction: column-reverse;
+    }
+    .section-heroi .container .texto-heroi{
+        width: 100%;
+    }
+    .section-heroi .container .img-heroi{
+        width: 100%;
+    }
+    .section-equipe .img-equipe img{
+        width: 120px;
+        height: 130px;
+        object-fit: cover;
+    }
+    
 }
