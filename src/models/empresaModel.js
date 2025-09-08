@@ -16,8 +16,8 @@ function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServe
             const fkCargo = 1;
 
             var instrucaoSqlFuncionario = `
-                INSERT INTO bitware_db.Funcionario (nome, email, senha, fkCargo, fkEmpresa)
-                VALUES ('Admin${nomeEmpresaServer}', '${emailServer}', '${senhaServer}', ${fkCargo}, ${idEmpresa});
+                INSERT INTO bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
+                VALUES ('Admin', '${nomeEmpresaServer}', '${emailServer}', '${senhaServer}', ${fkCargo}, ${idEmpresa});
             `;
 
             console.log("Executando a instrução SQL do funcionário: \n" + instrucaoSqlFuncionario);
