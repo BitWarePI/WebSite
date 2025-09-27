@@ -37,7 +37,7 @@ CREATE TABLE bitware_db.Funcionario (
 
 CREATE TABLE bitware_db.Maquina (
 	idMaquina INT AUTO_INCREMENT,
-    hostname VARCHAR(50) NOT NULL,
+    enderecoMac VARCHAR(50) NOT NULL,
     fkEmpresa INT NOT NULL,
     PRIMARY KEY (idMaquina),
     CONSTRAINT fk_Empresa_Maquina
