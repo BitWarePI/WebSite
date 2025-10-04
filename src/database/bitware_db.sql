@@ -1,6 +1,5 @@
-drop DATABASE bitware_db;
+DROP DATABASE IF EXISTS bitware_db;
 CREATE DATABASE bitware_db;
-
 
 CREATE TABLE bitware_db.Empresa (
   idEmpresa INT NOT NULL AUTO_INCREMENT,
