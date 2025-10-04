@@ -12,6 +12,7 @@
     --main-text-inverse-color: #1d1c1c;
     --error-color: #ff3f3f;
     --sucess-color:rgb(137, 190, 77);
+    --attention-color: rgb(221, 186, 34);
 }
 
 *{
