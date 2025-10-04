@@ -242,6 +242,9 @@ table tr td.acao button.ver-mais{
     background-color: var(--error-color);
 }
 
+
+
+
 @media screen and (max-width: 1000px) {
     
     table{
@@ -257,4 +260,5 @@ table tr td.acao button.ver-mais{
     .container .kpi-container .kpi-card .quantidade{
         margin: 4px 0;
     }
+    
 }

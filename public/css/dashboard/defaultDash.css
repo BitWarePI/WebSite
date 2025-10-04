@@ -104,6 +104,7 @@ section .container{
     gap: 12px;
 }
 
+
 @media screen and (max-width: 1000px) {
     nav{
         height: fit-content;
