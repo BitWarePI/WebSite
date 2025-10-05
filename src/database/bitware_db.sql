@@ -5,7 +5,7 @@ CREATE TABLE bitware_db.Empresa (
   idEmpresa INT NOT NULL AUTO_INCREMENT,
   cnpj VARCHAR(14) NOT NULL,
   nome VARCHAR(200) NOT NULL,
-  chave BINARY(16), -- isso aqui tem que deixar not null depois
+  chave BINARY(16) , -- isso aqui tem que deixar not null depois
   PRIMARY KEY (idEmpresa)
 );
 
@@ -64,4 +64,6 @@ CREATE TABLE bitware_db.Parametro (
 		REFERENCES bitware_db.Componente (idComponente)
 
 );
-INSERT INTO bitware_db.Cargo (descricao) VALUE ("Admin"), ("Analista"), ("Técnico");
+INSERT INTO bitware_db.Cargo (descricao) VALUE ("Admin"),("Empresa"), ("Analista"), ("Técnico");
+insert into bitware_db.empresa (cnpj,nome) values ('00000000000000','Admin_Bitware');
+insert into bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa) VALUES ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1);
