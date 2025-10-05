@@ -8,8 +8,6 @@ function cadastrarEmpresa(req, res) {
         senhaServer
     } = req.body;
     
-
-
     if (
         nomeEmpresaServer == "" ||
         cnpjServer == "" ||

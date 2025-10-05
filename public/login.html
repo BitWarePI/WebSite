@@ -163,7 +163,7 @@
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    abrirModal("Erro no Login!", "Email ou senha inválidos!", "erro");
+                    abrirModal("Erro no Login!", "Email/senha inválidos! ou Empresa não encontrada!", "erro");
                     finalizarAguardar(texto);
                 });
             }
