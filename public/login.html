@@ -143,9 +143,13 @@
 
                     abrirModal("Sucesso!", "Login efetuado com Sucesso!", "sucesso");
 
-                    if (sessionStorage.fkCargo == 1) {
+                    if (sessionStorage.FK_CARGO == 1) {
                         setTimeout(function () {
                             window.location = "../dashAdm/dashHome.html";
+                        }, 1000);
+                    } else if (sessionStorage.FK_CARGO == 3) {
+                        setTimeout(function () {
+                            window.location = "../dashTecnico/dashHome.html";
                         }, 1000);
                     } else {
                         setTimeout(function () {
@@ -159,7 +163,7 @@
 
                 resposta.text().then(texto => {
                     console.error(texto);
-                    abrirModal("Erro no Login!", "Email ou senha inválidos!", "erro");
+                    abrirModal("Erro no Login!", "Email/senha inválidos! ou Empresa não encontrada!", "erro");
                     finalizarAguardar(texto);
                 });
             }

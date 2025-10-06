@@ -13,11 +13,11 @@ function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServe
     return database.executar(instrucaoSqlEmpresa)
         .then((resultadoEmpresa) => {
             var idEmpresa = resultadoEmpresa.insertId;
-            const fkCargo = 1;
+            const fkCargo = 2;
 
             var instrucaoSqlFuncionario = `
                 INSERT INTO bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
-                VALUES ('Admin', '${nomeEmpresaServer}', '${emailServer}', '${senhaServer}', ${fkCargo}, ${idEmpresa});
+                VALUES ('Empresa', '${nomeEmpresaServer}', '${emailServer}', '${senhaServer}', ${fkCargo}, ${idEmpresa});
             `;
 
             console.log("Executando a instrução SQL do funcionário: \n" + instrucaoSqlFuncionario);
