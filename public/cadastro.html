@@ -273,7 +273,7 @@ function mostrarSenha(inputId, iconId) {
 
     cnpjVar = cnpjVar.replace(/\D/g, '');
     
-    respone = await fetch(`/cadastrarEmpresa/`, {
+    respone = await fetch(`/empresas/cadastrarEmpresa`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
