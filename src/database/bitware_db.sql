@@ -5,7 +5,9 @@ CREATE TABLE bitware_db.Empresa (
   idEmpresa INT NOT NULL AUTO_INCREMENT,
   cnpj VARCHAR(14) NOT NULL,
   nome VARCHAR(200) NOT NULL,
+  email varchar(200) not null,
   ativo bit(1) not null default 0,
+  dtCadastro datetime  default current_timestamp,
   chave BINARY(16) , -- isso aqui tem que deixar not null depois
   PRIMARY KEY (idEmpresa)
 );
@@ -66,6 +68,6 @@ CREATE TABLE bitware_db.Parametro (
 
 );
 INSERT INTO bitware_db.Cargo (descricao) VALUE ("Admin"),("Empresa"), ("Analista"), ("Técnico");
-insert into bitware_db.empresa (cnpj,nome, ativo) values ('00000000000000','Admin_Bitware', 1);
+insert into bitware_db.Empresa (cnpj,nome,email, ativo) values ('00000000000000','Admin_Bitware','admBitware@gmail.com', 1);
 insert into bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa) VALUES ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1);
 -- update bitware_db.empresa set ativo = 1 where idEmpresa = 2;
