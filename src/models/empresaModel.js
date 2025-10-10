@@ -1,11 +1,9 @@
 var database = require("../database/config");
 
 function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServer) {
-
-
     var instrucaoSqlEmpresa = `
-        INSERT INTO bitware_db.Empresa (cnpj, nome)
-        VALUES ('${cnpjServer}', '${nomeEmpresaServer}');
+        INSERT INTO bitware_db.Empresa (cnpj, nome, email)
+        VALUES ('${cnpjServer}', '${nomeEmpresaServer}', '${emailServer}');
     `;
 
     console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
@@ -26,6 +24,40 @@ function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServe
         });
 }
 
+function listarEmpresas(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+function ativarEmpresa(idEmpresa){
+    const id = Number(idEmpresa); // força número
+    const sql = `
+        UPDATE bitware_db.Empresa 
+        SET ativo = 1 
+        WHERE idEmpresa = ${id}
+    `;
+    return database.executar(sql);
+}
+
+function desativarEmpresa(idEmpresa) {
+    const id = Number(idEmpresa); // força número
+    const sql = `
+        UPDATE bitware_db.Empresa 
+        SET ativo = 0 
+        WHERE idEmpresa = ${id}
+    `;
+    return database.executar(sql);
+}
+
+
 module.exports = {
-    cadastrarEmpresa
+    cadastrarEmpresa,
+    listarEmpresas,
+    ativarEmpresa,
+    desativarEmpresa
 };

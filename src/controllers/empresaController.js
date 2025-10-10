@@ -33,6 +33,53 @@ function cadastrarEmpresa(req, res) {
     }
 }
 
+function listarEmpresas(req, res){
+    empresaModel.listarEmpresas().then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar as empresas desativadas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function ativarEmpresa(req, res) {
+    const idEmpresa = req.params.id;
+
+    empresaModel.ativarEmpresa(idEmpresa).then((resultado) => {
+        if (resultado.affectedRows > 0) {
+            res.status(200).json({ mensagem: 'Empresa ativada com sucesso.' });
+        } else {
+            res.status(404).json({ mensagem: 'Empresa não encontrada.' });
+        }
+    }).catch(function (erro) {
+        console.log("Houve um erro ao ativar empresa:", erro);
+        res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    });
+}
+
+function desativarEmpresa(req, res) {
+    const idEmpresa = req.params.id;
+
+    empresaModel.desativarEmpresa(idEmpresa).then((resultado) => {
+        if (resultado.affectedRows > 0) {
+            res.status(200).json({ mensagem: 'Empresa desativada com sucesso.' });
+        } else {
+            res.status(404).json({ mensagem: 'Empresa não encontrada.' });
+        }
+    }).catch(function (erro) {
+        console.log("Houve um erro ao ativar empresa:", erro);
+        res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    });
+}
+
 module.exports = {
-    cadastrarEmpresa
+    cadastrarEmpresa,
+    listarEmpresas,
+    ativarEmpresa,
+    desativarEmpresa
 };
