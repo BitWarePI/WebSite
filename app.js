@@ -1,20 +1,24 @@
- var ambiente_processo = 'desenvolvimento';
-//var ambiente_processo = 'desenvolvimento';
+// Define o ambiente: desenvolvimento ou produção
+var ambiente_processo = 'desenvolvimento';
+//var ambiente_processo = 'producao';
 
+// Define o arquivo de ambiente
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
-
 require("dotenv").config({ path: caminho_env });
 
+// Importa pacotes
 var express = require("express");
 var cors = require("cors");
 var path = require("path");
-var PORTA_APP = process.env.APP_PORT;
-var HOST_APP = process.env.APP_HOST;
 
+// Cria a aplicação Express
 var app = express();
 
+// Define host e porta a partir do .env
+var PORTA_APP = process.env.APP_PORT || 3333;
+var HOST_APP = process.env.APP_HOST || 'localhost';
+
+// Importa rotas
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
@@ -22,34 +26,37 @@ var funcionariosRouter = require("./src/routes/funcionarios");
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use(cors());
 
+// Rotas
 app.use("/", indexRouter);
-//app.use("/usuarios", usuarioRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/funcionarios", funcionariosRouter);
-//app.use("/empresas", empresaRouter);
 app.use("/cargos", cargoRouter);
-//app.use("/emails", emailRouter);
 app.use("/empresas", cadastrarEmpresa);
+//app.use("/emails", emailRouter);
 
-app.listen(PORTA_APP, function () {
+// Inicia o servidor
+app.listen(PORTA_APP, HOST_APP, function () {
     console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
-    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP} :. \n\n
-    Você está rodando sua aplicação em ambiente de .:${process.env.AMBIENTE_PROCESSO}:. \n\n
-    \tSe .:desenvolvimento:. você está se conectando ao banco local. \n
-    \tSe .:producao:. você está se conectando ao banco remoto. \n\n
-    \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
+##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
+##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
+##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
+## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
+#######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
+### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
+##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
+
+Servidor do seu site já está rodando! Acesse: http://${HOST_APP}:${PORTA_APP}
+Você está rodando sua aplicação em ambiente de: ${process.env.AMBIENTE_PROCESSO}
+
+\tSe desenvolvimento, você está se conectando ao banco local.
+\tSe produção, você está se conectando ao banco remoto.
+
+\t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'
+`);
 });

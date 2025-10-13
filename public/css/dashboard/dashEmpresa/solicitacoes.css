@@ -1,0 +1,198 @@
+/* Estilo geral da página */
+.container {
+    padding: 2rem;
+}
+
+.header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    color: #333;
+}
+
+.header p {
+    font-size: 1.1rem;
+    color: #777;
+}
+
+/* Grid para os cards de solicitação */
+.lista-solicitacoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.aviso-vazio {
+    font-size: 1.2rem;
+    color: #888;
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Estilo de cada card */
+.card-solicitacao {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-solicitacao:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card-solicitacao .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-solicitacao .nome-empresa {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-solicitacao .cnpj-empresa {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+.card-solicitacao .acoes .btn-ver-mais {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+
+.card-solicitacao .acoes .btn-ver-mais:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos do Modal */
+.modal-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1000;
+}
+
+.modal-container.mostrar {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 550px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal .fechar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    color: #333;
+}
+
+.modal .info-grupo {
+    margin-bottom: 18px;
+}
+
+.modal .info-grupo label {
+    display: block;
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.modal .info-grupo p {
+    margin: 0;
+    font-size: 1.1rem;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.modal-acoes button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-acoes button:hover {
+    transform: scale(1.05);
+}
+
+.btn-aprovar {
+    background-color: #2ecc71;
+    color: white;
+}
+.btn-aprovar:hover {
+    background-color: #27ae60;
+}
+
+.btn-recusar {
+    background-color: #e74c3c;
+    color: white;
+}
+.btn-recusar:hover {
+    background-color: #c0392b;
+}
