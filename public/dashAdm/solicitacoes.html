@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/default.css">
+  <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
+  <link rel="stylesheet" href="../css/dashboard/admDashEmpresa.css">
+  <link rel="stylesheet" href="../css/dashEmpresa/solicitacoes.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="icon" href="../assets/icon/favicon2.png">
+  <title>Solicitações Pendentes | BitWare</title>
+</head>
+
+<body>
+  <section>
+    <nav>
+      <div class="main-nav">
+        <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt="Logo BitWare"></h1>
+        <ul class="links nav-links-pc">
+          <li><a class="link" href="dashHome.html"><span class="material-symbols-outlined icon">home</span><span class="titulo">Início</span></a></li>
+          <li><a class="link" href="dashEmpresa.html"><span class="material-symbols-outlined icon">apartment</span><span class="titulo">Empresas</span></a></li>
+          <li class="ativo"><a class="link" href="solicitacoes.html"><span class="material-symbols-outlined icon">pending_actions</span><span class="titulo">Solicitações</span></a></li>
+          <li><a class="link" href="../dashEmpresa/atualizar-senha.html"><span class="material-symbols-outlined icon">lock</span><span class="titulo">Atualizar senha</span></a></li>
+          <li><a class="link" href="https://bitwarepi.atlassian.net/servicedesk/customer/portal/34"><span class="material-symbols-outlined icon">bolt</span><span class="titulo">Suporte</span></a></li>
+        </ul>
+        <a href="../index.html" class="btn btn-sair nav-links-pc">Sair</a>
+        <div id="nav-menu-icon"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="listaEmpresa">
+        <div class="pesquisa">
+          <div class="ipt_label">
+            <label for="pesquisa_input">Pesquisar</label>
+            <input id="pesquisa_input" type="text" placeholder="Buscar por Nome, Email ou CNPJ" onkeyup="filtrarSolicitacoes()">
+            <button class="material-symbols-outlined btn-icon">search</button>
+          </div>
+        </div>
+        <div id="cards-container">
+          <table>
+            <thead>
+              <tr>
+                <th class="nome">Nome</th>
+                <th class="email">Email</th>
+                <th class="cnpj">CNPJ</th>
+                <th class="dt_cadastro">Dt.Cadastro</th>
+                <th class="estado">Estado</th>
+                <th class="acao">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/nav.js"></script>
+  <script>
+    // Função para carregar as solicitações
+    function carregarSolicitacoes() {
+      fetch("/solicitacoes/listarPendentes", { method: "GET" })
+        .then(resposta => resposta.json())
+        .then(solicitacoes => {
+          console.log("Solicitações recebidas:", solicitacoes);
+          criarTabelaPendentes(solicitacoes);
+        })
+        .catch(erro => console.error("#ERRO ao carregar solicitações:", erro));
+    }
+
+    // Função para criar a tabela
+    function criarTabelaPendentes(solicitacoes) {
+      const corpoTabela = document.querySelector("table tbody");
+      corpoTabela.innerHTML = ""; 
+
+      if (solicitacoes.length === 0) {
+        corpoTabela.innerHTML = `<tr><td colspan="6" class="aviso-vazio">Nenhuma solicitação pendente no momento.</td></tr>`;
+        return;
+      }
+
+      solicitacoes.forEach(empresa => {
+        corpoTabela.innerHTML += `
+            <tr>
+                <td class="nome"><p>${empresa.nome}</p></td>
+                <td class="email">${empresa.email}</td>
+                <td class="cnpj">${formatarCNPJ(empresa.cnpj)}</td>
+                <td class="dt_cadastro">${formatarData(empresa.dtCadastro)}</td>
+                <td class="estado"><span class="status pendente">Pendente</span></td>
+                <td class="acao">
+                    <button class="btn-acao aprovar" title="Aprovar" onclick="aprovarEmpresa(${empresa.idEmpresa})">
+                        <span class="material-symbols-outlined">check</span> Aprovar
+                    </button>
+                    <button class="btn-acao recusar" title="Recusar" onclick="recusarEmpresa(${empresa.idEmpresa})">
+                        <span class="material-symbols-outlined">close</span> Recusar
+                    </button>
+                </td>
+            </tr>
+        `;
+      });
+    }
+
+    function filtrarSolicitacoes() {
+        var termo = document.getElementById('pesquisa_input').value.toLowerCase();
+        var tabela = document.querySelector("table tbody");
+        var linhas = tabela.getElementsByTagName('tr');
+
+        for (var i = 0; i < linhas.length; i++) {
+            var linha = linhas[i];
+
+            if (linha.cells.length === 1 && linha.cells[0].classList.contains('aviso-vazio')) {
+                continue;
+            }
+
+            var nome = linha.cells[0].textContent.toLowerCase();
+            var email = linha.cells[1].textContent.toLowerCase();
+            var cnpj = linha.cells[2].textContent.toLowerCase();
+
+            if (nome.includes(termo) || email.includes(termo) || cnpj.includes(termo)) {
+                linha.style.display = "";
+            } else {
+                linha.style.display = "none";
+            }
+        }
+    }
+
+    function aprovarEmpresa(idEmpresa) {
+        if (!confirm("Tem certeza que deseja APROVAR esta empresa?")) return;
+        fetch(`/solicitacoes/aprovar/${idEmpresa}`, { method: "PUT" })
+        .then(res => {
+            if (res.ok) {
+                alert("Empresa aprovada com sucesso!");
+                carregarSolicitacoes();
+            } else { alert("Erro ao aprovar a empresa."); }
+        })
+        .catch(erro => console.error("Erro na requisição de aprovação:", erro));
+    }
+
+    function recusarEmpresa(idEmpresa) {
+        if (!confirm("ATENÇÃO: Esta ação irá EXCLUIR permanentemente a solicitação. Deseja continuar?")) return;
+        fetch(`/solicitacoes/recusar/${idEmpresa}`, { method: "DELETE" })
+        .then(res => {
+            if (res.ok) {
+                alert("Solicitação recusada e excluída com sucesso.");
+                carregarSolicitacoes();
+            } else { alert("Erro ao recusar a solicitação."); }
+        })
+        .catch(erro => console.error("Erro na requisição de recusa:", erro));
+    }
+
+    function formatarData(dataISO) {
+      const data = new Date(dataISO);
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarCNPJ(cnpj) {
+        return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    window.onload = carregarSolicitacoes;
+  </script>
+</body>
+</html>

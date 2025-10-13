@@ -1,0 +1,67 @@
+/* Estilo para a pílula de status na tabela */
+.status {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: white;
+    text-transform: uppercase;
+}
+
+.status.pendente {
+    background-color: #f39c12; /* Laranja */
+}
+
+/* Estilos para as células de aviso */
+.aviso-vazio, .aviso-erro {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.aviso-erro {
+    color: #e74c3c;
+}
+
+/* Container para os botões de ação */
+td.acao {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo base para os botões de Aprovar/Recusar */
+.btn-acao {
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-acao:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.btn-acao .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+/* Cor específica para o botão APROVAR */
+.btn-acao.aprovar {
+    background-color: #27ae60; /* Verde */
+}
+
+/* Cor específica para o botão RECUSAR */
+.btn-acao.recusar {
+    background-color: #c0392b; /* Vermelho */
+}
