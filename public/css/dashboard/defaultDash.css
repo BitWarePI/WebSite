@@ -90,10 +90,12 @@ nav .btn-sair:hover{
 
 section{
     max-width: 100dvw;
-    background-color: #7e7e7e;
+    background-color: #e0e0e0;
     flex-direction: row;
     color: var(--main-text-inverse-color);
 }
+
+
 section .container{
     width: 100%;
     height: 100dvh;
