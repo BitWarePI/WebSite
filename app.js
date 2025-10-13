@@ -19,6 +19,7 @@ var PORTA_APP = process.env.APP_PORT || 3333;
 var HOST_APP = process.env.APP_HOST || 'localhost';
 
 // Importa rotas
+var solicitacaoRouter = require("./src/routes/solicitacoes");
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
@@ -38,6 +39,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/funcionarios", funcionariosRouter);
 app.use("/cargos", cargoRouter);
 app.use("/empresas", cadastrarEmpresa);
+app.use("/solicitacoes", solicitacaoRouter);
 //app.use("/emails", emailRouter);
 
 // Inicia o servidor
