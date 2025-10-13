@@ -1,5 +1,3 @@
-// src/models/solicitacaoModel.js
-
 var database = require("../database/config");
 
 // Lista todas as empresas que estão com 'ativo' = 0
@@ -25,13 +23,23 @@ function aprovar(idEmpresa) {
 
 // Deleta a empresa do banco (Recusado)
 function recusar(idEmpresa) {
-    // CUIDADO: Garanta que tabelas como 'Funcionario' tenham ON DELETE CASCADE
-    // ou trate a exclusão de funcionários antes de excluir a empresa.
-    var instrucao = `
+    console.log(`Iniciando exclusão em cascata para Empresa ID: ${idEmpresa}`);
+
+    // Passo 1: Deletar os registros dependentes na tabela 'Funcionario'
+    const instrucaoDeleteFuncionarios = `
+        DELETE FROM Funcionario WHERE fkEmpresa = ${idEmpresa};
+    `;
+
+    // Passo 2: Deletar o registro principal na tabela 'Empresa'
+    const instrucaoDeleteEmpresa = `
         DELETE FROM Empresa WHERE idEmpresa = ${idEmpresa};
     `;
-    console.log("Executando a instrução SQL: \n" + instrucao);
-    return database.executar(instrucao);
+
+    // Executa a primeira instrução e, após sua conclusão, executa a segunda.
+    return database.executar(instrucaoDeleteFuncionarios).then(resultado => {
+        console.log(`Funcionários da empresa ${idEmpresa} deletados. Agora deletando a empresa.`);
+        return database.executar(instrucaoDeleteEmpresa);
+    });
 }
 
 module.exports = {
