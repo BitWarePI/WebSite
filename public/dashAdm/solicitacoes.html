@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/default.css">
+  <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
+  <link rel="stylesheet" href="../css/dashboard/solicitacoes.css"> 
+  <link rel="stylesheet" href="../css/animacao.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="icon" href="../assets/icon/favicon2.png">
+  <title>Solicitações de Aprovação | BitWare</title>
+</head>
+
+<body>
+  <section>
+    <nav>
+      <div class="main-nav">
+        <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt="Logo BitWare"></h1>
+        <ul class="links nav-links-pc">
+          <li>
+            <a class="link" href="dashHome.html">
+              <span class="material-symbols-outlined icon">home</span>
+              <span class="titulo">Início</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="dashEmpresa.html">
+              <span class="material-symbols-outlined icon">apartment</span>
+              <span class="titulo">Empresas</span>
+            </a>
+          </li>
+          <li class="ativo">
+            <a class="link" href="solicitacoes.html">
+              <span class="material-symbols-outlined icon">pending_actions</span>
+              <span class="titulo">Solicitações</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="../dashEmpresa/atualizar-senha.html">
+              <span class="material-symbols-outlined icon">lock</span>
+              <span class="titulo">Atualizar senha</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="https://bitwarepi.atlassian.net/servicedesk/customer/portal/34">
+              <span class="material-symbols-outlined icon">bolt</span>
+              <span class="titulo">Suporte</span>
+            </a>
+          </li>
+        </ul>
+        <a href="../index.html" class="btn btn-sair nav-links-pc">Sair</a>
+        <div id="nav-menu-icon">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <ul class="links nav-links-cell">
+        <li><a class="link" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Início</a></li>
+        <li><a class="link" href="dashEmpresa.html"><span class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
+        <li class="ativo"><a class="link" href="solicitacoes.html"><span class="material-symbols-outlined icon">pending_actions</span>Solicitações</a></li>
+        <li><a href="../index.html" class="btn btn-sair">Sair</a></li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <div class="header">
+        <h1>Solicitações Pendentes</h1>
+        <p>Aprove ou recuse os cadastros de novas empresas.</p>
+      </div>
+
+      <div class="lista-solicitacoes" id="lista-solicitacoes">
+        </div>
+    </div>
+  </section>
+
+  <div id="modal-detalhes" class="modal-container">
+    <div class="modal">
+      <button class="fechar" onclick="fecharModal()">x</button>
+      <h2>Dados da empresa</h2>
+      <div class="info-grupo">
+        <label>Razão Social</label>
+        <p id="modal-nome"></p>
+      </div>
+      <div class="info-grupo">
+        <label>CPF/CNPJ</label>
+        <p id="modal-cnpj"></p>
+      </div>
+      <div class="info-grupo">
+        <label>E-mail</label>
+        <p id="modal-email"></p>
+      </div>
+       <div class="info-grupo">
+        <label>Data de Cadastro</label>
+        <p id="modal-dtCadastro"></p>
+      </div>
+      <div class="modal-acoes">
+         <button class="btn-recusar" onclick="recusarSolicitacao()">Recusar</button>
+         <button class="btn-aprovar" onclick="aprovarSolicitacao()">Aprovar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="../js/nav.js"></script>
+  <script>
+    let idEmpresaSelecionada;
+
+    function carregarSolicitacoes() {
+      fetch("/solicitacoes/listarPendentes", { method: "GET" })
+      .then(resposta => {
+        if (!resposta.ok) throw new Error("Erro ao buscar solicitações.");
+        return resposta.json();
+      })
+      .then(solicitacoes => {
+        console.log("Solicitações recebidas:", solicitacoes);
+        criarCards(solicitacoes);
+      })
+      .catch(erro => console.error("#ERRO:", erro));
+    }
+
+    function criarCards(solicitacoes) {
+        const container = document.getElementById("lista-solicitacoes");
+        container.innerHTML = ""; 
+
+        if (solicitacoes.length === 0) {
+            container.innerHTML = `<p class="aviso-vazio">Nenhuma solicitação pendente no momento.</p>`;
+            return;
+        }
+
+        solicitacoes.forEach(empresa => {
+            const card = `
+                <div class="card-solicitacao">
+                    <div class="info">
+                        <span class="nome-empresa">${empresa.nome}</span>
+                        <span class="cnpj-empresa">CNPJ: ${formatarCNPJ(empresa.cnpj)}</span>
+                    </div>
+                    <div class="acoes">
+                        <button class="btn-ver-mais" onclick='abrirModal(${JSON.stringify(empresa)})'>
+                            <span class="material-symbols-outlined">visibility</span> Ver Dados
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += card;
+        });
+    }
+
+    function abrirModal(empresa) {
+        idEmpresaSelecionada = empresa.idEmpresa;
+        document.getElementById('modal-nome').innerText = empresa.nome;
+        document.getElementById('modal-cnpj').innerText = formatarCNPJ(empresa.cnpj);
+        document.getElementById('modal-email').innerText = empresa.email;
+        document.getElementById('modal-dtCadastro').innerText = formatarData(empresa.dtCadastro);
+        document.getElementById('modal-detalhes').classList.add('mostrar');
+    }
+
+    function fecharModal() {
+        document.getElementById('modal-detalhes').classList.remove('mostrar');
+        idEmpresaSelecionada = null;
+    }
+
+    function aprovarSolicitacao() {
+        if (!idEmpresaSelecionada) return;
+
+        fetch(`/solicitacoes/aprovar/${idEmpresaSelecionada}`, { method: "PUT" })
+        .then(res => {
+            if (res.ok) {
+                alert("Empresa aprovada com sucesso!");
+                fecharModal();
+                carregarSolicitacoes();
+            } else {
+                 alert("Erro ao aprovar a empresa.");
+            }
+        })
+        .catch(erro => console.error("Erro na requisição de aprovação:", erro));
+    }
+
+    function recusarSolicitacao() {
+        if (!idEmpresaSelecionada) return;
+        if (!confirm("Tem certeza que deseja recusar e excluir esta solicitação? A ação não pode ser desfeita.")) return;
+        
+        fetch(`/solicitacoes/recusar/${idEmpresaSelecionada}`, { method: "DELETE" })
+        .then(res => {
+            if (res.ok) {
+                alert("Solicitação recusada e excluída com sucesso.");
+                fecharModal();
+                carregarSolicitacoes();
+            } else {
+                alert("Erro ao recusar a solicitação.");
+            }
+        })
+        .catch(erro => console.error("Erro na requisição de recusa:", erro));
+    }
+
+    function formatarData(dataISO) {
+      const data = new Date(dataISO);
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarCNPJ(cnpj) {
+        return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    window.onload = carregarSolicitacoes;
+
+  </script>
+</body>
+</html>
