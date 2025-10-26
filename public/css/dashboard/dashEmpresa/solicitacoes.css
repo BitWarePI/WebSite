@@ -1,0 +1,133 @@
+.container .listaEmpresa {
+    background-color: var(--bg-inverse-color);
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px;
+}
+.container .pesquisa {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+}
+.container .pesquisa .ipt_label {
+    min-width: 150px;
+}
+
+/* ESTILOS DA TABELA */
+table.solicitacoes-table {
+    width: 100%;
+    background-color: #d3d3d3;
+    border-collapse: collapse;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+}
+table.solicitacoes-table thead {
+    display: flex;
+    width: 100%;
+    background-color: var(--bg-color);
+    color: var(--main-text-color);
+}
+table.solicitacoes-table tbody {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    scrollbar-color: var(--bg-inverse-color) var(--bg-color);
+}
+table.solicitacoes-table tr {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    transition: .2s;
+    align-items: center;
+}
+table.solicitacoes-table tbody tr:nth-child(odd) {
+  background-color: #bdbdbd;
+}
+table.solicitacoes-table tbody tr:hover {
+    background-color: #dbacf7;
+}
+table.solicitacoes-table th,
+table.solicitacoes-table td {
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* 1. Alinhamento das Células */
+.solicitacoes-table td.nome,
+.solicitacoes-table td.email,
+.solicitacoes-table td.cnpj,
+.solicitacoes-table td.dt_cadastro,
+.solicitacoes-table td.estado {
+    justify-content: flex-start !important; /* Força alinhamento à esquerda */
+    padding-left: 20px !important;
+}
+
+.solicitacoes-table td.acao {
+    justify-content: center !important; /* Centraliza o wrapper dos botões */
+}
+
+/* 2. Estilo do Status "PENDENTE" */
+.solicitacoes-table .status.pendente {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 12px;
+    color: white;
+    text-transform: uppercase;
+    background-color: #f39c12; /* Laranja */
+}
+
+/* 3. Wrapper para centralização perfeita dos botões */
+.solicitacoes-table .actions-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* 4. Estilo Final dos Botões de Ação */
+.solicitacoes-table th.acao, 
+.solicitacoes-table td.acao {
+    flex: 0 0 250px !important; /* Largura fixa para a coluna */
+}
+
+.solicitacoes-table td.acao .btn-acao {
+    width: 110px !important;
+    height: 40px !important;
+    padding: 0 10px !important;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.solicitacoes-table .btn-acao.aprovar {
+    background-color: #27ae60 !important; /* Verde */
+}
+
+.solicitacoes-table .btn-acao.recusar {
+    background-color: #c0392b !important; /* Vermelho */
+}
+
+.solicitacoes-table td.acao .btn-acao .material-symbols-outlined {
+    font-size: 20px !important;
+}
+
+/* 5. Estilo para Célula de Aviso de Tabela Vazia */
+.solicitacoes-table .aviso-vazio {
+    justify-content: center !important;
+    padding: 2rem;
+    color: #888;
+    font-size: 1.1rem;
+}
