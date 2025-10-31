@@ -71,3 +71,27 @@ INSERT INTO bitware_db.Cargo (descricao) VALUE ("Admin"),("Empresa"), ("Analista
 insert into bitware_db.Empresa (cnpj,nome,email, ativo) values ('00000000000000','Admin_Bitware','admBitware@gmail.com', 1);
 insert into bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa) VALUES ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1);
 -- update bitware_db.empresa set ativo = 1 where idEmpresa = 2;
+
+--  Inserir a máquina com o MAC Address
+INSERT INTO Maquina (enderecoMac, fkEmpresa)
+VALUES ('f4:6a:dd:7b:03:0d', 1);
+
+-- Inserir os componentes/parametros monitorados
+INSERT INTO Componente (descricao)
+VALUES 
+('cpu_percent'),
+('gpu_percent'),
+('ram_percent'),
+('disk_percent'),
+('cpu_temperature'),
+('gpu_temperature');
+
+-- Inserir os valores dos parâmetros da empresa (exemplo inicial)
+INSERT INTO Parametro (fkEmpresa, fkComponente, valor, unidadeMedia)
+VALUES
+(1, 1, 35, '%'),   -- cpu_percent
+(1, 2, 20, '%'),   -- gpu_percent
+(1, 3, 70, '%'),   -- ram_percent
+(1, 4, 55, '%'),   -- disk_percent
+(1, 5, 48, '°C'),  -- cpu_temperature
+(1, 6, 42, '°C');  -- gpu_temperature
