@@ -73,11 +73,11 @@ insert into bitware_db.Funcionario (nome, sobrenome, email, senha, fkCargo, fkEm
 -- update bitware_db.empresa set ativo = 1 where idEmpresa = 2;
 
 --  Inserir a máquina com o MAC Address
-INSERT INTO Maquina (enderecoMac, fkEmpresa)
+INSERT INTO bitware_db.Maquina (enderecoMac, fkEmpresa)
 VALUES ('f4:6a:dd:7b:03:0d', 1);
 
 -- Inserir os componentes/parametros monitorados
-INSERT INTO Componente (descricao)
+INSERT INTO bitware_db.Componente (descricao)
 VALUES 
 ('cpu_percent'),
 ('gpu_percent'),
@@ -87,7 +87,7 @@ VALUES
 ('gpu_temperature');
 
 -- Inserir os valores dos parâmetros da empresa (exemplo inicial)
-INSERT INTO Parametro (fkEmpresa, fkComponente, valor, unidadeMedia)
+INSERT INTO bitware_db.Parametro (fkEmpresa, fkComponente, valor, unidadeMedia)
 VALUES
 (1, 1, 35, '%'),   -- cpu_percent
 (1, 2, 20, '%'),   -- gpu_percent
