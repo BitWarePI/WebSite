@@ -33,10 +33,10 @@
             </a>
           </li>
           <li>
-              <a class="link" href="dashMaquinas.html">
-                  <span class="material-symbols-outlined icon">Computer</span>
-                  <span class="titulo">Máquinas</span>
-              </a>
+            <a class="link" href="dashMaquinas.html">
+              <span class="material-symbols-outlined icon">Computer</span>
+              <span class="titulo">Máquinas</span>
+            </a>
           </li>
           <li>
             <a class="link" href="atualizar-senha.html">
@@ -74,13 +74,20 @@
       </ul>
     </nav>
     <div class="container">
-
       <div style="display: flex; align-items:start; font-size: 20px;"">
                 <h1>Dashboard</h1>
             </div>
 
-            <div style=" display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; justify-content:
-        space-evenly; margin-bottom: 20px;">
+            <div>
+            <div style=" display: flex; align-self: flex-start; flex-direction: column;">
+        <h2 style="text-align:start; margin-bottom:0px;">Média de desempenho das Máquinas</h2>
+        <p style="text-align:start; color:#444; max-width:800px; margin-bottom: 30px;">Indicadores médios de uso e
+          temperatura das CPUs e GPUs das máquinas de mineração no período selecionado. Os dados ajudam a identificar
+          sobrecarga, superaquecimento e gargalos de desempenho.</p>
+      </div>
+
+      <div style=" display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; justify-content:
+        space-evenly; margin-bottom: 20px; gap: 60px;">
 
         <div style="width: 15rem; display: flex; flex-direction: column; justify-content: center;
                       margin-top: 1rem; height: 100%;">
@@ -118,98 +125,99 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center;">
-        <!-- Título centralizado -->
-        <p class="font-bold text-xl mb-4" style="text-align: center;">
-          Desempenho Térmico e Carga de Trabalho — CPU & GPU
-        </p>
+    <div style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center;">
+      <!-- Título centralizado -->
+      <p class="font-bold text-xl mb-4" style="text-align: center;">
+        Desempenho Térmico e Carga de Trabalho — CPU & GPU
+      </p>
 
-        <!-- Contêiner dos dois gráficos lado a lado -->
-        <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%; height: 100%;">
-          <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; height: 90%;">
-            <canvas id="grafico1" style="width: 100%; height: 100%;"></canvas>
-          </div>
+      <!-- Contêiner dos dois gráficos lado a lado -->
+      <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%; height: 100%;">
+        <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; height: 90%;">
+          <canvas id="grafico1" style="width: 100%; height: 100%;"></canvas>
+        </div>
 
-          <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; height: 90%;">
-            <canvas id="grafico2" style="width: 100%; height: 100%;"></canvas>
-          </div>
+        <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; height: 90%;">
+          <canvas id="grafico2" style="width: 100%; height: 100%;"></canvas>
         </div>
       </div>
+    </div>
 
-      <div class="chamado">
-        <table>
-          <thead>
-            <tr>
-              <th class="id">ID</th>
-              <th class="maquina">Máquina</th>
-              <th class="problema">Problema</th>
-              <th class="prioridade">Prioridade</th>
-              <th class="status">Status</th>
-              <th class="tecnico">Técnico responsável</th>
-              <th class="acao"></th>
-            </tr>
-          </thead>
-          <tbody class="">
-            <tr>
-              <td class="id">
-                <p>908</p>
-              </td>
-              <td class="maquina">015 - Corredor B</td>
-              <td class="problema">Superaquecimento</td>
-              <td class="prioridade">Alta</td>
-              <td class="status"><span class="nIniciado">Não iniciado</span></td>
-              <td class="tecnico">Não atribuído</td>
-              <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">
-                <p>666</p>
-              </td>
-              <td class="maquina">098 - Corredor G</td>
-              <td class="problema">uso de GPU abaixo do esperado</td>
-              <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Joseph Townborn</td>
-              <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">
-                <p>666</p>
-              </td>
-              <td class="maquina">098 - Corredor G</td>
-              <td class="problema">uso de GPU abaixo do esperado</td>
-              <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Edward Meanville</td>
-              <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="id">
-                <p>666</p>
-              </td>
-              <td class="maquina">098 - Corredor G</td>
-              <td class="problema">uso de GPU abaixo do esperado</td>
-              <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Melina Straw</td>
-              <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="chamado">
+      <table>
+        <thead>
+          <tr>
+            <th class="id">ID</th>
+            <th class="maquina">Máquina</th>
+            <th class="problema">Problema</th>
+            <th class="prioridade">Prioridade</th>
+            <th class="status">Status</th>
+            <th class="tecnico">Técnico responsável</th>
+            <th class="acao"></th>
+          </tr>
+        </thead>
+        <tbody class="">
+          <tr>
+            <td class="id">
+              <p>908</p>
+            </td>
+            <td class="maquina">015 - Corredor B</td>
+            <td class="problema">Superaquecimento</td>
+            <td class="prioridade">Alta</td>
+            <td class="status"><span class="nIniciado">Não iniciado</span></td>
+            <td class="tecnico">Não atribuído</td>
+            <td class="acao">
+              <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="id">
+              <p>666</p>
+            </td>
+            <td class="maquina">098 - Corredor G</td>
+            <td class="problema">uso de GPU abaixo do esperado</td>
+            <td class="prioridade">Média</td>
+            <td class="status"><span class="andamento">Em andamento</span></td>
+            <td class="tecnico">Joseph Townborn</td>
+            <td class="acao">
+              <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="id">
+              <p>666</p>
+            </td>
+            <td class="maquina">098 - Corredor G</td>
+            <td class="problema">uso de GPU abaixo do esperado</td>
+            <td class="prioridade">Média</td>
+            <td class="status"><span class="andamento">Em andamento</span></td>
+            <td class="tecnico">Edward Meanville</td>
+            <td class="acao">
+              <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="id">
+              <p>666</p>
+            </td>
+            <td class="maquina">098 - Corredor G</td>
+            <td class="problema">uso de GPU abaixo do esperado</td>
+            <td class="prioridade">Média</td>
+            <td class="status"><span class="andamento">Em andamento</span></td>
+            <td class="tecnico">Melina Straw</td>
+            <td class="acao">
+              <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     </div>
   </section>
 
