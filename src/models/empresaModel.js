@@ -34,6 +34,37 @@ function listarEmpresas(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
+function listarEmpresasDelecao(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa WHERE solicitouDelecao = 1;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+function aprovarSolicitacao(idEmpresa){
+    var instrucaoSqlEmpresa = `
+        DELETE FROM Empresa WHERE idEmpresa = ${idEmpresa};
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+
+function negarSolicitacao(idEmpresa){
+    var instrucaoSqlEmpresa = `
+        UPDATE Empresa SET solicitouDelecao = 0 WHERE idEmpresa = ${idEmpresa};
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
 function ativarEmpresa(idEmpresa){
     const id = Number(idEmpresa); // força número
     const sql = `
@@ -58,6 +89,9 @@ function desativarEmpresa(idEmpresa) {
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    listarEmpresasDelecao,
+    aprovarSolicitacao,
+    negarSolicitacao,
     ativarEmpresa,
     desativarEmpresa
 };
