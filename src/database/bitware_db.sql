@@ -145,3 +145,14 @@ VALUES
 (3, 'Disco cheio', 'Baixa', 'Resolvido', 3),
 (2, 'Máquina reiniciando sozinha', 'Crítica', 'Aberto', 2),
 (4, 'Falha na leitura de sensores', 'Alta', 'Aberto', 4);
+
+# Criação de usuarios para respectivas funções
+CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
+
+CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
+
+CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
+FLUSH PRIVILEGES;
