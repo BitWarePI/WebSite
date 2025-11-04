@@ -73,9 +73,25 @@ function ativarFuncionario(req, res) {
     }
 }
 
+function removerFuncionario(req, res) {
+    var funcionarioId = req.params.id;
+    if (funcionarioId == undefined) {
+        res.status(400).send("O id do funcionário está undefined!");
+    } else {
+        funcionariosModel.removerFuncionario(funcionarioId)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }   
+}
+
 module.exports = {
     listarFuncionariosPorEmpresa,
     cadastrarFuncionario,
     inativarFuncionario,
-    ativarFuncionario
+    ativarFuncionario,
+    removerFuncionario
 }
