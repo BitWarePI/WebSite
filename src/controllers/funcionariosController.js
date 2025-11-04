@@ -19,6 +19,45 @@ function listarFuncionariosPorEmpresa(req, res) {
     }
 }
 
+function coletarDados(req, res) {
+    var idFuncionario = req.params.id;
+
+    if (idFuncionario == undefined) {
+        res.status(400).send("O id do funcionario está undefined!");
+    } else {
+        funcionariosModel.coletarDados(idFuncionario)
+            .then(function (resultado) {
+                console.log(`\nResultados encontrados: ${resultado.length}`);
+                console.log(`Resultados: ${JSON.stringify(resultado)}`);
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao buscar os funcionários! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
+function editar(req, res) {
+    const idFuncionario = req.params.id;
+    const { nome, sobrenome, email, senha, descricao } = req.body;
+
+    if (idFuncionario == undefined) {
+        res.status(400).send("O id do funcionario está undefined!");
+    } else {
+        funcionariosModel.editarFuncionario(idFuncionario, nome, sobrenome, email, senha, descricao)
+            .then(resultado => {
+                console.log(`Funcionário ${idFuncionario} atualizado com sucesso.`);
+                res.status(200).json({ mensagem: "Funcionário atualizado com sucesso!" });
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao buscar os funcionários! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 function cadastrarFuncionario(req, res) {
     var nome = req.body.nomeServer;
     var sobrenome = req.body.sobrenomeServer;
@@ -55,7 +94,7 @@ function inativarFuncionario(req, res) {
                 console.log(erro);
                 res.status(500).json(erro.sqlMessage);
             });
-    }   
+    }
 }
 
 function ativarFuncionario(req, res) {
@@ -85,11 +124,13 @@ function removerFuncionario(req, res) {
                 console.log(erro);
                 res.status(500).json(erro.sqlMessage);
             });
-    }   
+    }
 }
 
 module.exports = {
     listarFuncionariosPorEmpresa,
+    coletarDados,
+    editar,
     cadastrarFuncionario,
     inativarFuncionario,
     ativarFuncionario,
