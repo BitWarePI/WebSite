@@ -257,7 +257,49 @@ table tr td.acao button.finalizar {
     color: var(--main-text-color);
 }
 
+#lista_tecnicos_container {
+    padding: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
+.tecnico-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.tecnico-card .info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.tecnico-card .info p strong {
+    color: #000;
+}
+
+.btn-atribuir {
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-atribuir:hover {
+    background-color: #45a049;
+}
 
 .concluidos {
     background-color: var(--sucess-color);
