@@ -47,6 +47,48 @@ function listarEmpresas(req, res){
     });
 }
 
+function listarEmpresasAtivas(req, res){
+    empresaModel.listarEmpresasAtivas().then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar as empresas ativas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function listarEmpresasInativas(req, res){
+    empresaModel.listarEmpresasInativas().then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar as empresas inativas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function carregarKPIS(req, res){
+    empresaModel.carregarKPIS().then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar as empresas desativadas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 function listarEmpresasDelecao(req, res){
     empresaModel.listarEmpresasDelecao().then((resultado) => {
         if (resultado.length > 0) {
@@ -93,7 +135,7 @@ function negarSolicitacao(req, res){
 
 function ativarEmpresa(req, res) {
     const idEmpresa = req.params.id;
-
+    console.log("ENTROU NO ATIVAR EMPRESA")
     empresaModel.ativarEmpresa(idEmpresa).then((resultado) => {
         if (resultado.affectedRows > 0) {
             res.status(200).json({ mensagem: 'Empresa ativada com sucesso.' });
@@ -124,6 +166,9 @@ function desativarEmpresa(req, res) {
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    listarEmpresasAtivas,
+    listarEmpresasInativas,
+    carregarKPIS,
     listarEmpresasDelecao,
     aprovarSolicitacao,
     negarSolicitacao,

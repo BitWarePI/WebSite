@@ -45,10 +45,20 @@ function ativarFuncionario(funcionarioId) {
     return database.executar(instrucaoSql);
 }
 
+function removerFuncionario(funcionarioId) {
+    var instrucaoSql = `
+        DELETE FROM Funcionario 
+        WHERE idFuncionario = ${funcionarioId};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 
 module.exports = {
     listarFuncionariosPorEmpresa,
     cadastrarFuncionario,
     inativarFuncionario,
-    ativarFuncionario
+    ativarFuncionario,
+    removerFuncionario
 };

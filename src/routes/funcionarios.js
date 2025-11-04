@@ -20,4 +20,8 @@ router.put("/ativar/:id", function (req, res) {
     funcionariosController.ativarFuncionario(req, res);
 });
 
+router.delete("/remover/:id", function (req, res) {
+    funcionariosController.removerFuncionario(req, res);
+});
+
 module.exports = router;

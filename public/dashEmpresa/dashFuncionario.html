@@ -323,6 +323,11 @@
                                     onclick="${f.estado == 1 ? `inativarFuncionario(${f.idFuncionario})` : `ativarFuncionario(${f.idFuncionario})`}">
                                     ${f.estado == 1 ? 'remove' : 'check'}
                                 </button>
+                                <button class="material-symbols-outlined deletar" 
+                                    title="Remover" 
+                                    onclick="removerFuncionario(${f.idFuncionario})">
+                                    delete
+                                </button>
                             </td>
                         </tr>`;
                     tbody.innerHTML += linha;
@@ -370,6 +375,31 @@
         .catch(err => {
             console.error(err);
             abrirModalFb('Erro', 'Erro ao ativar funcionário', 'erro');
+        });
+    }
+
+    function removerFuncionario(funcionarioId) {
+    
+        if (!confirm('Tem certeza que deseja REMOVER este funcionário? Você não poderá voltar atrás depois.')) {
+            return; 
+        }
+
+        console.log("Removendo funcionário ID:", funcionarioId);
+        
+        fetch(`/funcionarios/remover/${funcionarioId}`, {
+            method: 'DELETE'
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao remover funcionário");
+            return res.json();
+        })
+        .then(() => {
+            abrirModalFb('Sucesso', 'Funcionário removido permanentemente.', 'sucesso');
+            carregarFuncionarios();
+        })
+        .catch(err => {
+            console.error(err);
+            abrirModalFb('Erro', 'Erro ao remover o funcionário.', 'erro');
         });
     }
 

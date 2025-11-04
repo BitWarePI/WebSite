@@ -116,7 +116,7 @@ table {
     background-color: #d3d3d3;
     border-collapse: collapse;
     height: fit-content;
-    max-height: 200px;
+    max-height: 600px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
