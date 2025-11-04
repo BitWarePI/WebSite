@@ -24,6 +24,7 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
 var funcionariosRouter = require("./src/routes/funcionarios");
+var maquinaRouter = require("./src/routes/maquina")
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 
@@ -40,6 +41,7 @@ app.use("/funcionarios", funcionariosRouter);
 app.use("/cargos", cargoRouter);
 app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
+app.use("/maquina", maquinaRouter)
 //app.use("/emails", emailRouter);
 
 // Inicia o servidor
