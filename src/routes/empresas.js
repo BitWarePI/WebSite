@@ -12,6 +12,19 @@ router.get("/listarEmpresas", function(req, res){
     empresaController.listarEmpresas(req, res);
 })
 
+router.get("/listarEmpresasAtivas", function(req, res){
+    empresaController.listarEmpresasAtivas(req, res);
+})
+
+router.get("/listarEmpresasInativas", function(req, res){
+    empresaController.listarEmpresasInativas(req, res);
+})
+
+router.get("/carregarKPIS", function(req, res){
+    empresaController.carregarKPIS(req, res);
+})
+
+
 router.get("/listarEmpresasDelecao", function(req, res){
     empresaController.listarEmpresasDelecao(req, res);
 })

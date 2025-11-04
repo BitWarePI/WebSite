@@ -34,6 +34,39 @@ function listarEmpresas(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
+function listarEmpresasAtivas(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa WHERE ativo = 1;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+function listarEmpresasInativas(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa WHERE ativo = 0;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+
+function carregarKPIS(){
+    var instrucaoSqlEmpresa = `
+        SELECT COUNT(*) as qtdEmpresas, SUM(CASE WHEN ativo = 1 THEN 1 ELSE 0 END) as empresasAtivas, 
+	    SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) as solicitacoes FROM Empresa;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+
 function listarEmpresasDelecao(){
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa WHERE solicitouDelecao = 1;
@@ -89,7 +122,10 @@ function desativarEmpresa(idEmpresa) {
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    carregarKPIS,
     listarEmpresasDelecao,
+    listarEmpresasAtivas,
+    listarEmpresasInativas,
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,

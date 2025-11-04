@@ -59,17 +59,17 @@
       <div class="kpi-container">
         <div class="kpi-card">
           <h3 class="titulo">Empresas<br>Cadastradas</h3>
-          <p class="quantidade">12</p>
+          <p class="quantidade" id="quantidadeEmpresas">12</p>
           <span class="material-symbols-outlined icon cadastrada">apartment</span>
         </div>
         <div class="kpi-card">
           <h3 class="titulo">Empresas<br>Ativas</h3>
-          <p class="quantidade">12</p>
+          <p class="quantidade" id="quantidadeEmpresasAtivas">12</p>
           <span class="material-symbols-outlined icon ativo">apartment</span>
         </div>
         <div class="kpi-card">
           <h3 class="titulo">Qtde.<br>Solicitações</h3>
-          <p class="quantidade">12</p>
+          <p class="quantidade" id="quantidadeSolicitacoes">12</p>
           <span class="material-symbols-outlined icon solicitacao">apartment</span>
         </div>
       </div>
@@ -89,9 +89,8 @@
               <option value="inativo">Inativos</option>
             </select>
           </div>
-          <button class="requisicao" onclick="window.location.href='solicitacoes.html'">Ver Solicitações (+)</button>
         </div>
-        <div id="cards-container">
+        <div id="cards-container" class="cards-container">
           <table>
             <thead>
               <tr>
@@ -114,15 +113,70 @@
 
   <script src="../js/nav.js"></script>
   <script>
-    function carregarEmpresas() {
-      fetch("/empresas/listarEmpresas", {
+
+    let todasEmpresas = [];
+    const filtro = document.getElementById("filtroPesquisa");
+
+    document.getElementById("pesquisa_input").addEventListener("keypress", function (e) {
+      if (e.key == "Enter") {
+        filtrarEmpresasPorNome();
+      }
+    });
+
+    function filtrarEmpresasPorNome() {
+      console.log("ENTROU NO FILTRAR EMPRESAS POR NOME")
+      const termo = document.getElementById("pesquisa_input").value.trim().toLowerCase();
+
+      if (termo === "") {
+        console.log("TERMO É VAZIO")
+        console.log("FILTRO: " + filtro.value)
+
+        if (filtro.value == "todos") {
+          console.log("ENTROU NO CARREGAR todas empresas")
+          carregarEmpresas();
+        } else if (filtro.value == "ativo") {
+          console.log("ENTROU NO CARREGAR EMPRESAS ativas")
+          carregarEmpresasAtivas()
+        } else {
+          console.log("ENTROU NO CARREGAR EMPRESAS INATIVAS")
+          carregarEmpresasInativas()
+        }
+        return;
+      }
+
+      const empresasFiltradas = todasEmpresas.filter(empresa =>
+        empresa.nome.toLowerCase().includes(termo)
+      );
+
+      console.log("Empresas filtradas:", empresasFiltradas);
+      criarEmpresas(empresasFiltradas, filtro.value);
+    }
+
+    filtro.addEventListener("change", function () {
+      const valorSelecionado = filtro.value;
+
+      if (valorSelecionado === "ativo") {
+        carregarEmpresasAtivas()
+      } else if (valorSelecionado === "inativo") {
+        carregarEmpresasInativas()
+      } else {
+        carregarEmpresas()
+      }
+    });
+
+    function carregarKPIS() {
+      fetch("/empresas/carregarKPIS", {
         method: "GET"
       })
         .then(function (resposta) {
-          resposta.json().then(function (empresas) {
+          resposta.json().then(function (dados) {
             if (resposta.ok) {
-              console.log("Empresas recebidas:", empresas);
-              criarEmpresas(empresas);
+              const empresas = dados[0];
+              console.log("KPIS RECEBIDAS:", empresas);
+
+              document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas}</p>`;
+              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas}</p>`;
+              document.getElementById("quantidadeSolicitacoes").innerHTML = `<p>${empresas.solicitacoes}</p>`;
             } else {
               console.error("Erro ao buscar empresas:", resposta.statusText);
             }
@@ -133,7 +187,94 @@
         });
     }
 
-    function criarEmpresas(empresas) {
+    function carregarEmpresasAtivas() {
+      fetch("/empresas/listarEmpresasAtivas", {
+        method: "GET"
+      })
+        .then(function (resposta) {
+          resposta.json().then(function (empresas) {
+            if (resposta.ok) {
+              console.log("Empresas recebidas:", empresas);
+              todasEmpresas = empresas;
+              criarEmpresas(empresas, "ativos");
+            } else {
+              console.error("Erro ao buscar empresas:", resposta.statusText);
+            }
+          });
+        })
+        .catch(function (erro) {
+          console.error("#ERRO:", erro);
+        });
+    }
+
+    function carregarEmpresasInativas() {
+      fetch("/empresas/listarEmpresasInativas", { method: "GET" })
+        .then(function (resposta) {
+          if (!resposta.ok) {
+            console.error("Erro ao buscar empresas:", resposta.statusText);
+            todasEmpresas = empresas;
+            criarEmpresas(null);
+            return;
+          }
+
+          resposta.text().then(function (texto) {
+            if (!texto || texto.trim() === "") {
+              console.log("Nenhuma empresa inativa (corpo vazio)");
+              criarEmpresas(null);
+              return;
+            }
+
+            try {
+              const empresas = JSON.parse(texto);
+              if (!empresas || empresas.length === 0) {
+                console.log("Nenhuma empresa inativa (array vazio)");
+                criarEmpresas(null);
+                return;
+              }
+              console.log("Empresas recebidas:", empresas);
+              criarEmpresas(empresas, "inativos");
+            } catch (e) {
+              console.error("JSON inválido:", e);
+              criarEmpresas(null);
+            }
+          });
+        })
+        .catch(function (erro) {
+          console.error("#ERRO:", erro);
+        });
+    }
+
+
+
+    function carregarEmpresas() {
+      fetch("/empresas/listarEmpresas", {
+        method: "GET"
+      })
+        .then(function (resposta) {
+          resposta.json().then(function (empresas) {
+            if (resposta.ok) {
+              console.log("Empresas recebidas:", empresas);
+              todasEmpresas = empresas;
+              criarEmpresas(empresas, "todos");
+            } else {
+              console.error("Erro ao buscar empresas:", resposta.statusText);
+            }
+          });
+        })
+        .catch(function (erro) {
+          console.error("#ERRO:", erro);
+        });
+    }
+
+    function criarEmpresas(empresas, filtro) {
+      console.log("ENTROU NO CRIAR EMPRESA: " + filtro)
+      if (empresas == null) {
+        const corpoTabela = document.querySelector("table tbody");
+        corpoTabela.innerHTML = "";
+        return;
+      }
+
+      console.log("ENTROU NO CRIAR EMPRESAS")
       const corpoTabela = document.querySelector("table tbody");
       corpoTabela.innerHTML = ""; // Limpa a tabela antes de adicionar novos dados.
 
@@ -144,6 +285,7 @@
         if (Number(empresa.ativo?.data?.[0]) === 1) {
           estado = "Ativo";
         } else {
+          console.log("EMPRESA ESTA INATIVA: " + empresa.nome)
           estado = "Inativo";
         }
 
@@ -167,7 +309,7 @@
                 <td class="estado">${estadoSpan}</td>
                 <td class="acao">
                     <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
-                    ${botaoAtivarOuInativar}
+                    <div id="divBotaoAtivarInativar">${botaoAtivarOuInativar}</div>
                 </td>
             </tr>
         `;
@@ -179,13 +321,19 @@
             const id = this.getAttribute("data-id");
             const ativo = this.getAttribute("data-ativo");
 
+            console.log("ID: " + id)
+            console.log("ATIVO: " + ativo)
+
             var url = ""
 
-            if (Number(empresa.ativo?.data?.[0]) === 1) {
+            if (ativo == 1) {
+              console.log("ENTROU NO DESATIVAR EMPRESA")
               url = `/empresas/desativarEmpresa/${id}`
             } else {
+              console.log("ENTROU NO ATIVAR EMPRESA")
               url = `/empresas/ativarEmpresa/${id}`
             }
+
 
             fetch(url, {
               method: "PUT"
@@ -193,7 +341,17 @@
               .then(res => res.json())
               .then(data => {
                 console.log(data.mensagem || "Status alterado com sucesso.");
-                carregarEmpresas();
+                if (filtro == "todos") {
+                  console.log("ENTROU NO CARREGAR todas empresas")
+                  carregarEmpresas();
+                } else if (filtro == "ativos") {
+                  console.log("ENTROU NO CARREGAR EMPRESAS ativas")
+                  carregarEmpresasAtivas()
+                } else {
+                  console.log("ENTROU NO CARREGAR EMPRESAS INATIVAS")
+                  carregarEmpresasInativas()
+                }
+
               })
               .catch(erro => {
                 console.error("Erro ao alterar status da empresa:", erro);
@@ -212,10 +370,11 @@
     }
 
     window.onload = function () {
+      carregarKPIS();
       carregarEmpresas();
 
       setInterval(function () {
-        carregarEmpresas();
+        carregarKPIS();
       }, 5000); // Atualiza as empresas a cada 5 segundos
     }
   </script>
