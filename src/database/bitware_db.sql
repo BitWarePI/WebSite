@@ -147,8 +147,19 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Duperaquecimento', 'Alta', 'Aberto', 1),
+(1, 'Superaquecimento', 'Alta', 'Aberto', 1),
 (2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
 (3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
 (2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
 (4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
+
+# Criação de usuarios para respectivas funções
+CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
+
+CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
+
+CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
+FLUSH PRIVILEGES;
