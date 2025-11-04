@@ -8,6 +8,7 @@ CREATE TABLE Empresa (
   nome VARCHAR(200) NOT NULL,
   email VARCHAR(200) NOT NULL,
   ativo BIT(1) NOT NULL DEFAULT 0,
+  solicitouDelecao BIT(1) NOT NULL DEFAULT 0,
   dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   chave BINARY(16),
   PRIMARY KEY (idEmpresa)
@@ -32,6 +33,7 @@ CREATE TABLE Funcionario (
   PRIMARY KEY (idFuncionario),
   CONSTRAINT fk_Funcionario_Cargo FOREIGN KEY (fkCargo) REFERENCES Cargo (idCargo),
   CONSTRAINT fk_Empresa_Funcionario FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Maquina (
@@ -40,6 +42,7 @@ CREATE TABLE Maquina (
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idMaquina),
   CONSTRAINT fk_Empresa_Maquina FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Componente (
@@ -53,7 +56,8 @@ CREATE TABLE Parametro (
   fkComponente INT,
   valor INT NOT NULL,
   PRIMARY KEY (fkMaquina, fkComponente),
-  CONSTRAINT fk_Maquina_Parametro FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina),
+  CONSTRAINT fk_Maquina_Parametro FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
+    ON DELETE CASCADE,
   CONSTRAINT fk_Componente_Parametro FOREIGN KEY (fkComponente) REFERENCES Componente (idComponente)
 );
 
@@ -64,6 +68,7 @@ CREATE TABLE ParametrosGeraisEmpresa (
   cpu_temperature INT CHECK (cpu_temperature BETWEEN 0 AND 120),
   gpu_temperature INT CHECK (gpu_temperature BETWEEN 0 AND 120),
   CONSTRAINT fk_Empresa_ParametrosGerais FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Chamado (
@@ -74,8 +79,10 @@ CREATE TABLE Chamado (
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina),
+  CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
+    ON DELETE CASCADE,
   CONSTRAINT fk_Tecnico_Chamado FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
+    ON DELETE CASCADE
 );
 
 INSERT INTO Cargo (descricao) VALUES 
@@ -140,11 +147,11 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Temperatura da CPU acima do normal', 'Alta', 'Aberto', 1),
-(2, 'Uso de GPU muito alto', 'Média', 'Em andamento', 2),
-(3, 'Disco cheio', 'Baixa', 'Resolvido', 3),
-(2, 'Máquina reiniciando sozinha', 'Crítica', 'Aberto', 2),
-(4, 'Falha na leitura de sensores', 'Alta', 'Aberto', 4);
+(1, 'Superaquecimento', 'Alta', 'Aberto', 1),
+(2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
+(3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
+(4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
 
 # Criação de usuarios para respectivas funções
 CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';

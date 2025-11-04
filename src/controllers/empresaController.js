@@ -47,6 +47,50 @@ function listarEmpresas(req, res){
     });
 }
 
+function listarEmpresasDelecao(req, res){
+    empresaModel.listarEmpresasDelecao().then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao buscar as empresas desativadas: ", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function aprovarSolicitacao(req, res){
+    var idEmpresa = req.body.idEmpresa;
+    empresaModel.aprovarSolicitacao(idEmpresa).then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao aprovar a solicitação de exclusão da empresa", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function negarSolicitacao(req, res){
+    var idEmpresa = req.body.idEmpresa;
+    empresaModel.negarSolicitacao(idEmpresa).then((resultado) => {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).json([]);
+        }
+    }).catch(function (erro){
+        console.log(erro);
+        console.log("Houve um erro ao negar a solicitação de exclusão da empresa", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 function ativarEmpresa(req, res) {
     const idEmpresa = req.params.id;
 
@@ -80,6 +124,9 @@ function desativarEmpresa(req, res) {
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    listarEmpresasDelecao,
+    aprovarSolicitacao,
+    negarSolicitacao,
     ativarEmpresa,
     desativarEmpresa
 };

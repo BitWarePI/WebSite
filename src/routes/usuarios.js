@@ -16,4 +16,8 @@ router.post("/atualizarSenha", function (req, res) {
     usuarioController.atualizarSenha(req, res);
 });
 
+router.post("/solicitarDelecao", function (req, res) {
+    usuarioController.solicitarDelecao(req, res);
+});
+
 module.exports = router;

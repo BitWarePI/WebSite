@@ -27,6 +27,12 @@
             </a>
           </li>
           <li>
+            <a class="link" href="dashExclusoes.html">
+              <span class="material-symbols-outlined icon">do_not_disturb_on</span>
+              <span class="titulo">Solicitações exclusão</span>
+            </a>
+          </li>
+          <li>
             <a class="link" href="../dashEmpresa/atualizar-senha.html">
               <span class="material-symbols-outlined icon">lock</span>
               <span class="titulo">Atualizar senha</span>
@@ -174,13 +180,13 @@
             const ativo = this.getAttribute("data-ativo");
 
             var url = ""
-            
-            if(Number(empresa.ativo?.data?.[0]) === 1){
+
+            if (Number(empresa.ativo?.data?.[0]) === 1) {
               url = `/empresas/desativarEmpresa/${id}`
             } else {
               url = `/empresas/ativarEmpresa/${id}`
             }
-          
+
             fetch(url, {
               method: "PUT"
             })
