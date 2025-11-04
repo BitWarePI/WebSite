@@ -85,7 +85,7 @@
                 <div class="kpi-card">
                     <h3 class="titulo">Máquinas sem <br>parâmetros</h3>
                     <p class="quantidade" id="qtdSemParam">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">warning</span>
+                    <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
                 <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
             </div>
@@ -93,8 +93,8 @@
             <div class="listaEmpresa">
                 <div class="pesquisa">
                     <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="Nome da máquina..."
+                        <label for="pesquisa_input">Pesquisar (Endereço MAC)</label>
+                        <input id="pesquisa_input" type="text"
                             oninput="pesquisarMaquina()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
                     </div>
@@ -295,7 +295,7 @@
                     return res.json();
                 })
                 .then(() => {
-                    toggleModal();
+                    abrirModalParametrosGerais();
                 })
                 .catch(err => {
                     console.error(err);

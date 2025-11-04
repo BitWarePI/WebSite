@@ -1,3 +1,7 @@
 #qtdSemParam{
     color: red !important;
 }
+
+.container .kpi-container .kpi-card .icon.solicitacao{
+    background-color: var(--secondary-color);
+}
