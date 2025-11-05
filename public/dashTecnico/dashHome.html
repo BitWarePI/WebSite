@@ -337,9 +337,36 @@
       });
   }
 
+  function carregarKPIs() {
+        var idEmpresa = sessionStorage.getItem('idEmpresa');
+        document.getElementById('kpi_pendentes').innerText = '...';
+        document.getElementById('kpi_criticos').innerText = '...';
+        document.getElementById('kpi_maquinas').innerText = '...';
+
+        fetch(`/chamados/kpi/empresa/${idEmpresa}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao buscar KPIs');
+                return res.json();
+            })
+            .then(data => {
+                var kpis = data[0]; 
+                
+                document.getElementById('kpi_pendentes').innerText = kpis.pendentes;
+                document.getElementById('kpi_criticos').innerText = kpis.criticos;
+                document.getElementById('kpi_maquinas').innerText = kpis.maquinasComProblema;
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('kpi_pendentes').innerText = 'Erro';
+                document.getElementById('kpi_criticos').innerText = 'Erro';
+                document.getElementById('kpi_maquinas').innerText = 'Erro';
+            });
+    }
+
   window.onload = function() {
     carregarChamados();
+    carregarKPIs();
   }
 
-  
+
 </script>

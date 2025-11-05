@@ -10,4 +10,8 @@ router.get("/empresa/:idEmpresa", function (req, res) {
     chamadosController.listarChamadosPorEmpresa(req, res);
 });
 
+router.get("/kpi/empresa/:idEmpresa", function (req, res) {
+    chamadosController.buscarKPIs(req, res);
+});
+
 module.exports = router;

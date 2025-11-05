@@ -34,7 +34,33 @@ function listarChamadosPorEmpresa(idEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarKPIs(idEmpresa) {
+    var instrucaoSql = `
+        SELECT 
+            (SELECT COUNT(c.idChamado) 
+             FROM Chamado c
+             JOIN Maquina m ON c.fkMaquina = m.idMaquina
+             WHERE m.fkEmpresa = ${idEmpresa} AND c.status = 'Aberto') AS pendentes,
+             
+            (SELECT COUNT(c.idChamado) 
+             FROM Chamado c
+             JOIN Maquina m ON c.fkMaquina = m.idMaquina
+             WHERE m.fkEmpresa = ${idEmpresa} AND c.prioridade = 'Alta' AND c.status != 'Resolvido') AS criticos,
+             
+            (SELECT COUNT(DISTINCT m.idMaquina) 
+             FROM Chamado c
+             JOIN Maquina m ON c.fkMaquina = m.idMaquina
+             WHERE m.fkEmpresa = ${idEmpresa} AND c.status != 'Resolvido') AS maquinasComProblema
+        
+        FROM Empresa 
+        WHERE idEmpresa = ${idEmpresa};
+    `;
+    console.log("Executando a instrução SQL (KPIs): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     atribuirTecnico,
-    listarChamadosPorEmpresa
+    listarChamadosPorEmpresa,
+    buscarKPIs
 };

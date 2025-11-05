@@ -36,7 +36,25 @@ function listarChamadosPorEmpresa(req, res) {
     }
 }
 
+function buscarKPIs(req, res) {
+    var idEmpresa = req.params.idEmpresa;
+
+    if (idEmpresa == undefined) {
+        res.status(400).send("O id da empresa está undefined!");
+    } else {
+        chamadosModel.buscarKPIs(idEmpresa)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao buscar os KPIs! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     atribuirTecnico,
-    listarChamadosPorEmpresa
+    listarChamadosPorEmpresa,
+    buscarKPIs
 }
