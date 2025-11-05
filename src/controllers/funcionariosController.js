@@ -127,6 +127,23 @@ function removerFuncionario(req, res) {
     }
 }
 
+function listarTecnicosPorEmpresa(req, res) {
+    var idEmpresa = req.params.idEmpresa;
+
+    if (idEmpresa == undefined) {
+        res.status(400).send("O id da empresa está undefined!");
+    } else {
+        funcionariosModel.listarTecnicosPorEmpresa(idEmpresa)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao buscar os técnicos! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     listarFuncionariosPorEmpresa,
     coletarDados,
@@ -134,5 +151,6 @@ module.exports = {
     cadastrarFuncionario,
     inativarFuncionario,
     ativarFuncionario,
-    removerFuncionario
+    removerFuncionario,
+    listarTecnicosPorEmpresa
 }

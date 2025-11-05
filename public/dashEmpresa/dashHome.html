@@ -14,8 +14,6 @@
   <title>Dashboard | BitWare</title>
 </head>
 
-
-
 <body>
 
   <section>
@@ -37,7 +35,7 @@
           <li>
             <a class="link" href="dashMaquinas.html">
               <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Máquinas</span>
+              <span class="titulo">Máquina Parâmetros</span>
             </a>
           </li>
           <li>
@@ -187,52 +185,60 @@
               <td class="maquina">015 - Corredor B</td>
               <td class="problema">Superaquecimento</td>
               <td class="prioridade">Alta</td>
-              <td class="status"><span class="nIniciado">Não iniciado</span></td>
-              <td class="tecnico">Não atribuído</td>
+              <td class="status">
+                <span class="status-badge nIniciado">Não iniciado</span>
+              </td>
+              <td class="tecnico tecnico-nome">Não atribuído</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(908)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
-            <tr>
+
+            <tr id="chamado-666">
               <td class="id">
                 <p>666</p>
               </td>
               <td class="maquina">098 - Corredor G</td>
               <td class="problema">uso de GPU abaixo do esperado</td>
               <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Joseph Townborn</td>
+              <td class="status">
+                <span class="status-badge andamento">Em andamento</span>
+              </td>
+              <td class="tecnico tecnico-nome">Joseph Townborn</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(666)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
-            <tr>
-              <td class="id">
+
+            <tr id="chamado-667"> <td class="id">
+                <p>666</p> </td>
+              <td class="maquina">098 - Corredor G</td>
+              <td class="problema">uso de GPU abaixo do esperado</td>
+              <td class="prioridade">Média</td>
+              <td class="status">
+                <span class="status-badge andamento">Em andamento</span>
+              </td>
+              <td class="tecnico tecnico-nome">Edward Meanville</td>
+              <td class="acao">
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(667)">play_arrow</button>
+                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+              </td>
+            </tr>
+
+            <tr id="chamado-668"> <td class="id">
                 <p>666</p>
               </td>
               <td class="maquina">098 - Corredor G</td>
               <td class="problema">uso de GPU abaixo do esperado</td>
               <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Edward Meanville</td>
-              <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+              <td class="status">
+                <span class="status-badge andamento">Em andamento</span>
               </td>
-            </tr>
-            <tr>
-              <td class="id">
-                <p>666</p>
-              </td>
-              <td class="maquina">098 - Corredor G</td>
-              <td class="problema">uso de GPU abaixo do esperado</td>
-              <td class="prioridade">Média</td>
-              <td class="status"><span class="andamento">Em andamento</span></td>
-              <td class="tecnico">Melina Straw</td>
+              <td class="tecnico tecnico-nome">Melina Straw</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(668)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
@@ -240,6 +246,19 @@
         </table>
       </div>
     </div>
+
+    <div class="modal" id="modal_atribuir_tecnico">
+      <div class="modal-container" id="modal_container_atribuir">
+          <div class="header">
+              <h1>Atribuir Técnico ao Chamado</h1>
+              <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+                  close
+              </button>
+          </div>
+          <div class="body" id="lista_tecnicos_container">
+              </div>
+      </div>
+  </div>
   </section>
 
   <script src="../js/nav.js"></script>

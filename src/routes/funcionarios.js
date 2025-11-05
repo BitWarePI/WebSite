@@ -37,4 +37,8 @@ router.delete("/funcionarios/:id", function (req, res) {
     funcionariosController.removerFuncionario(req, res);
 });
 
+router.get("/tecnicos/empresa/:idEmpresa", function (req, res) {
+    funcionariosController.listarTecnicosPorEmpresa(req, res);
+});
+
 module.exports = router;
