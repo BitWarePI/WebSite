@@ -157,7 +157,7 @@ function inativarEmpresa(req, res) {
     usuarioModel.verificarSenhaAtual(idFuncionario, senhaVar)
         .then(resultado => {
             if (resultado.length > 0) {
-                // Senha atual confere, pode deletar
+                // Senha atual confere, pode inativar
                 empresaModel.inativarEmpresa(emailEmpresa)
                     .then(() => {
                         res.status(200).json({ mensagem: "Solicitação de deleção da empresa realizada com sucesso" });
