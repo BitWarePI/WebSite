@@ -94,8 +94,7 @@
                 <div class="pesquisa">
                     <div class="ipt_label">
                         <label for="pesquisa_input">Pesquisar (Endereço MAC)</label>
-                        <input id="pesquisa_input" type="text"
-                            oninput="pesquisarMaquina()">
+                        <input id="pesquisa_input" type="text" oninput="pesquisarMaquina()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
                     </div>
                 </div>
@@ -118,6 +117,21 @@
             </div>
         </div>
     </section>
+
+    <!-- Model de alerta -->
+    <div class="modal aviso" id="modal_avisar_parametros_gerais">
+        <div class="modal-container" id="modal_container_avisar_parametros_gerais">
+            <div class="header">
+                <h1>Aviso</h1>
+                <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
+            </div>
+            <div class="body">
+                <p>Os parâmetros gerais não foram definidos para esta empresa. Você precisa defini-los antes de
+                    continuar.</p>
+                <button class="btn submit" onclick="abrirModalParametrosGerais()">Definir Parâmetros Gerais</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL PARÂMETROS GERAIS -->
     <div class="modal cadastro" id="modal_param_gerais">
@@ -165,7 +179,7 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     </div>
 
     <script src="../js/nav.js"></script>
@@ -180,6 +194,7 @@
 
         // ---------- ABRIR / FECHAR MODAIS ----------
         function abrirModalParametrosGerais() {
+            toggleModalAviso(false);
             toggleModal(modalGeral, modalGeralContainer);
         }
 
@@ -311,21 +326,42 @@
                     return res.json();
                 })
                 .then(param => {
-                    if (!param || Array.length === 0) {
-                        // Nenhum parâmetro geral definido
-                        setTimeout(() => toggleModalParametrosGerais(true), 1200);
+                    if (Array.isArray(param) && param.length > 0) {
+                        console.log("Parâmetros gerais CARREGADOS. Modal de aviso NÃO será aberto.", param);
                     } else {
-                        console.log("Parâmetros gerais carregados:", param);
+                        console.log("Parâmetros gerais AUSENTES (array vazio). Abrindo aviso.");
+                        setTimeout(() => {
+                            toggleModalAviso(true);
+                        }, 200);
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    abrirModalFb('Erro', 'Erro ao buscar parâmetros gerais.', 'erro');
                 });
+        }
+
+        // Função para mostrar ou esconder o modal de aviso
+        function toggleModalAviso(show) {
+            console.log(`Abrindo modal de aviso: ${show}`);
+            let modalAviso = document.getElementById('modal_avisar_parametros_gerais');
+            let containerAviso = document.getElementById('modal_container_avisar_parametros_gerais');
+
+            if (show) {
+                modalAviso.classList.add('open');  
+                modalAviso.classList.remove('fade-out-flex');  
+                modalAviso.classList.add('fade-in'); 
+                containerAviso.classList.add('slide-in-top'); 
+            } else {
+                modalAviso.classList.remove('fade-in');  
+                containerAviso.classList.remove('slide-in-top');  
+                modalAviso.classList.add('fade-out-flex');  
+                modalAviso.classList.remove('open');  
+            }
         }
 
         window.onload = function () {
             carregarMaquinas();
+            verificarParametrosGerais();
         }
     </script>
 </body>
