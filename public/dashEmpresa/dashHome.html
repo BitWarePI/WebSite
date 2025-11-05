@@ -72,6 +72,7 @@
       </ul>
     </nav>
 
+    <!--COPIAR ESSA DIV PARA SIDEBAR FIXA!!!!!!!!!!!!!!!!-->
     <div style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
       <div style="display: flex; align-items:start; font-size: 20px;">
@@ -297,7 +298,7 @@
   const inputFim = document.getElementById('dt_fim');
   const btnAplicar = document.getElementById('btn_aplicar');
   const textoPeriodo = document.querySelector('p strong');
-  const kpiCards = document.querySelectorAll('.container > div > div > div > div > p:nth-child(2)');
+
 
   function random(min, max, decimal = 1) {
     return (Math.random() * (max - min) + min).toFixed(decimal);
@@ -323,8 +324,11 @@
     if (!inicio && !fim) {
       textoPeriodo.textContent = '24 horas';
     } else if (!inicio || !fim) {
-      alert('Por favor, selecione as duas datas.');
-      return;
+      alert('Por favor, selecione as duas datas!!');
+      return
+    }else if(fim < inicio){
+      alert("Datas incoerentes, por favor selecionar corretamente!!")
+      return
     } else {
       const dataInicio = formatar(new Date(inicio));
       const dataFim = formatar(new Date(fim));
