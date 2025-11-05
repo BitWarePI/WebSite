@@ -49,15 +49,7 @@ function atualizarSenha(idFuncionario, novaSenha) {
     return database.executar(instrucao);
 }
 
-function solicitarDelecao(emailEmpresa) {
-    var instrucao = `
-        UPDATE Empresa 
-        SET solicitouDelecao = 1
-        WHERE email = "${emailEmpresa}"
-        LIMIT 1;
-    `;
-    return database.executar(instrucao);
-}
+
 
 
 module.exports = {
@@ -66,5 +58,5 @@ module.exports = {
     verificarEmpresa,
     verificarSenhaAtual,
     atualizarSenha,
-    solicitarDelecao
+    inativarEmpresa
 };

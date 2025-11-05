@@ -8,7 +8,6 @@ CREATE TABLE Empresa (
   nome VARCHAR(200) NOT NULL,
   email VARCHAR(200) NOT NULL,
   ativo BIT(1) NOT NULL DEFAULT 0,
-  solicitouDelecao BIT(1) NOT NULL DEFAULT 0,
   dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   chave BINARY(16),
   PRIMARY KEY (idEmpresa)
