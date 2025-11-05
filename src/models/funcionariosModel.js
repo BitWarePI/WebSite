@@ -103,8 +103,7 @@ function ativarFuncionario(funcionarioId) {
 
 function removerFuncionario(funcionarioId) {
     var instrucaoSql = `
-        DELETE FROM Funcionario 
-        WHERE idFuncionario = ${funcionarioId};
+        DELETE FROM Funcionario WHERE idFuncionario = ${funcionarioId};
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -115,7 +114,7 @@ function listarTecnicosPorEmpresa(empresaId) {
         SELECT 
             f.idFuncionario, 
             f.nome, 
-            f.sobrenom, 
+            f.sobrenome, 
             f.email,
             c.descricao AS cargo,
             e.nome AS nomeEmpresa,
@@ -125,7 +124,7 @@ function listarTecnicosPorEmpresa(empresaId) {
         FROM Funcionario f
             JOIN Empresa e ON f.fkEmpresa = e.idEmpresa
             JOIN Cargo c ON f.fkCargo = c.idCargo
-        WHERE f.fkEmpresa = ${empresaId} AND c.descricao = 'Técnico' AND f.validado = 1;e
+        WHERE f.fkEmpresa = ${empresaId} AND c.descricao = 'Técnico' AND f.validado = 1;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

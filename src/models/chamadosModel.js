@@ -16,7 +16,7 @@ function listarChamadosPorEmpresa(idEmpresa) {
     var instrucaoSql = `
         SELECT 
             c.idChamado, 
-            m.enderecoMac, -- NOTA: Sua tabela Maquina não tem "nome", estou usando enderecoMac
+            m.enderecoMac,
             c.problema, 
             c.prioridade, 
             c.status,

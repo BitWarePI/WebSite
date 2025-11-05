@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-
 var chamadosController = require("../controllers/chamadosController");
 
 router.put("/atribuir/:idChamado", function (req, res) {

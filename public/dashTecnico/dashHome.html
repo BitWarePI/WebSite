@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/animacao.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="icon" href="../assets/icon/favicon2.png">
-    <title>Dashboard | BitWare</title>
+    <title>Dashboard Técnico | BitWare</title>
 </head>
 <body>
     
@@ -57,20 +57,20 @@
             </ul>
         </nav>    
         <div class="container">
-            <div class="kpi-container">
+              <div class="kpi-container">
                 <div class="kpi-card">
                     <h3 class="titulo">Chamados Pendentes</h3>
-                    <p class="quantidade">12</p>
+                    <p class="quantidade" id="kpi_pendentes">0</p>
                     <span class="material-symbols-outlined icon cadastrada">apartment</span>
                 </div>
                 <div class="kpi-card">
                     <h3 class="titulo">Chamados críticos</h3>
-                    <p class="quantidade">4</p>
+                    <p class="quantidade" id="kpi_criticos">0</p>
                     <span class="material-symbols-outlined icon ativo">apartment</span>
                 </div>
                 <div class="kpi-card">
                     <h3 class="titulo">Máquinas com problema</h3>
-                    <p class="quantidade">6</p>
+                    <p class="quantidade" id="kpi_maquinas">0</p>
                     <span class="material-symbols-outlined icon solicitacao">apartment</span>
                 </div>
             </div>
@@ -103,72 +103,10 @@
                           <th class="acao"></th>
                         </tr>
                       </thead>
-                      <tbody class="">
-                        <tr>
-                          <td class="id">
-                            <p>908</p>
-                          </td>
-                          <td class="maquina">015 - Corredor B</td>
-                          <td class="problema">Superaquecimento</td>
-                          <td class="prioridade">Alta</td>
-                          <td class="status">
-                            <span class="status-badge nIniciado">Não iniciado</span>
-                          </td>
-                          <td class="tecnico tecnico-nome">Não atribuído</td>
-                          <td class="acao">
-                            <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(908)">play_arrow</button>
-                            <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                          </td>
-                        </tr>
-            
-                        <tr id="chamado-666">
-                          <td class="id">
-                            <p>666</p>
-                          </td>
-                          <td class="maquina">098 - Corredor G</td>
-                          <td class="problema">uso de GPU abaixo do esperado</td>
-                          <td class="prioridade">Média</td>
-                          <td class="status">
-                            <span class="status-badge andamento">Em andamento</span>
-                          </td>
-                          <td class="tecnico tecnico-nome">Joseph Townborn</td>
-                          <td class="acao">
-                            <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(666)">play_arrow</button>
-                            <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                          </td>
-                        </tr>
-            
-                        <tr id="chamado-667"> <td class="id">
-                            <p>666</p> </td>
-                          <td class="maquina">098 - Corredor G</td>
-                          <td class="problema">uso de GPU abaixo do esperado</td>
-                          <td class="prioridade">Média</td>
-                          <td class="status">
-                            <span class="status-badge andamento">Em andamento</span>
-                          </td>
-                          <td class="tecnico tecnico-nome">Edward Meanville</td>
-                          <td class="acao">
-                            <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(667)">play_arrow</button>
-                            <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                          </td>
-                        </tr>
-            
-                        <tr id="chamado-668"> <td class="id">
-                            <p>666</p>
-                          </td>
-                          <td class="maquina">098 - Corredor G</td>
-                          <td class="problema">uso de GPU abaixo do esperado</td>
-                          <td class="prioridade">Média</td>
-                          <td class="status">
-                            <span class="status-badge andamento">Em andamento</span>
-                          </td>
-                          <td class="tecnico tecnico-nome">Melina Straw</td>
-                          <td class="acao">
-                            <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(668)">play_arrow</button>
-                            <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                          </td>
-                        </tr>
-                      </tbody>
+                      
+                      <tbody class="" id="tabela_chamados_body">
+                        </tbody>
+
                     </table>
                   </div>
                 </div>
@@ -190,6 +128,7 @@
     <script src="../js/nav.js"></script>
 </body>
 </html>
+
 <script>
 
     const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
@@ -302,11 +241,18 @@
                     celulaStatusBadge.classList.remove('nIniciado'); 
                     
                     celulaStatusBadge.classList.add('andamento'); 
+
+                    // Atualiza também o botão para não ser clicável novamente
+                    const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
+                    if (botaoIniciar) {
+                        botaoIniciar.setAttribute('onclick', "alert('O chamado ja tem um tecnico')");
+                        botaoIniciar.setAttribute('title', 'Este chamado já está em progresso');
+                    }
                 }
 
             } else {
                 console.warn(`Não foi possível encontrar a linha #chamado-${idChamado}. Recarregando a página.`);
-                window.location.reload();
+                carregarChamados(); // Recarrega a lista
             }
           
           })
@@ -394,4 +340,6 @@
   window.onload = function() {
     carregarChamados();
   }
+
+  
 </script>
