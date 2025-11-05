@@ -35,7 +35,7 @@
                     <li>
                         <a class="link ativo" href="dashMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
-                            <span class="titulo">Máquinas</span>
+                            <span class="titulo">Máquina Parâmetros</span>
                         </a>
                     </li>
                     <li>
@@ -311,9 +311,8 @@
                     return res.json();
                 })
                 .then(param => {
-                    if (!param || Object.keys(param).length === 0) {
+                    if (!param || Array.length === 0) {
                         // Nenhum parâmetro geral definido
-                        abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                         setTimeout(() => toggleModalParametrosGerais(true), 1200);
                     } else {
                         console.log("Parâmetros gerais carregados:", param);
