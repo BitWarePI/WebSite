@@ -35,11 +35,10 @@
     transition: transform 0.3s ease-in-out;
 }
 
-/* Sobrescreve o estilo .modal-container .body (do default.css) apenas para este modal */
 #modal_avisar_parametros_gerais .modal-container .body {
-    width: auto;      /* Permite que o width seja definido pelo container pai */
-    height: auto;     /* Permite que a altura seja definida pelo conteúdo */
-    overflow-y: visible; /* Ou auto, se precisar */
+    width: auto;      
+    height: auto;     
+    overflow-y: visible; 
 }
 
 .modal-container.aviso.slide-in-top {
@@ -51,7 +50,7 @@
 }
 
 .header h1 {
-    font-size: 1.2rem; /* Fonte menor para a mensagem */
+    font-size: 1.2rem; 
     font-weight: 600;
     margin: 0;
     color: #333;
@@ -72,9 +71,8 @@
     right: 10px;
 }
 
-/* Estilo para o botão de ação */
 .btn.submit {
-    background-color: #FF5722; /* Cor vibrante para destaque */
+    background-color: #FF5722; 
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -83,15 +81,14 @@
     font-size: 1rem;
 }
 
-/* Responsividade para telas menores */
 @media (max-width: 600px) {
     .modal-container.aviso {
-        width: 90%; /* Modal ocupa 90% da tela em dispositivos pequenos */
+        width: 90%; 
         padding: 15px;
     }
 
     .header h1 {
-        font-size: 1.1rem; /* Fonte ajustada para telas menores */
+        font-size: 1.1rem; 
     }
 
     .body p {
