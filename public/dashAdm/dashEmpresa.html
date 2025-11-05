@@ -300,7 +300,8 @@
 
 
         // Adiciona os dados na tabela
-        corpoTabela.innerHTML += `
+        if(empresa.email != "admBitware@gmail.com"){
+          corpoTabela.innerHTML += `
             <tr>
                 <td class="nome"><p>${empresa.nome}</p></td>
                 <td class="email">${empresa.email || ""}</td>
@@ -308,12 +309,12 @@
                 <td class="dt_cadastro">${formatarData(empresa.dtCadastro)}</td>
                 <td class="estado">${estadoSpan}</td>
                 <td class="acao">
-                    <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                     <div id="divBotaoAtivarInativar">${botaoAtivarOuInativar}</div>
                 </td>
             </tr>
         `;
-
+        } 
+        
         const botoesToggle = document.querySelectorAll(".btn-toggle");
 
         botoesToggle.forEach(botao => {

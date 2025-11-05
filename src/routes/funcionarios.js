@@ -8,6 +8,15 @@ router.get("/empresa/:id", function (req, res) {
     funcionariosController.listarFuncionariosPorEmpresa(req, res);
 });
 
+router.get("/coletarDados/:id", function (req, res) {
+    funcionariosController.coletarDados(req, res);
+});
+
+router.put("/editar/:id", function (req, res) {
+    funcionariosController.editar(req, res);
+});
+
+
 router.post("/cadastrar", function (req, res) {
     funcionariosController.cadastrarFuncionario(req, res);
 });
@@ -21,6 +30,10 @@ router.put("/ativar/:id", function (req, res) {
 });
 
 router.delete("/remover/:id", function (req, res) {
+    funcionariosController.removerFuncionario(req, res);
+});
+
+router.delete("/funcionarios/:id", function (req, res) {
     funcionariosController.removerFuncionario(req, res);
 });
 

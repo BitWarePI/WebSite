@@ -3,6 +3,11 @@ const database = require("../database/config");
 // Lista todas as máquinas de uma empresa com os parâmetros agregados
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
+    SELECT 
+        t.idMaquina,
+        t.enderecoMac,
+        t.parametros
+    FROM (
         SELECT 
             m.idMaquina,
             m.enderecoMac,
@@ -11,13 +16,21 @@ function listarPorEmpresa(idEmpresa) {
                 'uso_gpu', MAX(CASE WHEN c.descricao = 'gpu_percent' THEN p.valor END),
                 'temp_cpu', MAX(CASE WHEN c.descricao = 'cpu_temperature' THEN p.valor END),
                 'temp_gpu', MAX(CASE WHEN c.descricao = 'gpu_temperature' THEN p.valor END)
-            ), NULL) AS parametros
+            ), NULL) AS parametros,
+            MAX(CASE WHEN c.descricao = 'cpu_percent' THEN p.valor END) AS cpu,
+            MAX(CASE WHEN c.descricao = 'gpu_percent' THEN p.valor END) AS gpu,
+            MAX(CASE WHEN c.descricao = 'cpu_temperature' THEN p.valor END) AS tempCpu,
+            MAX(CASE WHEN c.descricao = 'gpu_temperature' THEN p.valor END) AS tempGpu
         FROM Maquina m
         LEFT JOIN Parametro p ON m.idMaquina = p.fkMaquina
         LEFT JOIN Componente c ON p.fkComponente = c.idComponente
         WHERE m.fkEmpresa = ${idEmpresa}
-        GROUP BY m.idMaquina;
-    `;
+        GROUP BY m.idMaquina
+    ) AS t
+    ORDER BY 
+        (t.cpu IS NULL AND t.gpu IS NULL AND t.tempCpu IS NULL AND t.tempGpu IS NULL) DESC,
+        t.idMaquina;
+`;
     return database.executar(instrucao);
 }
 

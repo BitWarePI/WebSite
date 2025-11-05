@@ -107,8 +107,8 @@ section .container{
 
 /* Estilos para a lista de chamados */
 .chamado{
-    width: 90%;
-    padding: 24px;
+    width: 100%;
+    margin-top: 99px;
 }
 
 table {
