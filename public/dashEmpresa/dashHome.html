@@ -71,7 +71,8 @@
     </nav>
 
     <!--COPIAR ESSA DIV PARA SIDEBAR FIXA!!!!!!!!!!!!!!!!-->
-    <div style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
+    <div
+      style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
       <div style="display: flex; align-items:start; font-size: 20px;">
         <h1>Dashboard</h1>
@@ -83,7 +84,8 @@
           temperatura das CPUs e GPUs das máquinas de mineração nas ultimas <strong>24 horas</strong>.</p>
       </div>
 
-      <div style="display: flex;justify-content: flex-start;align-self: flex-start; flex-direction: row; gap: 20px; margin-bottom: 20px;">
+      <div
+        style="display: flex;justify-content: flex-start;align-self: flex-start; flex-direction: row; gap: 20px; margin-bottom: 20px;">
         <div>
           <p style="margin: 3px;">Data inicial</p>
           <input type="date" style="border-radius: 10px; padding: 10px;" id="dt_inicio">
@@ -138,8 +140,11 @@
         </div>
       </div>
 
-       <div style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center; margin-top: 80px;">
-        <p class="font-bold text-xl mb-4" style="text-align: center; font-size: larger; font-weight: bold; align-self: flex-start;">Desempenho baseado em GPU
+      <div
+        style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center; margin-top: 80px;">
+        <p class="font-bold text-xl mb-4"
+          style="text-align: center; font-size: larger; font-weight: bold; align-self: flex-start;">Desempenho baseado
+          em GPU
         </p>
         <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%; height: 100%;">
           <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; min-height: 300px;">
@@ -151,8 +156,11 @@
         </div>
       </div>
 
-      <div style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center; margin-top: 80px;">
-        <p class="font-bold text-xl mb-4" style="text-align: center; font-size: larger; font-weight: bold; align-self: flex-start;">Desempenho baseado em CPU
+      <div
+        style="width: 100%; height: 50vh; display: flex; flex-direction: column; align-items: center; margin-top: 80px;">
+        <p class="font-bold text-xl mb-4"
+          style="text-align: center; font-size: larger; font-weight: bold; align-self: flex-start;">Desempenho baseado
+          em CPU
         </p>
         <div style="display: flex; flex-direction: row; justify-content: space-around; width: 100%; height: 100%;">
           <div class="bg-slate-400 bg-opacity-30 p-4" style="flex: 0 0 40%; min-height: 300px;">
@@ -190,7 +198,8 @@
               </td>
               <td class="tecnico tecnico-nome">Não atribuído</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(908)">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                  onclick="abrirModalTecnicos(908)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
@@ -207,13 +216,16 @@
               </td>
               <td class="tecnico tecnico-nome">Joseph Townborn</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(666)">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                  onclick="abrirModalTecnicos(666)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
 
-            <tr id="chamado-667"> <td class="id">
-                <p>666</p> </td>
+            <tr id="chamado-667">
+              <td class="id">
+                <p>666</p>
+              </td>
               <td class="maquina">098 - Corredor G</td>
               <td class="problema">uso de GPU abaixo do esperado</td>
               <td class="prioridade">Média</td>
@@ -222,12 +234,14 @@
               </td>
               <td class="tecnico tecnico-nome">Edward Meanville</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(667)">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                  onclick="abrirModalTecnicos(667)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
 
-            <tr id="chamado-668"> <td class="id">
+            <tr id="chamado-668">
+              <td class="id">
                 <p>666</p>
               </td>
               <td class="maquina">098 - Corredor G</td>
@@ -238,7 +252,8 @@
               </td>
               <td class="tecnico tecnico-nome">Melina Straw</td>
               <td class="acao">
-                <button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(668)">play_arrow</button>
+                <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                  onclick="abrirModalTecnicos(668)">play_arrow</button>
                 <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
               </td>
             </tr>
@@ -249,16 +264,16 @@
 
     <div class="modal" id="modal_atribuir_tecnico">
       <div class="modal-container" id="modal_container_atribuir">
-          <div class="header">
-              <h1>Atribuir Técnico ao Chamado</h1>
-              <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
-                  close
-              </button>
-          </div>
-          <div class="body" id="lista_tecnicos_container">
-              </div>
+        <div class="header">
+          <h1>Atribuir Técnico ao Chamado</h1>
+          <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+            close
+          </button>
+        </div>
+        <div class="body" id="lista_tecnicos_container">
+        </div>
       </div>
-  </div>
+    </div>
   </section>
 
   <script src="../js/nav.js"></script>
@@ -274,7 +289,7 @@
       type: 'bar',
       data: {
         labels: eixoX,
-        datasets:[{ type: 'bar', label: 'Uso de GPU (%)', data: [70, 75, 74, 82, 86, 70, 75, 80, 88], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
+        datasets: [{ type: 'bar', label: 'Uso de GPU (%)', data: [70, 75, 74, 82, 86, 70, 75, 80, 88], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
@@ -283,8 +298,8 @@
       type: 'bar',
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets: 
-         [ { type: 'line', label: 'Temperatura GPU (°C)', data: [50, 52, 53, 54, 55, 55, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+        datasets:
+          [{ type: 'line', label: 'Temperatura GPU (°C)', data: [50, 52, 53, 54, 55, 55, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
@@ -293,8 +308,8 @@
       type: 'bar',
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets: 
-         [ { type: 'bar', label: 'Uso de CPU (%)', data: [60, 80, 65, 70, 75, 74, 76.5, 79.2, 88], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
+        datasets:
+          [{ type: 'bar', label: 'Uso de CPU (%)', data: [60, 80, 65, 70, 75, 74, 76.5, 79.2, 88], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
@@ -303,8 +318,8 @@
       type: 'bar',
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets: 
-         [ { type: 'line', label: 'Temperatura CPU (°C)', data: [57, 55, 56, 58, 56, 57, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+        datasets:
+          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [57, 55, 56, 58, 56, 57, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
@@ -320,46 +335,67 @@
   const btnAplicar = document.getElementById('btn_aplicar');
   const textoPeriodo = document.querySelector('p strong');
 
-
-  function random(min, max, decimal = 1) {
-    return (Math.random() * (max - min) + min).toFixed(decimal);
-  }
-
-  function formatar(data) {
-    const d = new Date(data);
-    const dia = String(d.getDate()+1).padStart(2, '0');
-    const mes = String(d.getMonth() + 1).padStart(2, '0');
-    const ano = d.getFullYear();
-    return `${dia}/${mes}/${ano}`;
-  }
-
   const kpiGpuUso = document.querySelector('.kpi-gpu-uso');
   const kpiGpuTemp = document.querySelector('.kpi-gpu-temp');
   const kpiCpuUso = document.querySelector('.kpi-cpu-uso');
   const kpiCpuTemp = document.querySelector('.kpi-cpu-temp');
 
-  function aplicarPeriodo() {
+  function formatar(data) {
+    const d = new Date(data);
+
+    /*
+    padStart = método de string que preenche o início de uma string com um caractere ou
+    conjunto de caracteres especificado até que a string atinja um comprimento desejado
+    */
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = d.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
+  async function aplicarPeriodo() {
     const inicio = inputInicio.value;
     const fim = inputFim.value;
 
-    if (!inicio && !fim) {
-      textoPeriodo.textContent = '24 horas';
-    } else if (!inicio || !fim) {
-      alert('Por favor, selecione as duas datas!!');
-      return
-    }else if(fim < inicio){
-      alert("Datas incoerentes, por favor selecionar corretamente!!")
-      return
-    } else {
-      const dataInicio = formatar(new Date(inicio));
-      const dataFim = formatar(new Date(fim));
-      textoPeriodo.textContent = `período entre ${dataInicio} a ${dataFim}`;
+    if (!inicio || !fim) {
+      alert('selecione as duas datas!!');
+      return;
+    }else if(inicio > fim || fim < inicio){
+      alert('insira data coerentes!!')
     }
 
-    kpiGpuUso.textContent = `${random(60, 95, 0)}%`;
-    kpiGpuTemp.textContent = `${random(40, 85, 1)}°C`;
-    kpiCpuUso.textContent = `${random(50, 95, 0)}%`;
-    kpiCpuTemp.textContent = `${random(45, 80, 1)}°C`;
+    try {
+      const response = await fetch(`http://localhost:3333/kpi?inicio=${inicio}&fim=${fim}`);
+
+      if (!response.ok) {
+        throw new Error('erro na requisição: ' + response.status);
+      }
+
+      const dados = await response.json();
+
+      if (dados.length <= 0) {
+        alert('Nenhum dado encontrado para o período selecionado.');
+        return;
+      }
+
+      //media tirada das datas
+      const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+      //calculando media a partir da variavel d cima
+      const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
+      const mediaGpuTemp = media(dados.map(d => parseFloat(d.temperatura_gpu))).toFixed(1);
+      const mediaCpuUso = media(dados.map(d => parseFloat(d.uso_cpu))).toFixed(1);
+      const mediaCpuTemp = media(dados.map(d => parseFloat(d.temperatura_cpu))).toFixed(1);
+
+      kpiGpuUso.textContent = `${mediaGpuUso}%`;
+      kpiGpuTemp.textContent = `${mediaGpuTemp}°C`;
+      kpiCpuUso.textContent = `${mediaCpuUso}%`;
+      kpiCpuTemp.textContent = `${mediaCpuTemp}°C`;
+
+      textoPeriodo.textContent = `período entre ${formatar(inicio)} a ${formatar(fim)}`;
+    } catch (error) {
+      console.error("erro ao buscar dados:", error);
+      alert("ocorreu um erro ao buscar os dados");
+    }
   }
 
   btnAplicar.addEventListener('click', aplicarPeriodo);
