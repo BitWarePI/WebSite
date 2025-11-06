@@ -118,6 +118,14 @@ function inativarEmpresa(emailEmpresa) {
     return database.executar(instrucao);
 }
 
+function verificarSenhaAtual(idEmpresa, senhaAtual) {
+    var instrucao = `
+        SELECT * FROM Empresa 
+        WHERE idEmpresa = ${idEmpresa} 
+        AND senha = '${senhaAtual}';
+    `;
+    return database.executar(instrucao);
+}
 
 module.exports = {
     cadastrarEmpresa,
@@ -129,5 +137,6 @@ module.exports = {
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
-    inativarEmpresa
+    inativarEmpresa,
+    verificarSenhaAtual
 };
