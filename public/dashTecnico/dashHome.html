@@ -130,11 +130,10 @@
 </html>
 
 <script>
-
     const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
     const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
 
-  function fecharModalTecnicos() {
+    function fecharModalTecnicos() {
         modalTecnicos.classList.remove("fade-in");
         modalContainerTecnicos.classList.remove("slide-in-top");
         modalTecnicos.classList.add("fade-out-flex");
@@ -143,36 +142,24 @@
 
     function abrirModalTecnicos(idChamado) {
         modalTecnicos.dataset.idChamado = idChamado;
-
         modalTecnicos.classList.remove("fade-out-flex");
         modalTecnicos.classList.add("open");
         modalTecnicos.classList.add("fade-in");
         modalContainerTecnicos.classList.add("slide-in-top");
-
         carregarTecnicos();
     }
 
     function carregarTecnicos() {
         const container = document.getElementById('lista_tecnicos_container');
         container.innerHTML = "<p>Carregando técnicos...</p>";
-        
         var idEmpresa = sessionStorage.getItem('idEmpresa');
-
-        fetch(`/funcionarios/tecnicos/empresa/${idEmpresa}`) 
-            .then(res => {
-                if (!res.ok) throw new Error('Erro ao buscar técnicos');
-                return res.json();
-            })
+        fetch(`/funcionarios/tecnicos/empresa/${idEmpresa}`)
+            .then(res => { if (!res.ok) throw new Error('Erro ao buscar técnicos'); return res.json(); })
             .then(tecnicos => {
-              container.innerHTML = "";
-              if (tecnicos.length === 0) {
-                    container.innerHTML = "<p>Nenhum técnico disponível encontrado.</p>";
-                    return;
-                }
-
+                container.innerHTML = "";
+                if (tecnicos.length === 0) { container.innerHTML = "<p>Nenhum técnico disponível encontrado.</p>"; return; }
                 tecnicos.forEach(tec => {
                     var nomeCompleto = `${tec.nome} ${tec.sobrenome}`;
-
                     container.innerHTML += `
                         <div class="tecnico-card">
                             <div class="info">
@@ -182,7 +169,6 @@
                                 <p><strong>Empresa:</strong> ${tec.nomeEmpresa}</p>
                                 <p><strong>Chamados Ativos:</strong> ${tec.qtdChamados}</p>
                             </div>
-                            
                             <button class="btn-atribuir" 
                                 onclick="atribuirChamado(${tec.idFuncionario}, \'${nomeCompleto}\')">
                                 Atribuir
@@ -191,166 +177,103 @@
                     `;
                 });
             })
-            .catch(err => {
-                console.error(err);
-                container.innerHTML = "<p>Erro ao carregar técnicos. Tente novamente.</p>";
-            });
+            .catch(err => { console.error(err); container.innerHTML = "<p>Erro ao carregar técnicos. Tente novamente.</p>"; });
     }
 
     function atribuirChamado(idTecnico, nomeTecnico) {
-
-      const idChamado = modalTecnicos.dataset.idChamado;
-
-        if (!idChamado) {
-            console.error('ID do chamado não encontrado!');
-            return;
-        }
-
-        console.log(`Atribuindo Chamado ID: ${idChamado} ao Técnico: ${nomeTecnico} (ID: ${idTecnico})`);
-
-        fetch(`/chamados/atribuir/${idChamado}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                idTecnicoServer: idTecnico
-            })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error('Erro ao atribuir chamado');
-            return res.json();
-        })
-        .then(response => {
-            alert('Técnico atribuído ao chamado!');
-            fecharModalTecnicos();
-            
-            const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
-            
-            if (linhaDoChamado) {
-                
-                const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome');
-                if (celulaTecnico) {
-                    celulaTecnico.innerText = nomeTecnico;
-                }
-
-                const celulaStatusBadge = linhaDoChamado.querySelector('.status-badge');
-                if (celulaStatusBadge) {
-                    celulaStatusBadge.innerText = 'Em andamento';
-                    
-                    celulaStatusBadge.classList.remove('nIniciado'); 
-                    
-                    celulaStatusBadge.classList.add('andamento'); 
-
-                    // Atualiza também o botão para não ser clicável novamente
+        const idChamado = modalTecnicos.dataset.idChamado;
+        if (!idChamado) { console.error('ID do chamado não encontrado!'); return; }
+        fetch(`/chamados/atribuir/${idChamado}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idTecnicoServer: idTecnico }) })
+            .then(res => { if (!res.ok) throw new Error('Erro ao atribuir chamado'); return res.json(); })
+            .then(response => {
+                alert('Técnico atribuído ao chamado!');
+                fecharModalTecnicos();
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome');
+                    if (celulaTecnico) { celulaTecnico.innerText = nomeTecnico; }
+                    const celulaStatusBadge = linhaDoChamado.querySelector('.status-badge');
+                    if (celulaStatusBadge) {
+                        celulaStatusBadge.innerText = 'Em andamento';
+                        celulaStatusBadge.classList.remove('nIniciado');
+                        celulaStatusBadge.classList.add('andamento');
+                    }
                     const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
                     if (botaoIniciar) {
                         botaoIniciar.setAttribute('onclick', "alert('O chamado ja tem um tecnico')");
                         botaoIniciar.setAttribute('title', 'Este chamado já está em progresso');
                     }
-                }
-
-            } else {
-                console.warn(`Não foi possível encontrar a linha #chamado-${idChamado}. Recarregando a página.`);
-                carregarChamados(); // Recarrega a lista
-            }
-          
-          })
-        .catch(err => {
-            console.error(err);
-            alert('Erro ao atribuir o técnico.');
-        });
+                } else { carregarChamados(); }
+            })
+            .catch(err => { console.error(err); alert('Erro ao atribuir o técnico.'); });
     }
 
-    function carregarChamados() {
-    var idEmpresa = sessionStorage.getItem('idEmpresa');
-    var tbody = document.getElementById('tabela_chamados_body');
-    tbody.innerHTML = '<tr><td colspan="7">Carregando chamados...</td></tr>';
-
-    fetch(`/chamados/empresa/${idEmpresa}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Erro ao carregar chamados');
-        return res.json();
-      })
-      .then(chamados => {
-        tbody.innerHTML = "";
-        if (chamados.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7">Nenhum chamado encontrado.</td></tr>';
-          return;
+    function finalizarChamado(idChamado) {
+        if (confirm("Esse chamado foi finalizado realmente?")) {
+            fetch(`/chamados/finalizar/${idChamado}`, {
+                method: 'PUT'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao finalizar chamado');
+                return res.json();
+            })
+            .then(response => {
+                alert('Chamado finalizado com sucesso!');
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    const celulaStatusBadge = linhaDoChamado.querySelector('.status-badge');
+                    if (celulaStatusBadge) {
+                        celulaStatusBadge.innerText = 'Resolvido';
+                        celulaStatusBadge.classList.remove('nIniciado', 'andamento');
+                        celulaStatusBadge.classList.add('resolvido');
+                    }
+                    const iniciarBtn = linhaDoChamado.querySelector('.iniciar');
+                    if (iniciarBtn) iniciarBtn.style.display = 'none';
+                    
+                    const finalizarBtn = linhaDoChamado.querySelector('.finalizar');
+                    if (finalizarBtn) finalizarBtn.style.display = 'none';
+                    
+                } else {
+                    carregarChamados();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao finalizar o chamado.');
+            });
+        } else {
+            console.log("Finalização cancelada.");
         }
+    }
 
-        chamados.forEach(chamado => {
-          var nomeTecnico = "Não atribuído";
-          if (chamado.nomeTecnico) {
-            nomeTecnico = `${chamado.nomeTecnico} ${chamado.sobrenomeTecnico || ''}`;
-          }
 
-          var classeStatus = "";
-          var textoStatus = chamado.status;
-          var botaoAtribuirHtml = "";
+    function carregarKPIs() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
+        const userId = sessionStorage.getItem('ID_USUARIO');
 
-          if (chamado.status == 'Aberto') {
-            classeStatus = 'nIniciado';
-            textoStatus = 'Não iniciado';
-
-            botaoAtribuirHtml = `
-              <button class="material-symbols-outlined iniciar" 
-                      title="Iniciar chamado" 
-                      onclick="abrirModalTecnicos(${chamado.idChamado})">
-                  play_arrow
-              </button>`;
-          }else{
-            if (chamado.status == 'Em andamento') {
-            classeStatus = 'andamento';
-          } else if (chamado.status == 'Resolvido') {
-            classeStatus = 'resolvido';
-          }
-          botaoAtribuirHtml = `
-              <button class="material-symbols-outlined iniciar" 
-                      title="Este chamado já está em progresso" 
-                      onclick="alert('O chamado ja tem um tecnico')">
-                  play_arrow
-              </button>`;
-          }
-
-          var linha = `
-            <tr id="chamado-${chamado.idChamado}">
-                <td class="id"><p>${chamado.idChamado}</p></td>
-                <td class="maquina">${chamado.enderecoMac}</td>
-                <td class="problema">${chamado.problema}</td>
-                <td class="prioridade">${chamado.prioridade}</td>
-                <td class="status">
-                    <span class="status-badge ${classeStatus}">${textoStatus}</span>
-                </td>
-                <td class="tecnico tecnico-nome">${nomeTecnico}</td>
-                <td class="acao">
-                   ${botaoAtribuirHtml} <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                </td>
-            </tr>
-          `;
-          tbody.innerHTML += linha;
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
-      });
-  }
-
-  function carregarKPIs() {
-        var idEmpresa = sessionStorage.getItem('idEmpresa');
         document.getElementById('kpi_pendentes').innerText = '...';
         document.getElementById('kpi_criticos').innerText = '...';
         document.getElementById('kpi_maquinas').innerText = '...';
 
-        fetch(`/chamados/kpi/empresa/${idEmpresa}`)
+        let kpiUrl = '';
+
+        if (userCargo == '4') {
+            kpiUrl = `/chamados/kpi/tecnico/${userId}`;
+        }
+        else {
+            kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
+        }
+
+        console.log("Buscando KPIs da URL:", kpiUrl);
+
+        fetch(kpiUrl)
             .then(res => {
                 if (!res.ok) throw new Error('Erro ao buscar KPIs');
                 return res.json();
             })
             .then(data => {
-                var kpis = data[0]; 
-                
+                var kpis = data[0];
                 document.getElementById('kpi_pendentes').innerText = kpis.pendentes;
                 document.getElementById('kpi_criticos').innerText = kpis.criticos;
                 document.getElementById('kpi_maquinas').innerText = kpis.maquinasComProblema;
@@ -363,10 +286,123 @@
             });
     }
 
-  window.onload = function() {
-    carregarChamados();
-    carregarKPIs();
-  }
+    function carregarChamados() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const userId = sessionStorage.getItem('ID_USUARIO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
 
+        var tbody = document.getElementById('tabela_chamados_body');
+        tbody.innerHTML = '<tr><td colspan="7">Carregando chamados...</td></tr>';
 
+        fetch(`/chamados/empresa/${idEmpresa}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao carregar chamados');
+                return res.json();
+            })
+            .then(chamados => {
+                tbody.innerHTML = "";
+
+                let chamadosFiltrados = chamados;
+
+                if (userCargo == '4') {
+                    console.log("--- MODO TÉCNICO ---");
+                    console.log("ID do Usuário (da sessão):", userId);
+
+                    chamadosFiltrados = chamados.filter(c => {
+                        let idTecnicoBD = Number(c.idTecnico);
+                        let idUsuarioSessao = Number(userId);
+                        let match = (idTecnicoBD == idUsuarioSessao);
+                        
+                        console.log(`Chamado #${c.idChamado}: idTecnico(${idTecnicoBD}) == idSessao(${idUsuarioSessao})? ${match}`);
+                        
+                        return match;
+                    });
+                    
+                    console.log("Chamados filtrados:", chamadosFiltrados);
+                }
+
+                if (chamadosFiltrados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7">Nenhum chamado encontrado.</td></tr>';
+                    return;
+                }
+
+                chamadosFiltrados.forEach(chamado => {
+                    var nomeTecnico = "Não atribuído";
+                    if (chamado.nomeTecnico) {
+                        nomeTecnico = `${chamado.nomeTecnico} ${chamado.sobrenomeTecnico || ''}`;
+                    }
+
+                    var classeStatus = "";
+                    var textoStatus = chamado.status;
+                    var botaoAtribuirHtml = "";
+                    var botaoFinalizarHtml = "";
+
+                    if (chamado.status == 'Resolvido') {
+                        classeStatus = 'resolvido';
+                        botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = '';
+                    }
+                    else if (userCargo == '4') {
+                        botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                    }
+                    else {
+                        if (chamado.status == 'Aberto') {
+                            classeStatus = 'nIniciado';
+                            textoStatus = 'Não iniciado';
+                            botaoAtribuirHtml = `
+                                <button class="material-symbols-outlined iniciar" 
+                                        title="Iniciar chamado" 
+                                        onclick="abrirModalTecnicos(${chamado.idChamado})">
+                                    play_arrow
+                                </button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Atribua um técnico primeiro" style="opacity: 0.5; cursor: not-allowed;">check_circle</button>`;
+                        } else if (chamado.status == 'Em andamento') {
+                            classeStatus = 'andamento';
+                            botaoAtribuirHtml = `
+                                <button class="material-symbols-outlined iniciar" 
+                                        title="Este chamado já está em progresso" 
+                                        onclick="alert('O chamado ja tem um tecnico')">
+                                    play_arrow
+                                </button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                        }
+                    }
+                    
+                    if (chamado.status == 'Aberto' && (classeStatus == '')) {
+                        classeStatus = 'nIniciado';
+                        textoStatus = 'Não iniciado';
+                    }
+                    if (chamado.status == 'Em andamento' && (classeStatus == '')) {
+                        classeStatus = 'andamento';
+                    }
+
+                    var linha = `
+                        <tr id="chamado-${chamado.idChamado}">
+                            <td class="id"><p>${chamado.idChamado}</p></td>
+                            <td class="maquina">${chamado.enderecoMac}</td>
+                            <td class="problema">${chamado.problema}</td>
+                            <td class="prioridade">${chamado.prioridade}</td>
+                            <td class="status">
+                                <span class="status-badge ${classeStatus}">${textoStatus}</span>
+                            </td>
+                            <td class="tecnico tecnico-nome">${nomeTecnico}</td>
+                            <td class="acao">
+                                ${botaoAtribuirHtml} ${botaoFinalizarHtml}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += linha;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
+            });
+    }
+
+    window.onload = function() {
+        carregarChamados();
+        carregarKPIs();
+    }   
 </script>

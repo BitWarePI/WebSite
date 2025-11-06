@@ -14,4 +14,12 @@ router.get("/kpi/empresa/:idEmpresa", function (req, res) {
     chamadosController.buscarKPIs(req, res);
 });
 
+router.get("/kpi/tecnico/:idTecnico", function (req, res) {
+    chamadosController.buscarKPIsTecnico(req, res);
+});
+
+router.put("/finalizar/:idChamado", function (req, res) {
+    chamadosController.finalizarChamado(req, res);
+});
+
 module.exports = router;

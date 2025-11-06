@@ -20,6 +20,7 @@ var HOST_APP = process.env.APP_HOST || 'localhost';
 
 // Importa rotas
 var solicitacaoRouter = require("./src/routes/solicitacoes");
+var kpiRouter = require("./src/routes/kpi");
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
+app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/funcionarios", funcionariosRouter);

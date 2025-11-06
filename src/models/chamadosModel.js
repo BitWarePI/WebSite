@@ -21,13 +21,24 @@ function listarChamadosPorEmpresa(idEmpresa) {
             c.prioridade, 
             c.status,
             f.nome AS nomeTecnico,
-            f.sobrenome AS sobrenomeTecnico
+            f.sobrenome AS sobrenomeTecnico,
+            c.idTecnico -- <-- ESSA LINHA É A MAIS IMPORTANTE
         FROM Chamado c
             JOIN Maquina m ON c.fkMaquina = m.idMaquina
             LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
         WHERE m.fkEmpresa = ${idEmpresa}
         ORDER BY 
-            CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END, 
+            CASE c.prioridade 
+                WHEN 'Crítica' THEN 1
+                WHEN 'Alta' THEN 2 
+                WHEN 'Média' THEN 3 
+                WHEN 'Baixa' THEN 4 
+                ELSE 5 
+            END,
+            CASE c.status 
+                WHEN 'Aberto' THEN 1 
+                ELSE 2 
+            END, 
             c.dataAbertura DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -59,8 +70,38 @@ function buscarKPIs(idEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarKPIsTecnico(idTecnico) {
+    var instrucaoSql = `
+        SELECT 
+            (SELECT COUNT(idChamado) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND status = 'Aberto') AS pendentes,
+             
+            (SELECT COUNT(idChamado) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND prioridade = 'Alta' AND status != 'Resolvido') AS criticos,
+             
+            (SELECT COUNT(DISTINCT fkMaquina) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND status != 'Resolvido') AS maquinasComProblema
+        
+        FROM Funcionario WHERE idFuncionario = ${idTecnico};
+    `;
+    console.log("Executando a instrução SQL (KPIs Técnico): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function finalizarChamado(idChamado) {
+    var instrucaoSql = `
+        UPDATE Chamado 
+        SET status = 'Resolvido'
+        WHERE idChamado = ${idChamado};
+    `;
+    console.log("Executando a instrução SQL (Finalizar Chamado): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
-    buscarKPIs
+    buscarKPIs,
+    buscarKPIsTecnico,
+    finalizarChamado
 };
