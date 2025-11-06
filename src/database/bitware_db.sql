@@ -101,7 +101,7 @@ INSERT INTO Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
 VALUES 
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
 ('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 2, 2),
-('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 2, 2),
+('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 4, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 2, 3);
 
 INSERT INTO Maquina (enderecoMac, fkEmpresa)
