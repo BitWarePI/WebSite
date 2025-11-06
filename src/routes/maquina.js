@@ -6,6 +6,10 @@ router.get("/empresa/:idEmpresa", maquinaController.listarPorEmpresa);
 
 router.get("/empresa/parametros-gerais/:idEmpresa", maquinaController.verificarParametrosGerais);
 
+router.get("/listarQtdPorEmpresa", maquinaController.listarQtdPorEmpresa);
+
+router.post("/cadastrar", maquinaController.cadastrar);
+
 router.post("/parametros/gerais/:idEmpresa", maquinaController.definirParametrosGerais);
 
 router.post("/parametros/maquina/:idMaquina", maquinaController.definirParametrosMaquina);

@@ -13,13 +13,42 @@ module.exports = {
         }
     },
 
-    async verificarParametrosGerais(req,res){
+    async listarQtdPorEmpresa(req, res) {
+        const { idEmpresa } = req.params;
+
+        try {
+            const maquinas = await maquinaModel.listarQtdPorEmpresa(idEmpresa);
+            res.status(200).json(maquinas);
+        } catch (erro) {
+            console.error("Erro ao listar quantidade de máquinas:", erro);
+            res.status(500).json({ erro: "Erro ao listar quantidade de máquinas" });
+        }
+    },
+
+    async cadastrar(req, res) {
+        const { fkEmpresa, enderecoMac } = req.body;
+
+        if (!fkEmpresa || !enderecoMac) {
+            return res.status(400).send("Dados incompletos.");
+        }
+
+        maquinaModel.cadastrar(fkEmpresa, enderecoMac)
+            .then(() => {
+                res.status(200).send("Máquina cadastrada com sucesso!");
+            })
+            .catch(erro => {
+                console.error("Erro ao cadastrar máquina:", erro);
+                res.status(500).send("Erro ao cadastrar máquina.");
+            });
+    },
+
+    async verificarParametrosGerais(req, res) {
         const { idEmpresa } = req.params;
 
         try {
             const maquinas = await maquinaModel.verificarParametrosGerais(idEmpresa);
             res.status(200).json(maquinas);
-        } catch (erro){
+        } catch (erro) {
             console.error("Erro ao verificar existência dos parametros gerais:", erro);
             res.status(500).json({ erro: "Erro ao verificar existência dos parametros gerais" });
         }

@@ -34,6 +34,26 @@ function listarPorEmpresa(idEmpresa) {
     return database.executar(instrucao);
 }
 
+function listarQtdPorEmpresa(idEmpresa){
+    instrucao = `
+    SELECT 
+        fkEmpresa,
+        COUNT(idMaquina) AS qtd
+    FROM Maquina
+    GROUP BY fkEmpresa;
+    `
+    return database.executar(instrucao)
+}
+
+function cadastrar(fkEmpresa, enderecoMac){
+    instrucao = `
+    INSERT INTO Maquina (enderecoMac, fkEmpresa)
+        VALUES 
+        ('${enderecoMac}', ${fkEmpresa});
+    `
+    return database.executar(instrucao)
+}
+
 function verificarParametrosGerais(idEmpresa){
     const instrucao = `
     select * from ParametrosGeraisEmpresa where fkEmpresa = ${idEmpresa}
@@ -86,6 +106,8 @@ async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, t
 
 module.exports = {
     listarPorEmpresa,
+    listarQtdPorEmpresa,
+    cadastrar,
     verificarParametrosGerais,
     definirParametrosGerais,
     definirParametrosMaquina

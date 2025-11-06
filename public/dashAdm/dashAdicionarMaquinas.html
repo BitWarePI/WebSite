@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="../css/default.css">
+    <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
+    <link rel="stylesheet" href="../css/dashboard/admDashEmpresa.css">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
+    <link rel="stylesheet" href="../css/dashboard/admDashAdicionarMaquinas.css">
+    <link rel="stylesheet" href="../css/animacao.css">
+    <link rel="icon" href="../assets/icon/favicon2.png">
+    <title>Dashboard | Cadastrar Máquinas</title>
+</head>
+
+<body>
+    <section>
+        <nav>
+            <div class="main-nav">
+                <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt="Logo BitWare"></h1>
+                <ul class="links nav-links-pc">
+                    <li>
+                        <a class="link" href="dashEmpresa.html">
+                            <span class="material-symbols-outlined icon">apartment</span>
+                            <span class="titulo">Empresas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link ativo" href="dashAdicionarMaquinas.html">
+                            <span class="material-symbols-outlined icon">computer</span>
+                            <span class="titulo">Cadastrar Máquinas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="dashExclusoes.html">
+                            <span class="material-symbols-outlined icon">do_not_disturb_on</span>
+                            <span class="titulo">Solicitações exclusão</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="../dashEmpresa/atualizar-senha.html">
+                            <span class="material-symbols-outlined icon">lock</span>
+                            <span class="titulo">Atualizar senha</span>
+                        </a>
+                    </li>
+                </ul>
+                <a href="../index.html" class="btn btn-sair nav-links-pc">Sair</a>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <h3 class="titulo">Empresas<br>Cadastradas</h3>
+                    <p class="quantidade" id="quantidadeEmpresas"></p>
+                    <span class="material-symbols-outlined icon cadastrada">apartment</span>
+                </div>
+                <button class="requisicao" onclick="abrirModalCadastroMaquina()">Cadastrar novas máquinas</button>
+            </div>
+
+            <div class="listaEmpresa">
+                <div class="pesquisa">
+                    <div class="ipt_label">
+                        <label for="pesquisa_input">Pesquisar empresa</label>
+                        <input id="pesquisa_input" type="text" placeholder="" oninput="filtrarEmpresas()">
+                        <button class="material-symbols-outlined btn-icon">search</button>
+                    </div>
+                </div>
+
+                <div id="cards-container" class="cards-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="nome">Nome</th>
+                                <th class="email">Email</th>
+                                <th class="cnpj">CNPJ</th>
+                                <th class="qtd-maquinas">Máquinas Cadastradas</th>
+                                <th class="acao">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL: CADASTRAR NOVA MÁQUINA -->
+    <div class="modal cadastro" id="modal_cadastro_maquina">
+        <div class="modal-container" id="modal_container_cadastro_maquina">
+            <div class="header">
+                <h1 id="tituloModalMaquina">Cadastrar Nova Máquina</h1>
+                <button class="material-symbols-outlined close-icon"
+                    onclick="abrirModalCadastroMaquina()">close</button>
+            </div>
+
+            <div class="body">
+                <div class="formulario">
+                    <div class="ipt_label">
+                        <label for="empresaMaquina"></label>
+                        <select id="empresaMaquina">
+                            <option value="">Selecione uma empresa</option>
+                        </select>
+                    </div>
+
+                    <div class="ipt_label">
+                        <label for="enderecoMac">Endereço MAC da Máquina</label>
+                        <input type="text" id="enderecoMac">
+                    </div>
+
+                    <button class="btn submit" onclick="cadastrarMaquina()">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../js/nav.js"></script>
+    <script>
+        let todasEmpresas = [];
+
+        window.onload = function () {
+            carregarEmpresas();
+            carregarKPIEmpresas();
+        };
+
+        function carregarKPIEmpresas() {
+            fetch("/empresas/carregarKPIS", { method: "GET" })
+                .then(res => res.json())
+                .then(dados => {
+                    if (dados[0]) {
+                        document.getElementById("quantidadeEmpresas").innerText = dados[0].qtdEmpresas - 1;
+                    }
+                })
+                .catch(err => console.error("Erro ao carregar KPIs:", err));
+        }
+
+        function carregarEmpresas() {
+            fetch("/empresas/listarEmpresas", { method: "GET" })
+                .then(res => res.json())
+                .then(empresas => {
+                    todasEmpresas = empresas;
+                    carregarQuantidadeMaquinas(empresas);
+                })
+                .catch(erro => console.error("#ERRO:", erro));
+        }
+
+        function carregarQuantidadeMaquinas(empresas) {
+            fetch("/maquina/listarQtdPorEmpresa", { method: "GET" })
+                .then(res => res.json())
+                .then(maquinasPorEmpresa => {
+                    empresas.forEach(empresa => {
+                        const registro = maquinasPorEmpresa.find(m => m.fkEmpresa === empresa.idEmpresa);
+                        empresa.qtdMaquinas = registro ? registro.qtd : 0;
+                    });
+                    criarEmpresas(empresas);
+                })
+                .catch(err => console.error("Erro ao carregar quantidades de máquinas:", err));
+        }
+
+        function filtrarEmpresas() {
+            const termo = document.getElementById("pesquisa_input").value.trim().toLowerCase();
+            const filtradas = todasEmpresas.filter(e => e.nome.toLowerCase().includes(termo));
+            criarEmpresas(filtradas);
+        }
+
+        function criarEmpresas(empresas) {
+            const corpoTabela = document.querySelector("table tbody");
+            corpoTabela.innerHTML = "";
+
+            empresas.forEach(empresa => {
+                if (empresa.email === "admBitware@gmail.com") return;
+
+                corpoTabela.innerHTML += `
+          <tr>
+            <td class="nome"><p>${empresa.nome}</p></td>
+            <td class="email">${empresa.email}</td>
+            <td class="cnpj">${empresa.cnpj}</td>
+            <td class="qtd-maquinas">${empresa.qtdMaquinas || 0}</td>
+            <td class="acao">
+              <button class="material-symbols-outlined btn-gerenciar" onclick="abrirModalGerenciarMaquinas(${empresa.idEmpresa})">settings</button>
+            </td>
+          </tr>
+        `;
+            });
+        }
+
+        function abrirModalCadastroMaquina() {
+            const modal = document.getElementById("modal_cadastro_maquina");
+            const selectEmpresa = document.getElementById("empresaMaquina");
+
+            if (modal.style.display === "flex") {
+                modal.style.display = "none";
+                return;
+            }
+
+            modal.style.display = "flex";
+
+            selectEmpresa.innerHTML = '<option value="">Selecione uma empresa</option>';
+            todasEmpresas.forEach(empresa => {
+                if (empresa.email !== "admBitware@gmail.com") {
+                    selectEmpresa.innerHTML += `<option value="${empresa.idEmpresa}">${empresa.nome}</option>`;
+                }
+            });
+        }
+
+        function cadastrarMaquina() {
+            const idEmpresa = document.getElementById("empresaMaquina").value;
+            const enderecoMac = document.getElementById("enderecoMac").value.trim();
+
+            if (!idEmpresa) {
+                alert("Selecione uma empresa para vincular a máquina.");
+                return;
+            }
+
+            const macRegex = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/;
+            if (!macRegex.test(enderecoMac)) {
+                alert("Informe um endereço MAC válido (ex: AA:BB:CC:DD:EE:FF)");
+                return;
+            }
+
+            fetch("/maquina/cadastrar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fkEmpresa: idEmpresa,
+                    enderecoMac: enderecoMac
+                })
+            })
+                .then(res => {
+                    if (res.ok) {
+                        alert("Máquina cadastrada com sucesso!");
+                        document.getElementById("modal_cadastro_maquina").style.display = "none";
+                        carregarEmpresas(); 
+                    } else {
+                        alert("Erro ao cadastrar máquina.");
+                    }
+                })
+                .catch(erro => console.error("Erro ao cadastrar máquina:", erro));
+        }
+    </script>
+
+</body>
+
+</html>
