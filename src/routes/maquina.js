@@ -8,6 +8,16 @@ router.get("/infoMaquinas/:idEmpresa", maquinaController.infoMaquinas);
 
 router.get("/empresa/parametros-gerais/:idEmpresa", maquinaController.verificarParametrosGerais);
 
+router.get("/listarQtdPorEmpresa", maquinaController.listarQtdPorEmpresa);
+
+router.post("/cadastrar", maquinaController.cadastrar);
+
+router.get("/listarMaquinaPorEmpresa/:idEmpresa", maquinaController.listarMaquinaPorEmpresa);
+
+router.delete("/remover/:idMaquina", maquinaController.removerMaquina);
+
+router.put("/editar/:idMaquina", maquinaController.editarMaquina);
+
 router.post("/parametros/gerais/:idEmpresa", maquinaController.definirParametrosGerais);
 
 router.post("/parametros/maquina/:idMaquina", maquinaController.definirParametrosMaquina);

@@ -51,6 +51,53 @@ function infoMaquinas(idEmpresa) {
     `;
     console.log("Instrução SQL:", instrucao);
     return database.executar(instrucao); 
+function listarQtdPorEmpresa(idEmpresa){
+    instrucao = `
+    SELECT 
+        fkEmpresa,
+        COUNT(idMaquina) AS qtd
+    FROM Maquina
+    GROUP BY fkEmpresa;
+    `
+    return database.executar(instrucao)
+}
+
+function cadastrar(fkEmpresa, enderecoMac){
+    instrucao = `
+    INSERT INTO Maquina (enderecoMac, fkEmpresa)
+        VALUES 
+        ('${enderecoMac}', ${fkEmpresa});
+    `
+    return database.executar(instrucao)
+}
+
+function listarMaquinaPorEmpresa(fkEmpresa) {
+    const instrucao = `
+        SELECT idMaquina, enderecoMac
+        FROM maquina
+        WHERE fkEmpresa = ${fkEmpresa};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function remover(idMaquina) {
+    const instrucao = `
+        DELETE FROM Maquina
+        WHERE idMaquina = ${idMaquina};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function editar(idMaquina, enderecoMac) {
+    const instrucao = `
+        UPDATE Maquina
+        SET enderecoMac = '${enderecoMac}'
+        WHERE idMaquina = ${idMaquina};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
 }
 
 function verificarParametrosGerais(idEmpresa){
@@ -106,6 +153,11 @@ async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, t
 module.exports = {  
     listarPorEmpresa,
     infoMaquinas,
+    listarQtdPorEmpresa,
+    cadastrar,
+    listarMaquinaPorEmpresa,
+    remover,
+    editar,
     verificarParametrosGerais,
     definirParametrosGerais,
     definirParametrosMaquina
