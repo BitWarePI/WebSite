@@ -180,8 +180,8 @@
               const empresas = dados[0];
               console.log("KPIS RECEBIDAS:", empresas);
 
-              document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas}</p>`;
-              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas}</p>`;
+              document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas - 1}</p>`;
+              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas -1}</p>`;
               document.getElementById("quantidadeSolicitacoes").innerHTML = `<p>${empresas.solicitacoes}</p>`;
             } else {
               console.error("Erro ao buscar empresas:", resposta.statusText);
