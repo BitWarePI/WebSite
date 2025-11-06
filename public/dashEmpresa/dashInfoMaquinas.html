@@ -515,7 +515,6 @@
                 })
                 .then(param => {
                     if (!param || Object.keys(param).length === 0) {
-                        // Nenhum parâmetro geral definido
                         abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                         setTimeout(() => toggleModalParametrosGerais(true), 1200);
                     } else {
