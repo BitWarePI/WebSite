@@ -70,8 +70,27 @@ function buscarKPIs(idEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarKPIsTecnico(idTecnico) {
+    var instrucaoSql = `
+        SELECT 
+            (SELECT COUNT(idChamado) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND status = 'Aberto') AS pendentes,
+             
+            (SELECT COUNT(idChamado) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND prioridade = 'Alta' AND status != 'Resolvido') AS criticos,
+             
+            (SELECT COUNT(DISTINCT fkMaquina) FROM Chamado 
+             WHERE idTecnico = ${idTecnico} AND status != 'Resolvido') AS maquinasComProblema
+        
+        FROM Funcionario WHERE idFuncionario = ${idTecnico};
+    `;
+    console.log("Executando a instrução SQL (KPIs Técnico): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
-    buscarKPIs
+    buscarKPIs,
+    buscarKPIsTecnico
 };

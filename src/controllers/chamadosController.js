@@ -53,8 +53,26 @@ function buscarKPIs(req, res) {
     }
 }
 
+function buscarKPIsTecnico(req, res) {
+    var idTecnico = req.params.idTecnico;
+
+    if (idTecnico == undefined) {
+        res.status(400).send("O id do técnico está undefined!");
+    } else {
+        chamadosModel.buscarKPIsTecnico(idTecnico)
+            .then(function (resultado) {
+                res.json(resultado);
+            }).catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao buscar os KPIs do técnico! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
-    buscarKPIs
+    buscarKPIs,
+    buscarKPIsTecnico
 }
