@@ -41,8 +41,8 @@ router.put("/ativarEmpresa/:id", function (req, res){
     empresaController.ativarEmpresa(req, res)
 })
 
-router.put("/desativarEmpresa/:id", function (req, res){
-    empresaController.desativarEmpresa(req, res)
-})
+router.post("/inativarEmpresa", function (req, res) {
+    empresaController.inativarEmpresa(req, res);
+});
 
 module.exports = router;

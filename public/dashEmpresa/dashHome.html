@@ -45,9 +45,9 @@
             </a>
           </li>
           <li>
-            <a class="link" href="deletarConta.html">
+            <a class="link" href="desativarEmpresa.html">
               <span class="material-symbols-outlined icon">cancel</span>
-              <span class="titulo">Deletar conta</span>
+              <span class="titulo">Desativar empresa</span>
             </a>
           </li>
         </ul>
@@ -268,10 +268,12 @@
     const ctx3 = document.getElementById('grafico3').getContext('2d');
     const ctx4 = document.getElementById('grafico4').getContext('2d');
 
+    eixoX = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h']
+
     new Chart(ctx1, {
       type: 'bar',
       data: {
-        labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+        labels: eixoX,
         datasets:[{ type: 'bar', label: 'Uso de GPU (%)', data: [70, 75, 74, 82, 86, 70, 75, 80, 88], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }

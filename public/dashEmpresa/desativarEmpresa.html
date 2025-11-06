@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Bitware | Deletar conta</title>
+  <title>Bitware | Desativar empresa</title>
 
   <script src="../js/sessao.js"></script>
 
@@ -25,13 +25,17 @@
             <a href="index.html"><img src="../assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
             <div class="formulario slide-in-bottom">
                 <div class="header">
-                    <h1>Delete sua conta</h1>
+                    <h1>Desative sua conta</h1>
                 </div>
                 <div class="ipt_label">
                     <label for="senha_input">Digite sua senha</label>
                     <input id="senha_input" type="text" placeholder="">
                 </div>
-                <button class="btn submit" onclick="deletar()">Deletar</button>
+                <div class="ipt_label">
+                    <label for="confirmar_input">Digite "confirmar" para prosseguir</label>
+                    <input id="confirmar_input" type="text" placeholder="">
+                </div>
+                <button class="btn submit" onclick="enviar()">Desativar</button>
             </div>
 
             <div class="bg-light"></div>
@@ -86,13 +90,24 @@
         }
   }
 
+  function enviar(){
+    confirmar = confirmar_input.value
+
+    if(senha)
+    if(confirmar == "confirmar"){
+      deletar()
+    }else{
+      alert("Não foi possivel deletar a conta!!")
+    }
+  }
+
   function deletar() {
     var senhaVar = senha_input.value;
 
     console.log("Deletando conta da empresa:", emailEmpresa);
 
   
-    fetch(`/usuarios/solicitarDelecao`, {
+    fetch(`/empresas/inativarEmpresa`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
