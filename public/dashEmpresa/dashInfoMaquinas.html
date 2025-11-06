@@ -86,7 +86,7 @@
                 <h1 style="font-size: 45px;">Informações mais recentes das máquinas</h1>
             </div>
             <div class="kpi-container">
-                
+
                 <div class="kpi-card">
                     <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
                     <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
@@ -106,6 +106,17 @@
                         <input id="pesquisa_input" type="text" oninput="pesquisarMaquina()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
                     </div>
+                    <div class="selectFiltro">
+                        <span class="material-symbols-outlined icon">filter_alt</span>
+                        <select id="filtroPesquisa">
+                            <option value="todos">Todos</option>
+                            <option value="ultrapassando">Ultrapassando</option>
+                        </select>
+                    </div>
+                    <div id="divFitroUltrapassando">
+
+                    </div>
+
                 </div>
 
                 <table>
@@ -179,6 +190,84 @@
 
     <script>
 
+        let listaMaquinas = [];
+
+        function aplicarFiltro() {
+            const filtroPrincipal = document.getElementById("filtroPesquisa");
+            const valorSelecionado = filtroPrincipal.value;
+            const divFiltroUltrapassando = document.getElementById("divFitroUltrapassando");
+            const tbody = document.getElementById("tableMaquinas");
+
+            if (valorSelecionado === "ultrapassando") {
+                divFiltroUltrapassando.innerHTML = `
+                    <div class="selectFiltro">
+                        <span class="material-symbols-outlined icon">filter_alt</span>
+                        <select id="filtroUltrapassando">
+                            <option value="cpu_percent">CPU</option>
+                            <option value="gpu_percent">GPU</option>
+                            <option value="cpu_temp">Temp. CPU</option>
+                            <option value="gpu_temp">Temp. GPU</option>
+                        </select>
+                    </div>
+                `;
+
+                const filtroUltrapassando = document.getElementById("filtroUltrapassando");
+
+                filtroUltrapassando.addEventListener("change", function () {
+                    const componente = filtroUltrapassando.value;
+                    const maquinasFiltradas = listaMaquinas.filter(m => m.foraDoParametro[componente]);
+
+                    tbody.innerHTML = "";
+
+                    if (maquinasFiltradas.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5">Nenhuma máquina ultrapassando ${componente}</td></tr>`;
+                        return;
+                    }
+
+                    maquinasFiltradas.forEach(maquina => {
+                        const leitura = maquina.leituraAtual;
+                        const cores = leitura.cores;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${maquina.mac}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                            </tr>`;
+                            });
+                });
+
+            } else if (valorSelecionado === "todos") {
+                divFiltroUltrapassando.innerHTML = "";
+                atualizarTabela(listaMaquinas);
+            }
+        }
+
+        function atualizarTabela(lista) {
+            const tbody = document.getElementById("tableMaquinas");
+            tbody.innerHTML = "";
+
+            lista.forEach(maquina => {
+                const leitura = maquina.leituraAtual;
+                const cores = leitura.cores;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${maquina.mac}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                    </tr>`;
+            });
+        }
+
+
+        const filtro = document.getElementById("filtroPesquisa");
+        filtro.addEventListener("change", aplicarFiltro);
+
         function carregarMaquinas() {
             var empresaId = sessionStorage.getItem('idEmpresa');
 
@@ -213,12 +302,12 @@
                                 });
                             }
 
-                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`
-
+                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
                             let contadorQtdForaParam = 0;
 
                             maquinas.forEach(maquina => {
                                 const macMaquina = maquina.enderecoMac.trim().toLowerCase();
+
                                 const parametroCpuPercent = maquina.cpu_percent;
                                 const parametroGpuPercent = maquina.gpu_percent;
                                 const parametroCpuTemperature = maquina.cpu_temperature;
@@ -233,7 +322,14 @@
                                     let corGpuPercent = "white";
                                     let corCpuTemp = "white";
                                     let corGpuTemp = "white";
-                                    let maquinaForaDoParametro = false; // ← controle por máquina
+
+                                    let maquinaForaDoParametro = false;
+                                    let foraDoParametro = {
+                                        cpu_percent: false,
+                                        gpu_percent: false,
+                                        cpu_temp: false,
+                                        gpu_temp: false
+                                    };
 
                                     const cincoCpuPercent = parametroCpuPercent * 0.05;
                                     const dezCpuPercent = parametroCpuPercent * 0.10;
@@ -250,59 +346,100 @@
                                     // ---- CPU USO ----
                                     if (ultimo.cpu_percent < parametroCpuPercent - dezCpuPercent) {
                                         corCpuPercent = "red";
+                                        foraDoParametro.cpu_percent = true;
                                         maquinaForaDoParametro = true;
                                     } else if (ultimo.cpu_percent < parametroCpuPercent - cincoCpuPercent) {
                                         corCpuPercent = "yellow";
+                                        foraDoParametro.cpu_percent = true;
                                         maquinaForaDoParametro = true;
+                                    } else {
+                                        corCpuPercent = "white";
                                     }
 
                                     // ---- GPU USO ----
                                     if (ultimo.gpu_percent < parametroGpuPercent - dezGpuPercent) {
                                         corGpuPercent = "red";
+                                        foraDoParametro.gpu_percent = true;
                                         maquinaForaDoParametro = true;
                                     } else if (ultimo.gpu_percent < parametroGpuPercent - cincoGpuPercent) {
                                         corGpuPercent = "yellow";
+                                        foraDoParametro.gpu_percent = true;
                                         maquinaForaDoParametro = true;
+                                    } else {
+                                        corGpuPercent = "white";
                                     }
 
                                     // ---- CPU TEMP ----
                                     if (ultimo.cpu_temp > parametroCpuTemperature + dezCpuTemp) {
                                         corCpuTemp = "red";
+                                        foraDoParametro.cpu_temp = true;
                                         maquinaForaDoParametro = true;
                                     } else if (ultimo.cpu_temp > parametroCpuTemperature + cincoCpuTemp) {
                                         corCpuTemp = "yellow";
+                                        foraDoParametro.cpu_temp = true;
                                         maquinaForaDoParametro = true;
+                                    } else {
+                                        corCpuTemp = "white";
                                     }
 
                                     // ---- GPU TEMP ----
                                     if (ultimo.gpu_temp > parametroGpuTemperature + dezGpuTemp) {
                                         corGpuTemp = "red";
+                                        foraDoParametro.gpu_temp = true;
                                         maquinaForaDoParametro = true;
                                     } else if (ultimo.gpu_temp > parametroGpuTemperature + cincoGpuTemp) {
                                         corGpuTemp = "yellow";
+                                        foraDoParametro.gpu_temp = true;
                                         maquinaForaDoParametro = true;
+                                    } else {
+                                        corGpuTemp = "white";
                                     }
 
                                     if (maquinaForaDoParametro) contadorQtdForaParam++;
 
+                                    listaMaquinas.push({
+                                        mac: macMaquina,
+                                        parametros: {
+                                            cpu_percent: parametroCpuPercent,
+                                            gpu_percent: parametroGpuPercent,
+                                            cpu_temp: parametroCpuTemperature,
+                                            gpu_temp: parametroGpuTemperature
+                                        },
+                                        leituraAtual: {
+                                            cpu_percent: ultimo.cpu_percent,
+                                            gpu_percent: ultimo.gpu_percent,
+                                            cpu_temp: ultimo.cpu_temp,
+                                            gpu_temp: ultimo.gpu_temp,
+                                            cores: {
+                                                cpu_percent: corCpuPercent,
+                                                gpu_percent: corGpuPercent,
+                                                cpu_temp: corCpuTemp,
+                                                gpu_temp: corGpuTemp
+                                            }
+                                        },
+                                        foraDoParametro
+                                    });
+
                                     tbody.innerHTML += `
-                                        <tr>
-                                            <td>${macMaquina}</td>
-                                            <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
-                                            <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
-                                            <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
-                                            <td style="font-size:20px; background-color:${corGpuTemp}">${ultimo.gpu_temp}</td>
-                                        </tr>`;
+                                <tr>
+                                    <td>${macMaquina}</td>
+                                    <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
+                                    <td style="font-size:20px; background-color:${corGpuTemp}">${ultimo.gpu_temp}</td>
+                                </tr>`;
                                 }
                             });
-                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`
-                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
 
+                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
+                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
+                            console.log("Lista de máquinas:", listaMaquinas);
                         })
                         .catch(err => console.error("Erro ao ler CSV:", err));
                 })
                 .catch(err => console.error("Erro ao carregar máquinas:", err));
         }
+
 
 
         function salvarParametrosIndividuais() {
