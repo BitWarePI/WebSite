@@ -21,13 +21,24 @@ function listarChamadosPorEmpresa(idEmpresa) {
             c.prioridade, 
             c.status,
             f.nome AS nomeTecnico,
-            f.sobrenome AS sobrenomeTecnico
+            f.sobrenome AS sobrenomeTecnico,
+            c.idTecnico -- <-- ESSA LINHA É A MAIS IMPORTANTE
         FROM Chamado c
             JOIN Maquina m ON c.fkMaquina = m.idMaquina
             LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
         WHERE m.fkEmpresa = ${idEmpresa}
         ORDER BY 
-            CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END, 
+            CASE c.prioridade 
+                WHEN 'Crítica' THEN 1
+                WHEN 'Alta' THEN 2 
+                WHEN 'Média' THEN 3 
+                WHEN 'Baixa' THEN 4 
+                ELSE 5 
+            END,
+            CASE c.status 
+                WHEN 'Aberto' THEN 1 
+                ELSE 2 
+            END, 
             c.dataAbertura DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
