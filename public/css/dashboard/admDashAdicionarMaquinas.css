@@ -101,6 +101,54 @@
   background-color: #0056b3;
 }
 
+.tabelaMaquinas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.tabelaMaquinas th, .tabelaMaquinas td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabelaMaquinas th {
+    background-color: var(--primary-color);
+    color: var(--main-text-color);
+}
+
+.tabelaMaquinas td input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+.tabelaMaquinas td button {
+    padding: 6px 10px;
+    margin: 2px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.tabelaMaquinas td button:hover {
+    opacity: 0.8;
+}
+
+.tabelaMaquinas td button.remover {
+    background-color: var(--error-color);
+    color: #fff;
+}
+
+.tabelaMaquinas td button.editar {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+
 /* Responsividade */
 @media (max-width: 600px) {
   .modal-container {
