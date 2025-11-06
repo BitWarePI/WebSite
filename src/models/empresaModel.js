@@ -108,6 +108,16 @@ function ativarEmpresa(idEmpresa){
     return database.executar(sql);
 }
 
+function desativarEmpresa(idEmpresa){
+    const id = Number(idEmpresa);
+    const sql = `
+        UPDATE bitware_db.Empresa 
+        SET ativo = 0
+        WHERE idEmpresa = ${id}
+    `;
+    return database.executar(sql);
+}
+
 function inativarEmpresa(emailEmpresa) {
     var instrucao = `
         UPDATE Empresa 
@@ -134,6 +144,7 @@ module.exports = {
     listarEmpresasDelecao,
     listarEmpresasAtivas,
     listarEmpresasInativas,
+    desativarEmpresa,
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,

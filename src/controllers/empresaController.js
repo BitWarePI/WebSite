@@ -148,6 +148,22 @@ function ativarEmpresa(req, res) {
     });
 }
 
+function desativarEmpresa(req, res) {
+    const idEmpresa = req.params.id;
+    console.log("ENTROU NO ATIVAR EMPRESA")
+    empresaModel.desativarEmpresa(idEmpresa).then((resultado) => {
+        if (resultado.affectedRows > 0) {
+            res.status(200).json({ mensagem: 'Empresa desativada com sucesso.' });
+        } else {
+            res.status(404).json({ mensagem: 'Empresa não encontrada.' });
+        }
+    }).catch(function (erro) {
+        console.log("Houve um erro ao ativar empresa:", erro);
+        res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    });
+}
+
+
 function inativarEmpresa(req, res) {
     console.log("ENTROU NO INATIVAR EMPRESA")
     var idEmpresa = req.body.idEmpresa;
@@ -186,5 +202,6 @@ module.exports = {
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
+    desativarEmpresa,
     inativarEmpresa
 };
