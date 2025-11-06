@@ -1,6 +1,5 @@
 const database = require("../database/config");
 
-// Lista todas as máquinas de uma empresa com os parâmetros agregados
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
     SELECT 
@@ -12,8 +11,8 @@ function listarPorEmpresa(idEmpresa) {
             m.idMaquina,
             m.enderecoMac,
             COALESCE(JSON_OBJECT(
-                'uso_cpu', MAX(CASE WHEN c.descricao = 'cpu_percent' THEN p.valor END),
-                'uso_gpu', MAX(CASE WHEN c.descricao = 'gpu_percent' THEN p.valor END),
+                'uso_cpu', MAX(CASE WHEN c.descricao = 'cpu' THEN p.valor END),
+                'uso_gpu', MAX(CASE WHEN c.descricao = 'gpu' THEN p.valor END),
                 'temp_cpu', MAX(CASE WHEN c.descricao = 'cpu_temperature' THEN p.valor END),
                 'temp_gpu', MAX(CASE WHEN c.descricao = 'gpu_temperature' THEN p.valor END)
             ), NULL) AS parametros,
@@ -32,6 +31,26 @@ function listarPorEmpresa(idEmpresa) {
         t.idMaquina;
 `;
     return database.executar(instrucao);
+}
+
+function infoMaquinas(idEmpresa) {
+    console.log("VAI EXECUTAR A INSTRUÇÃO DE PEGAR AS INFOS DAS MÁQUINAS");
+    const instrucao = `
+        SELECT 
+            m.enderecoMac,
+            MAX(CASE WHEN c.descricao = 'cpu' THEN p.valor END) AS cpu_percent,
+            MAX(CASE WHEN c.descricao = 'gpu' THEN p.valor END) AS gpu_percent,
+            MAX(CASE WHEN c.descricao = 'cpu_temperature' THEN p.valor END) AS cpu_temperature,
+            MAX(CASE WHEN c.descricao = 'gpu_temperature' THEN p.valor END) AS gpu_temperature
+        FROM Maquina AS m
+        INNER JOIN Parametro AS p ON m.idMaquina = p.fkMaquina
+        INNER JOIN Componente AS c ON p.fkComponente = c.idComponente
+        WHERE m.fkEmpresa = ${idEmpresa}
+        GROUP BY m.idMaquina, m.enderecoMac;
+
+    `;
+    console.log("Instrução SQL:", instrucao);
+    return database.executar(instrucao); 
 }
 
 function verificarParametrosGerais(idEmpresa){
@@ -84,8 +103,9 @@ async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, t
     }
 }
 
-module.exports = {
+module.exports = {  
     listarPorEmpresa,
+    infoMaquinas,
     verificarParametrosGerais,
     definirParametrosGerais,
     definirParametrosMaquina

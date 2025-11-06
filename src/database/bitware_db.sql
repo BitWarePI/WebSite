@@ -80,7 +80,8 @@ CREATE TABLE Chamado (
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
-  CONSTRAINT fk_Tecnico_Chamado FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
+  CONSTRAINT 
+  FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
     ON DELETE CASCADE
 );
 
@@ -99,23 +100,22 @@ VALUES
 INSERT INTO Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
 VALUES 
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
-('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 4, 2),
-('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 3, 2),
-('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 4, 3);
+('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 2, 2),
+('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 2, 2),
+('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 2, 3);
 
 INSERT INTO Maquina (enderecoMac, fkEmpresa)
 VALUES 
 ('f4:6a:dd:7b:03:0d', 1),
 ('a1:b2:c3:d4:e5:f6', 2),
 ('ff:ee:dd:cc:bb:aa', 2),
+('e8:5c:5f:1e:b4:1d', 2),
 ('11:22:33:44:55:66', 3);
 
 INSERT INTO Componente (descricao)
 VALUES 
-('cpu_percent'),
-('gpu_percent'),
-('ram_percent'),
-('disk_percent'),
+('cpu'),
+('gpu'),
 ('cpu_temperature'),
 ('gpu_temperature');
 
@@ -123,20 +123,28 @@ INSERT INTO Parametro (fkMaquina, fkComponente, valor)
 VALUES
 (1, 1, 35),
 (1, 2, 20),
-(1, 5, 48),
-(1, 6, 42),
+(1, 3, 48),
+(1, 4, 42),
+
 (2, 1, 55),
 (2, 2, 65),
-(2, 5, 72),
-(2, 6, 69),
+(2, 3, 72),
+(2, 4, 69),
+
 (3, 1, 80),
 (3, 2, 45),
-(3, 5, 90),
-(3, 6, 60),
+(3, 3, 90),
+(3, 4, 60),
+
 (4, 1, 25),
 (4, 2, 15),
-(4, 5, 40),
-(4, 6, 35);
+(4, 3, 40),
+(4, 4, 35),
+
+(5, 1, 50),
+(5, 2, 35),
+(5, 3, 70),
+(5, 4, 60);
 
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
@@ -146,19 +154,8 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Superaquecimento', 'Alta', 'Aberto', 1),
-(2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
-(3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
-(4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
-
-# Criação de usuarios para respectivas funções
-CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
-
-CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
-
-CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
-FLUSH PRIVILEGES;
+(1, 'Duperaquecimento', 'Alta', 'Aberto', 1),
+(2, 'uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
+(3, 'uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(2, 'uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
+(4, 'uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);

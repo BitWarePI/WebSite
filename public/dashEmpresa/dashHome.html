@@ -33,9 +33,15 @@
             </a>
           </li>
           <li>
-            <a class="link" href="dashMaquinas.html">
+            <a class="link" href="dashInfoMaquinas.html">
               <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Máquina Parâmetros</span>
+              <span class="titulo">Informações máquinas</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="dashMaquinas.html">
+              <span class="material-symbols-outlined icon">settings_applications</span>
+              <span class="titulo">Parametros máquinas</span>
             </a>
           </li>
           <li>
@@ -70,7 +76,6 @@
       </ul>
     </nav>
 
-    <!--COPIAR ESSA DIV PARA SIDEBAR FIXA!!!!!!!!!!!!!!!!-->
     <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
@@ -334,6 +339,20 @@
   const inputFim = document.getElementById('dt_fim');
   const btnAplicar = document.getElementById('btn_aplicar');
   const textoPeriodo = document.querySelector('p strong');
+
+  const kpiCards = document.querySelectorAll('.container > div > div > div > div > p:nth-child(2)');
+
+  function random(min, max, decimal = 1) {
+    return (Math.random() * (max - min) + min).toFixed(decimal);
+  }
+
+  function formatar(data) {
+    const d = new Date(data);
+    const dia = String(d.getDate() + 1).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = d.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
 
   const kpiGpuUso = document.querySelector('.kpi-gpu-uso');
   const kpiGpuTemp = document.querySelector('.kpi-gpu-temp');

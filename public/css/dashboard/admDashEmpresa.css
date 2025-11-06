@@ -250,9 +250,6 @@ table tr td.acao button.ver-mais{
     background-color: var(--error-color);
 }
 
-
-
-
 @media screen and (max-width: 1000px) {
     
     table{

@@ -13,13 +13,30 @@ module.exports = {
         }
     },
 
-    async verificarParametrosGerais(req,res){
+
+    async infoMaquinas(req, res) {
+        const { idEmpresa } = req.params;
+
+        try {
+            console.log("VAI PEGAR AS INFORMAÇÕES DA MÁQUINA");
+
+            const maquinas = await maquinaModel.infoMaquinas(idEmpresa);
+            console.log("Resultado da query:", maquinas);
+
+            res.status(200).json(maquinas); 
+        } catch (erro) {
+            console.error("Erro ao listar máquinas:", erro);
+            res.status(500).json({ erro: "Erro ao buscar máquinas" });
+        }
+    },
+
+    async verificarParametrosGerais(req, res) {
         const { idEmpresa } = req.params;
 
         try {
             const maquinas = await maquinaModel.verificarParametrosGerais(idEmpresa);
             res.status(200).json(maquinas);
-        } catch (erro){
+        } catch (erro) {
             console.error("Erro ao verificar existência dos parametros gerais:", erro);
             res.status(500).json({ erro: "Erro ao verificar existência dos parametros gerais" });
         }
