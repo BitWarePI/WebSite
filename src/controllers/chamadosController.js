@@ -70,9 +70,21 @@ function buscarKPIsTecnico(req, res) {
     }
 }
 
+function finalizarChamado(req, res) {
+    var idChamado = req.params.idChamado;
+    if (idChamado == undefined) {
+        res.status(400).send("O id do chamado está undefined!");
+    } else {
+        chamadosModel.finalizarChamado(idChamado)
+            .then(function (resultado) { res.json(resultado); })
+            .catch(function (erro) { console.log(erro); res.status(500).json(erro.sqlMessage); });
+    }
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
     buscarKPIs,
-    buscarKPIsTecnico
+    buscarKPIsTecnico,
+    finalizarChamado
 }

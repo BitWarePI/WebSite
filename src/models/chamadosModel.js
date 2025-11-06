@@ -88,9 +88,20 @@ function buscarKPIsTecnico(idTecnico) {
     return database.executar(instrucaoSql);
 }
 
+function finalizarChamado(idChamado) {
+    var instrucaoSql = `
+        UPDATE Chamado 
+        SET status = 'Resolvido'
+        WHERE idChamado = ${idChamado};
+    `;
+    console.log("Executando a instrução SQL (Finalizar Chamado): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
     buscarKPIs,
-    buscarKPIsTecnico
+    buscarKPIsTecnico,
+    finalizarChamado
 };

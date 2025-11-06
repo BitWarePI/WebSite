@@ -208,6 +208,45 @@
             .catch(err => { console.error(err); alert('Erro ao atribuir o técnico.'); });
     }
 
+    function finalizarChamado(idChamado) {
+        if (confirm("Esse chamado foi finalizado realmente?")) {
+            fetch(`/chamados/finalizar/${idChamado}`, {
+                method: 'PUT'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao finalizar chamado');
+                return res.json();
+            })
+            .then(response => {
+                alert('Chamado finalizado com sucesso!');
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    const celulaStatusBadge = linhaDoChamado.querySelector('.status-badge');
+                    if (celulaStatusBadge) {
+                        celulaStatusBadge.innerText = 'Resolvido';
+                        celulaStatusBadge.classList.remove('nIniciado', 'andamento');
+                        celulaStatusBadge.classList.add('resolvido');
+                    }
+                    const iniciarBtn = linhaDoChamado.querySelector('.iniciar');
+                    if (iniciarBtn) iniciarBtn.style.display = 'none';
+                    
+                    const finalizarBtn = linhaDoChamado.querySelector('.finalizar');
+                    if (finalizarBtn) finalizarBtn.style.display = 'none';
+                    
+                } else {
+                    carregarChamados();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao finalizar o chamado.');
+            });
+        } else {
+            console.log("Finalização cancelada.");
+        }
+    }
+
+
     function carregarKPIs() {
         const userCargo = sessionStorage.getItem('FK_CARGO');
         const idEmpresa = sessionStorage.getItem('idEmpresa');
@@ -296,9 +335,16 @@
                     var classeStatus = "";
                     var textoStatus = chamado.status;
                     var botaoAtribuirHtml = "";
+                    var botaoFinalizarHtml = "";
 
-                    if (userCargo == '4') {
+                    if (chamado.status == 'Resolvido') {
+                        classeStatus = 'resolvido';
                         botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = '';
+                    }
+                    else if (userCargo == '4') {
+                        botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
                     }
                     else {
                         if (chamado.status == 'Aberto') {
@@ -310,25 +356,26 @@
                                         onclick="abrirModalTecnicos(${chamado.idChamado})">
                                     play_arrow
                                 </button>`;
-                        } else {
-                            if (chamado.status == 'Em andamento') { classeStatus = 'andamento'; }
-                            else if (chamado.status == 'Resolvido') { classeStatus = 'resolvido'; }
-
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Atribua um técnico primeiro" style="opacity: 0.5; cursor: not-allowed;">check_circle</button>`;
+                        } else if (chamado.status == 'Em andamento') {
+                            classeStatus = 'andamento';
                             botaoAtribuirHtml = `
                                 <button class="material-symbols-outlined iniciar" 
                                         title="Este chamado já está em progresso" 
                                         onclick="alert('O chamado ja tem um tecnico')">
                                     play_arrow
                                 </button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
                         }
                     }
-
-                    if (chamado.status == 'Aberto') {
+                    
+                    if (chamado.status == 'Aberto' && (classeStatus == '')) {
                         classeStatus = 'nIniciado';
                         textoStatus = 'Não iniciado';
                     }
-                    if (chamado.status == 'Em andamento') { classeStatus = 'andamento'; }
-                    if (chamado.status == 'Resolvido') { classeStatus = 'resolvido'; }
+                    if (chamado.status == 'Em andamento' && (classeStatus == '')) {
+                        classeStatus = 'andamento';
+                    }
 
                     var linha = `
                         <tr id="chamado-${chamado.idChamado}">
@@ -341,7 +388,7 @@
                             </td>
                             <td class="tecnico tecnico-nome">${nomeTecnico}</td>
                             <td class="acao">
-                                ${botaoAtribuirHtml} <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+                                ${botaoAtribuirHtml} ${botaoFinalizarHtml}
                             </td>
                         </tr>
                     `;
@@ -357,5 +404,5 @@
     window.onload = function() {
         carregarChamados();
         carregarKPIs();
-    }
+    }   
 </script>
