@@ -48,15 +48,10 @@ function atualizarSenha(idFuncionario, novaSenha) {
     `;
     return database.executar(instrucao);
 }
-
-
-
-
 module.exports = {
     autenticar,
     cadastrar,
     verificarEmpresa,
     verificarSenhaAtual,
-    atualizarSenha,
-    inativarEmpresa
+    atualizarSenha
 };

@@ -150,11 +150,11 @@ function ativarEmpresa(req, res) {
 
 function inativarEmpresa(req, res) {
     console.log("ENTROU NO INATIVAR EMPRESA")
-    var idFuncionario = req.body.idFuncionario;
+    var idEmpresa = req.body.idEmpresa;
     var emailEmpresa = req.body.emailEmpresa;
     var senhaVar = req.body.senha;
 
-    usuarioModel.verificarSenhaAtual(idFuncionario, senhaVar)
+    empresaModel.verificarSenhaAtual(idEmpresa, senhaVar)
         .then(resultado => {
             if (resultado.length > 0) {
                 // Senha atual confere, pode inativar

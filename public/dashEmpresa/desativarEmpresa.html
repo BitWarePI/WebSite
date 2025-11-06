@@ -61,9 +61,9 @@
 </html>
 
 <script>
-  var idFuncionario = sessionStorage.ID_USUARIO; 
+  var idEmpresa = sessionStorage.idEmpresa; 
   var emailEmpresa = sessionStorage.EMAIL_USUARIO;
-  console.log(idFuncionario)
+  console.log(idEmpresa)
 
   function abrirModal(titulo, texto, tipo) {
     const modal = document.querySelector('.modal');
@@ -92,8 +92,6 @@
 
   function enviar(){
     confirmar = confirmar_input.value
-
-    if(senha)
     if(confirmar == "confirmar"){
       deletar()
     }else{
@@ -113,7 +111,7 @@
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        idFuncionario: idFuncionario,
+        idEmpresa: idEmpresa,
         emailEmpresa: emailEmpresa,
         senha: senhaVar
       })
