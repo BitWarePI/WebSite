@@ -13,6 +13,22 @@ module.exports = {
         }
     },
 
+    async infoMaquinas(req, res) {
+        const { idEmpresa } = req.params;
+
+        try {
+            console.log("VAI PEGAR AS INFORMAÇÕES DA MÁQUINA");
+
+            const maquinas = await maquinaModel.infoMaquinas(idEmpresa);
+            console.log("Resultado da query:", maquinas);
+
+            res.status(200).json(maquinas); 
+        } catch (erro) {
+            console.error("Erro ao listar máquinas:", erro);
+            res.status(500).json({ erro: "Erro ao buscar máquinas" });
+        }
+    },
+
     async listarQtdPorEmpresa(req, res) {
         const { idEmpresa } = req.params;
 

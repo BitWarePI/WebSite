@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="../css/default.css">
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
@@ -32,16 +33,16 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link" href="dashInfoMaquinas.html">
+                        <a class="link ativo" href="dashInfoMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
-
                             <span class="titulo">Informações máquinas</span>
                         </a>
                     </li>
                     <li>
-                        <a class="link ativo" href="dashMaquinas.html">
+                        <a class="link" href="dashMaquinas.html">
                             <span class="material-symbols-outlined icon">settings_applications</span>
-                            <span class="titulo">Parametros máquinas</span>                        </a>
+                            <span class="titulo">Parametros máquinas</span>
+                        </a>
                     </li>
                     <li>
                         <a class="link" href="atualizar-senha.html">
@@ -50,9 +51,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link" href="desativarEmpresa.html">
+                        <a class="link" href="deletarConta.html">
                             <span class="material-symbols-outlined icon">cancel</span>
-                            <span class="titulo">Desativar empresa</span>
+                            <span class="titulo">Deletar conta</span>
                         </a>
                     </li>
                 </ul>
@@ -82,20 +83,20 @@
 
         <div class="container">
             <div>
-                <h1 style="font-size: 45px;">Parametros das máquinas</h1>
+                <h1 style="font-size: 45px;">Informações mais recentes das máquinas</h1>
             </div>
             <div class="kpi-container">
+                
                 <div class="kpi-card">
                     <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
                     <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
                     <span class="material-symbols-outlined icon cadastrada">computer</span>
                 </div>
                 <div class="kpi-card">
-                    <h3 class="titulo" style="font-size: 25px;">Máquinas sem <br>parâmetros</h3>
-                    <p class="quantidade" id="qtdSemParam" style="font-size: 5em;">0</p>
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas ultrapassando os <br>parâmetros</h3>
+                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em; color: red;">0</p>
                     <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
-                <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
             </div>
 
             <div class="listaEmpresa">
@@ -115,7 +116,6 @@
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
                             <th>Temp GPU (°C)</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
@@ -125,21 +125,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Model de alerta -->
-    <div class="modal aviso" id="modal_avisar_parametros_gerais">
-        <div class="modal-container" id="modal_container_avisar_parametros_gerais">
-            <div class="header">
-                <h1>Aviso</h1>
-                <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
-            </div>
-            <div class="body">
-                <p>Os parâmetros gerais não foram definidos para esta empresa. Você precisa defini-los antes de
-                    continuar.</p>
-                <button class="btn submit" onclick="abrirModalParametrosGerais()">Definir Parâmetros Gerais</button>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL PARÂMETROS GERAIS -->
     <div class="modal cadastro" id="modal_param_gerais">
@@ -193,74 +178,132 @@
     <script src="../js/nav.js"></script>
 
     <script>
-        let modalGeral = document.getElementById('modal_param_gerais');
-        let modalGeralContainer = document.getElementById('modal_container_param_gerais');
 
-        let modalMaquina = document.getElementById('modal_param_maquina');
-        let modalMaquinaContainer = document.getElementById('modal_container_param_maquina');
-        let maquinaSelecionada = null;
-
-        // ---------- ABRIR / FECHAR MODAIS ----------
-        function abrirModalParametrosGerais() {
-            toggleModalAviso(false);
-            toggleModal(modalGeral, modalGeralContainer);
-        }
-
-        function abrirModalParametrosMaquina(idMaquina, nome) {
-            maquinaSelecionada = idMaquina;
-            document.getElementById("tituloModalMaquina").innerText = `Parâmetros - ${nome}`;
-            toggleModal(modalMaquina, modalMaquinaContainer);
-        }
-
-        function toggleModal(modal, container) {
-            if (modal.classList.contains("open")) {
-                modal.classList.remove("fade-in");
-                container.classList.remove("slide-in-top");
-                modal.classList.add("fade-out-flex");
-                modal.classList.remove("open");
-            } else {
-                modal.classList.remove("fade-out-flex");
-                modal.classList.add("open");
-                modal.classList.add("fade-in");
-                container.classList.add("slide-in-top");
-            }
-        }
-
-        // ---------- CARREGAR MÁQUINAS ----------
         function carregarMaquinas() {
             var empresaId = sessionStorage.getItem('idEmpresa');
 
-            fetch(`/maquina/empresa/${empresaId}`)
+            fetch(`/maquina/infoMaquinas/${empresaId}`)
                 .then(res => res.json())
                 .then(maquinas => {
                     let tbody = document.getElementById("tableMaquinas");
                     tbody.innerHTML = "";
 
-                    let semParam = 0;
-                    maquinas.forEach(m => {
-                        if (m.parametros.uso_cpu == null) {
-                            semParam++;
-                            console.log(semParam)
-                        }
-                        tbody.innerHTML += `
-                    <tr>
-                        <td>${m.enderecoMac}</td>
-                        <td>${m.parametros?.uso_cpu ?? '-'}</td>
-                        <td>${m.parametros?.uso_gpu ?? '-'}</td>
-                        <td>${m.parametros?.temp_cpu ?? '-'}</td>
-                        <td>${m.parametros?.temp_gpu ?? '-'}</td>
-                        <td>
-                            <button class="material-symbols-outlined ver-mais" title="Definir parâmetros"
-                                onclick="abrirModalParametrosMaquina(${m.idMaquina}, '${m.enderecoMac}')">tune</button>
-                        </td>
-                    </tr>`;
-                    });
+                    fetch("leituras2.csv")
+                        .then(res => {
+                            if (!res.ok) throw new Error("Erro ao carregar CSV");
+                            return res.text();
+                        })
+                        .then(texto => {
+                            const linhas = texto.split("\n").map(l => l.trim());
+                            const dadosCSV = [];
 
-                    document.getElementById("qtdMaquinas").textContent = maquinas.length;
-                    document.getElementById("qtdSemParam").textContent = semParam;
+                            for (let i = 1; i < linhas.length; i++) {
+                                const linha = linhas[i];
+                                if (!linha) continue;
+                                const campos = linha.split(";");
+
+                                dadosCSV.push({
+                                    datetime: campos[0],
+                                    cpu_percent: parseFloat(campos[1]),
+                                    gpu_percent: parseFloat(campos[2]),
+                                    cpu_temp: parseFloat(campos[3]),
+                                    gpu_temp: parseFloat(campos[4]),
+                                    id_empresa: campos[5],
+                                    mac: campos[6]
+                                });
+                            }
+
+                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`
+
+                            let contadorQtdForaParam = 0;
+
+                            maquinas.forEach(maquina => {
+                                const macMaquina = maquina.enderecoMac.trim().toLowerCase();
+                                const parametroCpuPercent = maquina.cpu_percent;
+                                const parametroGpuPercent = maquina.gpu_percent;
+                                const parametroCpuTemperature = maquina.cpu_temperature;
+                                const parametroGpuTemperature = maquina.gpu_temperature;
+
+                                const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
+
+                                if (registros.length > 0) {
+                                    const ultimo = registros[registros.length - 1];
+
+                                    let corCpuPercent = "white";
+                                    let corGpuPercent = "white";
+                                    let corCpuTemp = "white";
+                                    let corGpuTemp = "white";
+                                    let maquinaForaDoParametro = false; // ← controle por máquina
+
+                                    const cincoCpuPercent = parametroCpuPercent * 0.05;
+                                    const dezCpuPercent = parametroCpuPercent * 0.10;
+
+                                    const cincoGpuPercent = parametroGpuPercent * 0.05;
+                                    const dezGpuPercent = parametroGpuPercent * 0.10;
+
+                                    const cincoCpuTemp = parametroCpuTemperature * 0.05;
+                                    const dezCpuTemp = parametroCpuTemperature * 0.10;
+
+                                    const cincoGpuTemp = parametroGpuTemperature * 0.05;
+                                    const dezGpuTemp = parametroGpuTemperature * 0.10;
+
+                                    // ---- CPU USO ----
+                                    if (ultimo.cpu_percent < parametroCpuPercent - dezCpuPercent) {
+                                        corCpuPercent = "red";
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.cpu_percent < parametroCpuPercent - cincoCpuPercent) {
+                                        corCpuPercent = "yellow";
+                                        maquinaForaDoParametro = true;
+                                    }
+
+                                    // ---- GPU USO ----
+                                    if (ultimo.gpu_percent < parametroGpuPercent - dezGpuPercent) {
+                                        corGpuPercent = "red";
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.gpu_percent < parametroGpuPercent - cincoGpuPercent) {
+                                        corGpuPercent = "yellow";
+                                        maquinaForaDoParametro = true;
+                                    }
+
+                                    // ---- CPU TEMP ----
+                                    if (ultimo.cpu_temp > parametroCpuTemperature + dezCpuTemp) {
+                                        corCpuTemp = "red";
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.cpu_temp > parametroCpuTemperature + cincoCpuTemp) {
+                                        corCpuTemp = "yellow";
+                                        maquinaForaDoParametro = true;
+                                    }
+
+                                    // ---- GPU TEMP ----
+                                    if (ultimo.gpu_temp > parametroGpuTemperature + dezGpuTemp) {
+                                        corGpuTemp = "red";
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.gpu_temp > parametroGpuTemperature + cincoGpuTemp) {
+                                        corGpuTemp = "yellow";
+                                        maquinaForaDoParametro = true;
+                                    }
+
+                                    if (maquinaForaDoParametro) contadorQtdForaParam++;
+
+                                    tbody.innerHTML += `
+                                        <tr>
+                                            <td>${macMaquina}</td>
+                                            <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
+                                            <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
+                                            <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
+                                            <td style="font-size:20px; background-color:${corGpuTemp}">${ultimo.gpu_temp}</td>
+                                        </tr>`;
+                                }
+                            });
+                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`
+                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
+
+                        })
+                        .catch(err => console.error("Erro ao ler CSV:", err));
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.error("Erro ao carregar máquinas:", err));
         }
+
 
         function salvarParametrosIndividuais() {
             if (!maquinaSelecionada) return alert("Selecione uma máquina.");
@@ -335,42 +378,21 @@
                 })
                 .then(param => {
                     if (!param || Object.keys(param).length === 0) {
+                        // Nenhum parâmetro geral definido
                         abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                         setTimeout(() => toggleModalParametrosGerais(true), 1200);
                     } else {
-                        console.log("Parâmetros gerais AUSENTES (array vazio). Abrindo aviso.");
-                        setTimeout(() => {
-                            toggleModalAviso(true);
-                        }, 200);
+                        console.log("Parâmetros gerais carregados:", param);
                     }
                 })
                 .catch(err => {
                     console.error(err);
+                    abrirModalFb('Erro', 'Erro ao buscar parâmetros gerais.', 'erro');
                 });
-        }
-
-        // Função para mostrar ou esconder o modal de aviso
-        function toggleModalAviso(show) {
-            console.log(`Abrindo modal de aviso: ${show}`);
-            let modalAviso = document.getElementById('modal_avisar_parametros_gerais');
-            let containerAviso = document.getElementById('modal_container_avisar_parametros_gerais');
-
-            if (show) {
-                modalAviso.classList.add('open');
-                modalAviso.classList.remove('fade-out-flex');
-                modalAviso.classList.add('fade-in');
-                containerAviso.classList.add('slide-in-top');
-            } else {
-                modalAviso.classList.remove('fade-in');
-                containerAviso.classList.remove('slide-in-top');
-                modalAviso.classList.add('fade-out-flex');
-                modalAviso.classList.remove('open');
-            }
         }
 
         window.onload = function () {
             carregarMaquinas();
-            verificarParametrosGerais();
         }
     </script>
 </body>
