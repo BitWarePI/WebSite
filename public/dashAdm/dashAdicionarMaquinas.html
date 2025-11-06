@@ -118,6 +118,27 @@
         </div>
     </div>
 
+    <div class="modal" id="modal_gerenciar_maquinas">
+        <div class="modal-container">
+            <div class="header">
+                <h2>Gerenciar Máquinas</h2>
+                <button class="close-icon" onclick="fecharModal('modal_gerenciar_maquinas')">&times;</button>
+            </div>
+            <div class="body">
+                <table class="tabelaMaquinas">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Endereço MAC</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaMaquinas">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/nav.js"></script>
     <script>
@@ -235,13 +256,93 @@
                     if (res.ok) {
                         alert("Máquina cadastrada com sucesso!");
                         document.getElementById("modal_cadastro_maquina").style.display = "none";
-                        carregarEmpresas(); 
+                        carregarEmpresas();
                     } else {
                         alert("Erro ao cadastrar máquina.");
                     }
                 })
                 .catch(erro => console.error("Erro ao cadastrar máquina:", erro));
         }
+
+        let empresaAtual = null; // vai guardar o ID da empresa
+
+        function abrirModalGerenciarMaquinas(idEmpresa) {
+            if (!idEmpresa) {
+                alert("Empresa inválida.");
+                return;
+            }
+            empresaAtual = idEmpresa; // <-- guardar o ID da empresa
+            console.log(empresaAtual)
+            const modal = document.getElementById("modal_gerenciar_maquinas");
+            modal.classList.add("open");
+            listarMaquinas(empresaAtual);
+        }
+
+        function fecharModal(idModal) {
+            document.getElementById(idModal).classList.remove("open");
+        }
+
+        function listarMaquinas(idEmpresa) {
+            fetch(`/maquina/listarMaquinaPorEmpresa/${idEmpresa}`)
+                .then(res => res.json())
+                .then(maquinas => {
+                    const tabela = document.getElementById("tabelaMaquinas");
+                    tabela.innerHTML = "";
+
+                    if (maquinas.length === 0) {
+                        tabela.innerHTML = `<tr><td colspan="3">Nenhuma máquina cadastrada.</td></tr>`;
+                        return;
+                    }
+
+                    maquinas.forEach(m => {
+                        tabela.innerHTML += `
+                    <tr>
+                        <td>${m.idMaquina}</td>
+                        <td><input value="${m.enderecoMac}" onchange="editarMaquina(${m.idMaquina}, this.value)"></td>
+                        <td>
+                            <button class="editar" onclick="editarMaquina(${m.idMaquina}, this.closest('tr').querySelector('input').value)">Editar</button>
+                            <button class="remover" onclick="removerMaquina(${m.idMaquina})">Remover</button>
+                        </td>
+                    </tr>
+                `;
+                    });
+                })
+                .catch(erro => console.error("Erro ao listar máquinas:", erro));
+        }
+
+        function removerMaquina(idMaquina) {
+            if (!confirm("Deseja realmente remover esta máquina?")) return;
+
+            fetch(`/maquina/remover/${idMaquina}`, { method: "DELETE" })
+                .then(res => {
+                    if (res.ok) {
+                        alert("Máquina removida!");
+                        const idEmpresa = document.getElementById("empresaMaquina").value;
+                        listarMaquinas(empresaAtual);
+                        carregarEmpresas();
+                    }
+                });
+        }
+
+        // Editar máquina
+        function editarMaquina(idMaquina, enderecoMac) {
+            const macRegex = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/;
+            if (!macRegex.test(enderecoMac)) {
+                alert("Informe um endereço MAC válido (ex: AA:BB:CC:DD:EE:FF)");
+                return;
+            }
+
+            fetch(`/maquina/editar/${idMaquina}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ enderecoMac })
+            })
+                .then(res => {
+                    if (res.ok) {alert("Máquina editada!"); carregarEmpresas();} else {alert("Erro ao editar a máquina.");}
+                });
+        }
+
+
     </script>
 
 </body>

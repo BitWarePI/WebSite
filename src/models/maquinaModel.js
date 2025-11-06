@@ -54,6 +54,35 @@ function cadastrar(fkEmpresa, enderecoMac){
     return database.executar(instrucao)
 }
 
+function listarMaquinaPorEmpresa(fkEmpresa) {
+    const instrucao = `
+        SELECT idMaquina, enderecoMac
+        FROM maquina
+        WHERE fkEmpresa = ${fkEmpresa};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function remover(idMaquina) {
+    const instrucao = `
+        DELETE FROM Maquina
+        WHERE idMaquina = ${idMaquina};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
+
+function editar(idMaquina, enderecoMac) {
+    const instrucao = `
+        UPDATE Maquina
+        SET enderecoMac = '${enderecoMac}'
+        WHERE idMaquina = ${idMaquina};
+    `;
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
+
 function verificarParametrosGerais(idEmpresa){
     const instrucao = `
     select * from ParametrosGeraisEmpresa where fkEmpresa = ${idEmpresa}
@@ -108,6 +137,9 @@ module.exports = {
     listarPorEmpresa,
     listarQtdPorEmpresa,
     cadastrar,
+    listarMaquinaPorEmpresa,
+    remover,
+    editar,
     verificarParametrosGerais,
     definirParametrosGerais,
     definirParametrosMaquina
