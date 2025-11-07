@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/default.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
   <link rel="stylesheet" href="../css/animacao.css">
@@ -79,7 +80,7 @@
   <!-- TOPO DO DASHBOARD: gráfico + filtros + top máquinas -->
   <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
 
-    <!-- Gráfico à esquerda -->
+    <!-- GRAFICO -->
     <div style="flex: 1; min-width: 400px;">
       <p style="font-weight: bold; margin-bottom: 10px;">Erros de Máquinas</p>
       <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 280px;">
@@ -90,8 +91,8 @@
     <!-- LADO DIREITO -->
     <div style="display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
 
-      <!-- Filtro -->
-      <div style="background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
+      <!-- FILTRO -->
+      <div style="margin-top: 45px; background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
         <p style="margin: 0 0 10px 0; font-size: 15px;">Filtro de Dados</p>
         <select id="filtro"
           style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
@@ -104,15 +105,15 @@
         </select>
       </div>
 
-      <!-- Top 5 Máquinas -->
+       <!-- TOP5 -->
       <div style="font-weight: bold; background-color: #111; border-radius: 12px; padding: 20px 25px; color: #f1f5f9;">
         <p style="font-size: 1.1rem; margin-bottom: 10px;">Top 5 Máquinas com mais ocorrências</p>
         <ul style="list-style: none; padding-left: 0; margin: 0; text-align: center;">
-          <li style="color: #ffff; margin-bottom: 6px;">3e-223s-ssd3 001-Corredor B</li>
-          <li style="color: #ffff; margin-bottom: 6px;">3f-223s-ssd5 002-Corredor B</li>
-          <li style="color: #ffff; margin-bottom: 6px;">3e-223s-ssd4 003-Corredor B</li>
-          <li style="color: #ffff; margin-bottom: 6px;">3e-224s-ssd3 004-Corredor A</li>
-          <li style="color: #ffff; margin-bottom: 6px;">4e-223s-ssd3 005-Corredor A</li>
+          <li style="color: #ffff; margin-bottom: 6px;">3e-223s-ssd3 (001-Corredor B)</li>
+          <li style="color: #ffff; margin-bottom: 6px;">3f-223s-ssd5 (002-Corredor B)</li>
+          <li style="color: #ffff; margin-bottom: 6px;">3e-223s-ssd4 (003-Corredor B)</li>
+          <li style="color: #ffff; margin-bottom: 6px;">3e-224s-ssd3 (004-Corredor A)</li>
+          <li style="color: #ffff; margin-bottom: 6px;">4e-223s-ssd3 (005-Corredor A)</li>
 
         </ul>
       </div>
@@ -226,7 +227,7 @@
       labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
       datasets: [{
         label: 'Erros Semanais',
-        data: [2, 4, 1, 7, 3, 4, 3, 1],
+        data: [2, 4, 1, 7, 3, 4, 3, 1, 2.2],
         backgroundColor: '#8b5cf6',
         borderRadius: 8,
       }]
@@ -291,54 +292,3 @@
 </body>
 
 </html>
-
-<script>
-  const inputInicio = document.getElementById('dt_inicio');
-  const inputFim = document.getElementById('dt_fim');
-  const btnAplicar = document.getElementById('btn_aplicar');
-  const textoPeriodo = document.querySelector('p strong');
-
-
-  function random(min, max, decimal = 1) {
-    return (Math.random() * (max - min) + min).toFixed(decimal);
-  }
-
-  function formatar(data) {
-    const d = new Date(data);
-    const dia = String(d.getDate()+1).padStart(2, '0');
-    const mes = String(d.getMonth() + 1).padStart(2, '0');
-    const ano = d.getFullYear();
-    return `${dia}/${mes}/${ano}`;
-  }
-
-  const kpiGpuUso = document.querySelector('.kpi-gpu-uso');
-  const kpiGpuTemp = document.querySelector('.kpi-gpu-temp');
-  const kpiCpuUso = document.querySelector('.kpi-cpu-uso');
-  const kpiCpuTemp = document.querySelector('.kpi-cpu-temp');
-
-  function aplicarPeriodo() {
-    const inicio = inputInicio.value;
-    const fim = inputFim.value;
-
-    if (!inicio && !fim) {
-      textoPeriodo.textContent = '24 horas';
-    } else if (!inicio || !fim) {
-      alert('Por favor, selecione as duas datas!!');
-      return
-    }else if(fim < inicio){
-      alert("Datas incoerentes, por favor selecionar corretamente!!")
-      return
-    } else {
-      const dataInicio = formatar(new Date(inicio));
-      const dataFim = formatar(new Date(fim));
-      textoPeriodo.textContent = `período entre ${dataInicio} a ${dataFim}`;
-    }
-
-    kpiGpuUso.textContent = `${random(60, 95, 0)}%`;
-    kpiGpuTemp.textContent = `${random(40, 85, 1)}°C`;
-    kpiCpuUso.textContent = `${random(50, 95, 0)}%`;
-    kpiCpuTemp.textContent = `${random(45, 80, 1)}°C`;
-  }
-
-  btnAplicar.addEventListener('click', aplicarPeriodo);
-</script>
