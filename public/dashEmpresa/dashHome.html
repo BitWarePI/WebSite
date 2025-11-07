@@ -363,29 +363,27 @@
   const kpiCpuTempValor = kpitempcpu.querySelector('.kpi-cpu-uso');
 
   function definirCorKPI(elemento, valor, tipo) {
-    let cor = '#4c1d95'; // cor padrão roxa
+    let cor = '#4c1d95'; 
     if (parametro.value === "1") {
       if (tipo === 'uso') {
-        if (valor < 50) cor = '#ff4b4b'; // vermelho
-        else if (valor < 55) cor = '#ffc107'; // amarelo
-        else cor = '#4caf50'; // verde
+        if (valor < 70) cor = '#ff4b4b';
+        else if (valor < 75) cor = '#ffc107';
+        else cor = '#4caf50';
       } else if (tipo === 'temp') {
-        if (valor > 75) cor = '#ff4b4b'; // vermelho
-        else if (valor > 70) cor = '#ffc107'; // amarelo
-        else cor = '#4caf50'; // verde
+        if (valor > 75) cor = '#ff4b4b';
+        else if (valor > 70) cor = '#ffc107';
+        else cor = '#4caf50';
       }
     }
     elemento.style.backgroundColor = cor;
   }
 
-  // Aplica as cores iniciais (caso queira iniciar com o select "Padrão")
   definirCorKPI(kpiusogpu, 55, "uso");
   definirCorKPI(kpitempgpu, 80, "temp");
   definirCorKPI(kpiusocpu, 80, "uso");
   definirCorKPI(kpitempcpu, 72, "temp");
 
   parametro.addEventListener('change', () => {
-    // Reaplica as cores quando o usuário mudar o tipo de parâmetro
     definirCorKPI(kpiusogpu, parseFloat(kpiGpuUsoValor.textContent), "uso");
     definirCorKPI(kpitempgpu, parseFloat(kpiGpuTempValor.textContent), "temp");
     definirCorKPI(kpiusocpu, parseFloat(kpiCpuUsoValor.textContent), "uso");
@@ -414,7 +412,6 @@
         alert('Nenhum dado encontrado para o período selecionado.');
         return;
       }
-
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
       const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
