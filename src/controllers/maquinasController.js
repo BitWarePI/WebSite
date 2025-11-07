@@ -133,6 +133,7 @@ module.exports = {
 
     async definirParametrosMaquina(req, res) {
         const { idMaquina } = req.params;
+        console.log(req.body)
         const { uso_cpu, uso_gpu, temp_cpu, temp_gpu } = req.body;
 
         try {

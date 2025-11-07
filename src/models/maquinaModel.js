@@ -50,7 +50,8 @@ function infoMaquinas(idEmpresa) {
 
     `;
     console.log("Instrução SQL:", instrucao);
-    return database.executar(instrucao);}
+    return database.executar(instrucao);
+}
     function listarQtdPorEmpresa(idEmpresa) {
         instrucao = `
     SELECT 
@@ -107,7 +108,6 @@ function infoMaquinas(idEmpresa) {
         return database.executar(instrucao);
     }
 
-    // Cria ou atualiza os parâmetros gerais de uma empresa
     function definirParametrosGerais(idEmpresa, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
         const instrucao = `
         INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
@@ -121,17 +121,16 @@ function infoMaquinas(idEmpresa) {
         return database.executar(instrucao);
     }
 
-    // Cria ou atualiza os parâmetros individuais de uma máquina
     async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
         const queries = [
             // CPU %
             `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
-         SELECT ${idMaquina}, idComponente, ${uso_cpu} FROM Componente WHERE descricao = 'cpu_percent'
+         SELECT ${idMaquina}, idComponente, ${uso_cpu} FROM Componente WHERE descricao = 'cpu'
          ON DUPLICATE KEY UPDATE valor = ${uso_cpu};`,
 
             // GPU %
             `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
-         SELECT ${idMaquina}, idComponente, ${uso_gpu} FROM Componente WHERE descricao = 'gpu_percent'
+         SELECT ${idMaquina}, idComponente, ${uso_gpu} FROM Componente WHERE descricao = 'gpu'
          ON DUPLICATE KEY UPDATE valor = ${uso_gpu};`,
 
             // Temp CPU
