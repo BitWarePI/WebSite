@@ -316,6 +316,11 @@ table tr td.acao button.finalizar {
     color: var(--main-text-color);
 }
 
+.status-badge.resolvido {
+    background-color: #4CAF50;
+    color: white;
+}
+
 td.acao {
     display: flex;
     gap: 8px;

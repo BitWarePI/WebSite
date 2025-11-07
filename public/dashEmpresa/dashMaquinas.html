@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="../css/default.css">
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
@@ -33,10 +32,16 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link ativo" href="dashMaquinas.html">
+                        <a class="link" href="dashInfoMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
-                            <span class="titulo">Máquinas</span>
+
+                            <span class="titulo">Informações máquinas</span>
                         </a>
+                    </li>
+                    <li>
+                        <a class="link ativo" href="dashMaquinas.html">
+                            <span class="material-symbols-outlined icon">settings_applications</span>
+                            <span class="titulo">Parametros máquinas</span>                        </a>
                     </li>
                     <li>
                         <a class="link" href="atualizar-senha.html">
@@ -45,9 +50,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link" href="deletarConta.html">
+                        <a class="link" href="desativarEmpresa.html">
                             <span class="material-symbols-outlined icon">cancel</span>
-                            <span class="titulo">Deletar conta</span>
+                            <span class="titulo">Desativar empresa</span>
                         </a>
                     </li>
                 </ul>
@@ -76,16 +81,19 @@
 
 
         <div class="container">
+            <div>
+                <h1 style="font-size: 45px;">Parametros das máquinas</h1>
+            </div>
             <div class="kpi-container">
                 <div class="kpi-card">
-                    <h3 class="titulo">Máquinas <br>cadastradas</h3>
-                    <p class="quantidade" id="qtdMaquinas">0</p>
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
+                    <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
                     <span class="material-symbols-outlined icon cadastrada">computer</span>
                 </div>
                 <div class="kpi-card">
-                    <h3 class="titulo">Máquinas sem <br>parâmetros</h3>
-                    <p class="quantidade" id="qtdSemParam">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">warning</span>
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas sem <br>parâmetros</h3>
+                    <p class="quantidade" id="qtdSemParam" style="font-size: 5em;">0</p>
+                    <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
                 <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
             </div>
@@ -93,9 +101,8 @@
             <div class="listaEmpresa">
                 <div class="pesquisa">
                     <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="Nome da máquina..."
-                            oninput="pesquisarMaquina()">
+                        <label for="pesquisa_input">Pesquisar (Endereço MAC)</label>
+                        <input id="pesquisa_input" type="text" oninput="pesquisarMaquina()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
                     </div>
                 </div>
@@ -103,7 +110,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="nome">Nome da Máquina</th>
+                            <th class="nome">Endereço MAC</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
@@ -118,6 +125,21 @@
             </div>
         </div>
     </section>
+
+    <!-- Model de alerta -->
+    <div class="modal aviso" id="modal_avisar_parametros_gerais">
+        <div class="modal-container" id="modal_container_avisar_parametros_gerais">
+            <div class="header">
+                <h1>Aviso</h1>
+                <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
+            </div>
+            <div class="body">
+                <p>Os parâmetros gerais não foram definidos para esta empresa. Você precisa defini-los antes de
+                    continuar.</p>
+                <button class="btn submit" onclick="abrirModalParametrosGerais()">Definir Parâmetros Gerais</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL PARÂMETROS GERAIS -->
     <div class="modal cadastro" id="modal_param_gerais">
@@ -166,6 +188,7 @@
             </div>
         </div>
     </div>
+    </div>
 
     <script src="../js/nav.js"></script>
 
@@ -179,6 +202,7 @@
 
         // ---------- ABRIR / FECHAR MODAIS ----------
         function abrirModalParametrosGerais() {
+            toggleModalAviso(false);
             toggleModal(modalGeral, modalGeralContainer);
         }
 
@@ -206,7 +230,7 @@
         function carregarMaquinas() {
             var empresaId = sessionStorage.getItem('idEmpresa');
 
-            fetch(`/maquinas/empresa/${empresaId}`)
+            fetch(`/maquina/empresa/${empresaId}`)
                 .then(res => res.json())
                 .then(maquinas => {
                     let tbody = document.getElementById("tableMaquinas");
@@ -214,19 +238,20 @@
 
                     let semParam = 0;
                     maquinas.forEach(m => {
-                        if (!m.parametros) {
+                        if (m.parametros.uso_cpu == null) {
                             semParam++;
+                            console.log(semParam)
                         }
                         tbody.innerHTML += `
                     <tr>
-                        <td>${m.nome}</td>
+                        <td>${m.enderecoMac}</td>
                         <td>${m.parametros?.uso_cpu ?? '-'}</td>
                         <td>${m.parametros?.uso_gpu ?? '-'}</td>
                         <td>${m.parametros?.temp_cpu ?? '-'}</td>
                         <td>${m.parametros?.temp_gpu ?? '-'}</td>
                         <td>
                             <button class="material-symbols-outlined ver-mais" title="Definir parâmetros"
-                                onclick="abrirModalParametrosMaquina(${m.idMaquina}, '${m.nome}')">tune</button>
+                                onclick="abrirModalParametrosMaquina(${m.idMaquina}, '${m.enderecoMac}')">tune</button>
                         </td>
                     </tr>`;
                     });
@@ -235,29 +260,6 @@
                     document.getElementById("qtdSemParam").textContent = semParam;
                 })
                 .catch(err => console.error(err));
-        }
-
-        // ---------- SALVAR PARÂMETROS ----------
-        function salvarParametrosGerais() {
-            const empresaId = sessionStorage.getItem('idEmpresa');
-            const params = {
-                uso_cpu: usoCpuGeral.value,
-                uso_gpu: usoGpuGeral.value,
-                temp_cpu: tempCpuGeral.value,
-                temp_gpu: tempGpuGeral.value
-            };
-
-            fetch(`/parametros/gerais/${empresaId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(params)
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error("Erro ao salvar parâmetros gerais");
-                    abrirModalParametrosGerais();
-                    alert("Parâmetros gerais salvos com sucesso!");
-                })
-                .catch(err => alert(err.message));
         }
 
         function salvarParametrosIndividuais() {
@@ -270,7 +272,7 @@
                 temp_gpu: tempGpuInd.value
             };
 
-            fetch(`/parametros/maquina/${maquinaSelecionada}`, {
+            fetch(`/maquina/parametros/maquina/${maquinaSelecionada}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(params)
@@ -295,7 +297,81 @@
             }
         }
 
-        window.onload = carregarMaquinas;
+
+        function salvarParametrosGerais() {
+            const idEmpresa = sessionStorage.getItem('idEmpresa');
+            const uso_cpu = document.getElementById('usoCpuGeral').value;
+            const uso_gpu = document.getElementById('usoGpuGeral').value;
+            const temp_cpu = document.getElementById('tempCpuGeral').value;
+            const temp_gpu = document.getElementById('tempGpuGeral').value;
+
+            const dados = { uso_cpu, uso_gpu, temp_cpu, temp_gpu, idEmpresa };
+            console.log(dados)
+
+            fetch(`/maquina/parametros/gerais/${idEmpresa}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Erro ao salvar parâmetros');
+                    return res.json();
+                })
+                .then(() => {
+                    abrirModalParametrosGerais();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        function verificarParametrosGerais() {
+            const idEmpresa = sessionStorage.getItem('idEmpresa');
+
+            fetch(`/maquina/empresa/parametros-gerais/${idEmpresa}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Erro ao buscar parâmetros gerais');
+                    return res.json();
+                })
+                .then(param => {
+                    if (!param || Object.keys(param).length === 0) {
+                        abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
+                        setTimeout(() => toggleModalParametrosGerais(true), 1200);
+                    } else {
+                        console.log("Parâmetros gerais AUSENTES (array vazio). Abrindo aviso.");
+                        setTimeout(() => {
+                            toggleModalAviso(true);
+                        }, 200);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        // Função para mostrar ou esconder o modal de aviso
+        function toggleModalAviso(show) {
+            console.log(`Abrindo modal de aviso: ${show}`);
+            let modalAviso = document.getElementById('modal_avisar_parametros_gerais');
+            let containerAviso = document.getElementById('modal_container_avisar_parametros_gerais');
+
+            if (show) {
+                modalAviso.classList.add('open');
+                modalAviso.classList.remove('fade-out-flex');
+                modalAviso.classList.add('fade-in');
+                containerAviso.classList.add('slide-in-top');
+            } else {
+                modalAviso.classList.remove('fade-in');
+                containerAviso.classList.remove('slide-in-top');
+                modalAviso.classList.add('fade-out-flex');
+                modalAviso.classList.remove('open');
+            }
+        }
+
+        window.onload = function () {
+            carregarMaquinas();
+            verificarParametrosGerais();
+        }
     </script>
 </body>
 
