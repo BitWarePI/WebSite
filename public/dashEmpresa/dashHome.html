@@ -116,37 +116,37 @@
         </div>
       </div>
 
-      <div style="display: flex; align-self: flex-start; flex-direction: column;">
-        <h2 style="text-align:start; margin-bottom:0px;">Média de desempenho das Máquinas</h2>
-        <p style="text-align:start; color:#444; max-width:900px; margin-bottom: 30px;">Indicadores médios de uso e
-          temperatura das CPUs e GPUs das máquinas de mineração nas ultimas <strong>24 horas</strong>.</p>
-      </div>
+      <h2 style="margin-top:40px;">Análise de Desempenho - Média e Mediana por Parâmetro</h2>
+      <p style="color:#555; max-width:800px;">
+        Abaixo são exibidos os gráficos de uso e temperatura de CPU e GPU, acompanhados de seus valores médios e
+        medianos no período selecionado.
+      </p>
 
       <div style="width: 100%; margin-top: 60px;">
         <h2 style="font-weight: bold;">Desempenho baseado em GPU</h2>
         <div style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px;">
 
-            <div style="display: flex;flex-direction: column; gap: 20px; width: 100%; height: 450px;">
-              <div
-                style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-                <p style="color:white; font-size: large;  margin: 0;">Uso médio da GPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
-                <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-uso-mediana">50%</span></p>
-              </div>
-              <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                <canvas id="grafico1"></canvas>
-              </div>
+          <div style="display: flex;flex-direction: column; gap: 20px; width: 100%; height: 450px;">
+            <div id="kpiusogpu"
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large;  margin: 0;">Uso médio da GPU</p>
+              <p class="kpi-cpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-cpu-uso-mediana">50%</span>
+              </p>
             </div>
+            <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+              <canvas id="grafico1"></canvas>
+            </div>
+          </div>
 
-            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; ">
-              <div
-                style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-                <p style="color:white; font-size: large;  margin: 0;">Temperatura média da GPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">65°C</p>
-                <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-uso-mediana">61°C</span></p>
-              </div>
+          <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; ">
+            <div id="kpitempgpu"
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large;  margin: 0;">Temperatura média da GPU</p>
+              <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80°C</p>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
+                  class="kpi-cpu-uso-mediana">61°C</span></p>
+            </div>
             <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
               <canvas id="grafico2"></canvas>
             </div>
@@ -158,12 +158,13 @@
         <h2 style="font-weight: bold;">Desempenho baseado em CPU</h2>
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;">
 
-          <div style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
+          <div
+            style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
             <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
-              <div
+              <div id="kpiusocpu"
                 style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
                 <p style="color:white; font-size: large;  margin: 0;">Uso médio da CPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
+                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80%</p>
                 <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
                     class="kpi-cpu-uso-mediana">50%</span></p>
               </div>
@@ -173,123 +174,123 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
-              <div
+              <div id="kpitempcpu"
                 style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
                 <p style="color:white; font-size: large;  margin: 0;">Temperatura média da CPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">65°C</p>
+                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
                 <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
                     class="kpi-cpu-uso-mediana">61°C</span></p>
               </div>
-            <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-              <canvas id="grafico4"></canvas>
+              <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+                <canvas id="grafico4"></canvas>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
 
-    <div class="chamado">
-      <table>
-        <thead>
-          <tr>
-            <th class="id">ID</th>
-            <th class="maquina">Máquina</th>
-            <th class="problema">Problema</th>
-            <th class="prioridade">Prioridade</th>
-            <th class="status">Status</th>
-            <th class="tecnico">Técnico responsável</th>
-            <th class="acao"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="id">
-              <p>908</p>
-            </td>
-            <td class="maquina">015 - Corredor B</td>
-            <td class="problema">Superaquecimento</td>
-            <td class="prioridade">Alta</td>
-            <td class="status">
-              <span class="status-badge nIniciado">Não iniciado</span>
-            </td>
-            <td class="tecnico tecnico-nome">Não atribuído</td>
-            <td class="acao">
-              <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                onclick="abrirModalTecnicos(908)">play_arrow</button>
-              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-            </td>
-          </tr>
+        <div class="chamado">
+          <table>
+            <thead>
+              <tr>
+                <th class="id">ID</th>
+                <th class="maquina">Máquina</th>
+                <th class="problema">Problema</th>
+                <th class="prioridade">Prioridade</th>
+                <th class="status">Status</th>
+                <th class="tecnico">Técnico responsável</th>
+                <th class="acao"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="id">
+                  <p>908</p>
+                </td>
+                <td class="maquina">015 - Corredor B</td>
+                <td class="problema">Superaquecimento</td>
+                <td class="prioridade">Alta</td>
+                <td class="status">
+                  <span class="status-badge nIniciado">Não iniciado</span>
+                </td>
+                <td class="tecnico tecnico-nome">Não atribuído</td>
+                <td class="acao">
+                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                    onclick="abrirModalTecnicos(908)">play_arrow</button>
+                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+                </td>
+              </tr>
 
-          <tr id="chamado-666">
-            <td class="id">
-              <p>666</p>
-            </td>
-            <td class="maquina">098 - Corredor G</td>
-            <td class="problema">uso de GPU abaixo do esperado</td>
-            <td class="prioridade">Média</td>
-            <td class="status">
-              <span class="status-badge andamento">Em andamento</span>
-            </td>
-            <td class="tecnico tecnico-nome">Joseph Townborn</td>
-            <td class="acao">
-              <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                onclick="abrirModalTecnicos(666)">play_arrow</button>
-              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-            </td>
-          </tr>
+              <tr id="chamado-666">
+                <td class="id">
+                  <p>666</p>
+                </td>
+                <td class="maquina">098 - Corredor G</td>
+                <td class="problema">uso de GPU abaixo do esperado</td>
+                <td class="prioridade">Média</td>
+                <td class="status">
+                  <span class="status-badge andamento">Em andamento</span>
+                </td>
+                <td class="tecnico tecnico-nome">Joseph Townborn</td>
+                <td class="acao">
+                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                    onclick="abrirModalTecnicos(666)">play_arrow</button>
+                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+                </td>
+              </tr>
 
-          <tr id="chamado-667">
-            <td class="id">
-              <p>666</p>
-            </td>
-            <td class="maquina">098 - Corredor G</td>
-            <td class="problema">uso de GPU abaixo do esperado</td>
-            <td class="prioridade">Média</td>
-            <td class="status">
-              <span class="status-badge andamento">Em andamento</span>
-            </td>
-            <td class="tecnico tecnico-nome">Edward Meanville</td>
-            <td class="acao">
-              <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                onclick="abrirModalTecnicos(667)">play_arrow</button>
-              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-            </td>
-          </tr>
+              <tr id="chamado-667">
+                <td class="id">
+                  <p>666</p>
+                </td>
+                <td class="maquina">098 - Corredor G</td>
+                <td class="problema">uso de GPU abaixo do esperado</td>
+                <td class="prioridade">Média</td>
+                <td class="status">
+                  <span class="status-badge andamento">Em andamento</span>
+                </td>
+                <td class="tecnico tecnico-nome">Edward Meanville</td>
+                <td class="acao">
+                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                    onclick="abrirModalTecnicos(667)">play_arrow</button>
+                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+                </td>
+              </tr>
 
-          <tr id="chamado-668">
-            <td class="id">
-              <p>666</p>
-            </td>
-            <td class="maquina">098 - Corredor G</td>
-            <td class="problema">uso de GPU abaixo do esperado</td>
-            <td class="prioridade">Média</td>
-            <td class="status">
-              <span class="status-badge andamento">Em andamento</span>
-            </td>
-            <td class="tecnico tecnico-nome">Melina Straw</td>
-            <td class="acao">
-              <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                onclick="abrirModalTecnicos(668)">play_arrow</button>
-              <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    </div>
-
-    <div class="modal" id="modal_atribuir_tecnico">
-      <div class="modal-container" id="modal_container_atribuir">
-        <div class="header">
-          <h1>Atribuir Técnico ao Chamado</h1>
-          <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
-            close
-          </button>
-        </div>
-        <div class="body" id="lista_tecnicos_container">
+              <tr id="chamado-668">
+                <td class="id">
+                  <p>666</p>
+                </td>
+                <td class="maquina">098 - Corredor G</td>
+                <td class="problema">uso de GPU abaixo do esperado</td>
+                <td class="prioridade">Média</td>
+                <td class="status">
+                  <span class="status-badge andamento">Em andamento</span>
+                </td>
+                <td class="tecnico tecnico-nome">Melina Straw</td>
+                <td class="acao">
+                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
+                    onclick="abrirModalTecnicos(668)">play_arrow</button>
+                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+
+      <div class="modal" id="modal_atribuir_tecnico">
+        <div class="modal-container" id="modal_container_atribuir">
+          <div class="header">
+            <h1>Atribuir Técnico ao Chamado</h1>
+            <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+              close
+            </button>
+          </div>
+          <div class="body" id="lista_tecnicos_container">
+          </div>
+        </div>
+      </div>
   </section>
 
   <script src="../js/nav.js"></script>
@@ -349,12 +350,42 @@
   const inputInicio = document.getElementById('dt_inicio');
   const inputFim = document.getElementById('dt_fim');
   const btnAplicar = document.getElementById('btn_aplicar');
+  const parametro = document.getElementById('parametro');
   const textoPeriodo = document.querySelector('p strong');
 
-  const kpiGpuUso = document.querySelector('.kpi-gpu-uso');
-  const kpiGpuTemp = document.querySelector('.kpi-gpu-temp');
-  const kpiCpuUso = document.querySelector('.kpi-cpu-uso');
-  const kpiCpuTemp = document.querySelector('.kpi-cpu-temp');
+  const kpiGpuUso = document.querySelectorAll('.kpi-cpu-uso')[0]; // GPU Uso
+  const kpiGpuTemp = document.querySelectorAll('.kpi-cpu-uso')[1]; // GPU Temp
+  const kpiCpuUso = document.querySelectorAll('.kpi-cpu-uso')[2]; // CPU Uso
+  const kpiCpuTemp = document.querySelectorAll('.kpi-cpu-uso')[3]; // CPU Temp
+
+  function definirCorKPI(elemento, valor, tipo) {
+    let cor = 'white';
+
+    if (tipo === 'uso') {
+      if (valor < 50) {
+        cor = '#ff4b4b'; // vermelho
+      } else if (valor < 55) {
+        cor = '#ffc107'; // amarelo
+      } else {
+        cor = '#4caf50'; // verde
+      }
+    } else if (tipo === 'temp') {
+      if (valor > 75) {
+        cor = '#ff4b4b'; // vermelho
+      } else if (valor > 70) {
+        cor = '#ffc107'; // amarelo
+      } else {
+        cor = '#4caf50'; // verde
+      }
+    }
+
+    elemento.style.backgroundColor = cor;
+  }
+
+  definirCorKPI(kpiusogpu, 55, "uso")
+  definirCorKPI(kpitempgpu, 80, "temp")
+  definirCorKPI(kpiusocpu, 80, "uso")
+  definirCorKPI(kpitempcpu, 72, "temp")
 
   function formatar(data) {
     const d = new Date(data);
@@ -403,6 +434,7 @@
       }
 
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+
       const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
       const mediaGpuTemp = media(dados.map(d => parseFloat(d.temperatura_gpu))).toFixed(1);
       const mediaCpuUso = media(dados.map(d => parseFloat(d.uso_cpu))).toFixed(1);
@@ -413,6 +445,15 @@
       kpiCpuUso.textContent = `${mediaCpuUso}%`;
       kpiCpuTemp.textContent = `${mediaCpuTemp}°C`;
 
+      if (parametro.value === "1") {
+        definirCorKPI(kpiGpuUso, parseFloat(mediaGpuUso), 'uso');
+        definirCorKPI(kpiGpuTemp, parseFloat(mediaGpuTemp), 'temp');
+        definirCorKPI(kpiCpuUso, parseFloat(mediaCpuUso), 'uso');
+        definirCorKPI(kpiCpuTemp, parseFloat(mediaCpuTemp), 'temp');
+      } else {
+        [kpiGpuUso, kpiGpuTemp, kpiCpuUso, kpiCpuTemp].forEach(el => el.style.color = 'white');
+      }
+
       const medianaGpuUso = mediana(dados.map(d => parseFloat(d.uso_gpu)));
       const medianaGpuTemp = mediana(dados.map(d => parseFloat(d.temperatura_gpu)));
       const medianaCpuUso = mediana(dados.map(d => parseFloat(d.uso_cpu)));
@@ -422,8 +463,6 @@
       document.querySelector('.kpi-gpu-temp-mediana').textContent = `${medianaGpuTemp}°C`;
       document.querySelector('.kpi-cpu-uso-mediana').textContent = `${medianaCpuUso}%`;
       document.querySelector('.kpi-cpu-temp-mediana').textContent = `${medianaCpuTemp}°C`;
-
-      textoPeriodo.textContent = `período entre ${formatar(inicio)} a ${formatar(fim)}`;
 
       const labels = dados.map(d => {
         const dt = new Date(d.data);
