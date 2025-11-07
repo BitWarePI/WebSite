@@ -123,6 +123,7 @@
                     <thead>
                         <tr>
                             <th class="nome">Endereço MAC</th>
+                            <th class="data">Data captura</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
@@ -256,6 +257,7 @@
                 tbody.innerHTML += `
                     <tr>
                         <td>${maquina.mac}</td>
+                        <td>${leitura.datetime}</td>
                         <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
                         <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
                         <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
@@ -406,6 +408,7 @@
                                             gpu_temp: parametroGpuTemperature
                                         },
                                         leituraAtual: {
+                                            datetime: ultimo.datetime,
                                             cpu_percent: ultimo.cpu_percent,
                                             gpu_percent: ultimo.gpu_percent,
                                             cpu_temp: ultimo.cpu_temp,
@@ -423,6 +426,7 @@
                                     tbody.innerHTML += `
                                 <tr>
                                     <td>${macMaquina}</td>
+                                    <td>${ultimo.datetime}</td>
                                     <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
                                     <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
                                     <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
