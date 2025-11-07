@@ -321,6 +321,144 @@ table tr td.acao button.finalizar {
     color: white;
 }
 
+.status-badge.resolvido {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.remover-tecnico {
+    color: #E53935; 
+    cursor: pointer;
+    vertical-align: middle; 
+    user-select: none;
+}
+
+.remover-tecnico:hover {
+    color: #B71C1C;
+}
+
+.truncate-text {
+    max-width: 150px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    display: inline-block;
+    vertical-align: middle; 
+}
+
+
+
+#lista_tecnicos_container {
+    padding: 10px; max-height: 60vh; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 15px;
+}
+.tecnico-card {
+    border: 1px solid #ccc; border-radius: 8px; padding: 15px;
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: #f9f9f9;
+}
+.tecnico-card .info p { margin: 5px 0; font-size: 0.9rem; color: #333; }
+.tecnico-card .info p strong { color: #000; }
+.btn-atribuir {
+    background-color: #4CAF50; color: white; border: none;
+    padding: 10px 15px; border-radius: 5px; cursor: pointer;
+    font-weight: bold; transition: background-color 0.3s;
+}
+.btn-atribuir:hover { background-color: #45a049; }
+.status-badge.resolvido {
+    background-color: #4CAF50;
+    color: white;
+}
+.remover-tecnico {
+    color: #E53935; cursor: pointer;
+    vertical-align: middle; user-select: none;
+}
+.remover-tecnico:hover { color: #B71C1C; }
+
+.chamado {
+    width: 100%;
+}
+
+chamado table {
+    min-width: 100%;
+    table-layout: auto; 
+    
+    width: auto;
+}
+
+.chamado th.maquina, .chamado td.maquina,
+.chamado th.problema, .chamado td.problema,
+.chamado th.tecnico, .chamado td.tecnico {
+    white-space: nowrap;
+    min-width: 150px; 
+}
+
+.chamado th.acao, .chamado td.acao {
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+}
+
+.priority-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: white;
+    text-align: center;
+}
+.prioridade-alta {
+    background-color: #E53935; 
+}
+.prioridade-media {
+    background-color: #FDD835; 
+    color: #333; 
+}
+.prioridade-baixa {
+    background-color: #4CAF50;
+}
+.prioridade-crítica { 
+    background-color: #4A148C;
+}
+
+.chamado table td.id {
+    padding-left: 10px;
+    border-left-width: 5px; 
+    border-left-style: solid; 
+}
+
+.chamado table tr.row-status-nao-iniciado td.id {
+    border-left-color: #E53935;
+}
+.chamado table tr.row-status-em-andamento td.id {
+    border-left-color: #FDD835;
+}
+.chamado table tr.row-status-resolvido td.id {
+    border-left-color: #4CAF50; 
+}
+
+.chamado table th.dt_abertura,
+.chamado table td.dt_abertura {
+    text-align: center !important;;
+    white-space: nowrap;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+td.maquina .truncate-text {
+    max-width: 130px;
+}
+
+td.problema .truncate-text {
+    max-width: 200px; 
+}
+
+td.tecnico .truncate-text {
+    max-width: 140px;
+}
+
 td.acao {
     display: flex;
     gap: 8px;
