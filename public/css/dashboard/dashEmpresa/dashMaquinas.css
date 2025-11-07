@@ -72,6 +72,16 @@
 }
 
 .btn.submit {
+    background-color: var(--primary-color); 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.btn.cancel {
     background-color: #FF5722; 
     color: #fff;
     border: none;
