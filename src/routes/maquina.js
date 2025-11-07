@@ -4,6 +4,9 @@ const maquinaController = require("../controllers/maquinasController");
 
 router.get("/empresa/:idEmpresa", maquinaController.listarPorEmpresa);
 
+router.get("/top5/:idEmpresa", maquinaController.topMaquinas);
+
+
 router.get("/infoMaquinas/:idEmpresa", maquinaController.infoMaquinas);
 
 router.get("/empresa/parametros-gerais/:idEmpresa", maquinaController.verificarParametrosGerais);

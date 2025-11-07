@@ -553,3 +553,56 @@ option:checked {
 ::picker(select):popover-open {
   opacity: 1;
 }
+
+.pesquisa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* separa pesquisa e filtro */
+  gap: 20px; /* dá espaço entre eles */
+  width: 100%;
+}
+
+/* Input de pesquisa */
+.ipt_label {
+  flex: 1; /* ocupa todo o espaço possível */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ipt_label input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+}
+
+.ipt_label button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Filtro à direita */
+.selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra totalmente para a direita */
+}
+
+.selectFiltro select {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+.listaEmpresa{
+    justify-content: space-between;
+}

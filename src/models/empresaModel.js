@@ -141,7 +141,6 @@ module.exports = {
     listarEmpresasDelecao,
     listarEmpresasAtivas,
     listarEmpresasInativas,
-    desativarEmpresa,
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
