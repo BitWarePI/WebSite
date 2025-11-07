@@ -120,7 +120,6 @@
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
-                        <!-- preenchido via JS -->
                     </tbody>
                 </table>
             </div>
@@ -135,9 +134,9 @@
                 <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
             </div>
             <div class="body">
-                <p>Os parâmetros gerais não foram definidos para esta empresa. Você precisa defini-los antes de
-                    continuar.</p>
-                <button class="btn submit" onclick="abrirModalParametrosGerais()">Definir Parâmetros Gerais</button>
+                <p>Detectamos que você está usando os parâmetros recomendados pela nossa empresa. Deseja personalizá-los?</p>
+                <button class="btn submit" onclick="abrirModalParametrosGerais()">Personalizar</button>
+                <button class="btn cancel" onclick="toggleModalAviso(false)">Fechar</button>
             </div>
         </div>
     </div>
