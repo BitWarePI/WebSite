@@ -76,7 +76,7 @@ CREATE TABLE Chamado (
   idChamado INT AUTO_INCREMENT PRIMARY KEY,
   fkMaquina INT NOT NULL,
   problema VARCHAR(255) NOT NULL,
-  prioridade ENUM('Baixa', 'Média', 'Alta', 'Crítica') NOT NULL DEFAULT 'Média',
+  prioridade ENUM('Baixa', 'Media', 'Alta', 'Critica') NOT NULL DEFAULT 'Media',
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -163,48 +163,48 @@ VALUES
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
 (1, 'Superaquecimento', 'Alta', 'Aberto', 1),
-(2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
+(2, 'Uso de GPU abaixo do esperado', 'Media', 'Em andamento', 2),
 (3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
+(2, 'Uso de GPU abaixo do esperado', 'Critica', 'Aberto', 2),
 (4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
--- Máquina 2
-(2, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(2, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Crítica', 'Aberto', 3),
-(2, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(2, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 2
+(2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(2, 'Uso de GPU (%) acima do parametro - Atencao', 'Critica', 'Aberto', 3),
+(2, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(2, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
 
--- Máquina 3
-(3, 'Temperatura da CPU (°C) abaixo do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 3
+(3, 'Temperatura da CPU (C) abaixo do esperado', 'Alta', 'Aberto', 3),
 (3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(3, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(3, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Média', 'Aberto', 3),
+(3, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(3, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) acima do parametro - Atencao', 'Media', 'Aberto', 3),
 
--- Máquina 4
-(4, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(4, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 4
+(4, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(4, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(4, 'Temperatura da GPU (°C) acima do esperado', 'Média', 'Aberto', 3),
+(4, 'Temperatura da GPU (C) acima do esperado', 'Media', 'Aberto', 3),
 (4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
--- Máquina 6
-(6, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(6, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(6, 'Temperatura da CPU (°C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(6, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 6
+(6, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(6, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(6, 'Temperatura da CPU (C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(6, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
--- Máquina 7
-(7, 'Uso de CPU (%) abaixo do esperado', 'Crítica', 'Aberto', 3),
-(7, 'Temperatura da GPU (°C) acima do esperado', 'Crítica', 'Em andamento', 3),
-(7, 'Temperatura da CPU (°C) abaixo do esperado', 'Média', 'Aberto', 3),
-(7, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(7, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+-- Maquina 7
+(7, 'Uso de CPU (%) abaixo do esperado', 'Critica', 'Aberto', 3),
+(7, 'Temperatura da GPU (C) acima do esperado', 'Critica', 'Em andamento', 3),
+(7, 'Temperatura da CPU (C) abaixo do esperado', 'Media', 'Aberto', 3),
+(7, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(7, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
 (7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
 
 
