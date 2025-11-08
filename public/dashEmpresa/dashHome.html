@@ -93,7 +93,7 @@
           <label for="parametro" style="font-weight: bold;">Selecionar o tipo de parâmetro</label>
           <select id="parametro" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 200px;">
             <option value="">Tipo de parâmetro</option>
-            <option value="1">Padrão</option>
+            <option value="1" selected>Padrão</option>
             <option value="2">Personalizado</option>
           </select>
         </div>
@@ -131,7 +131,7 @@
               style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
               <p style="color:white; font-size: large;  margin: 0;">Uso médio da GPU</p>
               <p class="kpi-gpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
-              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-gpu-uso-mediana">50%</span>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-gpu-uso-mediana">56%</span>
               </p>
             </div>
             <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
@@ -145,7 +145,7 @@
               <p style="color:white; font-size: large;  margin: 0;">Temperatura média da GPU</p>
               <p class="kpi-gpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80°C</p>
               <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                  class="kpi-gpu-temp-mediana">61°C</span></p>
+                  class="kpi-gpu-temp-mediana">85°C</span></p>
             </div>
             <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
               <canvas id="grafico2"></canvas>
@@ -166,7 +166,7 @@
                 <p style="color:white; font-size: large;  margin: 0;">Uso médio da CPU</p>
                 <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80%</p>
                 <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-uso-mediana">50%</span></p>
+                    class="kpi-cpu-uso-mediana">85%</span></p>
               </div>
               <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
                 <canvas id="grafico3"></canvas>
@@ -179,103 +179,13 @@
                 <p style="color:white; font-size: large;  margin: 0;">Temperatura média da CPU</p>
                 <p class="kpi-cpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
                 <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-temp-mediana">61°C</span></p>
+                    class="kpi-cpu-temp-mediana">76°C</span></p>
               </div>
               <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
                 <canvas id="grafico4"></canvas>
               </div>
             </div>
           </div>
-        </div>
-
-
-        <div class="chamado">
-          <table>
-            <thead>
-              <tr>
-                <th class="id">ID</th>
-                <th class="maquina">Máquina</th>
-                <th class="problema">Problema</th>
-                <th class="prioridade">Prioridade</th>
-                <th class="status">Status</th>
-                <th class="tecnico">Técnico responsável</th>
-                <th class="acao"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="id">
-                  <p>908</p>
-                </td>
-                <td class="maquina">015 - Corredor B</td>
-                <td class="problema">Superaquecimento</td>
-                <td class="prioridade">Alta</td>
-                <td class="status">
-                  <span class="status-badge nIniciado">Não iniciado</span>
-                </td>
-                <td class="tecnico tecnico-nome">Não atribuído</td>
-                <td class="acao">
-                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                    onclick="abrirModalTecnicos(908)">play_arrow</button>
-                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                </td>
-              </tr>
-
-              <tr id="chamado-666">
-                <td class="id">
-                  <p>666</p>
-                </td>
-                <td class="maquina">098 - Corredor G</td>
-                <td class="problema">uso de GPU abaixo do esperado</td>
-                <td class="prioridade">Média</td>
-                <td class="status">
-                  <span class="status-badge andamento">Em andamento</span>
-                </td>
-                <td class="tecnico tecnico-nome">Joseph Townborn</td>
-                <td class="acao">
-                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                    onclick="abrirModalTecnicos(666)">play_arrow</button>
-                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                </td>
-              </tr>
-
-              <tr id="chamado-667">
-                <td class="id">
-                  <p>666</p>
-                </td>
-                <td class="maquina">098 - Corredor G</td>
-                <td class="problema">uso de GPU abaixo do esperado</td>
-                <td class="prioridade">Média</td>
-                <td class="status">
-                  <span class="status-badge andamento">Em andamento</span>
-                </td>
-                <td class="tecnico tecnico-nome">Edward Meanville</td>
-                <td class="acao">
-                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                    onclick="abrirModalTecnicos(667)">play_arrow</button>
-                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                </td>
-              </tr>
-
-              <tr id="chamado-668">
-                <td class="id">
-                  <p>666</p>
-                </td>
-                <td class="maquina">098 - Corredor G</td>
-                <td class="problema">uso de GPU abaixo do esperado</td>
-                <td class="prioridade">Média</td>
-                <td class="status">
-                  <span class="status-badge andamento">Em andamento</span>
-                </td>
-                <td class="tecnico tecnico-nome">Melina Straw</td>
-                <td class="acao">
-                  <button class="material-symbols-outlined iniciar" title="Iniciar chamado"
-                    onclick="abrirModalTecnicos(668)">play_arrow</button>
-                  <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -306,7 +216,7 @@
       type: 'bar',
       data: {
         labels: eixoX,
-        datasets: [{ type: 'bar', label: 'Uso de GPU (%)', data: [70, 75, 74, 82, 86, 70, 75, 80, 88], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
+        datasets: [{ type: 'bar', label: 'Uso de GPU (%)', data: [50, 55, 54, 62, 56, 50, 55, 50, 58], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
@@ -316,7 +226,7 @@
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'line', label: 'Temperatura GPU (°C)', data: [50, 52, 53, 54, 55, 55, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+          [{ type: 'line', label: 'Temperatura GPU (°C)', data: [80, 82, 83, 84, 85, 75, 86, 76, 70], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
@@ -326,7 +236,7 @@
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'bar', label: 'Uso de CPU (%)', data: [60, 80, 65, 70, 75, 74, 76.5, 79.2, 88], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
+          [{ type: 'bar', label: 'Uso de CPU (%)', data: [80, 90, 75, 80, 85, 84, 86.5, 89.2, 70], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
@@ -336,7 +246,7 @@
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [57, 55, 56, 58, 56, 57, 56, 56, 57], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [77, 75, 76, 68, 76, 67, 76, 76, 77], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
@@ -362,71 +272,97 @@
   const kpiCpuUsoValor = kpiusocpu.querySelector('.kpi-cpu-uso');
   const kpiCpuTempValor = kpitempcpu.querySelector('.kpi-cpu-temp');
 
-  const kpiMedianaUsoCpu = document.getElementsByClassName('kpi-cpu-uso-mediana')[0]
-  const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0]
-  const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0]
-  const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0]
+  const kpiMedianaUsoCpu = document.getElementsByClassName('kpi-cpu-uso-mediana')[0];
+  const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0];
+  const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
+  const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
 
+  // calcula mediana
   function mediana(dados, tipo) {
     const valores = dados.map(d => parseFloat(d[tipo])).sort((a, b) => a - b);
-    const tamanho = valores.length;
+    const n = valores.length;
+    if (n % 2 === 0) return ((valores[n / 2 - 1] + valores[n / 2]) / 2).toFixed(1);
+    return valores[Math.floor(n / 2)].toFixed(1);
+  }
 
-    if (tamanho % 2 === 0) {
-      const meio1 = valores[tamanho / 2 - 1];
-      const meio2 = valores[tamanho / 2];
-      return ((meio1 + meio2) / 2).toFixed(1);
+  function definirCorPadrao(valor, tipo) {
+    if (tipo.includes('uso')) {
+      if (valor < 50) return '#ff4b4b'; // vermelho
+      if (valor < 70) return '#ffc107'; // amarelo
+      return '#4caf50'; // verde
     } else {
-      return valores[Math.floor(tamanho / 2)].toFixed(1);
+      if (valor > 80) return '#ff4b4b'; // vermelho
+      if (valor > 70) return '#ffc107'; // amarelo
+      return '#4caf50'; // verde
     }
-  }
-  function definirCorKPI(elemento, valor, tipo) {
-    let cor = '#4c1d95';
-    if (parametro.value === "1") {
-      if (tipo === 'uso') {
-        if (valor < 70) cor = '#ff4b4b';
-        else if (valor < 75) cor = '#ffc107';
-        else cor = '#4caf50';
-      } else if (tipo === 'temp') {
-        if (valor > 75) cor = '#ff4b4b';
-        else if (valor > 70) cor = '#ffc107';
-        else cor = '#4caf50';
-      }
-    }
-    elemento.style.backgroundColor = cor;
   }
 
-  parametro.addEventListener('change', () => {
-    definirCorKPI(kpiusogpu, parseFloat(kpiGpuUsoValor.textContent), "uso");
-    definirCorKPI(kpitempgpu, parseFloat(kpiGpuTempValor.textContent), "temp");
-    definirCorKPI(kpiusocpu, parseFloat(kpiCpuUsoValor.textContent), "uso");
-    definirCorKPI(kpitempcpu, parseFloat(kpiCpuTempValor.textContent), "temp");
-  });
+  async function definirCorPersonalizada(valor, tipo) {
+    const empresaId = sessionStorage.getItem('idEmpresa');
+    const response = await fetch(`/maquina/empresa/parametros-gerais/${empresaId}`);
+    if (!response.ok) throw new Error('Erro na requisição personalizada');
+    const dados = await response.json();
+
+    const limites = {
+      usocpu: dados.cpu_percent,
+      usogpu: dados.gpu_percent,
+      tempcpu: dados.cpu_temperature,
+      tempgpu: dados.gpu_temperature
+    };
+
+    if (tipo.includes('uso')) {
+      if (valor < limites[tipo]) return '#ff4b4b';
+      if (valor < limites[tipo] + 5) return '#ffc107';
+      return '#4caf50';
+    } else {
+      if (valor > limites[tipo]) return '#ff4b4b';
+      if (valor > limites[tipo] - 5) return '#ffc107';
+      return '#4caf50';
+    }
+  }
+
+  async function aplicarCores() {
+    const modo = parametro.value;
+    const gpuUso = parseFloat(kpiGpuUsoValor.textContent);
+    const gpuTemp = parseFloat(kpiGpuTempValor.textContent);
+    const cpuUso = parseFloat(kpiCpuUsoValor.textContent);
+    const cpuTemp = parseFloat(kpiCpuTempValor.textContent);
+
+    if (modo === "2") {
+      // personalizado
+      kpiusogpu.style.backgroundColor = await definirCorPersonalizada(gpuUso, 'usogpu');
+      kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
+      kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
+      kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
+    } else {
+      // padrão
+      kpiusogpu.style.backgroundColor = definirCorPadrao(gpuUso, 'uso');
+      kpitempgpu.style.backgroundColor = definirCorPadrao(gpuTemp, 'temp');
+      kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
+      kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
+    }
+  }
+
+  parametro.addEventListener('change', aplicarCores);
 
   async function aplicarPeriodo() {
     const inicio = inputInicio.value;
     const fim = inputFim.value;
 
-    if (!inicio || !fim) {
-      alert('Selecione as duas datas!');
-      return;
-    } else if (inicio > fim) {
-      alert('Datas incoerentes!');
-      return;
-    }
+    if (!inicio || !fim) return alert('Selecione as duas datas!');
+    if (inicio > fim) return alert('Datas incoerentes!');
 
     try {
       const response = await fetch(`http://localhost:3333/kpis?inicio=${inicio}&fim=${fim}`);
       if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
 
       const dados = await response.json();
-      console.log(dados)
-
       if (!Array.isArray(dados) || dados.length === 0) {
         alert('Nenhum dado encontrado para o período selecionado.');
         return;
       }
-      const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
+      const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
       const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
       const mediaGpuTemp = media(dados.map(d => parseFloat(d.temperatura_gpu))).toFixed(1);
       const mediaCpuUso = media(dados.map(d => parseFloat(d.uso_cpu))).toFixed(1);
@@ -437,17 +373,12 @@
       kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
       kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
 
-      console.log(kpiMedianaTempCpu)
-      console.log(mediana(dados, "temperatura_cpu"))
-      kpiMedianaTempCpu.innerHTML = `${mediana(dados, "temperatura_cpu")}°C`
-      kpiMedianaTempGpu.innerHTML = `${mediana(dados, "temperatura_gpu")}°C`
-      kpiMedianaUsoCpu.innerHTML = `${mediana(dados, "uso_cpu")}%`
-      kpiMedianaUsoGpu.innerHTML = `${mediana(dados, "uso_gpu")}%`
+      kpiMedianaTempCpu.textContent = `${mediana(dados, "temperatura_cpu")}°C`;
+      kpiMedianaTempGpu.textContent = `${mediana(dados, "temperatura_gpu")}°C`;
+      kpiMedianaUsoCpu.textContent = `${mediana(dados, "uso_cpu")}%`;
+      kpiMedianaUsoGpu.textContent = `${mediana(dados, "uso_gpu")}%`;
 
-      definirCorKPI(kpiusogpu, parseFloat(mediaGpuUso), 'uso');
-      definirCorKPI(kpitempgpu, parseFloat(mediaGpuTemp), 'temp');
-      definirCorKPI(kpiusocpu, parseFloat(mediaCpuUso), 'uso');
-      definirCorKPI(kpitempcpu, parseFloat(mediaCpuTemp), 'temp');
+      aplicarCores();
 
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -456,4 +387,8 @@
   }
 
   btnAplicar.addEventListener('click', aplicarPeriodo);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    aplicarCores();
+  });
 </script>
