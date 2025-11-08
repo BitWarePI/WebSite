@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bitware | Desativar empresa</title>
+
+  <script src="../js/sessao.js"></script>
+
+  <link rel="stylesheet" href="../css/default.css" />
+  <link rel="stylesheet" href="../css/animacao.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="icon" href="../assets/icon/favicon2.png" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close,visibility,visibility_off" />
+
+</head>
+
+<body>
+
+  <section class="sessao-login">
+    <div class="container">
+      <a href="index.html"><img src="../assets/imgs/Logo.svg" alt="" class="logo slide-in-top"></a>
+      <div class="formulario slide-in-bottom">
+        <div class="header">
+          <h1>Desative sua conta</h1>
+        </div>
+        <div class="ipt_label">
+          <label for="email_input">Digite o email da empresa</label>
+          <input id="email_input" type="email" placeholder="">
+        </div>
+        <div class="ipt_label">
+          <label for="senha_input">Digite sua senha</label>
+          <input id="senha_input" type="password" placeholder="">
+          <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
+        </div>
+        <div class="ipt_label">
+          <label for="confirmar_input">Digite "confirmar" para prosseguir</label>
+          <input id="confirmar_input" type="text" placeholder="">
+        </div>
+        <button class="btn submit" onclick="enviar()">Desativar</button>
+      </div>
+
+      <div class="bg-light"></div>
+      <div class="bg-light2"></div>
+    </div>
+  </section>
+
+  <div class="modal">
+    <div class="modal-container" id="modal_container_solicitacoes">
+      <div class="header">
+        <h1 id="card-title"></h1>
+        <button class="material-symbols-outlined close-icon" onclick="abrirModal()">
+          close
+        </button>
+      </div>
+      <div class="body" id="cardErro">
+        <p id="card-text"></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+  var idEmpresa = sessionStorage.idEmpresa;
+  var emailEmpresa = sessionStorage.EMAIL_USUARIO;
+  var emailFuncionario = sessionStorage.EMAIL_USUARIO;
+  console.log(idEmpresa)
+
+  function mostrarSenha(inputId, iconId){
+        input = document.getElementById(inputId);
+        icon = document.getElementById(iconId);
+        if(icon.innerText == "visibility_off"){
+            input.type = "text";
+            icon.innerText = "visibility";
+        } else{
+            input.type = "password";
+            icon.innerText = "visibility_off";
+        }
+    }
+
+  function abrirModal(titulo, texto, tipo) {
+    const modal = document.querySelector('.modal');
+    const modalContainer = document.querySelector('.modal-container');
+    if (!modal.classList.contains('open')) {
+      if (tipo == 'sucesso') {
+        document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #4BB543";
+      } else if (tipo == 'erro') {
+        document.getElementById('modal_container_solicitacoes').style.borderLeft = "10px solid #FF0000";
+      } else {
+        document.getElementById('modal_container_solicitacoes').style.borderLeft = "none";
+      }
+      document.getElementById('card-title').innerText = titulo;
+      document.getElementById('card-text').innerText = texto;
+      modal.classList.remove("fade-out-flex");
+      modal.classList.add('open');
+      modal.classList.add("fade-in");
+      modalContainer.classList.add("slide-in-top");
+    } else {
+      modal.classList.remove("fade-in");
+      modalContainer.classList.remove("slide-in-top");
+      modal.classList.remove('open');
+      modal.classList.add("fade-out-flex");
+    }
+  }
+
+  function enviar() {
+    email = email_input.value
+    confirmar = confirmar_input.value
+
+    if (emailEmpresa == email) {
+      if (confirmar == "confirmar") {
+        deletar()
+      } else {
+        alert("Não foi possivel deletar a conta!!")
+        return
+      }
+    }else{
+      alert("O email inserido não está correto")
+      return
+    }
+  }
+
+  function deletar() {
+    var senhaVar = senha_input.value;
+
+    console.log("Deletando conta da empresa:", emailEmpresa);
+
+
+    fetch(`/empresas/inativarEmpresa`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        idEmpresa: idEmpresa,
+        emailEmpresa: emailEmpresa,
+        senha: senhaVar,
+        emailFuncionario: emailFuncionario
+      })
+    }).then(resposta => {
+      if (resposta.ok) {
+        abrirModal("Sucesso!", "Solicitação de inativação de conta realizada com sucesso!", "sucesso");
+
+        setTimeout(() => {
+          window.location = "../login.html";
+        }, 2000);
+
+      } else {
+        if (senhaVar == "") {
+          resposta.text().then(texto => {
+            abrirModal("Erro!", "Existem campos em branco", 'erro');
+          });
+        } else {
+          resposta.text().then(texto => {
+            abrirModal("Erro!", "Não foi possível solicitar a inativação da conta!\nSenha atual inválida!", 'erro');
+          });
+        }
+      }
+    }).catch(function (erro) {
+      console.log("Erro na requisição de solicitar a deleção da conta:", erro);
+      abrirModal("Erro!", "Ocorreu um erro no servidor!", "erro");
+    });
+
+    return false;
+  }
+
+</script>

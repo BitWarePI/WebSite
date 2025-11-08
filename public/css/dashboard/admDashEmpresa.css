@@ -7,6 +7,7 @@ table{
     flex-direction: column;
     overflow: hidden;
     border-radius: 8px;
+    
 }
 table tr{
     flex: 1;
@@ -118,10 +119,11 @@ table tr td.acao button.ver-mais{
     font-weight: normal;
 }
 .container .kpi-container .kpi-card .quantidade{
-    font-size: 3em;
+    font-size: 5em;
     align-self: center;
     font-weight: bold;
-    margin: -8px 0;
+    margin: -80px 0;
+    height: fit-content;
 }
 .container .kpi-container .kpi-card .icon{
     align-self: flex-end;
@@ -151,6 +153,12 @@ table tr td.acao button.ver-mais{
     box-sizing: border-box;
     padding: 24px;
 }
+
+.cards-container{
+    height: 500px;
+}
+
+
 .container .pesquisa{
     display: flex;
     flex-wrap: wrap;
@@ -257,4 +265,5 @@ table tr td.acao button.ver-mais{
     .container .kpi-container .kpi-card .quantidade{
         margin: 4px 0;
     }
+    
 }

@@ -90,19 +90,362 @@ nav .btn-sair:hover{
 
 section{
     max-width: 100dvw;
-    background-color: #7e7e7e;
+    background-color: #e0e0e0;
     flex-direction: row;
     color: var(--main-text-inverse-color);
 }
+
+
 section .container{
     width: 100%;
     height: 100dvh;
     padding: 24px;
     box-sizing: border-box;
-    justify-content: flex-start;
     flex-direction: column;
     gap: 12px;
 }
+
+/* Estilos para a lista de chamados */
+.chamado{
+    width: 100%;
+    margin-top: 99px;
+}
+
+table {
+    width: 100%;
+    background-color: #d3d3d3;
+    border-collapse: collapse;
+    height: fit-content;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+table tr {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    transition: .2s;
+    align-items: center;
+}
+
+table tr th,
+table tr td {
+    text-align: start;
+    padding: 10px;
+    flex: 1;
+    max-height: 56px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+table thead {
+    position: sticky;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    min-width: fit-content;
+    width: 100%;
+    background-color: var(--bg-color);
+    color: var(--main-text-color);
+}
+
+table tbody {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    scrollbar-color: var(--bg-inverse-color) var(--bg-color);
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #bdbdbd;
+}
+
+tbody tr:hover {
+    background-color: #dbacf7;
+}
+
+table tr .id {
+    flex: 0.25;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table tr .maquina {
+    flex: 0.50;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table tr .problema {
+    flex: 0.50;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table tr .prioridade {
+    flex: 0.25;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table tr .status,
+table tr th.status {
+    flex: 0 0 160px; /* largura fixa da coluna */
+    box-sizing: border-box;
+}
+
+
+table tr td.status span {
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+table .ativo {
+    background: var(--sucess-color);
+    color: var(--main-text-color);
+}
+
+table .inativo {
+    background: var(--error-color);
+    color: var(--main-text-color);
+}
+
+table tr .tecnico {
+    flex: 0.8;
+    min-width: fit-content;
+    box-sizing: border-box;
+}
+
+table tr .acao {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex: 1;
+    max-width: 92px;
+    min-width: fit-content;
+    box-sizing: border-box;
+}
+
+table tr td.acao button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    
+}
+
+table tr td.acao button.iniciar  {
+    background-color: var(--secondary-color);
+    color: var(--main-text-color);
+}
+
+table tr td.acao button.finalizar {
+    background-color: var(--sucess-color);
+    color: var(--main-text-color);
+}
+
+#lista_tecnicos_container {
+    padding: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tecnico-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.tecnico-card .info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.tecnico-card .info p strong {
+    color: #000;
+}
+
+.btn-atribuir {
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-atribuir:hover {
+    background-color: #45a049;
+}
+
+.concluidos {
+    background-color: var(--sucess-color);
+    color: var(--main-text-color);
+}
+
+.andamento {
+    background-color: var(--attention-color);
+    color: var(--main-text-color);
+}
+
+.nIniciado {
+    background-color: var(--error-color);
+    color: var(--main-text-color);
+}
+
+.status-badge.resolvido {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td.acao {
+    display: flex;
+    gap: 8px;
+}
+
+td.acao button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+td.acao button.ver-mais {
+    background-color: #636363;
+    color: var(--main-text-color);
+}
+
+
+.container .listaEmpresa{
+    background-color: var(--bg-inverse-color);
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 24px;
+}
+.container .pesquisa{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 12px;
+}
+.container .pesquisa .ipt_label{
+    min-width: 150px;
+}
+.container .pesquisa .requisicao{
+    flex: 1;
+    padding: 12px 0;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 1.25em;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    min-width: fit-content;
+    transition: .3s;
+    background: var(--secondary-color);
+    color: #FFF;
+}
+.container .pesquisa .requisicao:hover{
+    outline: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    background: #FFF;
+}
+
+.modal.cadastro .modal-container .body{
+    padding: 0 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-color: var(--bg-color) transparent;
+}
+.modal.cadastro .modal-container .body .header-body{
+    display: flex;
+    padding: 8px;
+    background-color: var(--bg-inverse-color);
+    position: sticky;
+    top: -1px;
+    gap: 24px;
+}
+.modal.cadastro .modal-container .body .header-body h2{
+    width: fit-content;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.modal.cadastro .modal-container .body .card{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 12px 24px;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 8px;
+    background-color: #FFF;
+}
+.modal.cadastro .modal-container .body .card .info .nome{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.modal.cadastro .modal-container .body .card .info .nome span{
+    font-size: 0.7em;
+    font-weight: normal;
+}
+.modal.cadastro .modal-container .body .card .botoes{
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 155px;
+    margin-left: auto;
+}
+.modal.cadastro .modal-container .body .card .botoes button{
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+}
+.modal.cadastro .modal-container .body .card .botoes .aprovar{
+    background-color: var(--sucess-color);
+}
+.modal.cadastro .modal-container .body .card .botoes .reprovar{
+    background-color: var(--error-color);
+}
+
+
 
 @media screen and (max-width: 1000px) {
     nav{
@@ -130,4 +473,164 @@ section .container{
     section .container{
         height: calc(100dvh - 123px);
     }
+}
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+  border: 2px solid #dddddd;
+  background: #e4b131;
+  color: white;
+  padding: 10px;
+  transition: 0.4s;
+}
+select::picker-icon {
+  color: #9e7504;
+  transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+::picker(select) {
+  border: none;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  border: 2px solid #dddddd;
+  background: #eeeeee;
+  padding: 10px;
+  transition: 0.4s;
+}
+
+option:first-of-type {
+  border-radius: 8px 8px 0 0;
+}
+
+option:last-of-type {
+  border-radius: 0 0 8px 8px;
+}
+
+::picker(select) {
+  border-radius: 8px;
+}
+
+option:not(option:last-of-type) {
+  border-bottom: none;
+}
+
+option:nth-of-type(odd) {
+  background: white;
+}
+
+option:hover,
+option:focus {
+  background: rgb(155, 87, 219);
+  color: white;
+}
+
+option .icon {
+  font-size: 1.6rem;
+  text-box: trim-both cap alphabetic;
+}
+
+option:checked {
+  font-weight: bold;
+}
+
+::picker(select) {
+  opacity: 0;
+  transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+  opacity: 1;
+}
+
+.pesquisa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* separa pesquisa e filtro */
+  gap: 20px; /* dá espaço entre eles */
+  width: 100%;
+}
+
+/* Input de pesquisa */
+.ipt_label {
+  flex: 1; /* ocupa todo o espaço possível */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ipt_label input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+}
+
+.ipt_label button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Filtro à direita */
+.selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra totalmente para a direita */
+}
+
+.selectFiltro select {
+  background-color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+.listaEmpresa{
+    justify-content: space-between;
+    width: 1200px;
+}
+
+/* Garante que o nav ocupe sempre toda a altura da tela */
+nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh; /* ocupa 100% da altura da viewport */
+  width: 150px; 
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
+}
+
+
+section {
+  display: flex;
+}
+
+/* Empurra o conteúdo principal para o lado direito da sidebar */
+section > div {
+  margin-left: 240px; /* mesmo valor da largura do nav */
+  flex: 1;
 }
