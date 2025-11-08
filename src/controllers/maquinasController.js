@@ -66,7 +66,7 @@ module.exports = {
             return res.status(400).send("ID da empresa é obrigatório.");
         }
 
-        maquinaModel.listarPorEmpresa(fkEmpresa)
+        maquinaModel.listarMaquinaPorEmpresa(fkEmpresa)
             .then(resultados => res.status(200).json(resultados))
             .catch(erro => {
                 console.error(erro);
@@ -91,13 +91,13 @@ module.exports = {
 
     async editarMaquina(req, res) {
         const { idMaquina } = req.params;
-        const { enderecoMac } = req.body;
+        const { enderecoMac, nome } = req.body;
 
-        if (!idMaquina || !enderecoMac) {
+        if (!idMaquina || !enderecoMac || !nome) {
             return res.status(400).send("Dados incompletos.");
         }
 
-        maquinaModel.editar(idMaquina, enderecoMac)
+        maquinaModel.editar(idMaquina, enderecoMac, nome)
             .then(() => res.status(200).send("Máquina editada com sucesso!"))
             .catch(erro => {
                 console.error(erro);

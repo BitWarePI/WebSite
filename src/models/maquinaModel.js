@@ -74,8 +74,8 @@ function cadastrar(fkEmpresa, enderecoMac) {
 
 function listarMaquinaPorEmpresa(fkEmpresa) {
     const instrucao = `
-        SELECT idMaquina, enderecoMac
-        FROM maquina
+        SELECT idMaquina, enderecoMac, nome
+        FROM Maquina
         WHERE fkEmpresa = ${fkEmpresa};
     `;
     console.log("Executando SQL:\n" + instrucao);
@@ -91,10 +91,10 @@ function remover(idMaquina) {
     return database.executar(instrucao);
 }
 
-function editar(idMaquina, enderecoMac) {
+function editar(idMaquina, enderecoMac, nome) {
     const instrucao = `
         UPDATE Maquina
-        SET enderecoMac = '${enderecoMac}'
+        SET enderecoMac = '${enderecoMac}', nome = '${nome}'
         WHERE idMaquina = ${idMaquina};
     `;
     console.log("Executando SQL:\n" + instrucao);
