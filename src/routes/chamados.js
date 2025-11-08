@@ -22,4 +22,8 @@ router.put("/finalizar/:idChamado", function (req, res) {
     chamadosController.finalizarChamado(req, res);
 });
 
+router.put("/remover-tecnico/:idChamado", function (req, res) {
+    chamadosController.removerTecnico(req, res);
+});
+
 module.exports = router;
