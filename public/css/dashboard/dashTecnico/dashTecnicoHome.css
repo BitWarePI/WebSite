@@ -1,126 +1,594 @@
-:root {
-    --primary-color: #7e0cac; 
-    --secondary-color: hsl(49, 73%, 50%); 
-    --bg-sidebar: #181818; 
-    --bg-content: #f0f0f0; 
-    --text-sidebar: #f0f0f0; 
-    --text-content: #1d1c1c; 
-    --active-color: #4c1d95; 
-    --high-priority: #ff3f3f; 
-    --low-priority: #8b8b8b; 
-    --status-not-started: #ff3f3f; 
-    --status-in-progress: rgb(221, 186, 34); 
+nav {
+  height: 100dvh;
+  width: 156px;
+  padding: 42px;
+  background: rgb(36, 35, 35);
+  box-shadow: 0 4px 30px rgba(181, 3, 235, 0.1);
+  outline: 1px solid rgba(234, 0, 255, 0.3);
+  transition: .3s;
+  box-sizing: border-box;
 }
-
-
-body {
-    background-color: var(--bg-content); /* Fundo da página, geralmente não é visível devido à section */
-    display: flex;
-    flex-direction: row; /* Para alinhar a nav e a section */
-    overflow-x: hidden;
-    color: var(--text-content); /* Cor de texto padrão do corpo */
+nav:hover {
+  width: 320px;
+}
+nav .main-nav {
+  flex-direction: column;
+  height: 100%;
+}
+nav .main-nav .logo {
+  margin: 0;
+  object-fit: cover;
+  width: 42px;
+  overflow: hidden;
+  transition: .3s;
+}
+nav:hover .main-nav .logo {
+  width: 142px;
+}
+nav .links {
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+  box-sizing: border-box;
+}
+nav .links li {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+}
+nav .links li:has(.link.ativo) {
+  background-color: var(--primary-color);
+}
+nav .links .link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-left: 42px;
+  position: relative;
+  transition: .3s;
+}
+nav .links .link .icon {
+  font-size: 1.15em;
+  position: absolute;
+  left: 8px;
+  background-color: var(--bg-color);
+  padding: 4px;
+  border-radius: 6px;
+}
+nav .links .link .titulo {
+  width: 0;
+  transition: .3s;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+nav:hover .links .link .titulo {
+  width: fit-content;
+}
+nav .btn-sair {
+  color: var(--main-text-color);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  transition: .3s;
+}
+nav .btn-sair:hover {
+  background: #eb2e2e;
 }
 
 section {
-    max-width: 100dvw;
-    background-color: var(--bg-content); /* Fundo da área de conteúdo principal (claro) */
-    display: flex;
+  max-width: 100dvw;
+  background-color: #e0e0e0;
+  flex-direction: row;
+  color: var(--main-text-inverse-color);
+}
+
+.listaEmpresa {
+  background-color: #e0e0e0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+}
+
+.pesquisa {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 12px;
+}
+
+.pesquisa .ipt_label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pesquisa .selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pesquisa select {
+  background-color: #7e22ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chamado {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  background-color: #d3d3d3;
+  border-collapse: collapse;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+table thead {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--bg-color);
+  color: var(--main-text-color);
+}
+
+table tr {
+  display: flex;
+  align-items: center;
+  transition: .2s;
+}
+
+table tr th,
+table tr td {
+  text-align: start;
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #bdbdbd;
+}
+
+tbody tr:hover {
+  background-color: #dbacf7;
+}
+
+table tr .id { flex: 0.25; }
+table tr .maquina { flex: 0.5; }
+table tr .problema { flex: 0.5; }
+table tr .prioridade { flex: 0.25; }
+table tr .status { flex: 0 0 160px; }
+table tr .tecnico { flex: 0.8; }
+table tr .acao {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex: 1;
+  max-width: 92px;
+}
+
+table tr td.acao button {
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#lista_tecnicos_container {
+  padding: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tecnico-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.btn-atribuir {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-atribuir:hover {
+  background-color: #45a049;
+}
+
+.modal.cadastro .modal-container .body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media screen and (max-width: 1000px) {
+  nav {
+    height: fit-content;
+    width: 100dvw !important;
+  }
+  nav .main-nav {
     flex-direction: row;
-    min-height: 100dvh;
-    padding: 0;
-    margin: 0;
-    width: 100%;
+  }
+  nav .main-nav .logo {
+    width: 142px;
+  }
+  nav .nav-links-pc {
+    display: none;
+  }
+  nav #nav-menu-icon {
+    display: block;
+  }
+
+  section {
+    flex-direction: column;
+  }
+  section .container {
+    height: calc(100dvh - 123px);
+  }
 }
 
-.main-content {
-    flex-grow: 1;
-    padding: 20px;
-    margin-left: 100px; /* Espaço para a barra lateral fechada (aprox. 156px - padding) */
-    box-sizing: border-box;
-    overflow-y: auto;
-    width: calc(100% - 100px);
+/* === PERFIL DO TÉCNICO NA BARRA LATERAL === */
+.perfil-tecnico {
+  text-align: center;
+  padding: 20px 10px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+  color: white;
 }
 
-.dashboard-header-container h1 {
-    color: var(--text-content); /* Cor do título principal no topo */
+.perfil-tecnico .avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
-/* ---------------------------------------------------- */
-/* NAVEGAÇÃO LATERAL (SIDEBAR) */
-/* ---------------------------------------------------- */
+.perfil-tecnico .nome-tecnico {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
 
+.perfil-tecnico .cargo-tecnico,
+.perfil-tecnico .empresa-tecnico {
+  font-size: 14px;
+  color: #fff;
+  margin: 2px 0;
+}
+
+/* === KPI CONTAINERS === */
+.container .kpi-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 12px;
+  justify-content: center;
+}
+
+.container .kpi-container .kpi-card {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  box-sizing: border-box;
+  background: var(--bg-inverse-color);
+  flex: 1 1 250px;
+  min-width: 250px;
+  max-width: 465px;
+  border-radius: 8px;
+}
+
+.container .kpi-container .kpi-card .titulo {
+  margin: 0;
+  font-size: 2em;
+  font-weight: normal;
+  text-align: center;
+}
+
+.container .kpi-container .kpi-card .quantidade {
+  font-size: 3em;
+  align-self: center;
+  font-weight: bold;
+  margin: 8px 0 0 0;
+}
+
+.container .kpi-container .kpi-card .icon {
+  align-self: flex-end;
+  padding: 8px;
+  border-radius: 4px;
+  color: var(--main-text-color);
+}
+
+.icon.cadastrada { background-color: #b3b3b3; }
+.icon.ativo { background-color: var(--error-color); }
+.icon.solicitacao { background-color: var(--secondary-color); }
+
+/* === LISTA DE CHAMADOS === */
+table {
+  width: 100%;
+  background-color: #d3d3d3;
+  border-collapse: collapse;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--bg-color);
+  color: var(--main-text-color);
+}
+
+tbody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+tr {
+  display: flex;
+  align-items: center;
+  transition: .2s;
+}
+
+tr th,
+tr td {
+  text-align: start;
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #bdbdbd;
+}
+
+tbody tr:hover {
+  background-color: #dbacf7;
+}
+
+tr .id { flex: 0.25; }
+tr .maquina { flex: 0.5; }
+tr .problema { flex: 0.5; }
+tr .prioridade { flex: 0.25; }
+tr .status { flex: 0 0 160px; }
+tr .tecnico { flex: 0.8; }
+tr .acao {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex: 1;
+  max-width: 92px;
+}
+
+td.acao button {
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+td.acao button.iniciar {
+  background-color: var(--secondary-color);
+  color: var(--main-text-color);
+}
+
+td.acao button.finalizar {
+  background-color: var(--sucess-color);
+  color: var(--main-text-color);
+}
+
+td.acao button.ver-mais {
+  background-color: #636363;
+  color: var(--main-text-color);
+}
+
+/* === STATUS === */
+.concluidos { background-color: var(--sucess-color); color: var(--main-text-color); }
+.andamento { background-color: var(--attention-color); color: var(--main-text-color); }
+.nIniciado { background-color: var(--error-color); color: var(--main-text-color); }
+
+
+
+.container .pesquisa {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 12px;
+}
+
+.container .pesquisa .ipt_label {
+  min-width: 150px;
+}
+
+.container .pesquisa .requisicao {
+  flex: 1;
+  padding: 12px 0;
+  font-weight: bold;
+  font-size: 1.25em;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  transition: .3s;
+  background: var(--secondary-color);
+  color: #FFF;
+}
+
+.container .pesquisa .requisicao:hover {
+  outline: 1px solid var(--secondary-color);
+  color: var(--secondary-color);
+  background: #FFF;
+}
+
+/* === MODAL === */
+.modal.cadastro .modal-container .body {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal.cadastro .modal-container .body .header-body {
+  display: flex;
+  padding: 8px;
+  background-color: var(--bg-inverse-color);
+  position: sticky;
+  top: -1px;
+  gap: 24px;
+}
+
+.modal.cadastro .modal-container .body .header-body h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.modal.cadastro .modal-container .body .card {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 24px;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 8px;
+  background-color: #FFF;
+}
+
+.modal.cadastro .modal-container .body .card .info .nome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal.cadastro .modal-container .body .card .info .nome span {
+  font-size: 0.7em;
+  font-weight: normal;
+}
+
+.modal.cadastro .modal-container .body .card .botoes {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 155px;
+  margin-left: auto;
+}
+
+.modal.cadastro .modal-container .body .card .botoes button {
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal.cadastro .modal-container .body .card .botoes .aprovar {
+  background-color: var(--sucess-color);
+}
+
+.modal.cadastro .modal-container .body .card .botoes .reprovar {
+  background-color: var(--error-color);
+}
+
+/* Barra lateral fixa ocupando 100% da tela */
 nav {
-    height: 100dvh;
-    width: 90px; /* Largura para a versão fechada */
-    border-radius: 0;
-    padding: 20px 0;
-    position: fixed; /* Fixa a barra lateral */
+    position: fixed;          /* Mantém fixa na lateral */
     top: 0;
     left: 0;
-    background: var(--bg-sidebar); /* Fundo escuro */
-    box-shadow: none; /* Remove a sombra flutuante */
+    height: 100vh;            /* Ocupa 100% da altura da tela */
+    width: 156px;
+    border-radius: 0;
+    padding: 42px;
+    background: rgb(36, 35, 35);
+    box-shadow: 0 4px 30px rgba(181, 3, 235, 0.1);
     border: none;
-    outline: none;
-    transition: width .3s, padding .3s;
+    outline: 1px solid rgba(234, 0, 255, 0.3);
+    transition: .3s;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 100;
+    z-index: 100;             /* Garante que fique sobre o conteúdo */
 }
 
 nav:hover {
-    width: 250px; /* Largura na versão aberta (hover) */
+    width: 320px;
 }
 
 nav .main-nav {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
     height: 100%;
-    padding: 0 10px;
 }
 
-nav .logo {
+nav .main-nav .logo {
     margin: 0;
+    object-fit: cover;
     width: 42px;
-    height: 42px;
-    margin-bottom: 20px;
-    padding-top: 10px;
+    overflow: hidden;
+    transition: .3s;
 }
 
-nav .nav-title {
-    color: var(--text-sidebar);
-    font-size: 1.1em;
-    margin: 0;
-    display: none; /* Esconde o título da nav na versão fechada */
+nav:hover .main-nav .logo {
+    width: 142px;
 }
 
-nav:hover .nav-title {
-    display: block;
-    margin-bottom: 20px;
-}
-
+/* Links da sidebar */
 nav .links {
     flex-direction: column;
     width: 100%;
     gap: 12px;
-    padding: 0;
     box-sizing: border-box;
-    align-items: center;
 }
 
 nav .links li {
     width: 100%;
-    padding: 10px 0;
+    padding: 12px;
     border-radius: 8px;
     box-sizing: border-box;
 }
 
 nav .links li:has(.link.ativo) {
-    background-color: var(--active-color); /* Cor de fundo do link ativo */
+    background-color: var(--primary-color);
 }
 
 nav .links .link {
@@ -128,357 +596,258 @@ nav .links .link {
     justify-content: center;
     align-items: center;
     width: 100%;
-    color: var(--text-sidebar);
-    padding: 0;
+    padding-left: 42px;
+    box-sizing: border-box;
+    position: relative;
+    transition: .3s;
 }
 
 nav .links .link .icon {
-    font-size: 2.2em; /* Ícones maiores */
-    position: static;
-    background-color: transparent;
-    padding: 0;
-    margin: 0;
+    font-size: 1.15em;
+    position: absolute;
+    left: 8px;
+    background-color: var(--bg-color);
+    padding: 4px;
+    border-radius: 6px;
 }
 
 nav .links .link .titulo {
-    display: none; /* Esconde títulos na versão fechada */
-}
-
-nav:hover .links .link {
-    justify-content: flex-start;
-    padding-left: 20px;
-}
-
-nav:hover .links .link .icon {
-    margin-right: 15px;
+    width: 0px;
+    transition: .3s;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 nav:hover .links .link .titulo {
-    display: block; /* Mostra títulos na versão aberta */
-    width: auto;
-    text-align: left;
+    width: fit-content;
 }
 
 nav .btn-sair {
-    color: var(--text-sidebar);
-    background-color: transparent;
-    border: 1px solid var(--text-sidebar);
-    margin-bottom: 10px;
-    width: 80%;
-    display: none; /* Esconde o botão Sair na versão fechada */
-}
-
-nav:hover .btn-sair {
-    display: flex; /* Mostra o botão Sair na versão aberta */
-}
-
-/* Esconder links mobile/links não utilizados */
-nav .nav-links-cell {
-    display: none !important;
-}
-
-/* ---------------------------------------------------- */
-/* TOP CARDS / GRÁFICOS ERROS SEMANAIS E TOP 5 MÁQUINAS */
-/* ---------------------------------------------------- */
-
-.top-info-row {
-    display: flex;
-    justify-content: flex-start;
-    gap: 30px;
-    margin-top: 20px;
-}
-
-.erros-semanais-card {
-    flex: 0 0 50%; /* Ocupa 50% da largura disponível */
-    background-color: white; /* Fundo branco/claro */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-    height: 300px;
-    box-sizing: border-box;
-}
-
-.erros-semanais-card h2 {
-    font-size: 1.2em;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--text-content);
-}
-
-#graficoErros {
-    max-height: 200px;
+    color: var(--main-text-color);
     width: 100%;
-}
-
-.filtro-dados-container {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-}
-
-.filtro-dados-box {
-    background-color: var(--bg-sidebar); /* Fundo roxo escuro */
-    padding: 5px 10px;
-    border-radius: 8px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.filtro-dados-box p {
-    color: var(--text-sidebar);
-    font-weight: bold;
-    font-size: 0.8em;
-    margin: 0 0 5px 0;
-}
-
-#filtro_dados {
-    background-color: var(--primary-color); /* Roxo do dropdown */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 8px;
-    font-size: 0.9em;
-    cursor: pointer;
-    outline: none;
-}
-
-.top-maquinas-card {
-    flex: 0 0 30%; /* Ocupa 30% da largura disponível */
-    background-color: var(--bg-sidebar); /* Fundo escuro */
-    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
     border-radius: 8px;
-    color: var(--text-sidebar);
-    height: 300px;
-    box-sizing: border-box;
+    transition: .3s;
 }
 
-.top-maquinas-card h3 {
-    font-size: 1.1em;
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: var(--text-sidebar);
+nav .btn-sair:hover {
+    background: #eb2e2e;
 }
 
-.top-maquinas-card ul {
-    list-style: none;
-    padding: 0;
+/* ----- Área principal ----- */
+
+body, html {
+    height: 100%;
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #e0e0e0; /* cor de fundo clara para eliminar o preto */
 }
 
-.top-maquinas-card ul li {
-    margin-bottom: 8px;
-}
-
-.top-maquinas-card ul li a {
-    color: var(--primary-color); /* Links roxos */
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* ---------------------------------------------------- */
-/* FILTROS E TABELA DE CHAMADOS */
-/* ---------------------------------------------------- */
-
-.chamado-list-section {
-    margin-top: 40px;
-}
-
-.chamado-filters {
+section {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-    align-items: center;
+    flex-direction: row;
+    max-width: 100vw;
+    background-color: #e0e0e0;
+    color: var(--main-text-inverse-color);
+    margin-left: 156px; /* espaço para a sidebar */
+    min-height: 100vh;
 }
 
-.search-box {
-    display: flex;
-    align-items: center;
-    background-color: #d3d3d3; /* Fundo cinza claro/médio */
-    border-radius: 5px;
-    padding: 5px;
-    flex-grow: 1; /* Ocupa a maior parte do espaço */
-    max-width: 400px;
-}
-
-.search-box input {
-    border: none;
-    outline: none;
-    background: transparent;
-    padding: 8px 10px;
-    color: var(--text-content);
+section .container {
     width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.search-box .search-icon {
-    color: #636363;
-    cursor: pointer;
-    margin-right: 5px;
-}
-
-.filter-dropdown {
-    display: flex;
-    align-items: center;
-    background-color: #d3d3d3; /* Fundo cinza claro/médio */
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.filter-dropdown .filter-icon {
-    color: #636363;
-    margin: 0 5px;
-}
-
-.filter-dropdown select {
+.btn.submit {
+    background-color: var(--primary-color); 
+    color: #fff;
     border: none;
-    outline: none;
-    background: transparent;
-    padding: 8px 10px;
-    color: var(--text-content);
-    font-weight: bold;
+    padding: 10px 20px;
     cursor: pointer;
-}
-
-/* TABELA */
-
-.chamado {
-    width: 100%;
-    margin-top: 0;
-}
-
-table {
-    background-color: white; /* Fundo da tabela branco/claro */
-    border: 1px solid #ccc;
-}
-
-table thead {
-    background-color: #4c1d95; /* Fundo do cabeçalho roxo */
-    color: white;
-}
-
-table tr th,
-table tr td {
-    padding: 15px 10px;
-    border-bottom: 1px solid #ccc;
-    color: var(--text-content);
-}
-
-table tbody {
-    background-color: white;
-}
-
-/* Ajuste das larguras das colunas conforme a imagem */
-table tr .id {
-    flex: 0.1;
-}
-
-table tr .maquina {
-    flex: 0.4;
-}
-
-table tr .problema {
-    flex: 0.5;
-}
-
-table tr .prioridade {
-    flex: 0.3;
-}
-
-table tr .status {
-    flex: 0.4;
-}
-
-table tr .tecnico {
-    flex: 0.4;
-}
-
-/* Estilo para as etiquetas de Prioridade e Status */
-.prioridade-badge {
-    padding: 5px 10px;
     border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.9em;
-    color: white;
+    font-size: 1rem;
 }
 
-.prioridade-badge.alta {
-    background-color: var(--high-priority);
+.btn.cancel {
+    background-color: #FF5722; 
+    color: #fff;
+    border: none;
 }
 
-.prioridade-badge.baixa {
-    background-color: var(--low-priority);
+ section .container{
+        height: calc(100dvh - 123px);
+    }
+
+
+select,
+::picker(select) {
+  appearance: base-select;
 }
 
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.9em;
-    color: white;
+select {
+  border: 2px solid #dddddd;
+  background: #e4b131;
+  color: white;
+  padding: 10px;
+  transition: 0.4s;
+}
+select::picker-icon {
+  color: #9e7504;
+  transition: 0.4s rotate;
 }
 
-.status-badge.nIniciado {
-    background-color: var(--status-not-started);
+select:open::picker-icon {
+  rotate: 180deg;
 }
 
-.status-badge.andamento {
-    background-color: var(--status-in-progress);
+::picker(select) {
+  border: none;
 }
 
-/* Remove as colunas de Ação da tabela (não estão na imagem final) */
-table tr .acao, table tr th.acao {
-    display: none !important;
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  border: 2px solid #dddddd;
+  background: #eeeeee;
+  padding: 10px;
+  transition: 0.4s;
 }
 
-/* ---------------------------------------------------- */
-/* MEDIA QUERIES (Responsividade) */
-/* ---------------------------------------------------- */
+option:first-of-type {
+  border-radius: 8px 8px 0 0;
+}
 
-@media screen and (max-width: 1000px) {
-    /* Desativa a sidebar fixa em mobile e centraliza */
-    nav {
-        position: static;
-        width: 100dvw !important;
-        height: auto;
-        padding: 10px 20px;
-        flex-direction: row;
-        justify-content: space-between;
-    }
+option:last-of-type {
+  border-radius: 0 0 8px 8px;
+}
 
-    nav .main-nav {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0;
-    }
+::picker(select) {
+  border-radius: 8px;
+}
 
-    nav .nav-title {
-        display: block;
-        margin: 0;
-        text-align: right;
-    }
+option:not(option:last-of-type) {
+  border-bottom: none;
+}
 
-    nav .logo {
-        padding: 0;
-    }
+option:nth-of-type(odd) {
+  background: white;
+}
 
-    nav .nav-links-pc, nav .btn-sair {
-        display: none !important; /* Esconde os links grandes */
-    }
+option:hover,
+option:focus {
+  background: rgb(155, 87, 219);
+  color: white;
+}
 
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-        width: 100%;
-    }
+option .icon {
+  font-size: 1.6rem;
+  text-box: trim-both cap alphabetic;
+}
 
-    .top-info-row {
-        flex-direction: column;
-        gap: 20px;
-    }
+option:checked {
+  font-weight: bold;
+}
 
-    .erros-semanais-card, .top-maquinas-card {
-        flex: 1 1 100%;
-    }
+::picker(select) {
+  opacity: 0;
+  transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+  opacity: 1;
+}
+
+.pesquisa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* separa pesquisa e filtro */
+  gap: 20px; /* dá espaço entre eles */
+  width: 100%;
+}
+
+/* Input de pesquisa */
+.ipt_label {
+  flex: 1; /* ocupa todo o espaço possível */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ipt_label input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+}
+
+.ipt_label button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Filtro à direita */
+.selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra totalmente para a direita */
+}
+
+.selectFiltro select {
+  background-color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+.listaEmpresa{
+    justify-content: space-between;
+    width: 1200px;
+}
+
+/* Garante que o nav ocupe sempre toda a altura da tela */
+nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh; /* ocupa 100% da altura da viewport */
+  width: 150px; 
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
+}
+
+
+section {
+  display: flex;
+  min-height: 100vh;
+  
+}
+
+/* Empurra o conteúdo principal para o lado direito da sidebar */
+section > div {
+  margin-left: 240px; /* mesmo valor da largura do nav */
+  flex: 1;
+  padding-bottom: 40px;
 }
