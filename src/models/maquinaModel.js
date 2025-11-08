@@ -151,13 +151,13 @@ async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, t
 
 async function topMaquinas(idEmpresa) {
     const instrucao = `
-        SELECT 
+        SELECT 		M.nome,
             M.enderecoMac AS maquina,
             COUNT(C.idChamado) AS total_ocorrencias
         FROM Chamado AS C
         JOIN Maquina AS M ON C.fkMaquina = M.idMaquina
         WHERE M.fkEmpresa = ${idEmpresa}
-        GROUP BY M.enderecoMac
+        GROUP BY M.nome, M.enderecoMac
         ORDER BY total_ocorrencias DESC
         LIMIT 5;
     `;

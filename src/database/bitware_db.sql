@@ -38,6 +38,7 @@ CREATE TABLE Funcionario (
 CREATE TABLE Maquina (
   idMaquina INT AUTO_INCREMENT,
   enderecoMac VARCHAR(50) NOT NULL,
+  nome VARCHAR(100),
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idMaquina),
   CONSTRAINT fk_Empresa_Maquina FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
@@ -80,8 +81,7 @@ CREATE TABLE Chamado (
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
-  CONSTRAINT 
-  FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
+  CONSTRAINT FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
     ON DELETE CASCADE
 );
 
@@ -104,13 +104,19 @@ VALUES
 ('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 4, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 2, 3);
 
-INSERT INTO Maquina (enderecoMac, fkEmpresa)
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
-('f4:6a:dd:7b:03:0d', 1),
-('a1:b2:c3:d4:e5:f6', 2),
-('ff:ee:dd:cc:bb:aa', 2),
-('e8:5c:5f:1e:b4:1d', 2),
-('11:22:33:44:55:66', 3);
+('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
+('a1:b2:c3:d4:e5:f6', 'Corredor 1', 2),
+('ff:ee:dd:cc:bb:aa', 'Corredor 2', 2),
+('e8:5c:5f:1e:b4:1d', 'Corredor 3', 2),
+('11:22:33:44:55:66', 'Setor Logístico', 3);
+
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
+VALUES
+('aa:bb:cc:dd:ee:ff', 'Setor Financeiro', 2),
+('77:88:99:aa:bb:cc', 'Sala Servidores', 2);
+
 
 INSERT INTO Componente (descricao)
 VALUES 
@@ -154,8 +160,44 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Duperaquecimento', 'Alta', 'Aberto', 1),
-(2, 'uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
-(3, 'uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
-(4, 'uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
+(1, 'Superaquecimento', 'Alta', 'Aberto', 1),
+(2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
+(3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
+(4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
+
+INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
+VALUES
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 2),
+(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 3),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 4),
+(2, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Alta', 'Aberto', 3),
+(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Resolvido', 4),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 4),
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(3, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 4),
+(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Baixa', 'Resolvido', 2),
+
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(4, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 3),
+(4, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(6, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 4),
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 3),
+(6, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
+
+(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
+(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 3),
+(7, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
+(7, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3);
+
+        
