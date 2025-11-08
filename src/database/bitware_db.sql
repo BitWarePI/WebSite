@@ -169,38 +169,37 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 2),
-(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 3),
-(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 4),
-(2, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
-(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Alta', 'Aberto', 3),
-(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Resolvido', 4),
-(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(2, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
+(2, 'gpu_percent acima do parâmetro - Atenção', 'Crítica', 'Aberto', 3),
+(2, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(2, 'cpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
 
-(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 4),
-(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
-(3, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 4),
-(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Baixa', 'Resolvido', 2),
+(3, 'cpu_temperature abaixo do esperado', 'Alta', 'Aberto', 3),
+(3, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(3, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
+(3, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'gpu_percent acima do parâmetro - Atenção', 'Média', 'Aberto', 3),
 
-(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
-(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
-(4, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 3),
-(4, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
-(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(4, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(4, 'cpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(4, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(4, 'gpu_temperature acima do esperado', 'Média', 'Aberto', 3),
+(4, 'cpu_percent abaixo do esperado', 'Baixa', 'Aberto', 3),
 
-(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(6, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 4),
-(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
-(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 3),
-(6, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
+(6, 'gpu_percent acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
+(6, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
+(6, 'cpu_temperature abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(6, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(6, 'gpu_percent abaixo do esperado', 'Baixa', 'Aberto', 3),
 
-(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
-(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 3),
-(7, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
-(7, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3);
-
+(7, 'cpu_percent abaixo do esperado', 'Crítica', 'Aberto', 3),
+(7, 'gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 3),
+(7, 'cpu_temperature abaixo do esperado', 'Média', 'Aberto', 3),
+(7, 'gpu_percent acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
+(7, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(7, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3);
 # Criação de usuarios para respectivas funções
 CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
 GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';

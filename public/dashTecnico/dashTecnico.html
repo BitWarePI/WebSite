@@ -177,30 +177,30 @@
 <script>
   const ctx1 = document.getElementById('grafico1').getContext('2d');
 
-    // Definição inicial do gráfico
-    const graficoErros = new Chart(ctx1, {
-      type: 'bar',
-      data: {
-        labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets: [{
-          label: 'Erros Semanais',
-          data: [2, 4, 1, 7, 3, 4, 3, 1, 2.2],
-          backgroundColor: '#8b5cf6',
-          borderRadius: 8,
-        }]
+  // Definição inicial do gráfico
+  const graficoErros = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+      datasets: [{
+        label: 'Erros Semanais',
+        data: [2, 4, 1, 7, 3, 4, 3, 1, 2.2],
+        backgroundColor: '#8b5cf6',
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          x: { ticks: { color: '#000' } },
-          y: { beginAtZero: true, ticks: { color: '#000' } }
-        }
+      scales: {
+        x: { ticks: { color: '#000' } },
+        y: { beginAtZero: true, ticks: { color: '#000' } }
       }
-    });
+    }
+  });
 
   // Pega o select do filtro
   const filtroSelect = document.getElementById('filtro');
@@ -245,9 +245,73 @@
 </script>
 
 
-  <script>
-    const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
-    const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+<script>
+  const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
+  const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+
+  async function carregarTop5Maquinas() {
+      const lista = document.getElementById("top5-lista");
+      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
+
+      try {
+        const idEmpresa = sessionStorage.getItem("idEmpresa");
+        const resposta = await fetch(`http://localhost:3333/maquina/top5/${idEmpresa}`);
+        const maquinas = await resposta.json();
+
+        console.log("MAQUINAS:", maquinas);
+
+        if (!maquinas.length) {
+          lista.innerHTML = "<li style='color:#ccc; text-align:center;'>Nenhuma ocorrência encontrada</li>";
+          return;
+        }
+
+        lista.innerHTML = "";
+        maquinas.forEach((m, index) => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+          <div style="
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            border: 1px solid #222;
+          " onmouseover="this.style.background='#222'" onmouseout="this.style.background='#1a1a1a'">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="
+                background: linear-gradient(135deg, #7e0cac, #a94ee5);
+                color: #fff;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+              ">${index + 1}</span>
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size: 1rem; color: #fff;">${m.nome}</span>
+                <span style="font-size: 0.8rem; color: #aaa;">${m.maquina}</span>
+              </div>
+            </div>
+            <span style="color: #ccc; font-size: 0.95rem;">
+              ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}
+            </span>
+          </div>`;
+          lista.appendChild(item);
+        });
+      } catch (erro) {
+        console.error("Erro ao buscar top 5 máquinas:", erro);
+        lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
+      }
+    }
+
+    window.onload = function () {
+      carregarChamados(),
+      carregarTop5Maquinas();
+    };
 
   function fecharModalTecnicos() {
     modalTecnicos.classList.remove("fade-in");
@@ -644,51 +708,15 @@
                             </td>
                         </tr>
                     `;
-            tbody.innerHTML += linha;
-          });
-        })
-        .catch(err => {
-          console.error(err);
-          tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
+          tbody.innerHTML += linha;
         });
-    }  
-  </script>
-
-  <script>
-     async function carregarTop5Maquinas() {
-      const lista = document.getElementById("top5-lista");
-      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
-
-      try {
-        const idEmpresa = sessionStorage.getItem("idEmpresa");
-        const resposta = await fetch(`http://localhost:3333/maquinas/top5/${idEmpresa}`);
-        const maquinas = await resposta.json();
-
-        if (!maquinas.length) {
-          lista.innerHTML = "<li style='color:#ccc;'>Nenhuma ocorrência encontrada</li>";
-          return;
-        }
-
-        lista.innerHTML = "";
-        maquinas.forEach((m, index) => {
-          const item = document.createElement("li");
-          item.style.color = "#fff";
-          item.style.marginBottom = "6px";
-          item.textContent = `${index + 1}. ${m.maquina} — ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}`;
-          lista.appendChild(item);
-        });
-      } catch (erro) {
-        console.error("Erro ao buscar top 5 máquinas:", erro);
-        lista.innerHTML = "<li style='color:#f88;'>Erro ao carregar dados</li>";
-      }
-    }
-    carregarTop5Maquinas();
-
-      window.onload = function () {
-      carregarChamados(),
-      carregarTop5Maquinas();
-    } 
-  </script>
+      })
+      .catch(err => {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
+      });
+  }  
+</script>
 
 </body>
 
