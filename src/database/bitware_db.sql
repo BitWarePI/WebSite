@@ -154,7 +154,7 @@ VALUES
 (4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
 
 # Criação de usuarios para respectivas funções
-CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
 GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
 
 CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
