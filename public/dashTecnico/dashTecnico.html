@@ -105,10 +105,18 @@
           </div>
 
           <div id="top5-container"
-            style="font-weight: bold; background-color: #111; border-radius: 12px; padding: 20px 25px; color: #f1f5f9;">
-            <p style="font-size: 1.1rem; margin-bottom: 10px;">Top 5 Máquinas com mais ocorrências</p>
-            <ul id="top5-lista" style="list-style: none; padding-left: 0; margin: 0; text-align: center;">
-              <li style="color: #ccc;">Carregando...</li>
+            style="font-weight: bold; background-color: #111; border-radius: 16px; padding: 20px 25px; color: #f1f5f9; box-shadow: 0 0 12px rgba(255,255,255,0.05);">
+            <p style="font-size: 1.3rem; margin-bottom: 15px; text-align: center; color: #7e0cac;">
+              Top 5 Máquinas com mais ocorrências (24horas)
+            </p>
+            <ul id="top5-lista" style="
+              list-style: none;
+              padding-left: 0;
+              margin: 0;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;">
+              <li style="color: #ccc; text-align: center;">Carregando...</li>
             </ul>
           </div>
 
@@ -254,6 +262,69 @@
   <script>
     const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
     const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+
+    async function carregarTop5Maquinas() {
+      const lista = document.getElementById("top5-lista");
+      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
+
+      try {
+        const idEmpresa = sessionStorage.getItem("idEmpresa");
+        const resposta = await fetch(`http://localhost:3333/maquina/top5/${idEmpresa}`);
+        const maquinas = await resposta.json();
+
+        console.log("MAQUINAS:", maquinas);
+
+        if (!maquinas.length) {
+          lista.innerHTML = "<li style='color:#ccc; text-align:center;'>Nenhuma ocorrência encontrada</li>";
+          return;
+        }
+
+        lista.innerHTML = "";
+        maquinas.forEach((m, index) => {
+          const item = document.createElement("li");
+          item.innerHTML = `
+          <div style="
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            border: 1px solid #222;
+          " onmouseover="this.style.background='#222'" onmouseout="this.style.background='#1a1a1a'">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="
+                background: linear-gradient(135deg, #7e0cac, #a94ee5);
+                color: #fff;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+              ">${index + 1}</span>
+              <div style="display:flex; flex-direction:column;">
+                <span style="font-size: 1rem; color: #fff;">${m.nome}</span>
+                <span style="font-size: 0.8rem; color: #aaa;">${m.maquina}</span>
+              </div>
+            </div>
+            <span style="color: #ccc; font-size: 0.95rem;">
+              ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}
+            </span>
+          </div>`;
+          lista.appendChild(item);
+        });
+      } catch (erro) {
+        console.error("Erro ao buscar top 5 máquinas:", erro);
+        lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
+      }
+    }
+
+    window.onload = function () {
+      carregarTop5Maquinas();
+    };
 
     function fecharModalTecnicos() {
       modalTecnicos.classList.remove("fade-in");
@@ -483,43 +554,6 @@
         });
     }  
   </script>
-
-  <script>
-     async function carregarTop5Maquinas() {
-      const lista = document.getElementById("top5-lista");
-      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
-
-      try {
-        const idEmpresa = sessionStorage.getItem("idEmpresa");
-        const resposta = await fetch(`http://localhost:3333/maquinas/top5/${idEmpresa}`);
-        const maquinas = await resposta.json();
-
-        if (!maquinas.length) {
-          lista.innerHTML = "<li style='color:#ccc;'>Nenhuma ocorrência encontrada</li>";
-          return;
-        }
-
-        lista.innerHTML = "";
-        maquinas.forEach((m, index) => {
-          const item = document.createElement("li");
-          item.style.color = "#fff";
-          item.style.marginBottom = "6px";
-          item.textContent = `${index + 1}. ${m.maquina} — ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}`;
-          lista.appendChild(item);
-        });
-      } catch (erro) {
-        console.error("Erro ao buscar top 5 máquinas:", erro);
-        lista.innerHTML = "<li style='color:#f88;'>Erro ao carregar dados</li>";
-      }
-    }
-    carregarTop5Maquinas();
-
-      window.onload = function () {
-      carregarChamados(),
-      carregarTop5Maquinas();
-    } 
-  </script>
-
 </body>
 
 </html>
