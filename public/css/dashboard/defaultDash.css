@@ -595,7 +595,7 @@ option:checked {
 }
 
 .selectFiltro select {
-  background-color: #fff;
+  background-color: #000;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 6px 10px;
@@ -605,4 +605,32 @@ option:checked {
 
 .listaEmpresa{
     justify-content: space-between;
+    width: 1200px;
+}
+
+/* Garante que o nav ocupe sempre toda a altura da tela */
+nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh; /* ocupa 100% da altura da viewport */
+  width: 150px; 
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
+}
+
+
+section {
+  display: flex;
+}
+
+/* Empurra o conteúdo principal para o lado direito da sidebar */
+section > div {
+  margin-left: 240px; /* mesmo valor da largura do nav */
+  flex: 1;
 }
