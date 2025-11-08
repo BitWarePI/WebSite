@@ -108,15 +108,15 @@ VALUES
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
 ('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
-('a1:b2:c3:d4:e5:f6', 'Corredor 1', 2),
-('ff:ee:dd:cc:bb:aa', 'Corredor 2', 2),
-('e8:5c:5f:1e:b4:1d', 'Corredor 3', 2),
+('a1:b2:c3:d4:e5:f6', 'Setor A', 2),
+('ff:ee:dd:cc:bb:aa', 'Setor B', 2),
+('e8:5c:5f:1e:b4:1d', 'Setor C', 2),
 ('11:22:33:44:55:66', 'Setor Logístico', 3);
 
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES
-('aa:bb:cc:dd:ee:ff', 'Setor Financeiro', 2),
-('77:88:99:aa:bb:cc', 'Sala Servidores', 2);
+('aa:bb:cc:dd:ee:ff', 'Setor D', 2),
+('77:88:99:aa:bb:cc', 'Setor E', 2);
 
 
 INSERT INTO Componente (descricao)
@@ -169,37 +169,44 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(2, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
-(2, 'gpu_percent acima do parâmetro - Atenção', 'Crítica', 'Aberto', 3),
-(2, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(2, 'cpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
+-- Máquina 2
+(2, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
+(2, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Crítica', 'Aberto', 3),
+(2, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(2, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
 
-(3, 'cpu_temperature abaixo do esperado', 'Alta', 'Aberto', 3),
-(3, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(3, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
-(3, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'gpu_percent acima do parâmetro - Atenção', 'Média', 'Aberto', 3),
+-- Máquina 3
+(3, 'Temperatura da CPU (°C) abaixo do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(3, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
+(3, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Média', 'Aberto', 3),
 
-(4, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(4, 'cpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(4, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(4, 'gpu_temperature acima do esperado', 'Média', 'Aberto', 3),
-(4, 'cpu_percent abaixo do esperado', 'Baixa', 'Aberto', 3),
+-- Máquina 4
+(4, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(4, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+(4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(4, 'Temperatura da GPU (°C) acima do esperado', 'Média', 'Aberto', 3),
+(4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
-(6, 'gpu_percent acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(6, 'cpu_percent abaixo do esperado', 'Média', 'Em andamento', 3),
-(6, 'cpu_temperature abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(6, 'gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
-(6, 'gpu_percent abaixo do esperado', 'Baixa', 'Aberto', 3),
+-- Máquina 6
+(6, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
+(6, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
+(6, 'Temperatura da CPU (°C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(6, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+(6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
-(7, 'cpu_percent abaixo do esperado', 'Crítica', 'Aberto', 3),
-(7, 'gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 3),
-(7, 'cpu_temperature abaixo do esperado', 'Média', 'Aberto', 3),
-(7, 'gpu_percent acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(7, 'cpu_percent acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(7, 'gpu_percent abaixo do esperado', 'Baixa', 'Resolvido', 3);
+-- Máquina 7
+(7, 'Uso de CPU (%) abaixo do esperado', 'Crítica', 'Aberto', 3),
+(7, 'Temperatura da GPU (°C) acima do esperado', 'Crítica', 'Em andamento', 3),
+(7, 'Temperatura da CPU (°C) abaixo do esperado', 'Média', 'Aberto', 3),
+(7, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
+(7, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+(7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
+
+
 # Criação de usuarios para respectivas funções
 CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
 GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';

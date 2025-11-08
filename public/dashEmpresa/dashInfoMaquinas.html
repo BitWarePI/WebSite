@@ -123,6 +123,7 @@
                     <thead>
                         <tr>
                             <th class="nome">Endereço MAC</th>
+                            <th class="nomeMesmo">Nome</th>
                             <th class="data">Data captura</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
@@ -232,6 +233,7 @@
                         tbody.innerHTML += `
                             <tr>
                                 <td>${maquina.mac}</td>
+                                <td>${maquina.nome}</td>
                                 <td>${leitura.datetime}</td>
                                 <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
                                 <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
@@ -258,6 +260,7 @@
                 tbody.innerHTML += `
                     <tr>
                         <td>${maquina.mac}</td>
+                        <td>${maquina.nome}</td>
                         <td>${leitura.datetime}</td>
                         <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
                         <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
@@ -310,6 +313,7 @@
 
                             maquinas.forEach(maquina => {
                                 const macMaquina = maquina.enderecoMac.trim().toLowerCase();
+                                const maquinaNome = maquina.nome;
 
                                 const parametroCpuPercent = maquina.cpu_percent;
                                 const parametroGpuPercent = maquina.gpu_percent;
@@ -402,6 +406,7 @@
 
                                     listaMaquinas.push({
                                         mac: macMaquina,
+                                        nome: maquinaNome,
                                         parametros: {
                                             cpu_percent: parametroCpuPercent,
                                             gpu_percent: parametroGpuPercent,
@@ -427,6 +432,7 @@
                                     tbody.innerHTML += `
                                 <tr>
                                     <td>${macMaquina}</td>
+                                    <td>${maquinaNome}</td>
                                     <td>${ultimo.datetime}</td>
                                     <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
                                     <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>

@@ -40,6 +40,7 @@ function infoMaquinas(idEmpresa) {
     const instrucao = `
         SELECT 
             m.enderecoMac,
+            m.nome,
             MAX(CASE WHEN c.descricao = 'cpu' THEN p.valor END) AS cpu_percent,
             MAX(CASE WHEN c.descricao = 'gpu' THEN p.valor END) AS gpu_percent,
             MAX(CASE WHEN c.descricao = 'cpu_temperature' THEN p.valor END) AS cpu_temperature,
