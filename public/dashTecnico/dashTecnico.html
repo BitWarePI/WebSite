@@ -23,13 +23,13 @@
       <div class="main-nav">
         <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
         <ul class="links nav-links-pc">
-          <li><a class="link" href="dashTecnico.html">
+          <li><a class="link ativo" href="dashTecnico.html">
               <span class="material-symbols-outlined icon">home</span>
               <span class="titulo">Inicio</span>
             </a>
           </li>
           <li>
-            <a class="link ativo" href="../dashEmpresa/dashFuncionario.html">
+            <a class="link" href="../dashEmpresa/dashFuncionario.html">
               <span class="material-symbols-outlined icon">apartment</span>
               <span class="titulo">Funcionários</span>
             </a>
@@ -86,14 +86,14 @@
     <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
-      <h1 style="font-size: 22px; margin-bottom: 40px;">Dashboard - Técnico</h1>
+      <h1 style="font-size: 42px; margin-bottom: 40px;">Dashboard - Técnico</h1>
 
       <!-- TOPO DO DASHBOARD: gráfico + filtros + top máquinas -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
 
         <!-- GRAFICO -->
         <div style="flex: 1; min-width: 400px; min-height: 600px;">
-          <p style="font-weight: bold; margin-bottom: 10px;">Erros de Máquinas</p>
+          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Erros nas máquinas</p>
           <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 480px;">
             <canvas id="grafico1" style="height: 100%;"></canvas>
           </div>
@@ -135,6 +135,7 @@
 
         </div>
         <div class="chamado">
+          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
           <table>
             <thead>
               <tr>
