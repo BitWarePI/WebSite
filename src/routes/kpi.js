@@ -14,9 +14,10 @@ router.get("/", (req, res) => {
   const dataFim = fim ? new Date(fim) : null;
 
   fs.createReadStream(caminhoCSV)
-    .pipe(csv({ separator: ";" }))
+    .pipe(csv({ separator: "," }))
     .on("data", (data) => {
-      const dataRegistro = new Date(data.datetime.split(" ")[0]); 
+      console.log(data)
+      const dataRegistro = new Date(data.data.split(" ")[0]); 
 
       const inicioDia = dataInicio ? new Date(dataInicio.toISOString().split("T")[0]) : null;
       const fimDia = dataFim ? new Date(dataFim.toISOString().split("T")[0]) : null;
@@ -27,10 +28,10 @@ router.get("/", (req, res) => {
       ) {
         resultados.push({
           data: dataRegistro.toISOString().split("T")[0],
-          uso_cpu: parseFloat(data.cpu_percent),
-          uso_gpu: parseFloat(data.gpu_percent),
-          temperatura_cpu: parseFloat(data.cpu_temperature),
-          temperatura_gpu: parseFloat(data.gpu_temperature),
+          uso_cpu: parseFloat(data.uso_cpu),
+          uso_gpu: parseFloat(data.uso_gpu),
+          temperatura_cpu: parseFloat(data.temperatura_cpu),
+          temperatura_gpu: parseFloat(data.temperatura_gpu),
         });
       }
     })

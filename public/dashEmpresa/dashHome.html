@@ -87,7 +87,7 @@
         <p style="font-weight: bold; font-size: large;">Selecionar data desejada</p>
       </div>
 
-      <div style="display: flex; flex-direction: row-reverse; justify-content: space-between;">
+      <div style="display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: flex-start;">
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="parametro" style="font-weight: bold;">Selecionar o tipo de parâmetro</label>
@@ -130,8 +130,8 @@
             <div id="kpiusogpu"
               style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
               <p style="color:white; font-size: large;  margin: 0;">Uso médio da GPU</p>
-              <p class="kpi-cpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
-              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-cpu-uso-mediana">50%</span>
+              <p class="kpi-gpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-gpu-uso-mediana">50%</span>
               </p>
             </div>
             <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
@@ -143,9 +143,9 @@
             <div id="kpitempgpu"
               style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
               <p style="color:white; font-size: large;  margin: 0;">Temperatura média da GPU</p>
-              <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80°C</p>
+              <p class="kpi-gpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80°C</p>
               <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                  class="kpi-cpu-uso-mediana">61°C</span></p>
+                  class="kpi-gpu-temp-mediana">61°C</span></p>
             </div>
             <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
               <canvas id="grafico2"></canvas>
@@ -177,9 +177,9 @@
               <div id="kpitempcpu"
                 style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
                 <p style="color:white; font-size: large;  margin: 0;">Temperatura média da CPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
+                <p class="kpi-cpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
                 <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-uso-mediana">61°C</span></p>
+                    class="kpi-cpu-temp-mediana">61°C</span></p>
               </div>
               <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
                 <canvas id="grafico4"></canvas>
@@ -357,35 +357,45 @@
   const kpiusocpu = document.getElementById('kpiusocpu');
   const kpitempcpu = document.getElementById('kpitempcpu');
 
-  const kpiGpuUsoValor = kpiusogpu.querySelector('.kpi1');
-  const kpiGpuTempValor = kpitempgpu.querySelector('.kpi-cpu-uso');
+  const kpiGpuUsoValor = kpiusogpu.querySelector('.kpi-gpu-uso');
+  const kpiGpuTempValor = kpitempgpu.querySelector('.kpi-gpu-temp');
   const kpiCpuUsoValor = kpiusocpu.querySelector('.kpi-cpu-uso');
-  const kpiCpuTempValor = kpitempcpu.querySelector('.kpi-cpu-uso');
+  const kpiCpuTempValor = kpitempcpu.querySelector('.kpi-cpu-temp');
 
+  const kpiMedianaUsoCpu = document.getElementsByClassName('kpi-cpu-uso-mediana')[0]
+  const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0]
+  const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0]
+  const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0]
+
+  function mediana(dados, tipo) {
+    const valores = dados.map(d => parseFloat(d[tipo])).sort((a, b) => a - b);
+    const tamanho = valores.length;
+
+    if (tamanho % 2 === 0) {
+      const meio1 = valores[tamanho / 2 - 1];
+      const meio2 = valores[tamanho / 2];
+      return ((meio1 + meio2) / 2).toFixed(1);
+    } else {
+      return valores[Math.floor(tamanho / 2)].toFixed(1);
+    }
+  }
   function definirCorKPI(elemento, valor, tipo) {
-    let cor = '#4c1d95'; // cor padrão roxa
+    let cor = '#4c1d95';
     if (parametro.value === "1") {
       if (tipo === 'uso') {
-        if (valor < 50) cor = '#ff4b4b'; // vermelho
-        else if (valor < 55) cor = '#ffc107'; // amarelo
-        else cor = '#4caf50'; // verde
+        if (valor < 70) cor = '#ff4b4b';
+        else if (valor < 75) cor = '#ffc107';
+        else cor = '#4caf50';
       } else if (tipo === 'temp') {
-        if (valor > 75) cor = '#ff4b4b'; // vermelho
-        else if (valor > 70) cor = '#ffc107'; // amarelo
-        else cor = '#4caf50'; // verde
+        if (valor > 75) cor = '#ff4b4b';
+        else if (valor > 70) cor = '#ffc107';
+        else cor = '#4caf50';
       }
     }
     elemento.style.backgroundColor = cor;
   }
 
-  // Aplica as cores iniciais (caso queira iniciar com o select "Padrão")
-  definirCorKPI(kpiusogpu, 55, "uso");
-  definirCorKPI(kpitempgpu, 80, "temp");
-  definirCorKPI(kpiusocpu, 80, "uso");
-  definirCorKPI(kpitempcpu, 72, "temp");
-
   parametro.addEventListener('change', () => {
-    // Reaplica as cores quando o usuário mudar o tipo de parâmetro
     definirCorKPI(kpiusogpu, parseFloat(kpiGpuUsoValor.textContent), "uso");
     definirCorKPI(kpitempgpu, parseFloat(kpiGpuTempValor.textContent), "temp");
     definirCorKPI(kpiusocpu, parseFloat(kpiCpuUsoValor.textContent), "uso");
@@ -409,12 +419,12 @@
       if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
 
       const dados = await response.json();
+      console.log(dados)
 
       if (!Array.isArray(dados) || dados.length === 0) {
         alert('Nenhum dado encontrado para o período selecionado.');
         return;
       }
-
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
       const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
@@ -426,6 +436,13 @@
       kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
       kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
       kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
+
+      console.log(kpiMedianaTempCpu)
+      console.log(mediana(dados, "temperatura_cpu"))
+      kpiMedianaTempCpu.innerHTML = `${mediana(dados, "temperatura_cpu")}°C`
+      kpiMedianaTempGpu.innerHTML = `${mediana(dados, "temperatura_gpu")}°C`
+      kpiMedianaUsoCpu.innerHTML = `${mediana(dados, "uso_cpu")}%`
+      kpiMedianaUsoGpu.innerHTML = `${mediana(dados, "uso_gpu")}%`
 
       definirCorKPI(kpiusogpu, parseFloat(mediaGpuUso), 'uso');
       definirCorKPI(kpitempgpu, parseFloat(mediaGpuTemp), 'temp');
