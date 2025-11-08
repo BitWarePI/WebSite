@@ -133,6 +133,7 @@ module.exports = {
 
     async definirParametrosMaquina(req, res) {
         const { idMaquina } = req.params;
+        console.log(req.body)
         const { uso_cpu, uso_gpu, temp_cpu, temp_gpu } = req.body;
 
         try {
@@ -142,5 +143,23 @@ module.exports = {
             console.error("Erro ao definir parâmetros individuais:", erro);
             res.status(500).json({ erro: "Erro ao definir parâmetros individuais" });
         }
+    },
+
+    async topMaquinas(req, res) {
+    const { idEmpresa } = req.params;
+
+    try {
+        const resultado = await maquinaModel.topMaquinas(idEmpresa);
+
+        if (resultado.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        res.status(200).json(resultado);
+    } catch (erro) {
+        console.error("Erro ao buscar top 5 máquinas:", erro);
+        res.status(500).json({ erro: "Erro ao buscar top 5 máquinas" });
     }
+}
+
 };

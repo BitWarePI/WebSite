@@ -612,3 +612,163 @@ td.acao button.ver-mais {
         height: calc(100dvh - 123px);
     }
 }
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+  border: 2px solid #dddddd;
+  background: #e4b131;
+  color: white;
+  padding: 10px;
+  transition: 0.4s;
+}
+select::picker-icon {
+  color: #9e7504;
+  transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+::picker(select) {
+  border: none;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  border: 2px solid #dddddd;
+  background: #eeeeee;
+  padding: 10px;
+  transition: 0.4s;
+}
+
+option:first-of-type {
+  border-radius: 8px 8px 0 0;
+}
+
+option:last-of-type {
+  border-radius: 0 0 8px 8px;
+}
+
+::picker(select) {
+  border-radius: 8px;
+}
+
+option:not(option:last-of-type) {
+  border-bottom: none;
+}
+
+option:nth-of-type(odd) {
+  background: white;
+}
+
+option:hover,
+option:focus {
+  background: rgb(155, 87, 219);
+  color: white;
+}
+
+option .icon {
+  font-size: 1.6rem;
+  text-box: trim-both cap alphabetic;
+}
+
+option:checked {
+  font-weight: bold;
+}
+
+::picker(select) {
+  opacity: 0;
+  transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+  opacity: 1;
+}
+
+.pesquisa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* separa pesquisa e filtro */
+  gap: 20px; /* dá espaço entre eles */
+  width: 100%;
+}
+
+/* Input de pesquisa */
+.ipt_label {
+  flex: 1; /* ocupa todo o espaço possível */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ipt_label input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+}
+
+.ipt_label button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Filtro à direita */
+.selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra totalmente para a direita */
+}
+
+.selectFiltro select {
+  background-color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+.listaEmpresa{
+    justify-content: space-between;
+    width: 1200px;
+}
+
+/* Garante que o nav ocupe sempre toda a altura da tela */
+nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh; /* ocupa 100% da altura da viewport */
+  width: 150px; 
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
+}
+
+
+section {
+  display: flex;
+}
+
+/* Empurra o conteúdo principal para o lado direito da sidebar */
+section > div {
+  margin-left: 240px; /* mesmo valor da largura do nav */
+  flex: 1;
+}

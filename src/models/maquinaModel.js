@@ -50,66 +50,66 @@ function infoMaquinas(idEmpresa) {
 
     `;
     console.log("Instrução SQL:", instrucao);
-    return database.executar(instrucao);}
-    function listarQtdPorEmpresa(idEmpresa) {
-        instrucao = `
+    return database.executar(instrucao);
+}
+function listarQtdPorEmpresa(idEmpresa) {
+    instrucao = `
     SELECT 
         fkEmpresa,
         COUNT(idMaquina) AS qtd
     FROM Maquina
     GROUP BY fkEmpresa;
     `
-        return database.executar(instrucao)
-    }
+    return database.executar(instrucao)
+}
 
-    function cadastrar(fkEmpresa, enderecoMac) {
-        instrucao = `
+function cadastrar(fkEmpresa, enderecoMac) {
+    instrucao = `
     INSERT INTO Maquina (enderecoMac, fkEmpresa)
         VALUES 
         ('${enderecoMac}', ${fkEmpresa});
     `
-        return database.executar(instrucao)
-    }
+    return database.executar(instrucao)
+}
 
-    function listarMaquinaPorEmpresa(fkEmpresa) {
-        const instrucao = `
+function listarMaquinaPorEmpresa(fkEmpresa) {
+    const instrucao = `
         SELECT idMaquina, enderecoMac
         FROM maquina
         WHERE fkEmpresa = ${fkEmpresa};
     `;
-        console.log("Executando SQL:\n" + instrucao);
-        return database.executar(instrucao);
-    }
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
 
-    function remover(idMaquina) {
-        const instrucao = `
+function remover(idMaquina) {
+    const instrucao = `
         DELETE FROM Maquina
         WHERE idMaquina = ${idMaquina};
     `;
-        console.log("Executando SQL:\n" + instrucao);
-        return database.executar(instrucao);
-    }
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
 
-    function editar(idMaquina, enderecoMac) {
-        const instrucao = `
+function editar(idMaquina, enderecoMac) {
+    const instrucao = `
         UPDATE Maquina
         SET enderecoMac = '${enderecoMac}'
         WHERE idMaquina = ${idMaquina};
     `;
-        console.log("Executando SQL:\n" + instrucao);
-        return database.executar(instrucao);
-    }
+    console.log("Executando SQL:\n" + instrucao);
+    return database.executar(instrucao);
+}
 
-    function verificarParametrosGerais(idEmpresa) {
-        const instrucao = `
+function verificarParametrosGerais(idEmpresa) {
+    const instrucao = `
     select * from ParametrosGeraisEmpresa where fkEmpresa = ${idEmpresa}
     `;
-        return database.executar(instrucao);
-    }
+    return database.executar(instrucao);
+}
 
-    // Cria ou atualiza os parâmetros gerais de uma empresa
-    function definirParametrosGerais(idEmpresa, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
-        const instrucao = `
+function definirParametrosGerais(idEmpresa, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
+    const instrucao = `
         INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
         VALUES (${idEmpresa}, ${uso_cpu}, ${uso_gpu}, ${temp_cpu}, ${temp_gpu})
         ON DUPLICATE KEY UPDATE
@@ -118,47 +118,64 @@ function infoMaquinas(idEmpresa) {
             cpu_temperature = VALUES(cpu_temperature),
             gpu_temperature = VALUES(gpu_temperature);
     `;
-        return database.executar(instrucao);
-    }
+    return database.executar(instrucao);
+}
 
-    // Cria ou atualiza os parâmetros individuais de uma máquina
-    async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
-        const queries = [
-            // CPU %
-            `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
-         SELECT ${idMaquina}, idComponente, ${uso_cpu} FROM Componente WHERE descricao = 'cpu_percent'
+async function definirParametrosMaquina(idMaquina, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
+    const queries = [
+        // CPU %
+        `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+         SELECT ${idMaquina}, idComponente, ${uso_cpu} FROM Componente WHERE descricao = 'cpu'
          ON DUPLICATE KEY UPDATE valor = ${uso_cpu};`,
 
-            // GPU %
-            `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
-         SELECT ${idMaquina}, idComponente, ${uso_gpu} FROM Componente WHERE descricao = 'gpu_percent'
+        // GPU %
+        `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+         SELECT ${idMaquina}, idComponente, ${uso_gpu} FROM Componente WHERE descricao = 'gpu'
          ON DUPLICATE KEY UPDATE valor = ${uso_gpu};`,
 
-            // Temp CPU
-            `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+        // Temp CPU
+        `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
          SELECT ${idMaquina}, idComponente, ${temp_cpu} FROM Componente WHERE descricao = 'cpu_temperature'
          ON DUPLICATE KEY UPDATE valor = ${temp_cpu};`,
 
-            // Temp GPU
-            `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+        // Temp GPU
+        `INSERT INTO Parametro (fkMaquina, fkComponente, valor)
          SELECT ${idMaquina}, idComponente, ${temp_gpu} FROM Componente WHERE descricao = 'gpu_temperature'
          ON DUPLICATE KEY UPDATE valor = ${temp_gpu};`
-        ];
+    ];
 
-        for (const q of queries) {
-            await database.executar(q);
-        }
+    for (const q of queries) {
+        await database.executar(q);
     }
+}
 
-    module.exports = {
-        listarPorEmpresa,
-        infoMaquinas,
-        listarQtdPorEmpresa,
-        cadastrar,
-        listarMaquinaPorEmpresa,
-        remover,
-        editar,
-        verificarParametrosGerais,
-        definirParametrosGerais,
-        definirParametrosMaquina
-    };
+async function topMaquinas(idEmpresa) {
+    const instrucao = `
+        SELECT 
+            M.enderecoMac AS maquina,
+            COUNT(C.idChamado) AS total_ocorrencias
+        FROM Chamado AS C
+        JOIN Maquina AS M ON C.fkMaquina = M.idMaquina
+        WHERE M.fkEmpresa = ${idEmpresa}
+        GROUP BY M.enderecoMac
+        ORDER BY total_ocorrencias DESC
+        LIMIT 5;
+    `;
+
+    return database.executar(instrucao);
+
+}
+
+module.exports = {
+    listarPorEmpresa,
+    infoMaquinas,
+    listarQtdPorEmpresa,
+    cadastrar,
+    listarMaquinaPorEmpresa,
+    remover,
+    editar,
+    verificarParametrosGerais,
+    definirParametrosGerais,
+    definirParametrosMaquina,
+    topMaquinas
+};
