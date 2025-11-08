@@ -108,15 +108,15 @@ VALUES
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
 ('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
-('a1:b2:c3:d4:e5:f6', 'Corredor 1', 2),
-('ff:ee:dd:cc:bb:aa', 'Corredor 2', 2),
-('e8:5c:5f:1e:b4:1d', 'Corredor 3', 2),
+('a1:b2:c3:d4:e5:f6', 'Setor A', 2),
+('ff:ee:dd:cc:bb:aa', 'Setor B', 2),
+('e8:5c:5f:1e:b4:1d', 'Setor C', 2),
 ('11:22:33:44:55:66', 'Setor Logístico', 3);
 
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES
-('aa:bb:cc:dd:ee:ff', 'Setor Financeiro', 2),
-('77:88:99:aa:bb:cc', 'Sala Servidores', 2);
+('aa:bb:cc:dd:ee:ff', 'Setor D', 2),
+('77:88:99:aa:bb:cc', 'Setor E', 2);
 
 
 INSERT INTO Componente (descricao)
