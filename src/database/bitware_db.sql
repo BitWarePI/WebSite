@@ -79,6 +79,7 @@ CREATE TABLE Chamado (
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
+  sincronizado TINYINT(1) NOT NULL DEFAULT 0,  
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
   CONSTRAINT FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
@@ -200,4 +201,13 @@ VALUES
 (7, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
 (7, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3);
 
-        
+# Criação de usuarios para respectivas funções
+CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
+
+CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
+
+CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
+FLUSH PRIVILEGES;
