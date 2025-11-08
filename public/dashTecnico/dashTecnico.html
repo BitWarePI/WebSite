@@ -23,37 +23,37 @@
       <div class="main-nav">
         <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
         <ul class="links nav-links-pc">
-          <li><a class="link" href="dashHome.html">
+          <li><a class="link" href="dashTecnico.html">
               <span class="material-symbols-outlined icon">home</span>
               <span class="titulo">Inicio</span>
             </a>
           </li>
           <li>
-            <a class="link ativo" href="dashFuncionario.html">
+            <a class="link ativo" href="../dashEmpresa/dashFuncionario.html">
               <span class="material-symbols-outlined icon">apartment</span>
               <span class="titulo">Funcionários</span>
             </a>
           </li>
           <li>
-            <a class="link" href="dashInfoMaquinas.html">
+            <a class="link" href="../dashEmpresa/dashInfoMaquinas.html">
               <span class="material-symbols-outlined icon">Computer</span>
               <span class="titulo">Informações máquinas</span>
             </a>
           </li>
           <li>
-            <a class="link" href="dashInfoMaquinas.html">
-              <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Máquina Parâmetros</span>
+            <a class="link" href="../dashEmpresa/dashMaquinas.html">
+              <span class="material-symbols-outlined icon">settings_applications</span>
+              <span class="titulo">Parametros máquinas</span>
             </a>
           </li>
           <li>
-            <a class="link" href="atualizar-senha.html">
+            <a class="link" href="../dashEmpresa/atualizar-senha.html">
               <span class="material-symbols-outlined icon">lock</span>
               <span class="titulo">Atualizar senha</span>
             </a>
           </li>
           <li>
-            <a class="link" href="desativarEmpresa.html">
+            <a class="link" href="../dashEmpresa/desativarEmpresa.html">
               <span class="material-symbols-outlined icon">cancel</span>
               <span class="titulo">Inativar empresa</span>
             </a>
@@ -92,10 +92,10 @@
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
 
         <!-- GRAFICO -->
-        <div style="flex: 1; min-width: 400px;">
+        <div style="flex: 1; min-width: 400px; min-height: 600px;">
           <p style="font-weight: bold; margin-bottom: 10px;">Erros de Máquinas</p>
-          <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 280px;">
-            <canvas id="grafico1"></canvas>
+          <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 480px;">
+            <canvas id="grafico1" style="height: 100%;"></canvas>
           </div>
         </div>
 
@@ -250,25 +250,25 @@
   const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
 
   async function carregarTop5Maquinas() {
-      const lista = document.getElementById("top5-lista");
-      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
+    const lista = document.getElementById("top5-lista");
+    lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
 
-      try {
-        const idEmpresa = sessionStorage.getItem("idEmpresa");
-        const resposta = await fetch(`http://localhost:3333/maquina/top5/${idEmpresa}`);
-        const maquinas = await resposta.json();
+    try {
+      const idEmpresa = sessionStorage.getItem("idEmpresa");
+      const resposta = await fetch(`http://localhost:3333/maquina/top5/${idEmpresa}`);
+      const maquinas = await resposta.json();
 
-        console.log("MAQUINAS:", maquinas);
+      console.log("MAQUINAS:", maquinas);
 
-        if (!maquinas.length) {
-          lista.innerHTML = "<li style='color:#ccc; text-align:center;'>Nenhuma ocorrência encontrada</li>";
-          return;
-        }
+      if (!maquinas.length) {
+        lista.innerHTML = "<li style='color:#ccc; text-align:center;'>Nenhuma ocorrência encontrada</li>";
+        return;
+      }
 
-        lista.innerHTML = "";
-        maquinas.forEach((m, index) => {
-          const item = document.createElement("li");
-          item.innerHTML = `
+      lista.innerHTML = "";
+      maquinas.forEach((m, index) => {
+        const item = document.createElement("li");
+        item.innerHTML = `
           <div style="
             background: #1a1a1a;
             border-radius: 10px;
@@ -300,18 +300,18 @@
               ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}
             </span>
           </div>`;
-          lista.appendChild(item);
-        });
-      } catch (erro) {
-        console.error("Erro ao buscar top 5 máquinas:", erro);
-        lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
-      }
+        lista.appendChild(item);
+      });
+    } catch (erro) {
+      console.error("Erro ao buscar top 5 máquinas:", erro);
+      lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
     }
+  }
 
-    window.onload = function () {
-      carregarChamados(),
+  window.onload = function () {
+    carregarChamados(),
       carregarTop5Maquinas();
-    };
+  };
 
   function fecharModalTecnicos() {
     modalTecnicos.classList.remove("fade-in");
