@@ -3,12 +3,14 @@ const database = require("../database/config");
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
     SELECT 
+        t.nome,
         t.idMaquina,
         t.enderecoMac,
         t.parametros
     FROM (
         SELECT 
             m.idMaquina,
+            m.nome,
             m.enderecoMac,
             COALESCE(JSON_OBJECT(
                 'uso_cpu', MAX(CASE WHEN c.descricao = 'cpu' THEN p.valor END),
