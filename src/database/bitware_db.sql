@@ -79,6 +79,7 @@ CREATE TABLE Chamado (
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
+  sincronizado TINYINT(1) NOT NULL DEFAULT 0,  
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
   CONSTRAINT fk_Tecnico_Chamado FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
