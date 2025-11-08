@@ -93,7 +93,7 @@
           <label for="parametro" style="font-weight: bold;">Selecionar o tipo de parâmetro</label>
           <select id="parametro" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 200px;">
             <option value="">Tipo de parâmetro</option>
-            <option value="1">Padrão</option>
+            <option value="1" selected>Padrão</option>
             <option value="2">Personalizado</option>
           </select>
         </div>
@@ -477,4 +477,8 @@
   }
 
   btnAplicar.addEventListener('click', aplicarPeriodo);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    aplicarCores();
+  });
 </script>
