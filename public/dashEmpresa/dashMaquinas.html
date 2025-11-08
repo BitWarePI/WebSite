@@ -96,6 +96,28 @@
                     <p class="quantidade" id="qtdSemParam" style="font-size: 5em;">0</p>
                     <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
+                <div class="kpi-card">
+                    <h3 class="titulo" style="font-size: 25px;">Parâmetros<br>atuais</h3>
+                    <div class="parametros-atuais">
+                        <div class="param-item">
+                            <span class="label">CPU</span>
+                            <p id="paramCpu" class="quantidadeParam">0%</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">GPU</span>
+                            <p id="paramGpu" class="quantidadeParam">0%</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">Temp. CPU</span>
+                            <p id="paramTempCpu" class="quantidadeParam">0°C</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">Temp. GPU</span>
+                            <p id="paramTempGpu" class="quantidadeParam">0°C</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined icon solicitacao">tune</span>
+                </div>
                 <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
             </div>
 
@@ -134,7 +156,8 @@
                 <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
             </div>
             <div class="body">
-                <p>Detectamos que você está usando os parâmetros recomendados pela nossa empresa. Deseja personalizá-los?</p>
+                <p>Detectamos que você está usando os parâmetros recomendados pela nossa empresa. Deseja
+                    personalizá-los?</p>
                 <button class="btn submit" onclick="abrirModalParametrosGerais()">Personalizar</button>
                 <button class="btn cancel" onclick="toggleModalAviso(false)">Fechar</button>
             </div>
@@ -226,7 +249,6 @@
             }
         }
 
-        // ---------- CARREGAR MÁQUINAS ----------
         function carregarMaquinas() {
             var empresaId = sessionStorage.getItem('idEmpresa');
 
@@ -291,7 +313,6 @@
                 .catch(err => alert(err.message));
         }
 
-        // ---------- PESQUISAR ----------
         function pesquisarMaquina() {
             const pesquisa = document.getElementById("pesquisa_input").value.toLowerCase();
             const linhas = document.getElementById("tableMaquinas").getElementsByTagName("tr");
@@ -311,7 +332,6 @@
             const temp_gpu = document.getElementById('tempGpuGeral').value;
 
             const dados = { uso_cpu, uso_gpu, temp_cpu, temp_gpu, idEmpresa };
-            console.log(dados)
 
             fetch(`/maquina/parametros/gerais/${idEmpresa}`, {
                 method: "POST",
@@ -342,6 +362,10 @@
                     if (Array.isArray(param) && param.length === 0) {
                         toggleModalAviso('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                     } else {
+                        document.getElementById("paramCpu").textContent = `${param[0].cpu_percent ?? 0}%`;
+                        document.getElementById("paramGpu").textContent = `${param[0].gpu_percent ?? 0}%`;
+                        document.getElementById("paramTempCpu").textContent = `${param[0].cpu_temperature ?? 0}°C`;
+                        document.getElementById("paramTempGpu").textContent = `${param[0].gpu_temperature ?? 0}°C`;
                         console.log("Parametros encontrados.");
                     }
                 })
