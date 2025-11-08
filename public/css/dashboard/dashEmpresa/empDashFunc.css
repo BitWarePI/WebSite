@@ -113,6 +113,15 @@ table tr td.acao button.ver-mais{
     box-sizing: border-box;
     gap: 12px;
 }
+
+.container .kpi-container .kpi-card-titulo{
+    flex-direction: column;
+    padding: 8px;
+    box-sizing: border-box;
+    background: var(--bg-inverse-color);
+}
+
+
 .container .kpi-container .kpi-card{
     display: flex;
     flex-direction: column;

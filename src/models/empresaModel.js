@@ -34,6 +34,39 @@ function listarEmpresas(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
+function listarEmpresasAtivas(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa WHERE ativo = 1;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+function listarEmpresasInativas(){
+    var instrucaoSqlEmpresa = `
+        select * from bitware_db.Empresa WHERE ativo = 0;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+
+function carregarKPIS(){
+    var instrucaoSqlEmpresa = `
+        SELECT COUNT(*) as qtdEmpresas, SUM(CASE WHEN ativo = 1 THEN 1 ELSE 0 END) as empresasAtivas, 
+	    SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) as solicitacoes FROM Empresa;
+    `;
+
+    console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
+
+    return database.executar(instrucaoSqlEmpresa)
+}
+
+
 function listarEmpresasDelecao(){
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa WHERE solicitouDelecao = 1;
@@ -75,23 +108,42 @@ function ativarEmpresa(idEmpresa){
     return database.executar(sql);
 }
 
-function desativarEmpresa(idEmpresa) {
-    const id = Number(idEmpresa); // força número
-    const sql = `
-        UPDATE bitware_db.Empresa 
-        SET ativo = 0 
-        WHERE idEmpresa = ${id}
+function inativarEmpresa(emailEmpresa, senha) {
+    //tem uma subquery pq a tabela empresa n armazena a senha ent a empresa esta sendo inativa pela senha do funcionario
+    var instrucao = `
+        UPDATE Empresa 
+        SET ativo = 0
+        WHERE idEmpresa = (
+            SELECT fkEmpresa FROM Funcionario 
+            WHERE email = "${emailEmpresa}" AND senha = "${senha}" LIMIT 1
+        )
+        AND email = "${emailEmpresa}";
     `;
-    return database.executar(sql);
+    console.log(instrucao)
+    return database.executar(instrucao);
 }
 
+function verificarSenhaAtual(idEmpresa, senhaAtual) {
+    var instrucao = `
+        SELECT f.idFuncionario
+        FROM Funcionario f
+        WHERE f.fkEmpresa = ${idEmpresa}
+        AND f.senha = '${senhaAtual}'
+        LIMIT 1;
+    `;
+    return database.executar(instrucao);
+}
 
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    carregarKPIS,
     listarEmpresasDelecao,
+    listarEmpresasAtivas,
+    listarEmpresasInativas,
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
-    desativarEmpresa
+    inativarEmpresa,
+    verificarSenhaAtual
 };

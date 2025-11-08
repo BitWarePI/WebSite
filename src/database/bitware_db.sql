@@ -8,7 +8,6 @@ CREATE TABLE Empresa (
   nome VARCHAR(200) NOT NULL,
   email VARCHAR(200) NOT NULL,
   ativo BIT(1) NOT NULL DEFAULT 0,
-  solicitouDelecao BIT(1) NOT NULL DEFAULT 0,
   dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   chave BINARY(16),
   PRIMARY KEY (idEmpresa)
@@ -39,6 +38,7 @@ CREATE TABLE Funcionario (
 CREATE TABLE Maquina (
   idMaquina INT AUTO_INCREMENT,
   enderecoMac VARCHAR(50) NOT NULL,
+  nome VARCHAR(100),
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idMaquina),
   CONSTRAINT fk_Empresa_Maquina FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
@@ -82,7 +82,7 @@ CREATE TABLE Chamado (
   sincronizado TINYINT(1) NOT NULL DEFAULT 0,  
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
-  CONSTRAINT fk_Tecnico_Chamado FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
+  CONSTRAINT FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
     ON DELETE CASCADE
 );
 
@@ -101,23 +101,28 @@ VALUES
 INSERT INTO Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
 VALUES 
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
-('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 4, 2),
-('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 3, 2),
-('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 4, 3);
+('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 2, 2),
+('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 4, 2),
+('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 2, 3);
 
-INSERT INTO Maquina (enderecoMac, fkEmpresa)
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
-('f4:6a:dd:7b:03:0d', 1),
-('a1:b2:c3:d4:e5:f6', 2),
-('ff:ee:dd:cc:bb:aa', 2),
-('11:22:33:44:55:66', 3);
+('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
+('a1:b2:c3:d4:e5:f6', 'Corredor 1', 2),
+('ff:ee:dd:cc:bb:aa', 'Corredor 2', 2),
+('e8:5c:5f:1e:b4:1d', 'Corredor 3', 2),
+('11:22:33:44:55:66', 'Setor Logístico', 3);
+
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
+VALUES
+('aa:bb:cc:dd:ee:ff', 'Setor Financeiro', 2),
+('77:88:99:aa:bb:cc', 'Sala Servidores', 2);
+
 
 INSERT INTO Componente (descricao)
 VALUES 
-('cpu_percent'),
-('gpu_percent'),
-('ram_percent'),
-('disk_percent'),
+('cpu'),
+('gpu'),
 ('cpu_temperature'),
 ('gpu_temperature');
 
@@ -125,20 +130,28 @@ INSERT INTO Parametro (fkMaquina, fkComponente, valor)
 VALUES
 (1, 1, 35),
 (1, 2, 20),
-(1, 5, 48),
-(1, 6, 42),
+(1, 3, 48),
+(1, 4, 42),
+
 (2, 1, 55),
 (2, 2, 65),
-(2, 5, 72),
-(2, 6, 69),
+(2, 3, 72),
+(2, 4, 69),
+
 (3, 1, 80),
 (3, 2, 45),
-(3, 5, 90),
-(3, 6, 60),
+(3, 3, 90),
+(3, 4, 60),
+
 (4, 1, 25),
 (4, 2, 15),
-(4, 5, 40),
-(4, 6, 35);
+(4, 3, 40),
+(4, 4, 35),
+
+(5, 1, 50),
+(5, 2, 35),
+(5, 3, 70),
+(5, 4, 60);
 
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
@@ -153,6 +166,40 @@ VALUES
 (3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
 (2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
 (4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
+
+INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
+VALUES
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 2),
+(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 3),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 4),
+(2, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Alta', 'Aberto', 3),
+(2, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Resolvido', 4),
+(2, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 4),
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(3, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 4),
+(3, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Baixa', 'Resolvido', 2),
+
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(4, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Crítica', 'Em andamento', 3),
+(4, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
+(4, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3),
+(6, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Em andamento', 4),
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 2),
+(6, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Média', 'Aberto', 3),
+(6, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 4),
+
+(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | gpu_temperature acima do esperado', 'Crítica', 'Aberto', 2),
+(7, 'cpu_percent abaixo do esperado | gpu_percent abaixo do esperado | cpu_temperature abaixo do esperado', 'Baixa', 'Aberto', 3),
+(7, 'cpu_percent abaixo do esperado | gpu_percent acima do parâmetro - Atenção | gpu_temperature acima do esperado', 'Média', 'Aberto', 4),
+(7, 'cpu_percent acima do parâmetro - Atenção | gpu_percent acima do parâmetro - Atenção | cpu_temperature acima do esperado | gpu_temperature acima do esperado', 'Alta', 'Aberto', 3);
 
 # Criação de usuarios para respectivas funções
 CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';

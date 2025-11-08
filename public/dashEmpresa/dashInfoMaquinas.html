@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="../css/default.css">
+    <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/dashMaquinas.css">
+    <link rel="stylesheet" href="../css/animacao.css">
+    <link rel="icon" href="../assets/icon/favicon2.png">
+    <title>Dashboard | BitWare</title>
+</head>
+
+<body>
+    <section>
+        <nav>
+            <div class="main-nav">
+                <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
+                <ul class="links nav-links-pc">
+                    <li><a class="link" href="dashHome.html">
+                            <span class="material-symbols-outlined icon">home</span>
+                            <span class="titulo">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="dashFuncionario.html">
+                            <span class="material-symbols-outlined icon">apartment</span>
+                            <span class="titulo">Funcionários</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link ativo" href="dashInfoMaquinas.html">
+                            <span class="material-symbols-outlined icon">Computer</span>
+                            <span class="titulo">Informações máquinas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="dashMaquinas.html">
+                            <span class="material-symbols-outlined icon">settings_applications</span>
+                            <span class="titulo">Parametros máquinas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="atualizar-senha.html">
+                            <span class="material-symbols-outlined icon">lock</span>
+                            <span class="titulo">Atualizar senha</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="deletarConta.html">
+                            <span class="material-symbols-outlined icon">cancel</span>
+                            <span class="titulo">Deletar conta</span>
+                        </a>
+                    </li>
+                </ul>
+                <a href="../index.html" class="btn btn-sair nav-links-pc">
+                    Sair
+                </a>
+                <div id="nav-menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <ul class="links nav-links-cell">
+                <li><a class="link" href="dashHome.html"><span
+                            class="material-symbols-outlined icon">home</span>Inicio</a></li>
+                <li><a class="link ativo" href="dashFuncionario.html"><span
+                            class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
+                <li>
+                    <a href="../index.html" class="btn btn-sair">
+                        Sair
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+        <div class="container">
+            <div>
+                <h1 style="font-size: 45px;">Informações mais recentes das máquinas</h1>
+            </div>
+            <div class="kpi-container">
+
+                <div class="kpi-card">
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
+                    <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
+                    <span class="material-symbols-outlined icon cadastrada">computer</span>
+                </div>
+                <div class="kpi-card">
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas ultrapassando os <br>parâmetros</h3>
+                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em; color: red;">0</p>
+                    <span class="material-symbols-outlined icon solicitacao">warning</span>
+                </div>
+            </div>
+
+            <div class="listaEmpresa">
+                <div class="pesquisa">
+                    <div class="ipt_label">
+                        <label for="pesquisa_input">Pesquisar (Endereço MAC)</label>
+                        <input id="pesquisa_input" type="text" oninput="pesquisarMaquina()">
+                        <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
+                    </div>
+                    <div class="selectFiltro">
+                        <span class="material-symbols-outlined icon">filter_alt</span>
+                        <select id="filtroPesquisa">
+                            <option value="todos">Todos</option>
+                            <option value="ultrapassando">Ultrapassando</option>
+                        </select>
+                    </div>
+                    <div id="divFitroUltrapassando">
+
+                    </div>
+
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="nome">Endereço MAC</th>
+                            <th class="data">Data captura</th>
+                            <th>CPU (%)</th>
+                            <th>GPU (%)</th>
+                            <th>Temp CPU (°C)</th>
+                            <th>Temp GPU (°C)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableMaquinas">
+                        <!-- preenchido via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL PARÂMETROS GERAIS -->
+    <div class="modal cadastro" id="modal_param_gerais">
+        <div class="modal-container" id="modal_container_param_gerais">
+            <div class="header">
+                <h1>Parâmetros Gerais</h1>
+                <button class="material-symbols-outlined close-icon"
+                    onclick="abrirModalParametrosGerais()">close</button>
+            </div>
+            <div class="body">
+                <div class="formulario">
+                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuGeral"
+                            min="0" max="100"></div>
+                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuGeral"
+                            min="0" max="100"></div>
+                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuGeral"
+                            min="0"></div>
+                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuGeral"
+                            min="0"></div>
+                    <button class="btn submit" onclick="salvarParametrosGerais()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARÂMETROS INDIVIDUAIS -->
+    <div class="modal cadastro" id="modal_param_maquina">
+        <div class="modal-container" id="modal_container_param_maquina">
+            <div class="header">
+                <h1 id="tituloModalMaquina">Parâmetros da Máquina</h1>
+                <button class="material-symbols-outlined close-icon"
+                    onclick="abrirModalParametrosMaquina()">close</button>
+            </div>
+            <div class="body">
+                <div class="formulario">
+                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
+                            max="100"></div>
+                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
+                            max="100"></div>
+                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuInd"
+                            min="0"></div>
+                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuInd"
+                            min="0"></div>
+                    <button class="btn submit" onclick="salvarParametrosIndividuais()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+
+    <script>
+
+        let listaMaquinas = [];
+
+        function aplicarFiltro() {
+            const filtroPrincipal = document.getElementById("filtroPesquisa");
+            const valorSelecionado = filtroPrincipal.value;
+            const divFiltroUltrapassando = document.getElementById("divFitroUltrapassando");
+            const tbody = document.getElementById("tableMaquinas");
+
+            if (valorSelecionado === "ultrapassando") {
+                divFiltroUltrapassando.innerHTML = `
+                    <div class="selectFiltro">
+                        <span class="material-symbols-outlined icon">filter_alt</span>
+                        <select id="filtroUltrapassando">
+                            <option value="cpu_percent">CPU</option>
+                            <option value="gpu_percent">GPU</option>
+                            <option value="cpu_temp">Temp. CPU</option>
+                            <option value="gpu_temp">Temp. GPU</option>
+                        </select>
+                    </div>
+                `;
+
+                const filtroUltrapassando = document.getElementById("filtroUltrapassando");
+
+                filtroUltrapassando.addEventListener("change", function () {
+                    const componente = filtroUltrapassando.value;
+                    const maquinasFiltradas = listaMaquinas.filter(m => m.foraDoParametro[componente]);
+
+                    tbody.innerHTML = "";
+
+                    if (maquinasFiltradas.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5">Nenhuma máquina ultrapassando ${componente}</td></tr>`;
+                        return;
+                    }
+
+                    maquinasFiltradas.forEach(maquina => {
+                        const leitura = maquina.leituraAtual;
+                        const cores = leitura.cores;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${maquina.mac}</td>
+                                <td>${leitura.datetime}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                            </tr>`;
+                            });
+                });
+
+            } else if (valorSelecionado === "todos") {
+                divFiltroUltrapassando.innerHTML = "";
+                atualizarTabela(listaMaquinas);
+            }
+        }
+
+        function atualizarTabela(lista) {
+            const tbody = document.getElementById("tableMaquinas");
+            tbody.innerHTML = "";
+
+            lista.forEach(maquina => {
+                const leitura = maquina.leituraAtual;
+                const cores = leitura.cores;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${maquina.mac}</td>
+                        <td>${leitura.datetime}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                    </tr>`;
+            });
+        }
+
+
+        const filtro = document.getElementById("filtroPesquisa");
+        filtro.addEventListener("change", aplicarFiltro);
+
+        function carregarMaquinas() {
+            var empresaId = sessionStorage.getItem('idEmpresa');
+
+            fetch(`/maquina/infoMaquinas/${empresaId}`)
+                .then(res => res.json())
+                .then(maquinas => {
+                    let tbody = document.getElementById("tableMaquinas");
+                    tbody.innerHTML = "";
+
+                    fetch("leituras2.csv")
+                        .then(res => {
+                            if (!res.ok) throw new Error("Erro ao carregar CSV");
+                            return res.text();
+                        })
+                        .then(texto => {
+                            const linhas = texto.split("\n").map(l => l.trim());
+                            const dadosCSV = [];
+
+                            for (let i = 1; i < linhas.length; i++) {
+                                const linha = linhas[i];
+                                if (!linha) continue;
+                                const campos = linha.split(";");
+
+                                dadosCSV.push({
+                                    datetime: campos[0],
+                                    cpu_percent: parseFloat(campos[1]),
+                                    gpu_percent: parseFloat(campos[2]),
+                                    cpu_temp: parseFloat(campos[3]),
+                                    gpu_temp: parseFloat(campos[4]),
+                                    id_empresa: campos[5],
+                                    mac: campos[6]
+                                });
+                            }
+
+                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
+                            let contadorQtdForaParam = 0;
+
+                            maquinas.forEach(maquina => {
+                                const macMaquina = maquina.enderecoMac.trim().toLowerCase();
+
+                                const parametroCpuPercent = maquina.cpu_percent;
+                                const parametroGpuPercent = maquina.gpu_percent;
+                                const parametroCpuTemperature = maquina.cpu_temperature;
+                                const parametroGpuTemperature = maquina.gpu_temperature;
+
+                                const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
+
+                                if (registros.length > 0) {
+                                    const ultimo = registros[registros.length - 1];
+
+                                    let corCpuPercent = "white";
+                                    let corGpuPercent = "white";
+                                    let corCpuTemp = "white";
+                                    let corGpuTemp = "white";
+
+                                    let maquinaForaDoParametro = false;
+                                    let foraDoParametro = {
+                                        cpu_percent: false,
+                                        gpu_percent: false,
+                                        cpu_temp: false,
+                                        gpu_temp: false
+                                    };
+
+                                    const cincoCpuPercent = parametroCpuPercent * 0.05;
+                                    const dezCpuPercent = parametroCpuPercent * 0.10;
+
+                                    const cincoGpuPercent = parametroGpuPercent * 0.05;
+                                    const dezGpuPercent = parametroGpuPercent * 0.10;
+
+                                    const cincoCpuTemp = parametroCpuTemperature * 0.05;
+                                    const dezCpuTemp = parametroCpuTemperature * 0.10;
+
+                                    const cincoGpuTemp = parametroGpuTemperature * 0.05;
+                                    const dezGpuTemp = parametroGpuTemperature * 0.10;
+
+                                    // ---- CPU USO ----
+                                    if (ultimo.cpu_percent < parametroCpuPercent - dezCpuPercent) {
+                                        corCpuPercent = "red";
+                                        foraDoParametro.cpu_percent = true;
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.cpu_percent < parametroCpuPercent - cincoCpuPercent) {
+                                        corCpuPercent = "yellow";
+                                        foraDoParametro.cpu_percent = true;
+                                        maquinaForaDoParametro = true;
+                                    } else {
+                                        corCpuPercent = "white";
+                                    }
+
+                                    // ---- GPU USO ----
+                                    if (ultimo.gpu_percent < parametroGpuPercent - dezGpuPercent) {
+                                        corGpuPercent = "red";
+                                        foraDoParametro.gpu_percent = true;
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.gpu_percent < parametroGpuPercent - cincoGpuPercent) {
+                                        corGpuPercent = "yellow";
+                                        foraDoParametro.gpu_percent = true;
+                                        maquinaForaDoParametro = true;
+                                    } else {
+                                        corGpuPercent = "white";
+                                    }
+
+                                    // ---- CPU TEMP ----
+                                    if (ultimo.cpu_temp > parametroCpuTemperature + dezCpuTemp) {
+                                        corCpuTemp = "red";
+                                        foraDoParametro.cpu_temp = true;
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.cpu_temp > parametroCpuTemperature + cincoCpuTemp) {
+                                        corCpuTemp = "yellow";
+                                        foraDoParametro.cpu_temp = true;
+                                        maquinaForaDoParametro = true;
+                                    } else {
+                                        corCpuTemp = "white";
+                                    }
+
+                                    // ---- GPU TEMP ----
+                                    if (ultimo.gpu_temp > parametroGpuTemperature + dezGpuTemp) {
+                                        corGpuTemp = "red";
+                                        foraDoParametro.gpu_temp = true;
+                                        maquinaForaDoParametro = true;
+                                    } else if (ultimo.gpu_temp > parametroGpuTemperature + cincoGpuTemp) {
+                                        corGpuTemp = "yellow";
+                                        foraDoParametro.gpu_temp = true;
+                                        maquinaForaDoParametro = true;
+                                    } else {
+                                        corGpuTemp = "white";
+                                    }
+
+                                    if (maquinaForaDoParametro) contadorQtdForaParam++;
+
+                                    listaMaquinas.push({
+                                        mac: macMaquina,
+                                        parametros: {
+                                            cpu_percent: parametroCpuPercent,
+                                            gpu_percent: parametroGpuPercent,
+                                            cpu_temp: parametroCpuTemperature,
+                                            gpu_temp: parametroGpuTemperature
+                                        },
+                                        leituraAtual: {
+                                            datetime: ultimo.datetime,
+                                            cpu_percent: ultimo.cpu_percent,
+                                            gpu_percent: ultimo.gpu_percent,
+                                            cpu_temp: ultimo.cpu_temp,
+                                            gpu_temp: ultimo.gpu_temp,
+                                            cores: {
+                                                cpu_percent: corCpuPercent,
+                                                gpu_percent: corGpuPercent,
+                                                cpu_temp: corCpuTemp,
+                                                gpu_temp: corGpuTemp
+                                            }
+                                        },
+                                        foraDoParametro
+                                    });
+
+                                    tbody.innerHTML += `
+                                <tr>
+                                    <td>${macMaquina}</td>
+                                    <td>${ultimo.datetime}</td>
+                                    <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
+                                    <td style="font-size:20px; background-color:${corGpuTemp}">${ultimo.gpu_temp}</td>
+                                </tr>`;
+                                }
+                            });
+
+                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
+                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
+                            console.log("Lista de máquinas:", listaMaquinas);
+                        })
+                        .catch(err => console.error("Erro ao ler CSV:", err));
+                })
+                .catch(err => console.error("Erro ao carregar máquinas:", err));
+        }
+
+
+
+        function salvarParametrosIndividuais() {
+            if (!maquinaSelecionada) return alert("Selecione uma máquina.");
+
+            const params = {
+                uso_cpu: usoCpuInd.value,
+                uso_gpu: usoGpuInd.value,
+                temp_cpu: tempCpuInd.value,
+                temp_gpu: tempGpuInd.value
+            };
+
+            fetch(`/maquina/parametros/maquina/${maquinaSelecionada}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(params)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Erro ao salvar parâmetros da máquina");
+                    abrirModalParametrosMaquina();
+                    carregarMaquinas();
+                    alert("Parâmetros individuais salvos!");
+                })
+                .catch(err => alert(err.message));
+        }
+
+        // ---------- PESQUISAR ----------
+        function pesquisarMaquina() {
+            const pesquisa = document.getElementById("pesquisa_input").value.toLowerCase();
+            const linhas = document.getElementById("tableMaquinas").getElementsByTagName("tr");
+
+            for (let linha of linhas) {
+                const nome = linha.querySelector("td").innerText.toLowerCase();
+                linha.style.display = nome.includes(pesquisa) ? "" : "none";
+            }
+        }
+
+
+        function salvarParametrosGerais() {
+            const idEmpresa = sessionStorage.getItem('idEmpresa');
+            const uso_cpu = document.getElementById('usoCpuGeral').value;
+            const uso_gpu = document.getElementById('usoGpuGeral').value;
+            const temp_cpu = document.getElementById('tempCpuGeral').value;
+            const temp_gpu = document.getElementById('tempGpuGeral').value;
+
+            const dados = { uso_cpu, uso_gpu, temp_cpu, temp_gpu, idEmpresa };
+            console.log(dados)
+
+            fetch(`/maquina/parametros/gerais/${idEmpresa}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Erro ao salvar parâmetros');
+                    return res.json();
+                })
+                .then(() => {
+                    abrirModalParametrosGerais();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+
+        function verificarParametrosGerais() {
+            const idEmpresa = sessionStorage.getItem('idEmpresa');
+
+            fetch(`/maquina/empresa/parametros-gerais/${idEmpresa}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Erro ao buscar parâmetros gerais');
+                    return res.json();
+                })
+                .then(param => {
+                    if (!param || Object.keys(param).length === 0) {
+                        abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
+                        setTimeout(() => toggleModalParametrosGerais(true), 1200);
+                    } else {
+                        console.log("Parâmetros gerais carregados:", param);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    abrirModalFb('Erro', 'Erro ao buscar parâmetros gerais.', 'erro');
+                });
+        }
+
+        window.onload = function () {
+            carregarMaquinas();
+        }
+    </script>
+</body>
+
+</html>
