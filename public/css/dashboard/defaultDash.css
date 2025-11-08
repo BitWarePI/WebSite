@@ -420,7 +420,7 @@ chamado table {
 .prioridade-baixa {
     background-color: #4CAF50;
 }
-.prioridade-crítica { 
+.prioridade-crÃ­tica { 
     background-color: #4A148C;
 }
 
@@ -690,4 +690,85 @@ option:checked {
 
 ::picker(select):popover-open {
   opacity: 1;
+}
+
+.pesquisa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* separa pesquisa e filtro */
+  gap: 20px; /* dÃ¡ espaÃ§o entre eles */
+  width: 100%;
+}
+
+/* Input de pesquisa */
+.ipt_label {
+  flex: 1; /* ocupa todo o espaÃ§o possÃ­vel */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ipt_label input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+}
+
+.ipt_label button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Filtro Ã  direita */
+.selectFiltro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra totalmente para a direita */
+}
+
+.selectFiltro select {
+  background-color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+
+.listaEmpresa{
+    justify-content: space-between;
+    width: 1200px;
+}
+
+/* Garante que o nav ocupe sempre toda a altura da tela */
+nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh; /* ocupa 100% da altura da viewport */
+  width: 150px; 
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
+}
+
+
+section {
+  display: flex;
+}
+
+/* Empurra o conteÃºdo principal para o lado direito da sidebar */
+section > div {
+  margin-left: 240px; /* mesmo valor da largura do nav */
+  flex: 1;
 }
