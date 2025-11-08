@@ -117,10 +117,18 @@
           </div>
 
           <div id="top5-container"
-            style="font-weight: bold; background-color: #111; border-radius: 12px; padding: 20px 25px; color: #f1f5f9;">
-            <p style="font-size: 1.1rem; margin-bottom: 10px;">Top 5 Máquinas com mais ocorrências</p>
-            <ul id="top5-lista" style="list-style: none; padding-left: 0; margin: 0; text-align: center;">
-              <li style="color: #ccc;">Carregando...</li>
+            style="font-weight: bold; background-color: #111; border-radius: 16px; padding: 20px 25px; color: #f1f5f9; box-shadow: 0 0 12px rgba(255,255,255,0.05);">
+            <p style="font-size: 1.3rem; margin-bottom: 15px; text-align: center; color: #7e0cac;">
+              Top 5 Máquinas com mais ocorrências (24horas)
+            </p>
+            <ul id="top5-lista" style="
+              list-style: none;
+              padding-left: 0;
+              margin: 0;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;">
+              <li style="color: #ccc; text-align: center;">Carregando...</li>
             </ul>
           </div>
 
@@ -169,30 +177,30 @@
 <script>
   const ctx1 = document.getElementById('grafico1').getContext('2d');
 
-  // Definição inicial do gráfico
-  const graficoErros = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-      datasets: [{
-        label: 'Erros Semanais',
-        data: [2, 4, 1, 7, 3, 4, 3, 1, 2.2],
-        backgroundColor: '#8b5cf6',
-        borderRadius: 8,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
+    // Definição inicial do gráfico
+    const graficoErros = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+        datasets: [{
+          label: 'Erros Semanais',
+          data: [2, 4, 1, 7, 3, 4, 3, 1, 2.2],
+          backgroundColor: '#8b5cf6',
+          borderRadius: 8,
+        }]
       },
-      scales: {
-        x: { ticks: { color: '#000' } },
-        y: { beginAtZero: true, ticks: { color: '#000' } }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: '#000' } },
+          y: { beginAtZero: true, ticks: { color: '#000' } }
+        }
       }
-    }
-  });
+    });
 
   // Pega o select do filtro
   const filtroSelect = document.getElementById('filtro');
@@ -237,9 +245,9 @@
 </script>
 
 
-<script>
-  const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
-  const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+  <script>
+    const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
+    const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
 
   function fecharModalTecnicos() {
     modalTecnicos.classList.remove("fade-in");
@@ -636,53 +644,51 @@
                             </td>
                         </tr>
                     `;
-          tbody.innerHTML += linha;
+            tbody.innerHTML += linha;
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
         });
-      })
-      .catch(err => {
-        console.error(err);
-        tbody.innerHTML = '<tr><td colspan="8">Erro ao carregar chamados. Tente novamente.</td></tr>';
-      });
-  }
+    }  
+  </script>
 
+  <script>
+     async function carregarTop5Maquinas() {
+      const lista = document.getElementById("top5-lista");
+      lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
 
-</script>
+      try {
+        const idEmpresa = sessionStorage.getItem("idEmpresa");
+        const resposta = await fetch(`http://localhost:3333/maquinas/top5/${idEmpresa}`);
+        const maquinas = await resposta.json();
 
-<script>
-  async function carregarTop5Maquinas() {
-    const lista = document.getElementById("top5-lista");
-    lista.innerHTML = "<li style='color:#ccc;'>Carregando...</li>";
+        if (!maquinas.length) {
+          lista.innerHTML = "<li style='color:#ccc;'>Nenhuma ocorrência encontrada</li>";
+          return;
+        }
 
-    try {
-      const idEmpresa = sessionStorage.getItem("idEmpresa");
-      const resposta = await fetch(`http://localhost:3333/maquinas/top5/${idEmpresa}`);
-      const maquinas = await resposta.json();
-
-      if (!maquinas.length) {
-        lista.innerHTML = "<li style='color:#ccc;'>Nenhuma ocorrência encontrada</li>";
-        return;
+        lista.innerHTML = "";
+        maquinas.forEach((m, index) => {
+          const item = document.createElement("li");
+          item.style.color = "#fff";
+          item.style.marginBottom = "6px";
+          item.textContent = `${index + 1}. ${m.maquina} — ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}`;
+          lista.appendChild(item);
+        });
+      } catch (erro) {
+        console.error("Erro ao buscar top 5 máquinas:", erro);
+        lista.innerHTML = "<li style='color:#f88;'>Erro ao carregar dados</li>";
       }
-
-      lista.innerHTML = "";
-      maquinas.forEach((m, index) => {
-        const item = document.createElement("li");
-        item.style.color = "#fff";
-        item.style.marginBottom = "6px";
-        item.textContent = `${index + 1}. ${m.maquina} — ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}`;
-        lista.appendChild(item);
-      });
-    } catch (erro) {
-      console.error("Erro ao buscar top 5 máquinas:", erro);
-      lista.innerHTML = "<li style='color:#f88;'>Erro ao carregar dados</li>";
     }
-  }
-  carregarTop5Maquinas();
+    carregarTop5Maquinas();
 
-  window.onload = function () {
-    carregarChamados(),
+      window.onload = function () {
+      carregarChamados(),
       carregarTop5Maquinas();
-  } 
-</script>
+    } 
+  </script>
 
 </body>
 
