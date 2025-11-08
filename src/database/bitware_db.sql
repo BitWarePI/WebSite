@@ -208,13 +208,29 @@ VALUES
 (7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
 
 
-# Criação de usuarios para respectivas funções
-CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
+# Cadastro
+CREATE USER 'empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT ON bitware_db.Funcionario TO 'empresa'@'%';
+GRANT INSERT ON bitware_db.Empresa TO 'empresa'@'%';
+
+# A empresa pode criar/deletar/atulizar seus usuarios (funcionarios)
+CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Parametro TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Chamado TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT, DELETE ON bitware_db.Funcionario TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Maquina TO 'funcionario.admEmpresa'@'%';
 
 CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.analista'@'%';
+GRANT SELECT, UPDATE ON bitware_db.Chamado TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.analista'@'%';
 
 CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Chamado TO 'funcionario.tecnico'@'%';
+
 FLUSH PRIVILEGES;
