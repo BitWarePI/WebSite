@@ -23,9 +23,14 @@
             <div class="main-nav">
                 <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
                 <ul class="links nav-links-pc">
-                    <li><a class="link" href="dashHome.html">
-                            <span class="material-symbols-outlined icon">home</span>
-                            <span class="titulo">Inicio</span>
+                    <li><a class="link " href="dashAnalista.html">
+                            <span class="material-symbols-outlined icon">analytics</span>
+                            <span class="titulo">Dash analista</span>
+                        </a>
+                    </li>
+                    <li><a class="link" href="dashTecnico.html">
+                            <span class="material-symbols-outlined icon">handyman</span>
+                            <span class="titulo">Dash técnico</span>
                         </a>
                     </li>
                     <li>
@@ -34,7 +39,7 @@
                             <span class="titulo">Funcionários</span>
                         </a>
                     </li>
-                     <li>
+                    <li>
                         <a class="link" href="dashInfoMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
                             <span class="titulo">Informações máquinas</span>
@@ -230,13 +235,13 @@
         const senha = document.getElementById("senha_input").value.trim();
         const confirmacaoSenha = document.getElementById("senha_confirm_input").value.trim();
         const cargo = document.getElementById("cargo_select").value;
-        
+
         if (!nome || !sobrenome || !email || !cargo) {
             abrirModalFb("Atenção", "Preencha todos os campos obrigatórios antes de salvar.");
             return;
         }
 
-        if(senha != confirmacaoSenha){
+        if (senha != confirmacaoSenha) {
             abrirModalFb("Atenção", "Senhas diferentes");
             return;
         }

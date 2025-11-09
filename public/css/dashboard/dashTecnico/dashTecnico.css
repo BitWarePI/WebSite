@@ -365,3 +365,28 @@ td.acao button.ver-mais {
 .modal.cadastro .modal-container .body .card .botoes .reprovar{
     background-color: var(--error-color);
 }
+
+.modal {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none; /* ou flex, quando estiver ativo */
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* fundo escurecido */
+  z-index: 9999; /* 🔥 fica acima do nav (que tem z-index: 100) */
+}
+
+.modal.ativo {
+  display: flex;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  z-index: 10000; /* opcional, mas garante que o conteúdo fique na frente */
+  position: relative;
+}

@@ -21,9 +21,14 @@
             <div class="main-nav">
                 <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
                 <ul class="links nav-links-pc">
-                    <li><a class="link" href="dashHome.html">
-                            <span class="material-symbols-outlined icon">home</span>
-                            <span class="titulo">Inicio</span>
+                    <li><a class="link " href="dashAnalista.html">
+                            <span class="material-symbols-outlined icon">analytics</span>
+                            <span class="titulo">Dash analista</span>
+                        </a>
+                    </li>
+                    <li><a class="link" href="dashTecnico.html">
+                            <span class="material-symbols-outlined icon">handyman</span>
+                            <span class="titulo">Dash técnico</span>
                         </a>
                     </li>
                     <li>
@@ -53,7 +58,7 @@
                     <li>
                         <a class="link" href="desativarEmpresa.html">
                             <span class="material-symbols-outlined icon">cancel</span>
-                            <span class="titulo">Desativar empresa</span>
+                            <span class="titulo">Inativar empresa</span>
                         </a>
                     </li>
                 </ul>
@@ -118,7 +123,8 @@
                     </div>
                     <span class="material-symbols-outlined icon cadastrada">tune</span>
                 </div>
-                <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
+                <button class="requisicao" onclick="abrirModalParametrosGerais()">Personalizar parâmetros
+                    gerais</button>
             </div>
 
             <div class="listaEmpresa">
@@ -133,7 +139,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="nome">Endereço MAC</th>
+                            <th class="mac">Endereço MAC</th>
+                            <th class="nome">Nome</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
@@ -174,13 +181,13 @@
             </div>
             <div class="body">
                 <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo CPU (%)</label><input type="number" id="usoCpuGeral"
                             min="0" max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo GPU (%)</label><input type="number" id="usoGpuGeral"
                             min="0" max="100"></div>
-                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuGeral"
+                    <div class="ipt_label"><label>Temp. mínima CPU (°C)</label><input type="number" id="tempCpuGeral"
                             min="0"></div>
-                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuGeral"
+                    <div class="ipt_label"><label>Temp. mínima GPU (°C)</label><input type="number" id="tempGpuGeral"
                             min="0"></div>
                     <button class="btn submit" onclick="salvarParametrosGerais()">Salvar</button>
                 </div>
@@ -198,13 +205,13 @@
             </div>
             <div class="body">
                 <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
+                    <div class="ipt_label"><label>Uso mínimo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
                             max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
+                    <div class="ipt_label"><label>Uso mínimo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
                             max="100"></div>
-                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuInd"
+                    <div class="ipt_label"><label>Temp. mínima CPU (°C)</label><input type="number" id="tempCpuInd"
                             min="0"></div>
-                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuInd"
+                    <div class="ipt_label"><label>Temp. mínima GPU (°C)</label><input type="number" id="tempGpuInd"
                             min="0"></div>
                     <button class="btn submit" onclick="salvarParametrosIndividuais()">Salvar</button>
                 </div>
@@ -267,6 +274,7 @@
                         tbody.innerHTML += `
                     <tr>
                         <td>${m.enderecoMac}</td>
+                        <td>${m.nome}</td>
                         <td>${m.parametros?.uso_cpu ?? '-'}</td>
                         <td>${m.parametros?.uso_gpu ?? '-'}</td>
                         <td>${m.parametros?.temp_cpu ?? '-'}</td>
@@ -343,6 +351,7 @@
                     return res.json();
                 })
                 .then(() => {
+                    verificarParametrosGerais();
                     abrirModalParametrosGerais();
                 })
                 .catch(err => {

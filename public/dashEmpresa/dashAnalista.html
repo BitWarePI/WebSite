@@ -21,9 +21,14 @@
       <div class="main-nav">
         <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
         <ul class="links nav-links-pc">
-          <li><a class="link ativo" href="dashHome.html">
-              <span class="material-symbols-outlined icon">home</span>
-              <span class="titulo">Inicio</span>
+          <li><a class="link ativo" href="dashAnalista.html">
+              <span class="material-symbols-outlined icon">analytics</span>
+              <span class="titulo">Dash analista</span>
+            </a>
+          </li>
+          <li><a class="link" href="dashTecnico.html">
+              <span class="material-symbols-outlined icon">handyman</span>
+              <span class="titulo">Dash técnico</span>
             </a>
           </li>
           <li>
@@ -53,7 +58,7 @@
           <li>
             <a class="link" href="desativarEmpresa.html">
               <span class="material-symbols-outlined icon">cancel</span>
-              <span class="titulo">Desativar empresa</span>
+              <span class="titulo">Inativar empresa</span>
             </a>
           </li>
         </ul>
@@ -345,6 +350,62 @@
 
   parametro.addEventListener('change', aplicarCores);
 
+  function graficos(dados) {
+    var valores = {}
+    for (var i = 0; i < dados.length; i++) {
+      const data = valores[dados[i].data]
+      if (data) {
+        data.push(dados[i])
+      } else {
+        valores[dados[i].data] = [dados[i]]
+      }
+    }
+
+    var resultado2 = {}
+    grafico1.data.labels = []
+    grafico1.data.datasets[0].data = []
+    grafico2.data.labels = []
+    grafico2.data.datasets[0].data = []
+    grafico3.data.labels = []
+    grafico3.data.datasets[0].data = []
+    grafico4.data.labels = []
+    grafico4.data.datasets[0].data = []
+
+    for (const [key, valor] of Object.entries(valores)) {
+      console.log(valor)
+      resultados = valor.reduce((total, atual, index) => {
+        total.uso_gpu += atual.uso_gpu
+        total.uso_cpu += atual.uso_gpu
+        total.temperatura_gpu += atual.temperatura_gpu
+        total.temperatura_cpu += atual.temperatura_cpu
+        if (index == valor.length - 1) {
+          total.uso_gpu /= valor.length
+          total.uso_cpu /= valor.length
+          total.temperatura_gpu /= valor.length
+          total.temperatura_cpu /= valor.length
+        }
+        return total
+      })
+
+      grafico1.data.datasets[0].data.push(resultados.uso_gpu)
+      grafico1.data.labels.push(key)
+
+      grafico2.data.datasets[0].data.push(resultados.temperatura_gpu)
+      grafico2.data.labels.push(key)
+
+      grafico3.data.datasets[0].data.push(resultados.uso_cpu)
+      grafico3.data.labels.push(key)
+
+      grafico4.data.datasets[0].data.push(resultados.temperatura_cpu)
+      grafico4.data.labels.push(key)
+
+    }
+    grafico1.update()
+    grafico2.update()
+    grafico3.update()
+    grafico4.update()
+  }
+
   async function aplicarPeriodo() {
     const inicio = inputInicio.value;
     const fim = inputFim.value;
@@ -377,6 +438,8 @@
       kpiMedianaTempGpu.textContent = `${mediana(dados, "temperatura_gpu")}°C`;
       kpiMedianaUsoCpu.textContent = `${mediana(dados, "uso_cpu")}%`;
       kpiMedianaUsoGpu.textContent = `${mediana(dados, "uso_gpu")}%`;
+
+      graficos(dados)
 
       aplicarCores();
 

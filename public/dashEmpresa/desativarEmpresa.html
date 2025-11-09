@@ -35,7 +35,8 @@
         <div class="ipt_label">
           <label for="senha_input">Digite sua senha</label>
           <input id="senha_input" type="password" placeholder="">
-          <span class="show-icon material-symbols-outlined" id="senha_input_icon" onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
+          <span class="show-icon material-symbols-outlined" id="senha_input_icon"
+            onclick="mostrarSenha('senha_input', 'senha_input_icon')">visibility_off</span>
         </div>
         <div class="ipt_label">
           <label for="confirmar_input">Digite "confirmar" para prosseguir</label>
@@ -68,21 +69,20 @@
 
 <script>
   var idEmpresa = sessionStorage.idEmpresa;
-  var emailEmpresa = sessionStorage.EMAIL_USUARIO;
   var emailFuncionario = sessionStorage.EMAIL_USUARIO;
   console.log(idEmpresa)
 
-  function mostrarSenha(inputId, iconId){
-        input = document.getElementById(inputId);
-        icon = document.getElementById(iconId);
-        if(icon.innerText == "visibility_off"){
-            input.type = "text";
-            icon.innerText = "visibility";
-        } else{
-            input.type = "password";
-            icon.innerText = "visibility_off";
-        }
+  function mostrarSenha(inputId, iconId) {
+    input = document.getElementById(inputId);
+    icon = document.getElementById(iconId);
+    if (icon.innerText == "visibility_off") {
+      input.type = "text";
+      icon.innerText = "visibility";
+    } else {
+      input.type = "password";
+      icon.innerText = "visibility_off";
     }
+  }
 
   function abrirModal(titulo, texto, tipo) {
     const modal = document.querySelector('.modal');
@@ -110,27 +110,20 @@
   }
 
   function enviar() {
-    email = email_input.value
+    emailEmpresa = email_input.value
     confirmar = confirmar_input.value
 
-    if (emailEmpresa == email) {
-      if (confirmar == "confirmar") {
-        deletar()
-      } else {
-        alert("Não foi possivel deletar a conta!!")
-        return
-      }
-    }else{
-      alert("O email inserido não está correto")
+    if (confirmar == "confirmar") {
+      deletar(emailEmpresa)
+    } else {
+      alert("Não foi possivel deletar a conta!!")
       return
     }
+
   }
 
-  function deletar() {
+  function deletar(emailEmpresa) {
     var senhaVar = senha_input.value;
-
-    console.log("Deletando conta da empresa:", emailEmpresa);
-
 
     fetch(`/empresas/inativarEmpresa`, {
       method: "POST",
