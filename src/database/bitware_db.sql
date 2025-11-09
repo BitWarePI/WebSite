@@ -162,14 +162,6 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Superaquecimento', 'Alta', 'Aberto', 1),
-(2, 'Uso de GPU abaixo do esperado', 'Media', 'Em andamento', 2),
-(3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'Uso de GPU abaixo do esperado', 'Critica', 'Aberto', 2),
-(4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
-
-INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
-VALUES
 -- Maquina 2
 (2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
