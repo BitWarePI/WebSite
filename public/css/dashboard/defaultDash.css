@@ -196,7 +196,7 @@ table tr .prioridade {
 
 table tr .status,
 table tr th.status {
-    flex: 0 0 160px; /* largura fixa da coluna */
+    flex: 0 0 160px; 
     box-sizing: border-box;
 }
 
