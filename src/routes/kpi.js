@@ -14,10 +14,10 @@ router.get("/", (req, res) => {
   const dataFim = fim ? new Date(fim) : null;
 
   fs.createReadStream(caminhoCSV)
-    .pipe(csv({ separator: "," }))
+    .pipe(csv({ separator: ";" }))
     .on("data", (data) => {
       console.log(data)
-      const dataRegistro = new Date(data.data.split(" ")[0]); 
+      const dataRegistro = new Date(data.datetime.split(" ")[0]); 
 
       const inicioDia = dataInicio ? new Date(dataInicio.toISOString().split("T")[0]) : null;
       const fimDia = dataFim ? new Date(dataFim.toISOString().split("T")[0]) : null;
