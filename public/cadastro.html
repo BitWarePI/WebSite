@@ -162,7 +162,7 @@
       requisitos = false;
       nome.style.border = "1px solid red";
     } else{
-      condicaoNome[0].style.color = "green";
+      condicaoNome[0].style.color = "#4caf50";
     } 
     for (let i = 0; i < nome.value.length; i++) {
       if (nome.value[i] >= '0' && nome.value[i] <= '9') {
@@ -170,22 +170,22 @@
         requisitos = false;
         break;
       } else{
-        nome.style.border = "1px solid green";
-        condicaoNome[1].style.color = "green";
+        nome.style.border = "1px solid #4caf50";
+        condicaoNome[1].style.color = "#4caf50";
       }
     }
 
     regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
     if (cnpj.value) {
-      condicaoCnpj[0].style.color = "green";
+      condicaoCnpj[0].style.color = "#4caf50";
       if(!regexCNPJ.test(cnpj.value)){
         condicaoCnpj[1].style.color = "red";
         requisitos = false;
         condicaoCnpj[1].innerText = "CNPJ Inválido";
       } else{
-        condicaoCnpj[1].style.color = "green";
+        condicaoCnpj[1].style.color = "#4caf50";
         condicaoCnpj[1].innerText = "CNPJ Válido";
-        cnpj.style.border = "1px solid green";
+        cnpj.style.border = "1px solid #4caf50";
       }
     } else{
       condicaoCnpj[0].style.color = "red";
@@ -199,16 +199,16 @@
       requisitos = false;
       email.style.border = "1px solid red";
     } else{
-      condicaoEmail[0].style.color = "green";
+      condicaoEmail[0].style.color = "#4caf50";
       if(!regexEmail.test(email.value)){
         condicaoEmail[1].style.color = "red";
         requisitos = false;
         condicaoEmail[1].innerText = "Email Inválido";
         email.style.border = "1px solid red";
       } else{
-        condicaoEmail[1].style.color = "green";
+        condicaoEmail[1].style.color = "#4caf50";
         condicaoEmail[1].innerText = "Email Válido";
-        email.style.border = "1px solid green";
+        email.style.border = "1px solid #4caf50";
       }
     }
 
@@ -217,14 +217,14 @@
       requisitos = false;
       senha.style.border = "1px solid red";
     } else{
-      condicaoSenha[0].style.color = "green";
+      condicaoSenha[0].style.color = "#4caf50";
       if(senha.value.length < 8){
         condicaoSenha[1].style.color = "red";
         requisitos = false;
         senha.style.border = "1px solid red";
       } else{
-        condicaoSenha[1].style.color = "green";
-        senha.style.border = "1px solid green";
+        condicaoSenha[1].style.color = "#4caf50";
+        senha.style.border = "1px solid #4caf50";
       }
     }
 

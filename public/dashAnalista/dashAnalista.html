@@ -133,9 +133,9 @@
           box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
         ">
               <strong>Legenda de desempenho:</strong><br>
-              <b style="color: green;">Verde</b>: ideal<br>
-              <b style="color: yellow;">Amarelo</b>: estado de alerta<br>
-              <b style="color: red;">Vermelho</b>: crítico
+              <b style="color: #4caf50;">Verde</b>: ideal<br>
+              <b style="color: #e4b131;">Amarelo</b>: estado de alerta<br>
+              <b style="color: #ff4b4b;">Vermelho</b>: crítico
             </span>
           </span>
         </h2>
@@ -199,9 +199,9 @@
           box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
         ">
               <strong>Legenda de desempenho:</strong><br>
-              <b style="color: green;">Verde</b>: ideal<br>
-              <b style="color: yellow;">Amarelo</b>: estado de alerta<br>
-              <b style="color: red;">Vermelho</b>: crítico
+              <b style="color: #4caf50;">Verde</b>: ideal<br>
+              <b style="color: #e4b131;">Amarelo</b>: estado de alerta<br>
+              <b style="color: #ff4b4b;">Vermelho</b>: crítico
             </span>
           </span>
         </h2>
@@ -336,11 +336,11 @@
   function definirCorPadrao(valor, tipo) {
     if (tipo.includes('uso')) {
       if (valor < 50) return '#ff4b4b'; // vermelho
-      if (valor < 70) return '#ffc107'; // amarelo
+      if (valor < 70) return '#e4b131'; // amarelo
       return '#4caf50'; // verde
     } else {
       if (valor > 80) return '#ff4b4b'; // vermelho
-      if (valor > 70) return '#ffc107'; // amarelo
+      if (valor > 70) return '#e4b131'; // amarelo
       return '#4caf50'; // verde
     }
   }
@@ -360,11 +360,11 @@
 
     if (tipo.includes('uso')) {
       if (valor < limites[tipo]) return '#ff4b4b';
-      if (valor < limites[tipo] + 5) return '#ffc107';
+      if (valor < limites[tipo] + 5) return '#e4b131';
       return '#4caf50';
     } else {
       if (valor > limites[tipo]) return '#ff4b4b';
-      if (valor > limites[tipo] - 5) return '#ffc107';
+      if (valor > limites[tipo] - 5) return '#e4b131';
       return '#4caf50';
     }
   }
