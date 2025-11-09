@@ -28,10 +28,10 @@ router.get("/", (req, res) => {
       ) {
         resultados.push({
           data: dataRegistro.toISOString().split("T")[0],
-          uso_cpu: parseFloat(data.uso_cpu),
-          uso_gpu: parseFloat(data.uso_gpu),
-          temperatura_cpu: parseFloat(data.temperatura_cpu),
-          temperatura_gpu: parseFloat(data.temperatura_gpu),
+          cpu_percent: parseFloat(data.cpu_percent),
+          gpu_percent: parseFloat(data.gpu_percent),
+          cpu_temperature: parseFloat(data.cpu_temperature),
+          gpu_temperature: parseFloat(data.gpu_temperature),
         });
       }
     })
@@ -52,10 +52,10 @@ router.get("/", (req, res) => {
 
         return {
           data: dia,
-          uso_cpu: media("uso_cpu").toFixed(1),
-          uso_gpu: media("uso_gpu").toFixed(1),
-          temperatura_cpu: media("temperatura_cpu").toFixed(1),
-          temperatura_gpu: media("temperatura_gpu").toFixed(1),
+          cpu_percent: media("cpu_percent").toFixed(1),
+          gpu_percent: media("gpu_percent").toFixed(1),
+          cpu_temperature: media("cpu_temperature").toFixed(1),
+          gpu_temperature: media("gpu_temperature").toFixed(1),
         };
       });
 

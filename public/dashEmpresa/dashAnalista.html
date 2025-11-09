@@ -85,7 +85,7 @@
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
       <div style="display: flex; align-items:start; font-size: 20px;">
-        <h1>Dashboard</h1>
+        <h1>Dashboard - Analista</h1>
       </div>
 
       <div>
@@ -130,7 +130,6 @@
       <div style="width: 100%; margin-top: 60px;">
         <h2 style="font-weight: bold;">Desempenho baseado em GPU</h2>
         <div style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px;">
-
           <div style="display: flex;flex-direction: column; gap: 20px; width: 100%; height: 450px;">
             <div id="kpiusogpu"
               style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
@@ -374,29 +373,29 @@
     for (const [key, valor] of Object.entries(valores)) {
       console.log(valor)
       resultados = valor.reduce((total, atual, index) => {
-        total.uso_gpu += atual.uso_gpu
-        total.uso_cpu += atual.uso_gpu
-        total.temperatura_gpu += atual.temperatura_gpu
-        total.temperatura_cpu += atual.temperatura_cpu
+        total.gpu_percent += atual.gpu_percent
+        total.cpu_percent += atual.cpu_percent
+        total.gpu_temperature += atual.gpu_temperature
+        total.cpu_temperature += atual.cpu_temperature
         if (index == valor.length - 1) {
-          total.uso_gpu /= valor.length
-          total.uso_cpu /= valor.length
-          total.temperatura_gpu /= valor.length
-          total.temperatura_cpu /= valor.length
+          total.gpu_percent /= valor.length
+          total.cpu_percent /= valor.length
+          total.gpu_temperature /= valor.length
+          total.cpu_temperature /= valor.length
         }
         return total
       })
 
-      grafico1.data.datasets[0].data.push(resultados.uso_gpu)
+      grafico1.data.datasets[0].data.push(resultados.gpu_percent)
       grafico1.data.labels.push(key)
 
-      grafico2.data.datasets[0].data.push(resultados.temperatura_gpu)
+      grafico2.data.datasets[0].data.push(resultados.gpu_temperature)
       grafico2.data.labels.push(key)
 
-      grafico3.data.datasets[0].data.push(resultados.uso_cpu)
+      grafico3.data.datasets[0].data.push(resultados.cpu_percent)
       grafico3.data.labels.push(key)
 
-      grafico4.data.datasets[0].data.push(resultados.temperatura_cpu)
+      grafico4.data.datasets[0].data.push(resultados.cpu_temperature)
       grafico4.data.labels.push(key)
 
     }
@@ -424,20 +423,20 @@
       }
 
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
-      const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
-      const mediaGpuTemp = media(dados.map(d => parseFloat(d.temperatura_gpu))).toFixed(1);
-      const mediaCpuUso = media(dados.map(d => parseFloat(d.uso_cpu))).toFixed(1);
-      const mediaCpuTemp = media(dados.map(d => parseFloat(d.temperatura_cpu))).toFixed(1);
+      const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
+      const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
+      const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
+      const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
 
       kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
       kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
       kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
       kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
 
-      kpiMedianaTempCpu.textContent = `${mediana(dados, "temperatura_cpu")}°C`;
-      kpiMedianaTempGpu.textContent = `${mediana(dados, "temperatura_gpu")}°C`;
-      kpiMedianaUsoCpu.textContent = `${mediana(dados, "uso_cpu")}%`;
-      kpiMedianaUsoGpu.textContent = `${mediana(dados, "uso_gpu")}%`;
+      kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
+      kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
+      kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
+      kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
 
       graficos(dados)
 
