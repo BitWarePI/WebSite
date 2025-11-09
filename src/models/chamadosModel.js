@@ -29,7 +29,7 @@ function listarChamadosPorEmpresa(idEmpresa) {
             LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
         WHERE m.fkEmpresa = ${idEmpresa}
         ORDER BY 
-            CASE c.prioridade WHEN 'Crítica' THEN 1 WHEN 'Alta' THEN 2 WHEN 'Média' THEN 3 WHEN 'Baixa' THEN 4 ELSE 5 END,
+            CASE c.prioridade WHEN 'Critica' THEN 1 WHEN 'Alta' THEN 2 WHEN 'Media' THEN 3 WHEN 'Baixa' THEN 4 ELSE 5 END,
             CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END, 
             c.dataAbertura DESC;
     `;

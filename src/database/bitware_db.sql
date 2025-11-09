@@ -8,6 +8,7 @@ CREATE TABLE Empresa (
   nome VARCHAR(200) NOT NULL,
   email VARCHAR(200) NOT NULL,
   ativo BIT(1) NOT NULL DEFAULT 0,
+  solicitouDelecao BIT(1) NOT NULL DEFAULT 0,
   dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   chave BINARY(16),
   PRIMARY KEY (idEmpresa)
@@ -75,7 +76,7 @@ CREATE TABLE Chamado (
   idChamado INT AUTO_INCREMENT PRIMARY KEY,
   fkMaquina INT NOT NULL,
   problema VARCHAR(255) NOT NULL,
-  prioridade ENUM('Baixa', 'Média', 'Alta', 'Crítica') NOT NULL DEFAULT 'Média',
+  prioridade ENUM('Baixa', 'Media', 'Alta', 'Critica') NOT NULL DEFAULT 'Media',
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -90,7 +91,7 @@ INSERT INTO Cargo (descricao) VALUES
 ('Admin'), 
 ('Empresa'), 
 ('Analista'), 
-('Técnico');
+('Tecnico');
 
 INSERT INTO Empresa (cnpj, nome, email, ativo)
 VALUES 
@@ -162,58 +163,74 @@ VALUES
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
 (1, 'Superaquecimento', 'Alta', 'Aberto', 1),
-(2, 'Uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
+(2, 'Uso de GPU abaixo do esperado', 'Media', 'Em andamento', 2),
 (3, 'Uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'Uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
+(2, 'Uso de GPU abaixo do esperado', 'Critica', 'Aberto', 2),
 (4, 'Uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
--- Máquina 2
-(2, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(2, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Crítica', 'Aberto', 3),
-(2, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(2, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 2
+(2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(2, 'Uso de GPU (%) acima do parametro - Atencao', 'Critica', 'Aberto', 3),
+(2, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(2, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
 
--- Máquina 3
-(3, 'Temperatura da CPU (°C) abaixo do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 3
+(3, 'Temperatura da CPU (C) abaixo do esperado', 'Alta', 'Aberto', 3),
 (3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(3, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(3, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Média', 'Aberto', 3),
+(3, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(3, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) acima do parametro - Atencao', 'Media', 'Aberto', 3),
 
--- Máquina 4
-(4, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
-(4, 'Temperatura da CPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 4
+(4, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(4, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(4, 'Temperatura da GPU (°C) acima do esperado', 'Média', 'Aberto', 3),
+(4, 'Temperatura da GPU (C) acima do esperado', 'Media', 'Aberto', 3),
 (4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
--- Máquina 6
-(6, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(6, 'Uso de CPU (%) abaixo do esperado', 'Média', 'Em andamento', 3),
-(6, 'Temperatura da CPU (°C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(6, 'Temperatura da GPU (°C) acima do esperado', 'Alta', 'Aberto', 3),
+-- Maquina 6
+(6, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(6, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(6, 'Temperatura da CPU (C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(6, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
 (6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
 
--- Máquina 7
-(7, 'Uso de CPU (%) abaixo do esperado', 'Crítica', 'Aberto', 3),
-(7, 'Temperatura da GPU (°C) acima do esperado', 'Crítica', 'Em andamento', 3),
-(7, 'Temperatura da CPU (°C) abaixo do esperado', 'Média', 'Aberto', 3),
-(7, 'Uso de GPU (%) acima do parâmetro - Atenção', 'Alta', 'Aberto', 3),
-(7, 'Uso de CPU (%) acima do parâmetro - Atenção', 'Crítica', 'Em andamento', 3),
+-- Maquina 7
+(7, 'Uso de CPU (%) abaixo do esperado', 'Critica', 'Aberto', 3),
+(7, 'Temperatura da GPU (C) acima do esperado', 'Critica', 'Em andamento', 3),
+(7, 'Temperatura da CPU (C) abaixo do esperado', 'Media', 'Aberto', 3),
+(7, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(7, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
 (7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
 
 
-# Criação de usuarios para respectivas funções
-CREATE USER 'funcionario.adm_empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, CREATE, UPDATE ON bitware_db.* TO 'funcionario.admEmpresa'@'%';
+# Cadastro
+CREATE USER 'empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT ON bitware_db.Funcionario TO 'empresa'@'%';
+GRANT INSERT ON bitware_db.Empresa TO 'empresa'@'%';
+
+# A empresa pode criar/deletar/atulizar seus usuarios (funcionarios)
+CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Parametro TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Chamado TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT, DELETE ON bitware_db.Funcionario TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Maquina TO 'funcionario.admEmpresa'@'%';
 
 CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT ON bitware_db.* TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.analista'@'%';
+GRANT SELECT, UPDATE ON bitware_db.Chamado TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.analista'@'%';
 
 CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-GRANT SELECT, INSERT ON bitware_db.* TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Chamado TO 'funcionario.tecnico'@'%';
+
 FLUSH PRIVILEGES;

@@ -23,15 +23,44 @@
       <div class="main-nav">
         <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
         <ul class="links nav-links-pc">
+          <li><a class="link " href="dashAnalista.html">
+              <span class="material-symbols-outlined icon">analytics</span>
+              <span class="titulo">Dash analista</span>
+            </a>
+          </li>
           <li><a class="link ativo" href="dashTecnico.html">
               <span class="material-symbols-outlined icon">handyman</span>
               <span class="titulo">Dash técnico</span>
             </a>
           </li>
           <li>
+            <a class="link" href="dashFuncionario.html">
+              <span class="material-symbols-outlined icon">apartment</span>
+              <span class="titulo">Funcionários</span>
+            </a>
+          </li>
+          <li>
             <a class="link" href="dashInfoMaquinas.html">
               <span class="material-symbols-outlined icon">Computer</span>
+
               <span class="titulo">Informações máquinas</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="dashMaquinas.html">
+              <span class="material-symbols-outlined icon">settings_applications</span>
+              <span class="titulo">Parametros máquinas</span> </a>
+          </li>
+          <li>
+            <a class="link" href="atualizar-senha.html">
+              <span class="material-symbols-outlined icon">lock</span>
+              <span class="titulo">Atualizar senha</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="desativarEmpresa.html">
+              <span class="material-symbols-outlined icon">cancel</span>
+              <span class="titulo">Inativar empresa</span>
             </a>
           </li>
         </ul>
@@ -188,29 +217,30 @@
 
     let novosLabels = [];
     let novosDados = [];
-if (valor === 'Últimas 24h') {
+
+    if (valor === 'Últimas 24h') {
       novosLabels = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'];
-      novosDados = [1, 2, 2, 2, 2, 2, 2, 1, 2];
-    } 
+      novosDados = [2, 4, 1, 7, 3, 4, 3, 1, 2];
+    }
     else if (valor === 'Semanal') {
-      novosLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      novosDados = [8, 6, 3, 6, 5, 7, 7];
-    } 
+      novosLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+      novosDados = [12, 9, 15, 11, 7, 4, 8];
+    }
     else if (valor === 'Mensal') {
       novosLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      novosDados = [56, 0, 0, 0];
-    } 
+      novosDados = [30, 45, 25, 10];
+    }
     else if (valor === 'Semestral1') {
       novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-      novosDados = [0, 0, 0, 0, 0, 0];
+      novosDados = [120, 150, 110, 130, 170, 140];
     }
     else if (valor === 'Semestral2') {
       novosLabels = ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [0, 0, 0, 56, 0,];
+      novosDados = [170, 150, 110, 130, 120,];
     }
     else if (valor === 'Anual') {
       novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0,];
+      novosDados = [120, 150, 110, 130, 170, 140, 170, 150, 110, 130, 120,];
     }
 
     // Atualiza os dados do gráfico
