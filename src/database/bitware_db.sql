@@ -154,6 +154,17 @@ VALUES
 (5, 3, 70),
 (5, 4, 60);
 
+INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+VALUES
+(6, 1, 60), 
+(6, 2, 75), 
+(6, 3, 78),
+(6, 4, 70), 
+(7, 1, 45),  
+(7, 2, 55), 
+(7, 3, 65),
+(7, 4, 60);
+
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
 (1, 35, 20, 48, 42),
