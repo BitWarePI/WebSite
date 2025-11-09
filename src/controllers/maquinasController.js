@@ -22,7 +22,7 @@ module.exports = {
             const maquinas = await maquinaModel.infoMaquinas(idEmpresa);
             console.log("Resultado da query:", maquinas);
 
-            res.status(200).json(maquinas); 
+            res.status(200).json(maquinas);
         } catch (erro) {
             console.error("Erro ao listar máquinas:", erro);
             res.status(500).json({ erro: "Erro ao buscar máquinas" });
@@ -146,20 +146,38 @@ module.exports = {
     },
 
     async topMaquinas(req, res) {
-    const { idEmpresa } = req.params;
+        const { idEmpresa } = req.params;
 
-    try {
-        const resultado = await maquinaModel.topMaquinas(idEmpresa);
+        try {
+            const resultado = await maquinaModel.topMaquinas(idEmpresa);
 
-        if (resultado.length === 0) {
-            return res.status(200).json([]);
+            if (resultado.length === 0) {
+                return res.status(200).json([]);
+            }
+
+            res.status(200).json(resultado);
+        } catch (erro) {
+            console.error("Erro ao buscar top 5 máquinas:", erro);
+            res.status(500).json({ erro: "Erro ao buscar top 5 máquinas" });
         }
+    },
 
-        res.status(200).json(resultado);
-    } catch (erro) {
-        console.error("Erro ao buscar top 5 máquinas:", erro);
-        res.status(500).json({ erro: "Erro ao buscar top 5 máquinas" });
+    async qtdMaquinas(req, res) {
+        const { idEmpresa } = req.params;
+
+        try {
+            const resultado = await maquinaModel.qtdMaquinas(idEmpresa);
+
+            if (resultado.length === 0) {
+                return res.status(200).json([]);
+            }
+
+            res.status(200).json(resultado);
+        } catch (erro) {
+            console.error("Erro ao buscar quantidade de maquinas:", erro);
+            res.status(500).json({ erro: "Erro interno:" });
+        }
     }
-}
+
 
 };

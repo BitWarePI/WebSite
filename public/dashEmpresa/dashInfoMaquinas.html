@@ -240,10 +240,10 @@
                                 <td>${maquina.mac}</td>
                                 <td>${maquina.nome}</td>
                                 <td>${leitura.datetime}</td>
-                                <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
-                                <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
-                                <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
-                                <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_percent}; border: 1px solid black">${leitura.cpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_percent}; border: 1px solid black">${leitura.gpu_percent}</td>
+                                <td style="font-size:20px; background-color:${cores.cpu_temp}; border: 1px solid black">${leitura.cpu_temp}</td>
+                                <td style="font-size:20px; background-color:${cores.gpu_temp}; border: 1px solid black">${leitura.gpu_temp}</td>
                             </tr>`;
                     });
                 });
@@ -267,10 +267,10 @@
                         <td>${maquina.mac}</td>
                         <td>${maquina.nome}</td>
                         <td>${leitura.datetime}</td>
-                        <td style="font-size:20px; background-color:${cores.cpu_percent}">${leitura.cpu_percent}</td>
-                        <td style="font-size:20px; background-color:${cores.gpu_percent}">${leitura.gpu_percent}</td>
-                        <td style="font-size:20px; background-color:${cores.cpu_temp}">${leitura.cpu_temp}</td>
-                        <td style="font-size:20px; background-color:${cores.gpu_temp}">${leitura.gpu_temp}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_percent}; border: 1px solid black">${leitura.cpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_percent}; border: 1px solid black">${leitura.gpu_percent}</td>
+                        <td style="font-size:20px; background-color:${cores.cpu_temp}; border: 1px solid black">${leitura.cpu_temp}</td>
+                        <td style="font-size:20px; background-color:${cores.gpu_temp}; border: 1px solid black">${leitura.gpu_temp}</td>
                     </tr>`;
             });
         }
@@ -288,7 +288,7 @@
                     let tbody = document.getElementById("tableMaquinas");
                     tbody.innerHTML = "";
 
-                    fetch("../leituras2.csv")
+                    fetch("../assets/data/leiturasClient.csv")
                         .then(res => {
                             if (!res.ok) throw new Error("Erro ao carregar CSV");
                             return res.text();
@@ -331,10 +331,10 @@
                                 if (registros.length > 0) {
                                     const ultimo = registros[registros.length - 1];
 
-                                    let corCpuPercent = "white";
-                                    let corGpuPercent = "white";
-                                    let corCpuTemp = "white";
-                                    let corGpuTemp = "white";
+                                    let corCpuPercent = "#89be4d";
+                                    let corGpuPercent = "#89be4d";
+                                    let corCpuTemp = "#89be4d";
+                                    let corGpuTemp = "#89be4d";
 
                                     let maquinaForaDoParametro = false;
                                     let foraDoParametro = {
@@ -366,7 +366,7 @@
                                         foraDoParametro.cpu_percent = true;
                                         maquinaForaDoParametro = true;
                                     } else {
-                                        corCpuPercent = "white";
+                                        corCpuPercent = "#89be4d";
                                     }
 
                                     // ---- GPU USO ----
@@ -379,7 +379,7 @@
                                         foraDoParametro.gpu_percent = true;
                                         maquinaForaDoParametro = true;
                                     } else {
-                                        corGpuPercent = "white";
+                                        corGpuPercent = "#89be4d";
                                     }
 
                                     // ---- CPU TEMP ----
@@ -392,7 +392,7 @@
                                         foraDoParametro.cpu_temp = true;
                                         maquinaForaDoParametro = true;
                                     } else {
-                                        corCpuTemp = "white";
+                                        corCpuTemp = "#89be4d";
                                     }
 
                                     // ---- GPU TEMP ----
@@ -405,7 +405,7 @@
                                         foraDoParametro.gpu_temp = true;
                                         maquinaForaDoParametro = true;
                                     } else {
-                                        corGpuTemp = "white";
+                                        corGpuTemp = "#89be4d";
                                     }
 
                                     if (maquinaForaDoParametro) contadorQtdForaParam++;
@@ -440,10 +440,10 @@
                                     <td>${macMaquina}</td>
                                     <td>${maquinaNome}</td>
                                     <td>${ultimo.datetime}</td>
-                                    <td style="font-size:20px; background-color:${corCpuPercent}">${ultimo.cpu_percent}</td>
-                                    <td style="font-size:20px; background-color:${corGpuPercent}">${ultimo.gpu_percent}</td>
-                                    <td style="font-size:20px; background-color:${corCpuTemp}">${ultimo.cpu_temp}</td>
-                                    <td style="font-size:20px; background-color:${corGpuTemp}">${ultimo.gpu_temp}</td>
+                                    <td style="font-size:20px; background-color:${corCpuPercent}; border: 1px solid black">${ultimo.cpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corGpuPercent}; border: 1px solid black">${ultimo.gpu_percent}</td>
+                                    <td style="font-size:20px; background-color:${corCpuTemp}; border: 1px solid black">${ultimo.cpu_temp}</td>
+                                    <td style="font-size:20px; background-color:${corGpuTemp}; border: 1px solid black">${ultimo.gpu_temp}</td>
                                 </tr>`;
                                 }
                             });
