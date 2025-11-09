@@ -104,7 +104,6 @@
         Abaixo são exibidos os gráficos de uso e temperatura de CPU e GPU, acompanhados de seus valores médios e
         medianos no período selecionado.
       </p>
-
       <div style="width: 100%; margin-top: 60px; position: relative;">
         <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
           Desempenho baseado em GPU
@@ -140,6 +139,26 @@
           </span>
         </h2>
 
+        <div style="display: flex; justify-content: space-between; padding: 20px 0px; display: none;" class="info">
+          <div
+            style="height: 140px; width: 250px; background-color: #4caf50; border-radius: 10px; padding: 5px 20px; color: white;">
+            <p style="font-weight: bolder;">Ideal</p>
+            <p><b style="font-weight: bolder;">Uso:</b> Maior que 70%</p>
+            <p><b style="font-weight: bolder;">Temperatura:</b> Menor que 70°C</p>
+          </div>
+          <div
+            style="height: 140px; width: 250px;  background-color: #e4b131; border-radius: 10px; padding: 5px 20px; color: white;">
+            <p style="font-weight: bolder;">Alerta</p>
+            <p style="margin: 0;"><b style="font-weight: bolder;">Uso:</b> Menor que 70% e maior que 50%</p>
+            <p style="margin: 0;"><b style="font-weight: bolder;">Temperatura:</b> Maior que 70°C e menor que 80°C</p>
+          </div>
+          <div
+            style="height: 140px; width: 250px;  background-color: #ff4b4b; border-radius: 10px; padding: 5px 20px;color: white;">
+            <p style="font-weight: bolder;">Critico</p>
+            <p><b style="font-weight: bolder;">Uso:</b> Menor que 50%</p>
+            <p><b style="font-weight: bolder;">Temperatura:</b> Maior que 80°C</p>
+          </div>
+        </div>
         <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px;">
           <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 450px;">
             <div id="kpiusogpu"
@@ -205,6 +224,28 @@
             </span>
           </span>
         </h2>
+
+        <div style="display: flex; justify-content: space-between; padding: 20px 0px; display: none;" class="info">
+          <div
+            style="height: 140px; width: 250px; background-color: #4caf50; border-radius: 10px; padding: 5px 20px; color: white;">
+            <p style="font-weight: bolder;">Ideal</p>
+            <p><b style="font-weight: bolder;">Uso:</b> Maior que 70%</p>
+            <p><b style="font-weight: bolder;">Temperatura:</b> Menor que 70°C</p>
+          </div>
+          <div
+            style="height: 140px; width: 250px;  background-color: #e4b131; border-radius: 10px; padding: 5px 20px; color: white;">
+            <p style="font-weight: bolder;">Alerta</p>
+            <p style="margin: 0;"><b style="font-weight: bolder;">Uso:</b> Menor que 70% e maior que 50%</p>
+            <p style="margin: 0;"><b style="font-weight: bolder;">Temperatura:</b> Maior que 70°C e menor que 80°C</p>
+          </div>
+          <div
+            style="height: 140px; width: 250px;  background-color: #ff4b4b; border-radius: 10px; padding: 5px 20px;color: white;">
+            <p style="font-weight: bolder;">Critico</p>
+            <p><b style="font-weight: bolder;">Uso:</b> Menor que 50%</p>
+            <p><b style="font-weight: bolder;">Temperatura:</b> Maior que 80°C</p>
+          </div>
+        </div>
+
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;"></div>
         <div
           style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
@@ -325,6 +366,18 @@
   const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
   const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
 
+  const info = document.getElementsByClassName("info");
+
+  async function quantidadeMaquinas() {
+    const empresaId = sessionStorage.getItem('idEmpresa');
+    const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
+    if (!response.ok) throw new Error('Erro na requisição personalizada');
+    const dados = await response.json();
+    console.log(dados)
+
+    qtdMaquinas.innerHTML = dados[0].total
+  }
+
   // calcula mediana
   function mediana(dados, tipo) {
     const valores = dados.map(d => parseFloat(d[tipo])).sort((a, b) => a - b);
@@ -382,8 +435,18 @@
       kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
       kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
       kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
+
+      for (let i = 0; i < info.length; i++) {
+        info[i].style.display = 'none';
+      }
+      console.log(info[0])
     } else {
       // padrão
+      for (let i = 0; i < info.length; i++) {
+        info[i].style.display = 'flex';
+      }
+      console.log(info[0])
+
       kpiusogpu.style.backgroundColor = definirCorPadrao(gpuUso, 'uso');
       kpitempgpu.style.backgroundColor = definirCorPadrao(gpuTemp, 'temp');
       kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
@@ -447,15 +510,6 @@
     grafico2.update()
     grafico3.update()
     grafico4.update()
-  }
-    async function quantidadeMaquinas() {
-    const empresaId = sessionStorage.getItem('idEmpresa');
-    const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
-    if (!response.ok) throw new Error('Erro na requisição personalizada');
-    const dados = await response.json();
-    console.log(dados)
-
-    qtdMaquinas.innerHTML = dados[0].total
   }
 
   async function aplicarPeriodo() {
