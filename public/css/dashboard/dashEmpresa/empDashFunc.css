@@ -121,6 +121,9 @@ table tr td.acao button.ver-mais{
     background: var(--bg-inverse-color);
 }
 
+#cargo_select{
+    color: black;
+}
 
 .container .kpi-container .kpi-card{
     display: flex;
