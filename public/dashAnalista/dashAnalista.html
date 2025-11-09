@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
   <link rel="stylesheet" href="../css/animacao.css">
+  <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="icon" href="../assets/icon/favicon2.png">
@@ -52,11 +53,11 @@
       </ul>
     </nav>
 
-    <div
+   <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
       <div style="display: flex; align-items:start; font-size: 20px;">
-        <h1>Dashboard</h1>
+        <h1>Dashboard - Analista</h1>
       </div>
 
       <div>
@@ -98,15 +99,47 @@
         medianos no período selecionado.
       </p>
 
-      <div style="width: 100%; margin-top: 60px;">
-        <h2 style="font-weight: bold;">Desempenho baseado em GPU</h2>
-        <div style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px;">
+      <div style="width: 100%; margin-top: 60px; position: relative;">
+        <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+          Desempenho baseado em GPU
+          <span style="
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        color: #4c1d95;
+        font-size: 20px;
+        font-weight: bold;
+      " onmouseover="document.getElementById('tooltipGPU').style.display='block'"
+            onmouseout="document.getElementById('tooltipGPU').style.display='none'">
+            <i class="fa-solid fa-circle-info" style="color: black;"></i>
+            <span id="tooltipGPU" style="
+          display: none;
+          position: absolute;
+          top: 25px;
+          left: 0;
+          background-color: #1e1e1e;
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 14px;
+          width: 260px;
+          z-index: 10;
+          box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        ">
+              <strong>Legenda de desempenho:</strong><br>
+              <b style="color: green;">Verde</b>: ideal<br>
+              <b style="color: yellow;">Amarelo</b>: estado de alerta<br>
+              <b style="color: red;">Vermelho</b>: crítico
+            </span>
+          </span>
+        </h2>
 
-          <div style="display: flex;flex-direction: column; gap: 20px; width: 100%; height: 450px;">
+        <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px;">
+          <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 450px;">
             <div id="kpiusogpu"
-              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-              <p style="color:white; font-size: large;  margin: 0;">Uso médio da GPU</p>
-              <p class="kpi-gpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">55%</p>
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px; display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large; margin: 0;">Uso médio da GPU</p>
+              <p class="kpi-gpu-uso kpi1" style="color:white; font-size:30px; font-weight:bold; margin: 0;">55%</p>
               <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-gpu-uso-mediana">56%</span>
               </p>
             </div>
@@ -115,11 +148,11 @@
             </div>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; ">
+          <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
             <div id="kpitempgpu"
-              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-              <p style="color:white; font-size: large;  margin: 0;">Temperatura média da GPU</p>
-              <p class="kpi-gpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80°C</p>
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px; display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large; margin: 0;">Temperatura média da GPU</p>
+              <p class="kpi-gpu-temp" style="color:white; font-size:30px; font-weight:bold; margin: 0;">80°C</p>
               <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
                   class="kpi-gpu-temp-mediana">85°C</span></p>
             </div>
@@ -130,53 +163,86 @@
         </div>
       </div>
 
+
       <div style="width: 100%; margin-top: 80px;">
-        <h2 style="font-weight: bold;">Desempenho baseado em CPU</h2>
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;">
 
-          <div
-            style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
-            <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
-              <div id="kpiusocpu"
-                style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-                <p style="color:white; font-size: large;  margin: 0;">Uso médio da CPU</p>
-                <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80%</p>
-                <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-uso-mediana">85%</span></p>
-              </div>
-              <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                <canvas id="grafico3"></canvas>
-              </div>
+        <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+          Desempenho baseado em GPU
+          <span style="
+              position: relative;
+              display: inline-block;
+              cursor: pointer;
+              color: #4c1d95;
+              font-size: 20px;
+              font-weight: bold;
+      " onmouseover="document.getElementById('tooltipCPU').style.display='block'"
+            onmouseout="document.getElementById('tooltipCPU').style.display='none'">
+            <i class="fa-solid fa-circle-info" style="color: black;"></i>
+            <span id="tooltipCPU" style="
+          display: none;
+          position: absolute;
+          top: 25px;
+          left: 0;
+          background-color: #1e1e1e;
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 14px;
+          width: 260px;
+          z-index: 10;
+          box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        ">
+              <strong>Legenda de desempenho:</strong><br>
+              <b style="color: green;">Verde</b>: ideal<br>
+              <b style="color: yellow;">Amarelo</b>: estado de alerta<br>
+              <b style="color: red;">Vermelho</b>: crítico
+            </span>
+          </span>
+        </h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;"></div>
+        <div
+          style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
+          <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
+            <div id="kpiusocpu"
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large;  margin: 0;">Uso médio da CPU</p>
+              <p class="kpi-cpu-uso" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">80%</p>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span class="kpi-cpu-uso-mediana">85%</span>
+              </p>
             </div>
+            <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+              <canvas id="grafico3"></canvas>
+            </div>
+          </div>
 
-            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
-              <div id="kpitempcpu"
-                style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
-                <p style="color:white; font-size: large;  margin: 0;">Temperatura média da CPU</p>
-                <p class="kpi-cpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
-                <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
-                    class="kpi-cpu-temp-mediana">76°C</span></p>
-              </div>
-              <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                <canvas id="grafico4"></canvas>
-              </div>
+          <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
+            <div id="kpitempcpu"
+              style="background-color:#4c1d95; border-radius:10px; padding:20px; height: 100px; width: 250px;display: flex; flex-direction: column; gap: 6px;">
+              <p style="color:white; font-size: large;  margin: 0;">Temperatura média da CPU</p>
+              <p class="kpi-cpu-temp" style="color:white; font-size:30px; font-weight:bold;  margin: 0;">72°C</p>
+              <p style="color:white; font-size:1.1rem; margin: 0;">Mediana: <span
+                  class="kpi-cpu-temp-mediana">76°C</span></p>
+            </div>
+            <div style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+              <canvas id="grafico4"></canvas>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="modal" id="modal_atribuir_tecnico">
-        <div class="modal-container" id="modal_container_atribuir">
-          <div class="header">
-            <h1>Atribuir Técnico ao Chamado</h1>
-            <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
-              close
-            </button>
-          </div>
-          <div class="body" id="lista_tecnicos_container">
-          </div>
+    <div class="modal" id="modal_atribuir_tecnico">
+      <div class="modal-container" id="modal_container_atribuir">
+        <div class="header">
+          <h1>Atribuir Técnico ao Chamado</h1>
+          <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+            close
+          </button>
+        </div>
+        <div class="body" id="lista_tecnicos_container">
         </div>
       </div>
+    </div>
   </section>
 
   <script src="../js/nav.js"></script>
@@ -332,7 +398,7 @@
       }
     }
 
-    var resultado2= {}
+    var resultado2 = {}
     grafico1.data.labels = []
     grafico1.data.datasets[0].data = []
     grafico2.data.labels = []
@@ -345,31 +411,31 @@
     for (const [key, valor] of Object.entries(valores)) {
       console.log(valor)
       resultados = valor.reduce((total, atual, index) => {
-        total.uso_gpu += atual.uso_gpu
-        total.uso_cpu += atual.uso_gpu
-        total.temperatura_gpu += atual.temperatura_gpu
-        total.temperatura_cpu += atual.temperatura_cpu
+        total.gpu_percent += atual.gpu_percent
+        total.cpu_percent += atual.cpu_percent
+        total.gpu_temperature += atual.gpu_temperature
+        total.cpu_temperature += atual.cpu_temperature
         if (index == valor.length - 1) {
-          total.uso_gpu /= valor.length
-          total.uso_cpu /= valor.length
-          total.temperatura_gpu /= valor.length
-          total.temperatura_cpu /= valor.length
+          total.gpu_percent /= valor.length
+          total.cpu_percent /= valor.length
+          total.gpu_temperature /= valor.length
+          total.cpu_temperature /= valor.length
         }
         return total
       })
 
-      grafico1.data.datasets[0].data.push(resultados.uso_gpu)
+      grafico1.data.datasets[0].data.push(resultados.gpu_percent)
       grafico1.data.labels.push(key)
 
-      grafico2.data.datasets[0].data.push(resultados.temperatura_gpu)
+      grafico2.data.datasets[0].data.push(resultados.gpu_temperature)
       grafico2.data.labels.push(key)
 
-      grafico3.data.datasets[0].data.push(resultados.uso_cpu)
+      grafico3.data.datasets[0].data.push(resultados.cpu_percent)
       grafico3.data.labels.push(key)
 
-      grafico4.data.datasets[0].data.push(resultados.temperatura_cpu)
+      grafico4.data.datasets[0].data.push(resultados.cpu_temperature)
       grafico4.data.labels.push(key)
-      
+
     }
     grafico1.update()
     grafico2.update()
@@ -395,20 +461,20 @@
       }
 
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
-      const mediaGpuUso = media(dados.map(d => parseFloat(d.uso_gpu))).toFixed(1);
-      const mediaGpuTemp = media(dados.map(d => parseFloat(d.temperatura_gpu))).toFixed(1);
-      const mediaCpuUso = media(dados.map(d => parseFloat(d.uso_cpu))).toFixed(1);
-      const mediaCpuTemp = media(dados.map(d => parseFloat(d.temperatura_cpu))).toFixed(1);
+      const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
+      const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
+      const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
+      const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
 
       kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
       kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
       kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
       kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
 
-      kpiMedianaTempCpu.textContent = `${mediana(dados, "temperatura_cpu")}°C`;
-      kpiMedianaTempGpu.textContent = `${mediana(dados, "temperatura_gpu")}°C`;
-      kpiMedianaUsoCpu.textContent = `${mediana(dados, "uso_cpu")}%`;
-      kpiMedianaUsoGpu.textContent = `${mediana(dados, "uso_gpu")}%`;
+      kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
+      kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
+      kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
+      kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
 
       graficos(dados)
 
