@@ -169,6 +169,15 @@ async function topMaquinas(idEmpresa) {
 
 }
 
+function qtdMaquinas(idEmpresa){
+    const instrucaoSQL = `
+        SELECT COUNT(*) AS total
+        FROM Maquina 
+        WHERE fkempresa = ${idEmpresa}
+    `
+    return database.executar(instrucaoSQL)
+}
+
 module.exports = {
     listarPorEmpresa,
     infoMaquinas,
@@ -180,5 +189,6 @@ module.exports = {
     verificarParametrosGerais,
     definirParametrosGerais,
     definirParametrosMaquina,
-    topMaquinas
+    topMaquinas,
+    qtdMaquinas
 };
