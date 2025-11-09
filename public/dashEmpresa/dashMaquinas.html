@@ -139,7 +139,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="nome">Endereço MAC</th>
+                            <th class="mac">Endereço MAC</th>
+                            <th class="nome">Nome</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
@@ -273,6 +274,7 @@
                         tbody.innerHTML += `
                     <tr>
                         <td>${m.enderecoMac}</td>
+                        <td>${m.nome}</td>
                         <td>${m.parametros?.uso_cpu ?? '-'}</td>
                         <td>${m.parametros?.uso_gpu ?? '-'}</td>
                         <td>${m.parametros?.temp_cpu ?? '-'}</td>

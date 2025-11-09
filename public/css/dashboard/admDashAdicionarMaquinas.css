@@ -18,7 +18,7 @@
   padding: 30px;
   border-radius: 12px;
   width: 100% !important;
-  max-width: 600px;
+  max-width: 750px;
   animation: fadeIn 0.3s ease;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
@@ -41,7 +41,7 @@
 }
 
 .modal .body .formulario {
-    max-width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;

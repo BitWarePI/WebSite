@@ -3,12 +3,14 @@ const database = require("../database/config");
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
     SELECT 
+        t.nome,
         t.idMaquina,
         t.enderecoMac,
         t.parametros
     FROM (
         SELECT 
             m.idMaquina,
+            m.nome,
             m.enderecoMac,
             COALESCE(JSON_OBJECT(
                 'uso_cpu', MAX(CASE WHEN c.descricao = 'cpu' THEN p.valor END),
@@ -64,19 +66,19 @@ function listarQtdPorEmpresa(idEmpresa) {
     return database.executar(instrucao)
 }
 
-function cadastrar(fkEmpresa, enderecoMac) {
+function cadastrar(fkEmpresa, nome, enderecoMac) {
     instrucao = `
-    INSERT INTO Maquina (enderecoMac, fkEmpresa)
+    INSERT INTO Maquina (nome, enderecoMac, fkEmpresa)
         VALUES 
-        ('${enderecoMac}', ${fkEmpresa});
+        ('${nome}', '${enderecoMac}', ${fkEmpresa});
     `
     return database.executar(instrucao)
 }
 
 function listarMaquinaPorEmpresa(fkEmpresa) {
     const instrucao = `
-        SELECT idMaquina, enderecoMac
-        FROM maquina
+        SELECT idMaquina, enderecoMac, nome
+        FROM Maquina
         WHERE fkEmpresa = ${fkEmpresa};
     `;
     console.log("Executando SQL:\n" + instrucao);
@@ -92,10 +94,10 @@ function remover(idMaquina) {
     return database.executar(instrucao);
 }
 
-function editar(idMaquina, enderecoMac) {
+function editar(idMaquina, enderecoMac, nome) {
     const instrucao = `
         UPDATE Maquina
-        SET enderecoMac = '${enderecoMac}'
+        SET enderecoMac = '${enderecoMac}', nome = '${nome}'
         WHERE idMaquina = ${idMaquina};
     `;
     console.log("Executando SQL:\n" + instrucao);
