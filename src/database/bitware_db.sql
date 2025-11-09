@@ -91,7 +91,7 @@ INSERT INTO Cargo (descricao) VALUES
 ('Admin'), 
 ('Empresa'), 
 ('Analista'), 
-('Técnico');
+('Tecnico');
 
 INSERT INTO Empresa (cnpj, nome, email, ativo)
 VALUES 
