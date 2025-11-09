@@ -86,13 +86,13 @@
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
       <div style="display: flex; justify-content: space-between;">
-      <div style="display: flex; align-items:start; font-size: 20px;">
-        <h1>Dashboard - Analista</h1>
-      </div>
-      <div style="display: flex; align-items: center; justify-content: center;">
-        <p>Quantidade de máquinas:  </p>
-        <p id="qtdMaquinas" style="font: bold;">  </p>
-      </div>
+        <div style="display: flex; align-items:start; font-size: 20px;">
+          <h1>Dashboard - Analista</h1>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <p>Quantidade de máquinas: </p>
+          <p id="qtdMaquinas" style="font: bold;"> </p>
+        </div>
       </div>
 
       <div>
@@ -354,7 +354,7 @@
   const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
   const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
 
-   async function quantidadeMaquinas(){
+  async function quantidadeMaquinas() {
     const empresaId = sessionStorage.getItem('idEmpresa');
     const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
     if (!response.ok) throw new Error('Erro na requisição personalizada');
