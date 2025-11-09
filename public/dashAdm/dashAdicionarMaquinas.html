@@ -108,6 +108,10 @@
                     </div>
 
                     <div class="ipt_label">
+                        <label for="nomeMaquina">Nome da Máquina</label>
+                        <input type="text" id="nomeMaquina">
+                    </div>
+                    <div class="ipt_label">
                         <label for="enderecoMac">Endereço MAC da Máquina</label>
                         <input type="text" id="enderecoMac">
                     </div>
@@ -232,6 +236,7 @@
 
         function cadastrarMaquina() {
             const idEmpresa = document.getElementById("empresaMaquina").value;
+            const nomeMaquina = document.getElementById("nomeMaquina").value.trim();
             const enderecoMac = document.getElementById("enderecoMac").value.trim();
 
             if (!idEmpresa) {
@@ -250,6 +255,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     fkEmpresa: idEmpresa,
+                    nome: nomeMaquina,
                     enderecoMac: enderecoMac
                 })
             })

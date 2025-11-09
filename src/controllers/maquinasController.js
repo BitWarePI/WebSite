@@ -42,13 +42,13 @@ module.exports = {
     },
 
     async cadastrar(req, res) {
-        const { fkEmpresa, enderecoMac } = req.body;
+        const { fkEmpresa, nome, enderecoMac } = req.body;
 
-        if (!fkEmpresa || !enderecoMac) {
+        if (!fkEmpresa || !nome || !enderecoMac) {
             return res.status(400).send("Dados incompletos.");
         }
 
-        maquinaModel.cadastrar(fkEmpresa, enderecoMac)
+        maquinaModel.cadastrar(fkEmpresa, nome, enderecoMac)
             .then(() => {
                 res.status(200).send("Máquina cadastrada com sucesso!");
             })

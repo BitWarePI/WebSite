@@ -66,11 +66,11 @@ function listarQtdPorEmpresa(idEmpresa) {
     return database.executar(instrucao)
 }
 
-function cadastrar(fkEmpresa, enderecoMac) {
+function cadastrar(fkEmpresa, nome, enderecoMac) {
     instrucao = `
-    INSERT INTO Maquina (enderecoMac, fkEmpresa)
+    INSERT INTO Maquina (nome, enderecoMac, fkEmpresa)
         VALUES 
-        ('${enderecoMac}', ${fkEmpresa});
+        ('${nome}', '${enderecoMac}', ${fkEmpresa});
     `
     return database.executar(instrucao)
 }
