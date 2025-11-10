@@ -24,7 +24,7 @@ function cadastrarEmpresa(nomeEmpresaServer, cnpjServer, emailServer, senhaServe
         });
 }
 
-function listarEmpresas(){
+function listarEmpresas() {
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa;
     `;
@@ -34,7 +34,7 @@ function listarEmpresas(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
-function listarEmpresasAtivas(){
+function listarEmpresasAtivas() {
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa WHERE ativo = 1;
     `;
@@ -44,7 +44,7 @@ function listarEmpresasAtivas(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
-function listarEmpresasInativas(){
+function listarEmpresasInativas() {
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa WHERE ativo = 0;
     `;
@@ -55,7 +55,7 @@ function listarEmpresasInativas(){
 }
 
 
-function carregarKPIS(){
+function carregarKPIS() {
     var instrucaoSqlEmpresa = `
         SELECT COUNT(*) as qtdEmpresas, SUM(CASE WHEN ativo = 1 THEN 1 ELSE 0 END) as empresasAtivas, 
 	    SUM(CASE WHEN ativo = 0 THEN 1 ELSE 0 END) as solicitacoes FROM Empresa;
@@ -67,7 +67,7 @@ function carregarKPIS(){
 }
 
 
-function listarEmpresasDelecao(){
+function listarEmpresasDelecao() {
     var instrucaoSqlEmpresa = `
         select * from bitware_db.Empresa WHERE solicitouDelecao = 1;
     `;
@@ -77,10 +77,13 @@ function listarEmpresasDelecao(){
     return database.executar(instrucaoSqlEmpresa)
 }
 
-function aprovarSolicitacao(idEmpresa){
+function aprovarSolicitacao(idEmpresa) {
     var instrucaoSqlEmpresa = `
-        DELETE FROM Empresa WHERE idEmpresa = ${idEmpresa};
-    `;
+    UPDATE Empresa 
+    SET ativo = 0, solicitouDelecao = 0 
+    WHERE idEmpresa = ${idEmpresa};
+`;
+
 
     console.log("Executando a instrução SQL da empresa: \n" + instrucaoSqlEmpresa);
 
@@ -88,7 +91,7 @@ function aprovarSolicitacao(idEmpresa){
 }
 
 
-function negarSolicitacao(idEmpresa){
+function negarSolicitacao(idEmpresa) {
     var instrucaoSqlEmpresa = `
         UPDATE Empresa SET solicitouDelecao = 0 WHERE idEmpresa = ${idEmpresa};
     `;
@@ -98,7 +101,7 @@ function negarSolicitacao(idEmpresa){
     return database.executar(instrucaoSqlEmpresa)
 }
 
-function ativarEmpresa(idEmpresa){
+function ativarEmpresa(idEmpresa) {
     const id = Number(idEmpresa); // força número
     const sql = `
         UPDATE bitware_db.Empresa 
@@ -109,30 +112,34 @@ function ativarEmpresa(idEmpresa){
 }
 
 function desativarEmpresa(idEmpresa){
-    const id = Number(idEmpresa);
+    const id = Number(idEmpresa); // força número
     const sql = `
         UPDATE bitware_db.Empresa 
-        SET ativo = 0
+        SET ativo = 0 
         WHERE idEmpresa = ${id}
     `;
     return database.executar(sql);
 }
 
-function inativarEmpresa(emailEmpresa) {
+function inativarEmpresa(emailEmpresa, idEmpresa) {
+    //tem uma subquery pq a tabela empresa n armazena a senha ent a empresa esta sendo inativa pela senha do funcionario
     var instrucao = `
         UPDATE Empresa 
-        SET ativo = 0
-        WHERE email = "${emailEmpresa}"
-        LIMIT 1;
+        SET solicitouDelecao = 1
+        WHERE idEmpresa = ${idEmpresa}
+        AND email = "${emailEmpresa}";
     `;
+    console.log(instrucao)
     return database.executar(instrucao);
 }
 
 function verificarSenhaAtual(idEmpresa, senhaAtual) {
     var instrucao = `
-        SELECT * FROM Empresa 
-        WHERE idEmpresa = ${idEmpresa} 
-        AND senha = '${senhaAtual}';
+        SELECT f.idFuncionario
+        FROM Funcionario f
+        WHERE f.fkEmpresa = ${idEmpresa}
+        AND f.senha = '${senhaAtual}'
+        LIMIT 1;
     `;
     return database.executar(instrucao);
 }
@@ -140,11 +147,11 @@ function verificarSenhaAtual(idEmpresa, senhaAtual) {
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
+    desativarEmpresa,
     carregarKPIS,
     listarEmpresasDelecao,
     listarEmpresasAtivas,
     listarEmpresasInativas,
-    desativarEmpresa,
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,

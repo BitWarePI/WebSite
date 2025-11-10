@@ -19,26 +19,18 @@ function listarChamadosPorEmpresa(idEmpresa) {
             m.enderecoMac,
             c.problema, 
             c.prioridade, 
+            DATE_FORMAT(c.dataAbertura, "%d/%m/%Y") AS data_abertura, -- <-- A LINHA CORRETA ESTÁ AQUI
             c.status,
             f.nome AS nomeTecnico,
             f.sobrenome AS sobrenomeTecnico,
-            c.idTecnico -- <-- ESSA LINHA É A MAIS IMPORTANTE
+            c.idTecnico
         FROM Chamado c
             JOIN Maquina m ON c.fkMaquina = m.idMaquina
             LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
         WHERE m.fkEmpresa = ${idEmpresa}
         ORDER BY 
-            CASE c.prioridade 
-                WHEN 'Crítica' THEN 1
-                WHEN 'Alta' THEN 2 
-                WHEN 'Média' THEN 3 
-                WHEN 'Baixa' THEN 4 
-                ELSE 5 
-            END,
-            CASE c.status 
-                WHEN 'Aberto' THEN 1 
-                ELSE 2 
-            END, 
+            CASE c.prioridade WHEN 'Critica' THEN 1 WHEN 'Alta' THEN 2 WHEN 'Media' THEN 3 WHEN 'Baixa' THEN 4 ELSE 5 END,
+            CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END, 
             c.dataAbertura DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -98,10 +90,21 @@ function finalizarChamado(idChamado) {
     return database.executar(instrucaoSql);
 }
 
+function removerTecnico(idChamado) {
+    var instrucaoSql = `
+        UPDATE Chamado 
+        SET status = 'Aberto', idTecnico = NULL
+        WHERE idChamado = ${idChamado};
+    `;
+    console.log("Executando a instrução SQL (Remover Técnico): \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     atribuirTecnico,
     listarChamadosPorEmpresa,
     buscarKPIs,
     buscarKPIsTecnico,
-    finalizarChamado
+    finalizarChamado,
+    removerTecnico
 };

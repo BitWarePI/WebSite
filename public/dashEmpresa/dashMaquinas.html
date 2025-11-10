@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="../css/default.css">
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
@@ -20,9 +21,14 @@
             <div class="main-nav">
                 <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
                 <ul class="links nav-links-pc">
-                    <li><a class="link" href="dashHome.html">
-                            <span class="material-symbols-outlined icon">home</span>
-                            <span class="titulo">Inicio</span>
+                    <li><a class="link " href="dashAnalista.html">
+                            <span class="material-symbols-outlined icon">analytics</span>
+                            <span class="titulo">Dash analista</span>
+                        </a>
+                    </li>
+                    <li><a class="link" href="dashTecnico.html">
+                            <span class="material-symbols-outlined icon">handyman</span>
+                            <span class="titulo">Dash técnico</span>
                         </a>
                     </li>
                     <li>
@@ -41,7 +47,7 @@
                     <li>
                         <a class="link ativo" href="dashMaquinas.html">
                             <span class="material-symbols-outlined icon">settings_applications</span>
-                            <span class="titulo">Parametros máquinas</span>                        </a>
+                            <span class="titulo">Parametros máquinas</span> </a>
                     </li>
                     <li>
                         <a class="link" href="atualizar-senha.html">
@@ -52,7 +58,7 @@
                     <li>
                         <a class="link" href="desativarEmpresa.html">
                             <span class="material-symbols-outlined icon">cancel</span>
-                            <span class="titulo">Desativar empresa</span>
+                            <span class="titulo">Inativar empresa</span>
                         </a>
                     </li>
                 </ul>
@@ -95,7 +101,30 @@
                     <p class="quantidade" id="qtdSemParam" style="font-size: 5em;">0</p>
                     <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
-                <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
+                <div class="kpi-card">
+                    <h3 class="titulo" style="font-size: 25px;">Parâmetros<br>atuais</h3>
+                    <div class="parametros-atuais">
+                        <div class="param-item">
+                            <span class="label">CPU</span>
+                            <p id="paramCpu" class="quantidadeParam">0%</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">GPU</span>
+                            <p id="paramGpu" class="quantidadeParam">0%</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">Temp. CPU</span>
+                            <p id="paramTempCpu" class="quantidadeParam">0°C</p>
+                        </div>
+                        <div class="param-item">
+                            <span class="label">Temp. GPU</span>
+                            <p id="paramTempGpu" class="quantidadeParam">0°C</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined icon cadastrada">tune</span>
+                </div>
+                <button class="requisicao" onclick="abrirModalParametrosGerais()">Personalizar parâmetros
+                    gerais</button>
             </div>
 
             <div class="listaEmpresa">
@@ -110,7 +139,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="nome">Endereço MAC</th>
+                            <th class="mac">Endereço MAC</th>
+                            <th class="nome">Nome</th>
                             <th>CPU (%)</th>
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
@@ -119,7 +149,6 @@
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
-                        <!-- preenchido via JS -->
                     </tbody>
                 </table>
             </div>
@@ -134,9 +163,10 @@
                 <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
             </div>
             <div class="body">
-                <p>Os parâmetros gerais não foram definidos para esta empresa. Você precisa defini-los antes de
-                    continuar.</p>
-                <button class="btn submit" onclick="abrirModalParametrosGerais()">Definir Parâmetros Gerais</button>
+                <p>Detectamos que você está usando os parâmetros recomendados pela nossa empresa. Deseja
+                    personalizá-los?</p>
+                <button class="btn submit" onclick="abrirModalParametrosGerais()">Personalizar</button>
+                <button class="btn cancel" onclick="toggleModalAviso(false)">Fechar</button>
             </div>
         </div>
     </div>
@@ -151,9 +181,9 @@
             </div>
             <div class="body">
                 <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo CPU (%)</label><input type="number" id="usoCpuGeral"
                             min="0" max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo GPU (%)</label><input type="number" id="usoGpuGeral"
                             min="0" max="100"></div>
                     <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuGeral"
                             min="0"></div>
@@ -175,9 +205,9 @@
             </div>
             <div class="body">
                 <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
+                    <div class="ipt_label"><label>Uso mínimo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
                             max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
+                    <div class="ipt_label"><label>Uso mínimo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
                             max="100"></div>
                     <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuInd"
                             min="0"></div>
@@ -226,7 +256,6 @@
             }
         }
 
-        // ---------- CARREGAR MÁQUINAS ----------
         function carregarMaquinas() {
             var empresaId = sessionStorage.getItem('idEmpresa');
 
@@ -245,6 +274,7 @@
                         tbody.innerHTML += `
                     <tr>
                         <td>${m.enderecoMac}</td>
+                        <td>${m.nome}</td>
                         <td>${m.parametros?.uso_cpu ?? '-'}</td>
                         <td>${m.parametros?.uso_gpu ?? '-'}</td>
                         <td>${m.parametros?.temp_cpu ?? '-'}</td>
@@ -264,6 +294,11 @@
 
         function salvarParametrosIndividuais() {
             if (!maquinaSelecionada) return alert("Selecione uma máquina.");
+
+            const usoCpuInd = document.getElementById('usoCpuInd');
+            const usoGpuInd = document.getElementById('usoGpuInd');
+            const tempCpuInd = document.getElementById('tempCpuInd');
+            const tempGpuInd = document.getElementById('tempGpuInd');
 
             const params = {
                 uso_cpu: usoCpuInd.value,
@@ -286,7 +321,6 @@
                 .catch(err => alert(err.message));
         }
 
-        // ---------- PESQUISAR ----------
         function pesquisarMaquina() {
             const pesquisa = document.getElementById("pesquisa_input").value.toLowerCase();
             const linhas = document.getElementById("tableMaquinas").getElementsByTagName("tr");
@@ -306,7 +340,6 @@
             const temp_gpu = document.getElementById('tempGpuGeral').value;
 
             const dados = { uso_cpu, uso_gpu, temp_cpu, temp_gpu, idEmpresa };
-            console.log(dados)
 
             fetch(`/maquina/parametros/gerais/${idEmpresa}`, {
                 method: "POST",
@@ -318,6 +351,7 @@
                     return res.json();
                 })
                 .then(() => {
+                    verificarParametrosGerais();
                     abrirModalParametrosGerais();
                 })
                 .catch(err => {
@@ -334,14 +368,14 @@
                     return res.json();
                 })
                 .then(param => {
-                    if (!param || Object.keys(param).length === 0) {
-                        abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
-                        setTimeout(() => toggleModalParametrosGerais(true), 1200);
+                    if (Array.isArray(param) && param.length === 0) {
+                        toggleModalAviso('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                     } else {
-                        console.log("Parâmetros gerais AUSENTES (array vazio). Abrindo aviso.");
-                        setTimeout(() => {
-                            toggleModalAviso(true);
-                        }, 200);
+                        document.getElementById("paramCpu").textContent = `${param[0].cpu_percent ?? 0}%`;
+                        document.getElementById("paramGpu").textContent = `${param[0].gpu_percent ?? 0}%`;
+                        document.getElementById("paramTempCpu").textContent = `${param[0].cpu_temperature ?? 0}°C`;
+                        document.getElementById("paramTempGpu").textContent = `${param[0].gpu_temperature ?? 0}°C`;
+                        console.log("Parametros encontrados.");
                     }
                 })
                 .catch(err => {
@@ -349,7 +383,6 @@
                 });
         }
 
-        // Função para mostrar ou esconder o modal de aviso
         function toggleModalAviso(show) {
             console.log(`Abrindo modal de aviso: ${show}`);
             let modalAviso = document.getElementById('modal_avisar_parametros_gerais');

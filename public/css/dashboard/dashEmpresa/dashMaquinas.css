@@ -5,6 +5,7 @@
 .container .kpi-container .kpi-card .icon.solicitacao{
     background-color: var(--secondary-color);
 }
+
 /* Estilos específicos para o modal de aviso */
 .modal.aviso {
     display: none;
@@ -17,6 +18,81 @@
     z-index: 1050; 
     justify-content: center;
     align-items: center;
+}
+
+.parametros-atuais {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.param-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.param-item .label {
+  font-size: 1.5em;
+  color: #555;
+  margin: 0;
+  transform: translateY(2px);
+
+}
+
+.quantidadeParam {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 0;
+}
+
+#paramCpu {
+    margin-left: 0.4em;
+}
+
+#paramGpu {
+    margin-left: 0.4em;
+}
+.modal-container .body .ipt_label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.modal-container .body .ipt_label label {
+    margin-left: -10px;
+  font-weight: 500;
+  color: #444;
+  font-size: 0.90rem;
+}
+
+.modal-container .body .ipt_label input {
+  height: 35px; 
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.25s ease; 
+}
+
+.modal-container .body .ipt_label input:focus {
+  height: 42px;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.modal-container .body .ipt_label input:focus + label,
+.modal-container .body .ipt_label label:focus-within {
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .modal.aviso.open {
@@ -35,10 +111,16 @@
     transition: transform 0.3s ease-in-out;
 }
 
-#modal_avisar_parametros_gerais .modal-container .body {
-    width: auto;      
-    height: auto;     
+.modal-container .body {
+    max-width: 1200px;      
+    max-height: 360px !important;   
     overflow-y: visible; 
+}
+
+.modal-container .body .formulario {
+    height: 360px; 
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-container.aviso.slide-in-top {
@@ -72,6 +154,16 @@
 }
 
 .btn.submit {
+    background-color: var(--primary-color); 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.btn.cancel {
     background-color: #FF5722; 
     color: #fff;
     border: none;

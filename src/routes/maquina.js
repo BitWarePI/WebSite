@@ -4,6 +4,8 @@ const maquinaController = require("../controllers/maquinasController");
 
 router.get("/empresa/:idEmpresa", maquinaController.listarPorEmpresa);
 
+router.get("/top5/:idEmpresa", maquinaController.topMaquinas);
+
 router.get("/infoMaquinas/:idEmpresa", maquinaController.infoMaquinas);
 
 router.get("/empresa/parametros-gerais/:idEmpresa", maquinaController.verificarParametrosGerais);
@@ -21,5 +23,7 @@ router.put("/editar/:idMaquina", maquinaController.editarMaquina);
 router.post("/parametros/gerais/:idEmpresa", maquinaController.definirParametrosGerais);
 
 router.post("/parametros/maquina/:idMaquina", maquinaController.definirParametrosMaquina);
+
+router.get("/qtdMaquina/:idEmpresa", maquinaController.qtdMaquinas);
 
 module.exports = router;

@@ -8,6 +8,7 @@ CREATE TABLE Empresa (
   nome VARCHAR(200) NOT NULL,
   email VARCHAR(200) NOT NULL,
   ativo BIT(1) NOT NULL DEFAULT 0,
+  solicitouDelecao BIT(1) NOT NULL DEFAULT 0,
   dtCadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
   chave BINARY(16),
   PRIMARY KEY (idEmpresa)
@@ -38,6 +39,7 @@ CREATE TABLE Funcionario (
 CREATE TABLE Maquina (
   idMaquina INT AUTO_INCREMENT,
   enderecoMac VARCHAR(50) NOT NULL,
+  nome VARCHAR(100),
   fkEmpresa INT NOT NULL,
   PRIMARY KEY (idMaquina),
   CONSTRAINT fk_Empresa_Maquina FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
@@ -62,10 +64,10 @@ CREATE TABLE Parametro (
 
 CREATE TABLE ParametrosGeraisEmpresa (
   fkEmpresa INT PRIMARY KEY,
-  cpu_percent INT CHECK (cpu_percent BETWEEN 0 AND 100),
-  gpu_percent INT CHECK (gpu_percent BETWEEN 0 AND 100),
-  cpu_temperature INT CHECK (cpu_temperature BETWEEN 0 AND 120),
-  gpu_temperature INT CHECK (gpu_temperature BETWEEN 0 AND 120),
+  cpu_percent INT CHECK (cpu_percent BETWEEN 0 AND 100) DEFAULT 70,
+  gpu_percent INT CHECK (gpu_percent BETWEEN 0 AND 100) DEFAULT 70,
+  cpu_temperature INT CHECK (cpu_temperature BETWEEN 0 AND 120) DEFAULT 70,
+  gpu_temperature INT CHECK (gpu_temperature BETWEEN 0 AND 120) DEFAULT 70,
   CONSTRAINT fk_Empresa_ParametrosGerais FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
     ON DELETE CASCADE
 );
@@ -74,14 +76,14 @@ CREATE TABLE Chamado (
   idChamado INT AUTO_INCREMENT PRIMARY KEY,
   fkMaquina INT NOT NULL,
   problema VARCHAR(255) NOT NULL,
-  prioridade ENUM('Baixa', 'Média', 'Alta', 'Crítica') NOT NULL DEFAULT 'Média',
+  prioridade ENUM('Baixa', 'Media', 'Alta', 'Critica') NOT NULL DEFAULT 'Media',
   status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL DEFAULT 'Aberto',
   idTecnico INT NULL,
   dataAbertura DATETIME DEFAULT CURRENT_TIMESTAMP,
+  sincronizado TINYINT(1) NOT NULL DEFAULT 0,  
   CONSTRAINT fk_Maquina_Chamado FOREIGN KEY (fkMaquina) REFERENCES Maquina (idMaquina)
     ON DELETE CASCADE,
-  CONSTRAINT 
-  FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
+  CONSTRAINT FOREIGN KEY (idTecnico) REFERENCES Funcionario (idFuncionario)
     ON DELETE CASCADE
 );
 
@@ -89,7 +91,7 @@ INSERT INTO Cargo (descricao) VALUES
 ('Admin'), 
 ('Empresa'), 
 ('Analista'), 
-('Técnico');
+('Tecnico');
 
 INSERT INTO Empresa (cnpj, nome, email, ativo)
 VALUES 
@@ -100,17 +102,23 @@ VALUES
 INSERT INTO Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
 VALUES 
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
-('Lucas', 'Silva', 'lucas.silva@techvision.com', 'senha123', 2, 2),
-('Marina', 'Costa', 'marina.costa@techvision.com', 'senha123', 4, 2),
-('João', 'Pereira', 'joao.pereira@ecodata.com', 'senha123', 2, 3);
+('techvision', 'Empresa', 'contato@techvision.com', '12345678', 2, 2),
+('Marina', 'Costa', 'marina.costa@techvision.com', '12345678', 4, 2),
+('João', 'Pereira', 'joao.pereira@ecodata.com', '12345678', 2, 3);
 
-INSERT INTO Maquina (enderecoMac, fkEmpresa)
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
-('f4:6a:dd:7b:03:0d', 1),
-('a1:b2:c3:d4:e5:f6', 2),
-('ff:ee:dd:cc:bb:aa', 2),
-('e8:5c:5f:1e:b4:1d', 2),
-('11:22:33:44:55:66', 3);
+('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
+('a1:b2:c3:d4:e5:f6', 'Setor A', 2),
+('ff:ee:dd:cc:bb:aa', 'Setor B', 2),
+('e8:5c:5f:1e:b4:1d', 'Setor C', 2),
+('11:22:33:44:55:66', 'Setor Logístico', 3);
+
+INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
+VALUES
+('aa:bb:cc:dd:ee:ff', 'Setor D', 2),
+('77:88:99:aa:bb:cc', 'Setor E', 2);
+
 
 INSERT INTO Componente (descricao)
 VALUES 
@@ -146,6 +154,17 @@ VALUES
 (5, 3, 70),
 (5, 4, 60);
 
+INSERT INTO Parametro (fkMaquina, fkComponente, valor)
+VALUES
+(6, 1, 60), 
+(6, 2, 75), 
+(6, 3, 78),
+(6, 4, 70), 
+(7, 1, 45),  
+(7, 2, 55), 
+(7, 3, 65),
+(7, 4, 60);
+
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
 (1, 35, 20, 48, 42),
@@ -154,8 +173,67 @@ VALUES
 
 INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
 VALUES
-(1, 'Duperaquecimento', 'Alta', 'Aberto', 1),
-(2, 'uso de GPU abaixo do esperado', 'Média', 'Em andamento', 2),
-(3, 'uso de GPU abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(2, 'uso de GPU abaixo do esperado', 'Crítica', 'Aberto', 2),
-(4, 'uso de GPU abaixo do esperado', 'Alta', 'Aberto', 4);
+-- Maquina 2
+(2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(2, 'Uso de GPU (%) acima do parametro - Atencao', 'Critica', 'Aberto', 3),
+(2, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(2, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+
+-- Maquina 3
+(3, 'Temperatura da CPU (C) abaixo do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(3, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(3, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(3, 'Uso de GPU (%) acima do parametro - Atencao', 'Media', 'Aberto', 3),
+
+-- Maquina 4
+(4, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(4, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(4, 'Temperatura da GPU (C) acima do esperado', 'Media', 'Aberto', 3),
+(4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
+
+-- Maquina 6
+(6, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(6, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
+(6, 'Temperatura da CPU (C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
+(6, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
+(6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
+
+-- Maquina 7
+(7, 'Uso de CPU (%) abaixo do esperado', 'Critica', 'Aberto', 3),
+(7, 'Temperatura da GPU (C) acima do esperado', 'Critica', 'Em andamento', 3),
+(7, 'Temperatura da CPU (C) abaixo do esperado', 'Media', 'Aberto', 3),
+(7, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
+(7, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
+(7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
+
+
+# Cadastro
+CREATE USER 'empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT ON bitware_db.Funcionario TO 'empresa'@'%';
+GRANT INSERT ON bitware_db.Empresa TO 'empresa'@'%';
+
+# A empresa pode criar/deletar/atulizar seus usuarios (funcionarios)
+CREATE USER 'funcionario.admEmpresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Parametro TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Chamado TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT, DELETE ON bitware_db.Funcionario TO 'funcionario.admEmpresa'@'%';
+GRANT INSERT, UPDATE, SELECT ON bitware_db.Maquina TO 'funcionario.admEmpresa'@'%';
+
+CREATE USER 'funcionario.analista'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.analista'@'%';
+GRANT SELECT, UPDATE ON bitware_db.Chamado TO 'funcionario.analista'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.analista'@'%';
+
+CREATE USER 'funcionario.tecnico'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
+GRANT SELECT ON bitware_db.Parametro TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.ParametrosGeraisEmpresa TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Maquina TO 'funcionario.tecnico'@'%';
+GRANT SELECT ON bitware_db.Chamado TO 'funcionario.tecnico'@'%';
+
+FLUSH PRIVILEGES;

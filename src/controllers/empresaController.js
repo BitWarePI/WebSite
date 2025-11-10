@@ -174,7 +174,7 @@ function inativarEmpresa(req, res) {
         .then(resultado => {
             if (resultado.length > 0) {
                 // Senha atual confere, pode inativar
-                empresaModel.inativarEmpresa(emailEmpresa)
+                empresaModel.inativarEmpresa(emailEmpresa, idEmpresa)
                     .then(() => {
                         res.status(200).json({ mensagem: "Solicitação de deleção da empresa realizada com sucesso" });
                     })

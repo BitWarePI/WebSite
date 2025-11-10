@@ -108,6 +108,10 @@
                     </div>
 
                     <div class="ipt_label">
+                        <label for="nomeMaquina">Nome da Máquina</label>
+                        <input type="text" id="nomeMaquina">
+                    </div>
+                    <div class="ipt_label">
                         <label for="enderecoMac">Endereço MAC da Máquina</label>
                         <input type="text" id="enderecoMac">
                     </div>
@@ -129,6 +133,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Nome</th>
                             <th>Endereço MAC</th>
                             <th>Ações</th>
                         </tr>
@@ -231,6 +236,7 @@
 
         function cadastrarMaquina() {
             const idEmpresa = document.getElementById("empresaMaquina").value;
+            const nomeMaquina = document.getElementById("nomeMaquina").value.trim();
             const enderecoMac = document.getElementById("enderecoMac").value.trim();
 
             if (!idEmpresa) {
@@ -249,6 +255,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     fkEmpresa: idEmpresa,
+                    nome: nomeMaquina,
                     enderecoMac: enderecoMac
                 })
             })
@@ -290,21 +297,28 @@
                     tabela.innerHTML = "";
 
                     if (maquinas.length === 0) {
-                        tabela.innerHTML = `<tr><td colspan="3">Nenhuma máquina cadastrada.</td></tr>`;
+                        tabela.innerHTML = `<tr><td colspan="4">Nenhuma máquina cadastrada.</td></tr>`;
                         return;
                     }
 
                     maquinas.forEach(m => {
+                        console.log(m)
                         tabela.innerHTML += `
-                    <tr>
-                        <td>${m.idMaquina}</td>
-                        <td><input value="${m.enderecoMac}" onchange="editarMaquina(${m.idMaquina}, this.value)"></td>
-                        <td>
-                            <button class="editar" onclick="editarMaquina(${m.idMaquina}, this.closest('tr').querySelector('input').value)">Editar</button>
-                            <button class="remover" onclick="removerMaquina(${m.idMaquina})">Remover</button>
-                        </td>
-                    </tr>
-                `;
+                            <tr>
+                                <td>${m.idMaquina}</td>
+                                <td><input value="${m.nome}" id="nome-${m.idMaquina}"></td>
+                                <td><input value="${m.enderecoMac}" id="mac-${m.idMaquina}"></td>
+                                <td>
+                                    <button class="editar" 
+                                        onclick="editarMaquina(
+                                            ${m.idMaquina}, 
+                                            document.getElementById('nome-${m.idMaquina}').value, 
+                                            document.getElementById('mac-${m.idMaquina}').value
+                                        )">Editar</button>
+                                    <button class="remover" onclick="removerMaquina(${m.idMaquina})">Remover</button>
+                                </td>
+                            </tr>
+                        `;
                     });
                 })
                 .catch(erro => console.error("Erro ao listar máquinas:", erro));
@@ -325,7 +339,7 @@
         }
 
         // Editar máquina
-        function editarMaquina(idMaquina, enderecoMac) {
+        function editarMaquina(idMaquina, nome, enderecoMac) {
             const macRegex = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/;
             if (!macRegex.test(enderecoMac)) {
                 alert("Informe um endereço MAC válido (ex: AA:BB:CC:DD:EE:FF)");
@@ -335,7 +349,7 @@
             fetch(`/maquina/editar/${idMaquina}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ enderecoMac })
+                body: JSON.stringify({ nome, enderecoMac })
             })
                 .then(res => {
                     if (res.ok) {alert("Máquina editada!"); carregarEmpresas();} else {alert("Erro ao editar a máquina.");}
