@@ -102,7 +102,7 @@ VALUES
 INSERT INTO Funcionario (nome, sobrenome, email, senha, fkCargo, fkEmpresa)
 VALUES 
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
-('Lucas', 'Silva', 'contato@techvision.com', '12345678', 2, 2),
+('techvision', 'Empresa', 'contato@techvision.com', '12345678', 2, 2),
 ('Marina', 'Costa', 'marina.costa@techvision.com', '12345678', 4, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', '12345678', 2, 3);
 
