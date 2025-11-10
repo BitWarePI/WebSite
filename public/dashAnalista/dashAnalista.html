@@ -53,10 +53,10 @@
       </ul>
     </nav>
 
-   <div
+    <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
-       <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex; justify-content: space-between;">
         <div style="display: flex; align-items:start; font-size: 20px;">
           <h1 style="color: #4c1d95; font-size: 60px;">Dashboard - Analista</h1>
         </div>
@@ -75,7 +75,8 @@
 
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="parametro" style="font-weight: bold; ">Selecionar o tipo de parâmetro</label>
-          <select id="parametro" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 200px; background-color: #4c1d95;">
+          <select id="parametro"
+            style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 200px; background-color: #4c1d95;">
             <option value="">Tipo de parâmetro</option>
             <option value="1" selected>Padrão</option>
             <option value="2">Personalizado</option>
@@ -110,7 +111,7 @@
         <div style="display: flex; flex-direction: column;">
 
           <div>
-            <h2 style="font-weight: bold; margin: 0; color: #4c1d95;">Parâmetros padrão</h2>
+            <h2 style="font-weight: bold; margin: 0; color: #4c1d95;" id="tituloParam">Parâmetros padrão</h2>
             <div
               style="display: flex; justify-content: space-between; align-items: flex-end;  padding: 20px 0px; display: none; width: 45%;"
               class="info">
@@ -136,7 +137,8 @@
             </div>
           </div>
 
-          <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px;  margin-right: 30px; color: #4c1d95;">
+          <h2
+            style="font-weight: bold; display: flex; align-items: center; gap: 8px;  margin-right: 30px; color: #4c1d95;">
             Desempenho baseado em GPU
             <span style="
           position: relative;
@@ -426,6 +428,7 @@
       kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
       kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
       kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
+      document.getElementById("tituloParam").innerHTML = "";
 
       for (let i = 0; i < info.length; i++) {
         info[i].style.display = 'none';
@@ -443,9 +446,20 @@
       kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
       kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
     }
+
   }
 
   parametro.addEventListener('change', aplicarCores);
+  parametro.addEventListener('change', tirarParametrosPadrao())
+
+  function tirarParametrosPadrao() {
+    console.log("PARAMETRO: " + parametro.value)
+    console.log("entrou aq")
+    if (parametro.value == 2) {
+      document.getElementById("tituloParam").innerHTML = "";
+    }
+
+  }
 
   function graficos(dados) {
     var valores = {}
@@ -501,6 +515,7 @@
     grafico2.update()
     grafico3.update()
     grafico4.update()
+
   }
 
   async function aplicarPeriodo() {
