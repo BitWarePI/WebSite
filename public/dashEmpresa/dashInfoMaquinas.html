@@ -134,6 +134,7 @@
                             <th>GPU (%)</th>
                             <th>Temp CPU (°C)</th>
                             <th>Temp GPU (°C)</th>
+                            <th>Ver mais</th>
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
@@ -150,13 +151,13 @@
             <div class="header">
                 <h1>Parâmetros Gerais</h1>
                 <button class="material-symbols-outlined close-icon"
-                    onclick="abrirModalParametrosGerais()">close</button>
+                    onclick="abrirGraficosMaquina()">close</button>
             </div>
             <div class="body">
                 <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo CPU (%)</label><input type="number" id="usoCpuGeral"
                             min="0" max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuGeral"
+                    <div class="ipt_label"><label>Uso mínimo GPU (%)</label><input type="number" id="usoGpuGeral"
                             min="0" max="100"></div>
                     <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuGeral"
                             min="0"></div>
@@ -167,35 +168,14 @@
             </div>
         </div>
     </div>
-
-    <!-- MODAL PARÂMETROS INDIVIDUAIS -->
-    <div class="modal cadastro" id="modal_param_maquina">
-        <div class="modal-container" id="modal_container_param_maquina">
-            <div class="header">
-                <h1 id="tituloModalMaquina">Parâmetros da Máquina</h1>
-                <button class="material-symbols-outlined close-icon"
-                    onclick="abrirModalParametrosMaquina()">close</button>
-            </div>
-            <div class="body">
-                <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
-                            max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
-                            max="100"></div>
-                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuInd"
-                            min="0"></div>
-                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuInd"
-                            min="0"></div>
-                    <button class="btn submit" onclick="salvarParametrosIndividuais()">Salvar</button>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 
     <script src="../js/nav.js"></script>
 
     <script>
+
+        let modalGeral = document.getElementById('modal_param_gerais');
+        let modalGeralContainer = document.getElementById('modal_container_param_gerais');
 
         let listaMaquinas = [];
 
@@ -236,7 +216,7 @@
                         const cores = leitura.cores;
 
                         tbody.innerHTML += `
-                            <tr>
+                            <tr onclick="abrirGraficosMaquina('${maquina.mac}')">
                                 <td>${maquina.mac}</td>
                                 <td>${maquina.nome}</td>
                                 <td>${leitura.datetime}</td>
@@ -263,7 +243,7 @@
                 const cores = leitura.cores;
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr onclick="abrirGraficosMaquina('${maquina.mac}')">
                         <td>${maquina.mac}</td>
                         <td>${maquina.nome}</td>
                         <td>${leitura.datetime}</td>
@@ -436,7 +416,7 @@
                                     });
 
                                     tbody.innerHTML += `
-                                <tr>
+                                <tr onclick="abrirGraficosMaquina('${macMaquina}')">
                                     <td>${macMaquina}</td>
                                     <td>${maquinaNome}</td>
                                     <td>${ultimo.datetime}</td>
@@ -542,6 +522,23 @@
                     console.error(err);
                     abrirModalFb('Erro', 'Erro ao buscar parâmetros gerais.', 'erro');
                 });
+        }
+
+        function abrirGraficosMaquina(macAddress) {
+            console.log("ENTROU NO ABRIR GRÁFICOS")
+
+            if (modalGeral.classList.contains("open")) {
+                modalGeral.classList.remove("fade-in");
+                modalGeralContainer.classList.remove("slide-in-top");
+                modalGeral.classList.add("fade-out-flex");
+                modalGeral.classList.remove("open");
+            } else {
+                modalGeral.classList.remove("fade-out-flex");
+                modalGeral.classList.add("open");
+                modalGeral.classList.add("fade-in");
+                modalGeralContainer.classList.add("slide-in-top");
+            }
+            //containerAviso.classList.add('slide-in-top');
         }
 
         window.onload = function () {
