@@ -12,10 +12,8 @@
     <title>Dashboard | BitWare</title>
 </head>
 <style>
-   
 </style>
 <body>
-    
     <section>
         <nav>
             <div class="main-nav">
@@ -81,39 +79,6 @@
         </nav>
         <div class="container">
               <div class="kpi-container">
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados Pendentes</h3>
-                    <p class="quantidade" id="kpi_pendentes">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados críticos</h3>
-                    <p class="quantidade" id="kpi_criticos">0</p>
-                    <span class="material-symbols-outlined icon ativo">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Máquinas com problema</h3>
-                    <p class="quantidade" id="kpi_maquinas">0</p>
-                    <span class="material-symbols-outlined icon solicitacao">apartment</span>
-                </div>
-            </div>
-            <div class="listaEmpresa">
-                <div class="pesquisa">
-                    <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
-                    </div>
-                    <div class="selectFiltro">
-                        <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa">
-                            <option value="todos">Todos</option>
-                            <option value="urgente">Urgente</option>
-                            <option value="nIniciado">Não Iniciado</option>
-                        </select>
-                    </div>
-                </div>
-                
                 <div class="chamado">
                     <table>
                       <thead>
@@ -216,7 +181,6 @@
                 fecharModalTecnicos();
                 const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
                 if (linhaDoChamado) {
-                    // ATUALIZAÇÃO: Adiciona classe de cor na linha
                     linhaDoChamado.className = 'row-status-em-andamento';
 
                     const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
@@ -274,7 +238,6 @@
                 alert('Chamado finalizado com sucesso!');
                 const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
                 if (linhaDoChamado) {
-                    // ATUALIZAÇÃO: Adiciona classe de cor na linha
                     linhaDoChamado.className = 'row-status-resolvido';
 
                     const celulaStatus = linhaDoChamado.querySelector('.status');
@@ -319,8 +282,7 @@
         .then(response => {
             alert('Técnico removido com sucesso!');
             const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
-            if (linhaDoChamado) {
-                // ATUALIZAÇÃO: Adiciona classe de cor na linha
+            if (linhaDoChamado) {   
                 linhaDoChamado.className = 'row-status-nao-iniciado';
                 
                 const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
