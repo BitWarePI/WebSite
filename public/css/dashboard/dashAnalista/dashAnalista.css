@@ -54,7 +54,6 @@ section nav:hover ~ #tudo {
   transition: all 0.3s ease;
 }
 
-
 .kpi-container {
   display: flex;
   gap: 20px;
@@ -89,6 +88,12 @@ section nav:hover ~ #tudo .kpi-container {
   padding: 5px 20px;
   border-radius: 10px;
   width: 100%;
+}
+
+.div-grafico{
+  background-color: white;
+  border-start-start-radius: 10px;
+  border-start-end-radius: 10px;
 }
 
 section nav:hover ~ #tudo .grafico {
