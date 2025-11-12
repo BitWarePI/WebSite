@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="../css/dashboard/dashAnalista/dashAnalista.css">
   <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
   <link rel="stylesheet" href="../css/animacao.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="icon" href="../assets/icon/favicon2.png">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -87,16 +88,73 @@
 
     <div style="min-height: 100vh;  top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;" id="tudo">
       <div style="display: flex; margin: 0;">
-        <p style="font-size: 40px;">Dashboard - Analista</p>
+        <p style="font-size: 40px; margin: 0; padding: 0; font-weight: bold;">Dashboard - Analista</p>
       </div>
-      <div>
-        <p>Desempenho CPU</p>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <p style="font-size: 22px;">Desempenho</p>
         <select name="" id="">
-          <option value="1" selected>CPU</option>
-          <option value="2">GPU</option>
+          <option value="1">CPU</option>
+          <option value="2" selected>GPU</option>
         </select>
       </div>
-      
+
+      <div style="display: flex; justify-content: space-between;">
+        <div
+          style="display: flex; flex-direction: column; width: 300px; height: 150px; background-color: rgb(65, 10, 116); color: white; justify-content: center; align-items: center; border-radius: 5px;">
+          <div>
+            <p style="font-size: 30px; margin: 0; padding: 0;">Média</p>
+            <p id="media_gpu"></p>
+          </div>
+          <div>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
+            <p id="mediana_gpu"></p>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: column; width: 300px; height: 150px; background-color: rgb(65, 10, 116); color: white; justify-content: center; align-items: center; border-radius: 5px;">
+          <div>
+            <p style="font-size: 30px; margin: 0; padding: 0;">Média</p>
+            <p id="media_gpu"></p>
+          </div>
+          <div>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
+            <p id="mediana_gpu"></p>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: column; width: 300px; height: 150px; background-color: rgb(65, 10, 116); color: white; justify-content: center; align-items: center; border-radius: 5px;">
+          <div>
+            <p style="font-size: 30px; margin: 0; padding: 0;">Média</p>
+            <p id="media_gpu"></p>
+          </div>
+          <div>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
+            <p id="mediana_gpu"></p>
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-direction: column; width: 300px; height: 150px; background-color: rgb(65, 10, 116); color: white; justify-content: center; align-items: center; border-radius: 5px;">
+          <div>
+            <p style="font-size: 30px; margin: 0; padding: 0;">Média</p>
+            <p id="media_gpu"></p>
+          </div>
+          <div>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
+            <p id="mediana_gpu"></p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 60px;">
+        <div style="width: 600px; height: 300px;">
+          <p style="font-size: 22px;">Uso da GPU</p>
+          <canvas id="grafico1" style="width: 100%; height: 100%;"></canvas>
+        </div>
+        <div style="width: 600px; height: 300px;">
+          <p style="font-size: 22px;">Temperatura da GPU</p>
+          <canvas style="width: 100%; height: 100%;" id="grafico2"></canvas>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -104,8 +162,8 @@
   <script>
     const ctx1 = document.getElementById('grafico1').getContext('2d');
     const ctx2 = document.getElementById('grafico2').getContext('2d');
-    const ctx3 = document.getElementById('grafico3').getContext('2d');
-    const ctx4 = document.getElementById('grafico4').getContext('2d');
+    // const ctx3 = document.getElementById('grafico3').getContext('2d');
+    // const ctx4 = document.getElementById('grafico4').getContext('2d');
 
     eixoX = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h']
 
@@ -128,25 +186,25 @@
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
 
-    const grafico3 = new Chart(ctx3, {
-      type: 'bar',
-      data: {
-        labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets:
-          [{ type: 'bar', label: 'Uso de CPU (%)', data: [80, 90, 75, 80, 85, 84, 86.5, 89.2, 70], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
-    });
+    // const grafico3 = new Chart(ctx3, {
+    //   type: 'bar',
+    //   data: {
+    //     labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+    //     datasets:
+    //       [{ type: 'bar', label: 'Uso de CPU (%)', data: [80, 90, 75, 80, 85, 84, 86.5, 89.2, 70], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
+    //   },
+    //   options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
+    // });
 
-    const grafico4 = new Chart(ctx4, {
-      type: 'bar',
-      data: {
-        labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-        datasets:
-          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [77, 75, 76, 68, 76, 67, 76, 76, 77], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
-    });
+    // const grafico4 = new Chart(ctx4, {
+    //   type: 'bar',
+    //   data: {
+    //     labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+    //     datasets:
+    //       [{ type: 'line', label: 'Temperatura CPU (°C)', data: [77, 75, 76, 68, 76, 67, 76, 76, 77], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+    //   },
+    //   options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
+    // });
   </script>
 
 </body>
@@ -292,10 +350,10 @@
     grafico1.data.datasets[0].data = []
     grafico2.data.labels = []
     grafico2.data.datasets[0].data = []
-    grafico3.data.labels = []
-    grafico3.data.datasets[0].data = []
-    grafico4.data.labels = []
-    grafico4.data.datasets[0].data = []
+    // grafico3.data.labels = []
+    // grafico3.data.datasets[0].data = []
+    // grafico4.data.labels = []
+    // grafico4.data.datasets[0].data = []
 
     for (const [key, valor] of Object.entries(valores)) {
       console.log(valor)
@@ -319,17 +377,17 @@
       grafico2.data.datasets[0].data.push(resultados.gpu_temperature)
       grafico2.data.labels.push(key)
 
-      grafico3.data.datasets[0].data.push(resultados.cpu_percent)
-      grafico3.data.labels.push(key)
+      // grafico3.data.datasets[0].data.push(resultados.cpu_percent)
+      // grafico3.data.labels.push(key)
 
-      grafico4.data.datasets[0].data.push(resultados.cpu_temperature)
-      grafico4.data.labels.push(key)
+      // grafico4.data.datasets[0].data.push(resultados.cpu_temperature)
+      // grafico4.data.labels.push(key)
 
     }
     grafico1.update()
     grafico2.update()
-    grafico3.update()
-    grafico4.update()
+    // grafico3.update()
+    // grafico4.update()
 
   }
 

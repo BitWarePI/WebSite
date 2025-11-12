@@ -27,9 +27,9 @@ section nav:hover {
   margin-left: 80px;
   flex-grow: 1;
   transition: margin-left 0.3s ease, transform 0.3s ease;
-  padding: 40px;
+  padding: 6px 40px;
   width: calc(100% - 80px);
-  color: white;
+  color: black;
 }
 
 
