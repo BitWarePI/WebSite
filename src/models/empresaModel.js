@@ -108,16 +108,31 @@ function ativarEmpresa(idEmpresa){
     return database.executar(sql);
 }
 
-function desativarEmpresa(idEmpresa) {
-    const id = Number(idEmpresa); // força número
-    const sql = `
-        UPDATE bitware_db.Empresa 
-        SET ativo = 0 
-        WHERE idEmpresa = ${id}
+function inativarEmpresa(emailEmpresa, senha) {
+    //tem uma subquery pq a tabela empresa n armazena a senha ent a empresa esta sendo inativa pela senha do funcionario
+    var instrucao = `
+        UPDATE Empresa 
+        SET ativo = 0
+        WHERE idEmpresa = (
+            SELECT fkEmpresa FROM Funcionario 
+            WHERE email = "${emailEmpresa}" AND senha = "${senha}" LIMIT 1
+        )
+        AND email = "${emailEmpresa}";
     `;
-    return database.executar(sql);
+    console.log(instrucao)
+    return database.executar(instrucao);
 }
 
+function verificarSenhaAtual(idEmpresa, senhaAtual) {
+    var instrucao = `
+        SELECT f.idFuncionario
+        FROM Funcionario f
+        WHERE f.fkEmpresa = ${idEmpresa}
+        AND f.senha = '${senhaAtual}'
+        LIMIT 1;
+    `;
+    return database.executar(instrucao);
+}
 
 module.exports = {
     cadastrarEmpresa,
@@ -129,5 +144,6 @@ module.exports = {
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
-    desativarEmpresa
+    inativarEmpresa,
+    verificarSenhaAtual
 };

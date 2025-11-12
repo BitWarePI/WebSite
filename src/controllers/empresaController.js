@@ -150,7 +150,7 @@ function ativarEmpresa(req, res) {
 
 function desativarEmpresa(req, res) {
     const idEmpresa = req.params.id;
-
+    console.log("ENTROU NO ATIVAR EMPRESA")
     empresaModel.desativarEmpresa(idEmpresa).then((resultado) => {
         if (resultado.affectedRows > 0) {
             res.status(200).json({ mensagem: 'Empresa desativada com sucesso.' });
@@ -163,6 +163,36 @@ function desativarEmpresa(req, res) {
     });
 }
 
+
+function inativarEmpresa(req, res) {
+    console.log("ENTROU NO INATIVAR EMPRESA")
+    var idEmpresa = req.body.idEmpresa;
+    var emailEmpresa = req.body.emailEmpresa;
+    var senhaVar = req.body.senha;
+    var emailFuncionario = req.body.emailFuncionario
+
+    empresaModel.verificarSenhaAtual(idEmpresa, senhaVar)
+        .then(resultado => {
+            if (resultado.length > 0) {
+                // Senha atual confere, pode inativar
+                empresaModel.inativarEmpresa(emailEmpresa, senhaVar)
+                    .then(() => {
+                        res.status(200).json({ mensagem: "Solicitação de deleção da empresa realizada com sucesso" });
+                    })
+                    .catch(erro => {
+                        console.error("Erro ao solicitar deleção da Empresa:", erro);
+                        res.status(500).json(erro.sqlMessage);
+                    });
+            } else {
+                res.status(401).json({ mensagem: "Senha incorreta!" });
+            }
+        })
+        .catch(erro => {
+            console.error("Erro ao verificar senha:", erro);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 module.exports = {
     cadastrarEmpresa,
     listarEmpresas,
@@ -173,5 +203,6 @@ module.exports = {
     aprovarSolicitacao,
     negarSolicitacao,
     ativarEmpresa,
-    desativarEmpresa
+    desativarEmpresa,
+    inativarEmpresa
 };

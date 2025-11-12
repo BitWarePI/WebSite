@@ -1,0 +1,484 @@
+:root {
+    --primary-color: #7e0cac; 
+    --secondary-color: hsl(49, 73%, 50%); 
+    --bg-sidebar: #181818; 
+    --bg-content: #f0f0f0; 
+    --text-sidebar: #f0f0f0; 
+    --text-content: #1d1c1c; 
+    --active-color: #4c1d95; 
+    --high-priority: #ff3f3f; 
+    --low-priority: #8b8b8b; 
+    --status-not-started: #ff3f3f; 
+    --status-in-progress: rgb(221, 186, 34); 
+}
+
+
+body {
+    background-color: var(--bg-content); /* Fundo da página, geralmente não é visível devido à section */
+    display: flex;
+    flex-direction: row; /* Para alinhar a nav e a section */
+    overflow-x: hidden;
+    color: var(--text-content); /* Cor de texto padrão do corpo */
+}
+
+section {
+    max-width: 100dvw;
+    background-color: var(--bg-content); /* Fundo da área de conteúdo principal (claro) */
+    display: flex;
+    flex-direction: row;
+    min-height: 100dvh;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 100px; /* Espaço para a barra lateral fechada (aprox. 156px - padding) */
+    box-sizing: border-box;
+    overflow-y: auto;
+    width: calc(100% - 100px);
+}
+
+.dashboard-header-container h1 {
+    color: var(--text-content); /* Cor do título principal no topo */
+}
+
+/* ---------------------------------------------------- */
+/* NAVEGAÇÃO LATERAL (SIDEBAR) */
+/* ---------------------------------------------------- */
+
+nav {
+    height: 100dvh;
+    width: 90px; /* Largura para a versão fechada */
+    border-radius: 0;
+    padding: 20px 0;
+    position: fixed; /* Fixa a barra lateral */
+    top: 0;
+    left: 0;
+    background: var(--bg-sidebar); /* Fundo escuro */
+    box-shadow: none; /* Remove a sombra flutuante */
+    border: none;
+    outline: none;
+    transition: width .3s, padding .3s;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+}
+
+nav:hover {
+    width: 250px; /* Largura na versão aberta (hover) */
+}
+
+nav .main-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+}
+
+nav .logo {
+    margin: 0;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
+nav .nav-title {
+    color: var(--text-sidebar);
+    font-size: 1.1em;
+    margin: 0;
+    display: none; /* Esconde o título da nav na versão fechada */
+}
+
+nav:hover .nav-title {
+    display: block;
+    margin-bottom: 20px;
+}
+
+nav .links {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    padding: 0;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+nav .links li {
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+nav .links li:has(.link.ativo) {
+    background-color: var(--active-color); /* Cor de fundo do link ativo */
+}
+
+nav .links .link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: var(--text-sidebar);
+    padding: 0;
+}
+
+nav .links .link .icon {
+    font-size: 2.2em; /* Ícones maiores */
+    position: static;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+nav .links .link .titulo {
+    display: none; /* Esconde títulos na versão fechada */
+}
+
+nav:hover .links .link {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+nav:hover .links .link .icon {
+    margin-right: 15px;
+}
+
+nav:hover .links .link .titulo {
+    display: block; /* Mostra títulos na versão aberta */
+    width: auto;
+    text-align: left;
+}
+
+nav .btn-sair {
+    color: var(--text-sidebar);
+    background-color: transparent;
+    border: 1px solid var(--text-sidebar);
+    margin-bottom: 10px;
+    width: 80%;
+    display: none; /* Esconde o botão Sair na versão fechada */
+}
+
+nav:hover .btn-sair {
+    display: flex; /* Mostra o botão Sair na versão aberta */
+}
+
+/* Esconder links mobile/links não utilizados */
+nav .nav-links-cell {
+    display: none !important;
+}
+
+/* ---------------------------------------------------- */
+/* TOP CARDS / GRÁFICOS ERROS SEMANAIS E TOP 5 MÁQUINAS */
+/* ---------------------------------------------------- */
+
+.top-info-row {
+    display: flex;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.erros-semanais-card {
+    flex: 0 0 50%; /* Ocupa 50% da largura disponível */
+    background-color: white; /* Fundo branco/claro */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    height: 300px;
+    box-sizing: border-box;
+}
+
+.erros-semanais-card h2 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-content);
+}
+
+#graficoErros {
+    max-height: 200px;
+    width: 100%;
+}
+
+.filtro-dados-container {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.filtro-dados-box {
+    background-color: var(--bg-sidebar); /* Fundo roxo escuro */
+    padding: 5px 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.filtro-dados-box p {
+    color: var(--text-sidebar);
+    font-weight: bold;
+    font-size: 0.8em;
+    margin: 0 0 5px 0;
+}
+
+#filtro_dados {
+    background-color: var(--primary-color); /* Roxo do dropdown */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 0.9em;
+    cursor: pointer;
+    outline: none;
+}
+
+.top-maquinas-card {
+    flex: 0 0 30%; /* Ocupa 30% da largura disponível */
+    background-color: var(--bg-sidebar); /* Fundo escuro */
+    padding: 15px;
+    border-radius: 8px;
+    color: var(--text-sidebar);
+    height: 300px;
+    box-sizing: border-box;
+}
+
+.top-maquinas-card h3 {
+    font-size: 1.1em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-sidebar);
+}
+
+.top-maquinas-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.top-maquinas-card ul li {
+    margin-bottom: 8px;
+}
+
+.top-maquinas-card ul li a {
+    color: var(--primary-color); /* Links roxos */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ---------------------------------------------------- */
+/* FILTROS E TABELA DE CHAMADOS */
+/* ---------------------------------------------------- */
+
+.chamado-list-section {
+    margin-top: 40px;
+}
+
+.chamado-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #d3d3d3; /* Fundo cinza claro/médio */
+    border-radius: 5px;
+    padding: 5px;
+    flex-grow: 1; /* Ocupa a maior parte do espaço */
+    max-width: 400px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 8px 10px;
+    color: var(--text-content);
+    width: 100%;
+}
+
+.search-box .search-icon {
+    color: #636363;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.filter-dropdown {
+    display: flex;
+    align-items: center;
+    background-color: #d3d3d3; /* Fundo cinza claro/médio */
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.filter-dropdown .filter-icon {
+    color: #636363;
+    margin: 0 5px;
+}
+
+.filter-dropdown select {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 8px 10px;
+    color: var(--text-content);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* TABELA */
+
+.chamado {
+    width: 100%;
+    margin-top: 0;
+}
+
+table {
+    background-color: white; /* Fundo da tabela branco/claro */
+    border: 1px solid #ccc;
+}
+
+table thead {
+    background-color: #4c1d95; /* Fundo do cabeçalho roxo */
+    color: white;
+}
+
+table tr th,
+table tr td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #ccc;
+    color: var(--text-content);
+}
+
+table tbody {
+    background-color: white;
+}
+
+/* Ajuste das larguras das colunas conforme a imagem */
+table tr .id {
+    flex: 0.1;
+}
+
+table tr .maquina {
+    flex: 0.4;
+}
+
+table tr .problema {
+    flex: 0.5;
+}
+
+table tr .prioridade {
+    flex: 0.3;
+}
+
+table tr .status {
+    flex: 0.4;
+}
+
+table tr .tecnico {
+    flex: 0.4;
+}
+
+/* Estilo para as etiquetas de Prioridade e Status */
+.prioridade-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: white;
+}
+
+.prioridade-badge.alta {
+    background-color: var(--high-priority);
+}
+
+.prioridade-badge.baixa {
+    background-color: var(--low-priority);
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: white;
+}
+
+.status-badge.nIniciado {
+    background-color: var(--status-not-started);
+}
+
+.status-badge.andamento {
+    background-color: var(--status-in-progress);
+}
+
+/* Remove as colunas de Ação da tabela (não estão na imagem final) */
+table tr .acao, table tr th.acao {
+    display: none !important;
+}
+
+/* ---------------------------------------------------- */
+/* MEDIA QUERIES (Responsividade) */
+/* ---------------------------------------------------- */
+
+@media screen and (max-width: 1000px) {
+    /* Desativa a sidebar fixa em mobile e centraliza */
+    nav {
+        position: static;
+        width: 100dvw !important;
+        height: auto;
+        padding: 10px 20px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    nav .main-nav {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+    }
+
+    nav .nav-title {
+        display: block;
+        margin: 0;
+        text-align: right;
+    }
+
+    nav .logo {
+        padding: 0;
+    }
+
+    nav .nav-links-pc, nav .btn-sair {
+        display: none !important; /* Esconde os links grandes */
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+        width: 100%;
+    }
+
+    .top-info-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .erros-semanais-card, .top-maquinas-card {
+        flex: 1 1 100%;
+    }
+}

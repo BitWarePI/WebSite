@@ -11,22 +11,35 @@
     <link rel="icon" href="../assets/icon/favicon2.png">
     <title>Dashboard | BitWare</title>
 </head>
+<style>
+</style>
 <body>
-    
     <section>
-        <nav class="slide-in-left">
+        <nav>
             <div class="main-nav">
                 <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
-                <div class="perfil-tecnico">
-                    <img src="../assets/imgs/isaak.png" alt="Avatar do Técnico" class="avatar">
-                    <h2 class="nome-tecnico">Isaak Guilherme</h2>
-                    <p class="cargo-tecnico">Técnico</p>
-                    <p class="empresa-tecnico">Empresa XYZ</p>
-                </div>
                 <ul class="links nav-links-pc">
-                    <li><a class="link ativo" href="dashHome.html">
+                    <li><a class="link" href="dashHome.html">
                             <span class="material-symbols-outlined icon">home</span>
                             <span class="titulo">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link ativo" href="dashFuncionario.html">
+                            <span class="material-symbols-outlined icon">apartment</span>
+                            <span class="titulo">Funcionários</span>
+                        </a>
+                    </li>
+                     <li>
+                        <a class="link" href="dashInfoMaquinas.html">
+                            <span class="material-symbols-outlined icon">Computer</span>
+                            <span class="titulo">Informações máquinas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="link" href="dashInfoMaquinas.html">
+                            <span class="material-symbols-outlined icon">Computer</span>
+                            <span class="titulo">Máquina Parâmetros</span>
                         </a>
                     </li>
                     <li>
@@ -35,8 +48,14 @@
                             <span class="titulo">Atualizar senha</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="link" href="desativarEmpresa.html">
+                            <span class="material-symbols-outlined icon">cancel</span>
+                            <span class="titulo">Inativar empresa</span>
+                        </a>
+                    </li>
                 </ul>
-                <a href="../index.html" class="btn btn-sair nav-links-pc">        
+                <a href="../index.html" class="btn btn-sair nav-links-pc">
                     Sair
                 </a>
                 <div id="nav-menu-icon">
@@ -47,91 +66,465 @@
                 </div>
             </div>
             <ul class="links nav-links-cell">
-                    <li><a class="link ativo" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Inicio</a></li>
-                    <li><a class="link" href="dashFuncionario.html"><span class="material-symbols-outlined icon">work</span>Empresas</a></li>
-                    <li>
-                        <a href="../index.html" class="btn btn-sair">        
-                            Sair
-                        </a>
-                    </li>
+                <li><a class="link" href="dashHome.html"><span
+                            class="material-symbols-outlined icon">home</span>Inicio</a></li>
+                <li><a class="link ativo" href="dashFuncionario.html"><span
+                            class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
+                <li>
+                    <a href="../index.html" class="btn btn-sair">
+                        Sair
+                    </a>
+                </li>
             </ul>
-        </nav>    
+        </nav>
         <div class="container">
-            <div class="kpi-container">
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados Pendentes</h3>
-                    <p class="quantidade">12</p>
-                    <span class="material-symbols-outlined icon cadastrada">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados críticos</h3>
-                    <p class="quantidade">4</p>
-                    <span class="material-symbols-outlined icon ativo">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Máquinas com problema</h3>
-                    <p class="quantidade">6</p>
-                    <span class="material-symbols-outlined icon solicitacao">apartment</span>
-                </div>
-            </div>
-            <div class="listaEmpresa">
-                <div class="pesquisa">
-                    <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
-                    </div>
-                    <div class="selectFiltro">
-                        <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa">
-                            <option value="todos">Todos</option>
-                            <option value="urgente">Urgente</option>
-                            <option value="nIniciado">Não Iniciado</option>
-                        </select>
-                    </div>
-                </div>
-                <table>
-                    <thead>
+              <div class="kpi-container">
+                <div class="chamado">
+                    <table>
+                      <thead>
                         <tr>
-                            <th class="id">ID</th>
-                            <th class="maquina">Máquina</th>
-                            <th class="problema">Problema</th>
-                            <th class="prioridade">Prioridade</th>
-                            <th class="status">Status</th>
-                            <th class="tecnico">Técnico responsável</th>
-                            <th class="acao"></th>
+                          <th class="id">ID</th>
+                          <th class="maquina">Máquina</th>
+                          <th class="problema">Problema</th>
+                          <th class="prioridade">Prioridade</th>
+                          <th class="dt_abertura">Data</th> <th class="status">Status</th>
+                          <th class="tecnico">Técnico responsável</th>
+                          <th class="acao"></th>
                         </tr>
-                    </thead>
-                    <tbody class="">
-                        <tr>
-                            <td class="id"> <p>908</p></td>
-                            <td class="maquina">015 - Corredor B</td>
-                            <td class="problema">Superaquecimento</td>
-                            <td class="prioridade">Alta</td>
-                            <td class="status"><span class="nIniciado">Não iniciado</span></td>
-                            <td class="tecnico">Não atribuído</td>
-                            <td class="acao">
-                                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                            </td>
-                        </tr>
-                        <tr>
-                             <td class="id"> <p>666</p></td>
-                            <td class="maquina">098 - Corredor G</td>
-                            <td class="problema">uso de GPU abaixo do esperado</td>
-                            <td class="prioridade">Média</td>
-                            <td class="status"><span class="andamento">Em andamento</span></td>
-                            <td class="tecnico">Isaak Guilherme</td>
-                            <td class="acao">
-                                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                      </thead>
+                      
+                      <tbody class="" id="tabela_chamados_body">
+                        </tbody>
+
+                    </table>
+                  </div>
+                </div>
+            
+                <div class="modal" id="modal_atribuir_tecnico">
+                  <div class="modal-container" id="modal_container_atribuir">
+                      <div class="header">
+                          <h1>Atribuir Técnico ao Chamado</h1>
+                          <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+                              close
+                          </button>
+                      </div>
+                      <div class="body" id="lista_tecnicos_container">
+                          </div>
+                  </div>
             </div>
     </section>
 
     <script src="../js/nav.js"></script>
 </body>
 </html>
+
+<script>
+    const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
+    const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+
+    function fecharModalTecnicos() {
+        modalTecnicos.classList.remove("fade-in");
+        modalContainerTecnicos.classList.remove("slide-in-top");
+        modalTecnicos.classList.add("fade-out-flex");
+        modalTecnicos.classList.remove("open");
+    }
+
+    function abrirModalTecnicos(idChamado) {
+        modalTecnicos.dataset.idChamado = idChamado;
+        modalTecnicos.classList.remove("fade-out-flex");
+        modalTecnicos.classList.add("open");
+        modalTecnicos.classList.add("fade-in");
+        modalContainerTecnicos.classList.add("slide-in-top");
+        carregarTecnicos();
+    }
+
+    function carregarTecnicos() {
+        const container = document.getElementById('lista_tecnicos_container');
+        container.innerHTML = "<p>Carregando técnicos...</p>";
+        var idEmpresa = sessionStorage.getItem('idEmpresa');
+        fetch(`/funcionarios/tecnicos/empresa/${idEmpresa}`)
+            .then(res => { if (!res.ok) throw new Error('Erro ao buscar técnicos'); return res.json(); })
+            .then(tecnicos => {
+                container.innerHTML = "";
+                if (tecnicos.length === 0) { container.innerHTML = "<p>Nenhum técnico disponível encontrado.</p>"; return; }
+                tecnicos.forEach(tec => {
+                    var nomeCompleto = `${tec.nome} ${tec.sobrenome}`;
+                    container.innerHTML += `
+                        <div class="tecnico-card">
+                            <div class="info">
+                                <p><strong>Nome:</strong> ${nomeCompleto}</p>
+                                <p><strong>Email:</strong> ${tec.email}</p>
+                                <p><strong>Cargo:</strong> ${tec.cargo}</p>
+                                <p><strong>Empresa:</strong> ${tec.nomeEmpresa}</p>
+                                <p><strong>Chamados Ativos:</strong> ${tec.qtdChamados}</p>
+                            </div>
+                            <button class="btn-atribuir" 
+                                onclick="atribuirChamado(${tec.idFuncionario}, \'${nomeCompleto}\')">
+                                Atribuir
+                            </button>
+                        </div>
+                    `;
+                });
+            })
+            .catch(err => { console.error(err); container.innerHTML = "<p>Erro ao carregar técnicos. Tente novamente.</p>"; });
+    }
+
+    function atribuirChamado(idTecnico, nomeTecnico) {
+        const idChamado = modalTecnicos.dataset.idChamado;
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+
+        if (!idChamado) { console.error('ID do chamado não encontrado!'); return; }
+        fetch(`/chamados/atribuir/${idChamado}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idTecnicoServer: idTecnico }) })
+            .then(res => { if (!res.ok) throw new Error('Erro ao atribuir chamado'); return res.json(); })
+            .then(response => {
+                alert('Técnico atribuído ao chamado!');
+                fecharModalTecnicos();
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    linhaDoChamado.className = 'row-status-em-andamento';
+
+                    const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
+                    if (celulaTecnico) { 
+                        celulaTecnico.innerText = nomeTecnico;
+                        celulaTecnico.setAttribute('title', nomeTecnico);
+                    }
+                    
+                    const celulaStatus = linhaDoChamado.querySelector('.status');
+                    if (celulaStatus) {
+                        celulaStatus.innerText = 'Em andamento';
+                    }
+                    
+                    const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
+                    if (botaoIniciar) {
+                        botaoIniciar.setAttribute('onclick', "alert('O chamado ja tem um tecnico')");
+                        botaoIniciar.setAttribute('title', 'Este chamado já está em progresso');
+                    }
+                    
+                    const botaoFinalizar = linhaDoChamado.querySelector('.finalizar');
+                    if (botaoFinalizar) {
+                        botaoFinalizar.style.opacity = 1;
+                        botaoFinalizar.style.cursor = 'pointer';
+                        botaoFinalizar.setAttribute('onclick', `finalizarChamado(${idChamado})`);
+                        botaoFinalizar.setAttribute('title', 'Finalizar');
+                    }
+
+                    if (userCargo != '4') {
+                        let botaoRemover = linhaDoChamado.querySelector('.remover-tecnico');
+                        if (botaoRemover) {
+                            botaoRemover.style.display = 'inline-block';
+                        } else {
+                            const acaoCell = linhaDoChamado.querySelector('.acao');
+                            if (acaoCell) {
+                                acaoCell.innerHTML += ` <span class="material-symbols-outlined remover-tecnico" title="Remover técnico" onclick="removerTecnico(${idChamado})">person_remove</span>`;
+                            }
+                        }
+                    }
+
+                } else { carregarChamados(); }
+            })
+            .catch(err => { console.error(err); alert('Erro ao atribuir o técnico.'); });
+    }
+
+    function finalizarChamado(idChamado) {
+        if (confirm("Esse chamado foi finalizado realmente?")) {
+            fetch(`/chamados/finalizar/${idChamado}`, {
+                method: 'PUT'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao finalizar chamado');
+                return res.json();
+            })
+            .then(response => {
+                alert('Chamado finalizado com sucesso!');
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    linhaDoChamado.className = 'row-status-resolvido';
+
+                    const celulaStatus = linhaDoChamado.querySelector('.status');
+                    if (celulaStatus) {
+                        celulaStatus.innerText = 'Resolvido';
+                    }
+                    
+                    const iniciarBtn = linhaDoChamado.querySelector('.iniciar');
+                    if (iniciarBtn) iniciarBtn.style.display = 'none';
+                    
+                    const finalizarBtn = linhaDoChamado.querySelector('.finalizar');
+                    if (finalizarBtn) finalizarBtn.style.display = 'none';
+
+                    const removerBtn = linhaDoChamado.querySelector('.remover-tecnico');
+                    if (removerBtn) removerBtn.style.display = 'none';
+                    
+                } else {
+                    carregarChamados();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro ao finalizar o chamado.');
+            });
+        } else {
+            console.log("Finalização cancelada.");
+        }
+    }
+
+    function removerTecnico(idChamado) {
+        if (!confirm("Tem certeza que deseja remover o técnico deste chamado? O status voltará para 'Não iniciado'.")) {
+            return;
+        }
+
+        fetch(`/chamados/remover-tecnico/${idChamado}`, { 
+            method: 'PUT' 
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Erro ao remover técnico');
+            return res.json();
+        })
+        .then(response => {
+            alert('Técnico removido com sucesso!');
+            const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+            if (linhaDoChamado) {   
+                linhaDoChamado.className = 'row-status-nao-iniciado';
+                
+                const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
+                if (celulaTecnico) {
+                    celulaTecnico.innerText = 'Não atribuído';
+                    celulaTecnico.setAttribute('title', 'Não atribuído');
+                }
+
+                const celulaStatus = linhaDoChamado.querySelector('.status');
+                if (celulaStatus) {
+                    celulaStatus.innerText = 'Não iniciado';
+                }
+
+                const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
+                if (botaoIniciar) {
+                    botaoIniciar.setAttribute('onclick', `abrirModalTecnicos(${idChamado})`);
+                    botaoIniciar.setAttribute('title', 'Iniciar chamado');
+                    botaoIniciar.style.display = 'inline-block';
+                }
+                
+                const botaoRemover = linhaDoChamado.querySelector('.remover-tecnico');
+                if (botaoRemover) botaoRemover.style.display = 'none';
+
+                const botaoFinalizar = linhaDoChamado.querySelector('.finalizar');
+                if(botaoFinalizar){
+                   botaoFinalizar.style.display = 'inline-block';
+                   botaoFinalizar.style.opacity = 0.5;
+                   botaoFinalizar.style.cursor = 'not-allowed';
+                   botaoFinalizar.setAttribute('title', 'Atribua um técnico primeiro');
+                }
+
+            } else {
+                carregarChamados();
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Erro ao remover o técnico.');
+        });
+    }
+
+    function carregarKPIs() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
+        const userId = sessionStorage.getItem('ID_USUARIO');
+
+        const kpiPendentes = document.getElementById('kpi_pendentes');
+        const kpiCriticos = document.getElementById('kpi_criticos');
+        const kpiMaquinas = document.getElementById('kpi_maquinas');
+
+        if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
+            console.log("KPIs não encontrados nesta página.");
+            return; 
+        }
+
+        kpiPendentes.innerText = '...';
+        kpiCriticos.innerText = '...';
+        kpiMaquinas.innerText = '...';
+
+        let kpiUrl = '';
+
+        if (userCargo == '4') {
+            kpiUrl = `/chamados/kpi/tecnico/${userId}`;
+        }
+        else {
+            kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
+        }
+
+        console.log("Buscando KPIs da URL:", kpiUrl);
+
+        fetch(kpiUrl)
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao buscar KPIs');
+                return res.json();
+            })
+            .then(data => {
+                var kpis = data[0];
+                kpiPendentes.innerText = kpis.pendentes;
+                kpiCriticos.innerText = kpis.criticos;
+                kpiMaquinas.innerText = kpis.maquinasComProblema;
+            })
+            .catch(err => {
+                console.error(err);
+                kpiPendentes.innerText = 'Erro';
+                kpiCriticos.innerText = 'Erro';
+                kpiMaquinas.innerText = 'Erro';
+            });
+    }
+
+    function carregarChamados() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const userId = sessionStorage.getItem('ID_USUARIO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
+
+        var tbody = document.getElementById('tabela_chamados_body');
+        if (!tbody) {
+            console.log("Tabela de chamados não encontrada nesta página.");
+            return;
+        }
+        
+        tbody.innerHTML = '<tr><td colspan="8">Carregando chamados...</td></tr>';
+
+        fetch(`/chamados/empresa/${idEmpresa}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao carregar chamados');
+                return res.json();
+            })
+            .then(chamados => {
+                tbody.innerHTML = "";
+
+                let chamadosFiltrados = chamados;
+
+                if (userCargo == '4') {
+                    console.log("--- MODO TÉCNICO ---");
+                    console.log("ID do Usuário (da sessão):", userId);
+
+                    chamadosFiltrados = chamados.filter(c => {
+                        let idTecnicoBD = Number(c.idTecnico);
+                        let idUsuarioSessao = Number(userId);
+                        let match = (idTecnicoBD == idUsuarioSessao);
+                        
+                        console.log(`Chamado #${c.idChamado}: idTecnico(${idTecnicoBD}) == idSessao(${idUsuarioSessao})? ${match}`);
+                        
+                        return match;
+                    });
+                    
+                    console.log("Chamados filtrados:", chamadosFiltrados);
+                }
+
+                if (chamadosFiltrados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8">Nenhum chamado encontrado.</td></tr>';
+                    return;
+                }
+
+                chamadosFiltrados.forEach(chamado => {
+                    var nomeTecnico = "Não atribuído";
+                    if (chamado.nomeTecnico) {
+                        nomeTecnico = `${chamado.nomeTecnico} ${chamado.sobrenomeTecnico || ''}`;
+                    }
+
+                    var classePrioridade = "";
+                    if (chamado.prioridade == 'Alta') {
+                        classePrioridade = 'prioridade-alta';
+                    } else if (chamado.prioridade == 'Média') {
+                        classePrioridade = 'prioridade-media';
+                    } else if (chamado.prioridade == 'Baixa') {
+                        classePrioridade = 'prioridade-baixa';
+                    } else if (chamado.prioridade == 'Crítica') {
+                        classePrioridade = 'prioridade-crítica';
+                    }
+
+                    var textoStatus = chamado.status;
+                    var classeLinha = ""; // ATUALIZAÇÃO: Classe da linha
+                    if (chamado.status == 'Aberto') {
+                        textoStatus = 'Não iniciado';
+                        classeLinha = 'row-status-nao-iniciado';
+                    } else if (chamado.status == 'Em andamento') {
+                        classeLinha = 'row-status-em-andamento';
+                    } else if (chamado.status == 'Resolvido') {
+                        classeLinha = 'row-status-resolvido';
+                    }
+
+
+                    var botaoAtribuirHtml = "";
+                    var botaoFinalizarHtml = "";
+                    var botaoRemoverHtml = "";
+
+                    if (chamado.status == 'Resolvido') {
+                        botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = '';
+                        botaoRemoverHtml = '';
+                    }
+                    else if (userCargo == '4') {
+                        botaoAtribuirHtml = '';
+                        botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                        botaoRemoverHtml = '';
+                    }
+                    else {
+                        if (chamado.status == 'Aberto') {
+                            botaoAtribuirHtml = `
+                                <button class="material-symbols-outlined iniciar" 
+                                        title="Iniciar chamado" 
+                                        onclick="abrirModalTecnicos(${chamado.idChamado})">
+                                    play_arrow
+                                </button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Atribua um técnico primeiro" style="opacity: 0.5; cursor: not-allowed;">check_circle</button>`;
+                            botaoRemoverHtml = '';
+                        } else if (chamado.status == 'Em andamento') {
+                            botaoAtribuirHtml = `
+                                <button class="material-symbols-outlined iniciar" 
+                                        title="Este chamado já está em progresso" 
+                                        onclick="alert('O chamado ja tem um tecnico')">
+                                    play_arrow
+                                </button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                            botaoRemoverHtml = `<span class="material-symbols-outlined remover-tecnico" title="Remover técnico" onclick="removerTecnico(${chamado.idChamado})">person_remove</span>`;
+                        }
+                    }
+
+                    var linha = `
+                        <tr id="chamado-${chamado.idChamado}" class="${classeLinha}">
+                            <td class="id"><p>${chamado.idChamado}</p></td>
+                            <td class="maquina">
+                                <div class="truncate-text" title="${chamado.enderecoMac}">
+                                    ${chamado.enderecoMac}
+                                </div>
+                            </td>
+                            <td class="problema">
+                                <div class="truncate-text" title="${chamado.problema}">
+                                    ${chamado.problema}
+                                </div>
+                            </td>
+                            <td class="prioridade">
+                                <span class="priority-badge ${classePrioridade}">${chamado.prioridade}</span>
+                            </td>
+                            <td class="dt_abertura">${chamado.data_abertura}</td>
+                            <td class="status">
+                                ${textoStatus}
+                            </td>
+                            <td class="tecnico tecnico-nome">
+                                <div class="truncate-text" title="${nomeTecnico}">
+                                    ${nomeTecnico}
+                                </div>
+                            </td>
+                            <td class="acao">
+                                ${botaoAtribuirHtml} 
+                                ${botaoFinalizarHtml}
+                                ${botaoRemoverHtml}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += linha;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = '<tr><td colspan="8">Erro ao carregar chamados. Tente novamente.</td></tr>';
+            });
+    }
+
+    window.onload = function() {
+        carregarChamados();
+        carregarKPIs();
+    }
+</script>

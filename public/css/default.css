@@ -30,7 +30,6 @@ body{
     overflow-x: hidden;
 }
 
-/* Nav */
 nav{
     z-index: 100;
     position: fixed;
@@ -38,8 +37,6 @@ nav{
     width: 80dvw;
     box-sizing: border-box;
     padding: 4px 42px;
-
-    /*https://css.glass*/
     background: rgba(14, 13, 13, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(170, 170, 170, 0.1);

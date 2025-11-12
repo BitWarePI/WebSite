@@ -1,3 +1,111 @@
 #qtdSemParam{
     color: red !important;
 }
+
+.container .kpi-container .kpi-card .icon.solicitacao{
+    background-color: var(--secondary-color);
+}
+/* Estilos específicos para o modal de aviso */
+.modal.aviso {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1050; 
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.aviso.open {
+    display: flex; 
+}
+
+.modal-container.aviso {
+    max-width: 400px; 
+    width: 80%; 
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center; 
+    transform: translateY(-100px);
+    transition: transform 0.3s ease-in-out;
+}
+
+#modal_avisar_parametros_gerais .modal-container .body {
+    width: auto;      
+    height: auto;     
+    overflow-y: visible; 
+}
+
+.modal-container.aviso.slide-in-top {
+    transform: translateY(0);
+}
+
+.header {
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 1.2rem; 
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.body p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.close-icon {
+    cursor: pointer;
+    font-size: 24px;
+    color: #333;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.btn.submit {
+    background-color: var(--primary-color); 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.btn.cancel {
+    background-color: #FF5722; 
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+    .modal-container.aviso {
+        width: 90%; 
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 1.1rem; 
+    }
+
+    .body p {
+        font-size: 0.9rem;
+    }
+
+    .btn.submit {
+        font-size: 0.9rem;
+    }
+}
