@@ -1,0 +1,48 @@
+section {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+section nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  background-color: #1e1e2f;
+  border-right: 2px solid #3b3b3b;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+section nav:hover {
+  width: 240px;
+}
+
+#tudo {
+  margin-left: 80px;
+  flex-grow: 1;
+  transition: margin-left 0.3s ease, transform 0.3s ease;
+  padding: 40px;
+  width: calc(100% - 80px);
+  color: white;
+}
+
+
+section nav:hover ~ #tudo {
+  margin-left: 240px;
+  width: calc(100% - 240px);
+  transform: scale(0.98);
+}
+
+#tudo * {
+  transition: all 0.3s ease;
+}
+
+section nav {
+  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
