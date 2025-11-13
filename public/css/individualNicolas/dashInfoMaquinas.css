@@ -1,0 +1,52 @@
+
+
+.modalDashInfo{
+    z-index: 101;
+    position: absolute;
+    width: 100dvw;
+    height: 100dvh;
+    box-sizing: border-box;
+    padding: 42px;
+    background-color: var(--low-bg-color);
+    display: none;
+    justify-content: center;
+}
+.modalDashInfo.open{
+    display: flex;
+}
+.modal-container{
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    width: 100% !important;
+}
+.modal-container .header{
+    display: flex;
+    justify-content: space-between;
+}
+.modal-container .header .close-icon{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 2em;
+    color: var(--main-text-inverse-color);
+}
+.modal-container .header .close-icon:hover{
+    color: var(--error-color);
+}
+.modal-container .body{
+    height: 100% !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow-y: auto;
+}
+.body .header-grafico{
+    display: flex;
+    justify-content: space-between;
+}
