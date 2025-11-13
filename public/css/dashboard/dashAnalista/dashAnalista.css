@@ -100,3 +100,22 @@ section nav:hover ~ #tudo .grafico {
   transform: scale(0.95);
   opacity: 0.9;
 }
+
+#btn_aplicar {
+  position: relative;
+  z-index: 10;
+}
+
+.div-grafico canvas {
+  pointer-events: none;
+}
+
+#btn_aplicar {
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto !important;
+}
+
+.graficos, .grafico, .div-grafico, .grafico canvas {
+  overflow: visible !important;
+}

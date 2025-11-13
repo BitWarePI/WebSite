@@ -150,34 +150,34 @@
       </div>
 
       <div style="display: flex; justify-content: space-center; gap: 2%;" id="kpi-container">
-        <div class="kpi-card"
+        <div class="kpi-card" id="kpiusogpu"
           style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
           <div>
             <div style="display: flex; align-items: center; gap: 4px;">
               <p style="font-size: 15px; margin: 0; padding: 0;">Uso médio da GPU</p>
-              <i class="fa-solid fa-chart-simple"></i>
+              <i class="fa-solid fa-microchip"></i>
             </div>
             
-            <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">50%</p>
+            <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;" class="kpi-gpu-uso kpi1" >50%</p>
           </div>
           <div style="display: flex; align-items: center; gap: 4px;">
             <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
-            <p id="mediana_gpu" style="margin: 0; padding: 0; font-size: 18px; font-weight: 700;">52%</p>
+            <p id="mediana_gpu" style="margin: 0; padding: 0; font-size: 18px; font-weight: 700;" class="kpi-gpu-uso-mediana">52%</p>
           </div>
         </div>
 
-        <div class="kpi-card"
+        <div class="kpi-card" id="kpitempgpu"
           style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
           <div>
             <div style="display: flex; gap: 6px;">
               <p style="font-size: 15px; margin: 0; padding: 0;">Temperatura média da GPU</p>
               <i class="fa-solid fa-temperature-low"></i>
             </div>
-            <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">50%</p>
+            <p id="media_gpu" class="kpi-gpu-temp" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">50°C</p>
           </div>
           <div style="display: flex; align-items: center; gap: 4px;">
             <p style="font-size: 18px; margin: 0; padding: 0;">Mediana</p>
-            <p id="mediana_gpu" style="margin: 0; padding: 0; font-size: 18px; font-weight: 700;">52%</p>
+            <p id="mediana_gpu" class="kpi-gpu-temp-mediana" style="margin: 0; padding: 0; font-size: 18px; font-weight: 700;">52°C</p>
           </div>
         </div>
 
@@ -296,22 +296,22 @@
   // const kpiCpuUsoValor = kpiusocpu.querySelector('.kpi-cpu-uso');
   // const kpiCpuTempValor = kpitempcpu.querySelector('.kpi-cpu-temp');
 
-  const kpiMedianaUsoCpu = document.getElementsByClassName('kpi-cpu-uso-mediana')[0];
-  const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0];
-  // const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
-  // const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
+  // const kpiMedianaUsoCpu = document.getElementsByClassName('kpi-cpu-uso-mediana')[0];
+  // const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0];
+  const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
+  const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
 
   const info = document.getElementsByClassName("info");
 
-  async function quantidadeMaquinas() {
-    const empresaId = sessionStorage.getItem('idEmpresa');
-    const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
-    if (!response.ok) throw new Error('Erro na requisição personalizada');
-    const dados = await response.json();
-    console.log(dados)
+  // async function quantidadeMaquinas() {
+  //   const empresaId = sessionStorage.getItem('idEmpresa');
+  //   const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
+  //   if (!response.ok) throw new Error('Erro na requisição personalizada');
+  //   const dados = await response.json();
+  //   console.log(dados)
 
-    qtdMaquinas.innerHTML = dados[0].total
-  }
+  //   qtdMaquinas.innerHTML = dados[0].total
+  // }
 
   // calcula mediana
   function mediana(dados, tipo) {
@@ -357,42 +357,42 @@
     }
   }
 
-  async function aplicarCores() {
-    const modo = parametro.value;
-    const gpuUso = parseFloat(kpiGpuUsoValor.textContent);
-    const gpuTemp = parseFloat(kpiGpuTempValor.textContent);
-    const cpuUso = parseFloat(kpiCpuUsoValor.textContent);
-    const cpuTemp = parseFloat(kpiCpuTempValor.textContent);
+  // async function aplicarCores() {
+  //   const modo = parametro.value;
+  //   const gpuUso = parseFloat(kpiGpuUsoValor.textContent);
+  //   const gpuTemp = parseFloat(kpiGpuTempValor.textContent);
+  //   const cpuUso = parseFloat(kpiCpuUsoValor.textContent);
+  //   const cpuTemp = parseFloat(kpiCpuTempValor.textContent);
 
-    if (modo === "2") {
-      // personalizado
-      kpiusogpu.style.backgroundColor = await definirCorPersonalizada(gpuUso, 'usogpu');
-      kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
-      kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
-      kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
-      document.getElementById("tituloParam").innerHTML = "";
+  //   if (modo === "2") {
+  //     // personalizado
+  //     kpiusogpu.style.backgroundColor = await definirCorPersonalizada(gpuUso, 'usogpu');
+  //     kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
+  //     kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
+  //     kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
+  //     document.getElementById("tituloParam").innerHTML = "";
 
-      for (let i = 0; i < info.length; i++) {
-        info[i].style.display = 'none';
-      }
-      console.log(info[0])
-    } else {
-      // padrão
-      for (let i = 0; i < info.length; i++) {
-        info[i].style.display = 'flex';
-      }
-      console.log(info[0])
+  //     for (let i = 0; i < info.length; i++) {
+  //       info[i].style.display = 'none';
+  //     }
+  //     console.log(info[0])
+  //   } else {
+  //     // padrão
+  //     for (let i = 0; i < info.length; i++) {
+  //       info[i].style.display = 'flex';
+  //     }
+  //     console.log(info[0])
 
-      kpiusogpu.style.backgroundColor = definirCorPadrao(gpuUso, 'uso');
-      kpitempgpu.style.backgroundColor = definirCorPadrao(gpuTemp, 'temp');
-      kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
-      kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
-    }
+  //     kpiusogpu.style.backgroundColor = definirCorPadrao(gpuUso, 'uso');
+  //     kpitempgpu.style.backgroundColor = definirCorPadrao(gpuTemp, 'temp');
+  //     kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
+  //     kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
+  //   }
 
-  }
+  // }
 
-  parametro.addEventListener('change', aplicarCores);
-  parametro.addEventListener('change', tirarParametrosPadrao())
+  // parametro.addEventListener('change', aplicarCores);
+  // parametro.addEventListener('change', tirarParametrosPadrao())
 
   function tirarParametrosPadrao() {
     console.log("PARAMETRO: " + parametro.value)
@@ -480,22 +480,22 @@
       const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
       const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
       const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
-      const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
-      const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
+      // const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
+      // const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
 
       kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
       kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
-      kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
-      kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
+      // kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
+      // kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
 
-      kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
+      // kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
       kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
-      kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
+      // kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
       kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
 
       graficos(dados)
 
-      aplicarCores();
+      // aplicarCores();
 
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -506,7 +506,7 @@
   btnAplicar.addEventListener('click', aplicarPeriodo);
 
   window.addEventListener('DOMContentLoaded', () => {
-    aplicarCores()
-    quantidadeMaquinas()
+    // aplicarCores()
+    // quantidadeMaquinas()
   });
 </script>
