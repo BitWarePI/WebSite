@@ -336,20 +336,3 @@ datetime;cpu_percent;gpu_percent;cpu_temperature;gpu_temperature;motivo_chamado;
 2025-11-10 15:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
 2025-11-10 18:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
 2025-11-10 21:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 00:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 03:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 06:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 09:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 12:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 15:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 18:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-2025-11-12 21:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;77:88:99:aa:bb:cc
-
-2025-11-12 00:00:00;100;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 03:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 06:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 09:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 12:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 15:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 18:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
-2025-11-12 21:00:00;79;61;64.9;55.7;Uso de CPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
