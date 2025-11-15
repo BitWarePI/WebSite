@@ -139,38 +139,8 @@ function atualizarSenha(req, res) {
         });
 }
 
-
-function solicitarDelecao(req, res) {
-    console.log("ENTROU NO DELETAR EMPRESA")
-    var idFuncionario = req.body.idFuncionario;
-    var emailEmpresa = req.body.emailEmpresa;
-    var senhaVar = req.body.senha;
-
-    usuarioModel.verificarSenhaAtual(idFuncionario, senhaVar)
-        .then(resultado => {
-            if (resultado.length > 0) {
-                // Senha atual confere, pode deletar
-                usuarioModel.solicitarDelecao(emailEmpresa)
-                    .then(() => {
-                        res.status(200).json({ mensagem: "Solicitação de deleção da empresa realizada com sucesso" });
-                    })
-                    .catch(erro => {
-                        console.error("Erro ao solicitar deleção da Empresa:", erro);
-                        res.status(500).json(erro.sqlMessage);
-                    });
-            } else {
-                res.status(401).json({ mensagem: "Senha incorreta!" });
-            }
-        })
-        .catch(erro => {
-            console.error("Erro ao verificar senha:", erro);
-            res.status(500).json(erro.sqlMessage);
-        });
-}
-
 module.exports = {
     cadastrar,
     autenticar,
     atualizarSenha,
-    solicitarDelecao
 }

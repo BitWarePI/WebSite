@@ -27,6 +27,12 @@
             </a>
           </li>
           <li>
+            <a class="link" href="dashAdicionarMaquinas.html">
+              <span class="material-symbols-outlined icon">computer</span>
+              <span class="titulo">Cadastrar Máquinas</span>
+            </a>
+          </li>
+          <li>
             <a class="link" href="dashExclusoes.html">
               <span class="material-symbols-outlined icon">do_not_disturb_on</span>
               <span class="titulo">Solicitações exclusão</span>
@@ -174,8 +180,8 @@
               const empresas = dados[0];
               console.log("KPIS RECEBIDAS:", empresas);
 
-              document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas}</p>`;
-              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas}</p>`;
+              document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas - 1}</p>`;
+              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas -1}</p>`;
               document.getElementById("quantidadeSolicitacoes").innerHTML = `<p>${empresas.solicitacoes}</p>`;
             } else {
               console.error("Erro ao buscar empresas:", resposta.statusText);
@@ -300,7 +306,8 @@
 
 
         // Adiciona os dados na tabela
-        corpoTabela.innerHTML += `
+        if(empresa.email != "admBitware@gmail.com"){
+          corpoTabela.innerHTML += `
             <tr>
                 <td class="nome"><p>${empresa.nome}</p></td>
                 <td class="email">${empresa.email || ""}</td>
@@ -308,12 +315,12 @@
                 <td class="dt_cadastro">${formatarData(empresa.dtCadastro)}</td>
                 <td class="estado">${estadoSpan}</td>
                 <td class="acao">
-                    <button class="material-symbols-outlined ver-mais" title="Ver Mais">open_in_full</button>
                     <div id="divBotaoAtivarInativar">${botaoAtivarOuInativar}</div>
                 </td>
             </tr>
         `;
-
+        } 
+        
         const botoesToggle = document.querySelectorAll(".btn-toggle");
 
         botoesToggle.forEach(botao => {

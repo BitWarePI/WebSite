@@ -33,10 +33,16 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link ativo" href="dashMaquinas.html">
+                        <a class="link" href="dashInfoMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
-                            <span class="titulo">Máquinas</span>
+
+                            <span class="titulo">Informações máquinas</span>
                         </a>
+                    </li>
+                    <li>
+                        <a class="link ativo" href="dashMaquinas.html">
+                            <span class="material-symbols-outlined icon">settings_applications</span>
+                            <span class="titulo">Parametros máquinas</span> </a>
                     </li>
                     <li>
                         <a class="link" href="atualizar-senha.html">
@@ -45,9 +51,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link" href="deletarConta.html">
+                        <a class="link" href="desativarEmpresa.html">
                             <span class="material-symbols-outlined icon">cancel</span>
-                            <span class="titulo">Deletar conta</span>
+                            <span class="titulo">Desativar empresa</span>
                         </a>
                     </li>
                 </ul>
@@ -76,16 +82,19 @@
 
 
         <div class="container">
+            <div>
+                <h1 style="font-size: 45px;">Parametros das máquinas</h1>
+            </div>
             <div class="kpi-container">
                 <div class="kpi-card">
-                    <h3 class="titulo">Máquinas <br>cadastradas</h3>
-                    <p class="quantidade" id="qtdMaquinas">0</p>
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
+                    <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
                     <span class="material-symbols-outlined icon cadastrada">computer</span>
                 </div>
                 <div class="kpi-card">
-                    <h3 class="titulo">Máquinas sem <br>parâmetros</h3>
-                    <p class="quantidade" id="qtdSemParam">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">warning</span>
+                    <h3 class="titulo" style="font-size: 25px;">Máquinas sem <br>parâmetros</h3>
+                    <p class="quantidade" id="qtdSemParam" style="font-size: 5em;">0</p>
+                    <span class="material-symbols-outlined icon solicitacao">warning</span>
                 </div>
                 <button class="requisicao" onclick="abrirModalParametrosGerais()">Definir parâmetros gerais</button>
             </div>
@@ -93,9 +102,8 @@
             <div class="listaEmpresa">
                 <div class="pesquisa">
                     <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="Nome da máquina..."
-                            oninput="pesquisarMaquina()">
+                        <label for="pesquisa_input">Pesquisar (Endereço MAC)</label>
+                        <input id="pesquisa_input" type="text" oninput="pesquisarMaquina()">
                         <button class="material-symbols-outlined btn-icon" onclick="pesquisarMaquina()">search</button>
                     </div>
                 </div>
@@ -112,12 +120,26 @@
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
-                        <!-- preenchido via JS -->
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
+
+    <!-- Model de alerta -->
+    <div class="modal aviso" id="modal_avisar_parametros_gerais">
+        <div class="modal-container" id="modal_container_avisar_parametros_gerais">
+            <div class="header">
+                <h1>Aviso</h1>
+                <button class="material-symbols-outlined close-icon" onclick="toggleModalAviso(false)">close</button>
+            </div>
+            <div class="body">
+                <p>Detectamos que você está usando os parâmetros recomendados pela nossa empresa. Deseja personalizá-los?</p>
+                <button class="btn submit" onclick="abrirModalParametrosGerais()">Personalizar</button>
+                <button class="btn cancel" onclick="toggleModalAviso(false)">Fechar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL PARÂMETROS GERAIS -->
     <div class="modal cadastro" id="modal_param_gerais">
@@ -165,7 +187,7 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     </div>
 
     <script src="../js/nav.js"></script>
@@ -180,6 +202,7 @@
 
         // ---------- ABRIR / FECHAR MODAIS ----------
         function abrirModalParametrosGerais() {
+            toggleModalAviso(false);
             toggleModal(modalGeral, modalGeralContainer);
         }
 
@@ -242,6 +265,11 @@
         function salvarParametrosIndividuais() {
             if (!maquinaSelecionada) return alert("Selecione uma máquina.");
 
+            const usoCpuInd = document.getElementById('usoCpuInd');
+            const usoGpuInd = document.getElementById('usoGpuInd');
+            const tempCpuInd = document.getElementById('tempCpuInd');
+            const tempGpuInd = document.getElementById('tempGpuInd');
+
             const params = {
                 uso_cpu: usoCpuInd.value,
                 uso_gpu: usoGpuInd.value,
@@ -295,7 +323,7 @@
                     return res.json();
                 })
                 .then(() => {
-                    toggleModal();
+                    abrirModalParametrosGerais();
                 })
                 .catch(err => {
                     console.error(err);
@@ -311,22 +339,38 @@
                     return res.json();
                 })
                 .then(param => {
-                    if (!param || Object.keys(param).length === 0) {
-                        // Nenhum parâmetro geral definido
-                        abrirModalFb('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
-                        setTimeout(() => toggleModalParametrosGerais(true), 1200);
+                    if (Array.isArray(param) && param.length === 0) {
+                        toggleModalAviso('Atenção', 'Você precisa definir os parâmetros gerais antes de continuar.', 'erro');
                     } else {
-                        console.log("Parâmetros gerais carregados:", param);
+                        console.log("Parametros encontrados.");
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    abrirModalFb('Erro', 'Erro ao buscar parâmetros gerais.', 'erro');
                 });
+        }
+
+        function toggleModalAviso(show) {
+            console.log(`Abrindo modal de aviso: ${show}`);
+            let modalAviso = document.getElementById('modal_avisar_parametros_gerais');
+            let containerAviso = document.getElementById('modal_container_avisar_parametros_gerais');
+
+            if (show) {
+                modalAviso.classList.add('open');
+                modalAviso.classList.remove('fade-out-flex');
+                modalAviso.classList.add('fade-in');
+                containerAviso.classList.add('slide-in-top');
+            } else {
+                modalAviso.classList.remove('fade-in');
+                containerAviso.classList.remove('slide-in-top');
+                modalAviso.classList.add('fade-out-flex');
+                modalAviso.classList.remove('open');
+            }
         }
 
         window.onload = function () {
             carregarMaquinas();
+            verificarParametrosGerais();
         }
     </script>
 </body>

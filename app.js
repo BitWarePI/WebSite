@@ -20,6 +20,7 @@ var HOST_APP = process.env.APP_HOST || 'localhost';
 
 // Importa rotas
 var solicitacaoRouter = require("./src/routes/solicitacoes");
+var kpiRouter = require("./src/routes/kpi");
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
@@ -27,6 +28,7 @@ var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
+var chamadosRouter = require("./src/routes/chamados");
 
 // Middlewares
 app.use(express.json());
@@ -35,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
+app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/funcionarios", funcionariosRouter);
@@ -42,6 +45,7 @@ app.use("/cargos", cargoRouter);
 app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
+app.use("/chamados", chamadosRouter);
 //app.use("/emails", emailRouter);
 
 // Inicia o servidor

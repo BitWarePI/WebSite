@@ -1,137 +1,659 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/default.css">
-    <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
-    <link rel="stylesheet" href="../css/dashboard/dashTecnico/dashTecnico.css">
-    <link rel="stylesheet" href="../css/animacao.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="icon" href="../assets/icon/favicon2.png">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/dashGeral.css"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <title>Dashboard | BitWare</title>
 </head>
+
 <body>
-    
-    <section>
-        <nav class="slide-in-left">
-            <div class="main-nav">
-                <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
-                <div class="perfil-tecnico">
-                    <img src="../assets/imgs/isaak.png" alt="Avatar do Técnico" class="avatar">
-                    <h2 class="nome-tecnico">Isaak Guilherme</h2>
-                    <p class="cargo-tecnico">Técnico</p>
-                    <p class="empresa-tecnico">Empresa XYZ</p>
+    <nav>
+        <div class="main-nav">
+            <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt="Bitware Logo"></h1>
+            
+            <ul class="links nav-links-pc">
+                <li><a class="link" href="dashHome.html">
+                        <span class="material-symbols-outlined icon">home</span>
+                        <span class="titulo">Inicio</span>
+                    </a>
+                </li>
+                <li><a class="link ativo" href="dashAnalista.html">
+                        <span class="material-symbols-outlined icon">analytics</span>
+                        <span class="titulo">Dash Geral</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="link" href="dashFuncionario.html">
+                        <span class="material-symbols-outlined icon">group</span>
+                        <span class="titulo">Funcionários</span>
+                    </a>
+                </li>
+                 <li>
+                    <a class="link" href="dashInfoMaquinas.html">
+                        <span class="material-symbols-outlined icon">computer</span>
+                        <span class="titulo">Informações máquinas</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="link" href="dashInfoMaquinas.html"> <span class="material-symbols-outlined icon">settings</span>
+                        <span class="titulo">Máquina Parâmetros</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="link" href="atualizar-senha.html">
+                        <span class="material-symbols-outlined icon">lock</span>
+                        <span class="titulo">Atualizar senha</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="link" href="desativarEmpresa.html">
+                        <span class="material-symbols-outlined icon">cancel</span>
+                        <span class="titulo">Inativar empresa</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <a href="../index.html" class="btn btn-sair">
+            Sair
+        </a>
+    </nav>
+    <div class="container">
+        
+        <div class="main-header">
+            <h1>Dashboard - Geral</h1>
+            <p>Monitoramento de Hardware</p>
+            <div class="date-filter">
+                <input type="date" id="dt_inicio">
+                <input type="date" id="dt_fim">
+                <button id="btn_aplicar">Aplicar</button>
+            </div>
+        </div>
+
+        <div class="kpi-row">
+            
+            <div class="kpi-card">
+                <span class="material-symbols-outlined">computer</span>
+                <p class="kpi-title">Máquinas Ativas</p>
+                <p class="kpi-value" id="kpi_maquinas_ativas">0</p>
+            </div>
+
+            <div id="kpiusocpu" class="kpi-card-gauge">
+                <div class="gauge-wrapper">
+                    <canvas id="gaugeCpuUso"></canvas>
+                    <div class="gauge-text">
+                        <span class="kpi-value-text">0%</span>
+                        <span class="kpi-machine-count">0 Maq</span>
+                    </div>
                 </div>
-                <ul class="links nav-links-pc">
-                    <li><a class="link ativo" href="dashHome.html">
-                            <span class="material-symbols-outlined icon">home</span>
-                            <span class="titulo">Inicio</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="link" href="atualizar-senha.html">
-                            <span class="material-symbols-outlined icon">lock</span>
-                            <span class="titulo">Atualizar senha</span>
-                        </a>
-                    </li>
-                </ul>
-                <a href="../index.html" class="btn btn-sair nav-links-pc">        
-                    Sair
-                </a>
-                <div id="nav-menu-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <p class="gauge-label">Uso de CPU</p>
+            </div>
+
+            <div id="kpiusogpu" class="kpi-card-gauge">
+                <div class="gauge-wrapper">
+                    <canvas id="gaugeGpuUso"></canvas>
+                    <div class="gauge-text">
+                        <span class="kpi-value-text">0%</span>
+                        <span class="kpi-machine-count">0 Maq</span>
+                    </div>
+                </div>
+                <p class="gauge-label">Uso de GPU</p>
+            </div>
+
+            <div id="kpitempcpu" class="kpi-card-gauge">
+                <div class="gauge-wrapper">
+                    <canvas id="gaugeCpuTemp"></canvas>
+                    <div class="gauge-text">
+                        <span class="kpi-value-text">0°C</span>
+                        <span class="kpi-machine-count">0 Maq</span>
+                    </div>
+                </div>
+                <p class="gauge-label">Temperatura</p>
+            </div>
+        </div>
+        
+        <div class="chamados-header">
+            <h2>Chamados</h2>
+            <div class="chamado-filters">
+                <select id="filter_maquina">
+                    <option value="">Todas Máquinas</option>
+                </select>
+                <select id="filter_prioridade">
+                    <option value="">Prioridade</option>
+                    <option value="Crítica">Crítica</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Média">Média</option>
+                    <option value="Baixa">Baixa</option>
+                </select>
+                <select id="filter_status">
+                    <option value="">Status</option>
+                    <option value="Aberto">Aberto</option>
+                    <option value="Em andamento">Em andamento</option>
+                    <option value="Resolvido">Resolvido</option>
+                </select>
+            </div>
+            
+            <div class="kpi-card-small">
+                <span class="material-symbols-outlined">support_agent</span>
+                <div class="kpi-text">
+                    <p class="kpi-title">Chamados Ativos</p>
+                    <p class="kpi-value" id="kpi_chamados_ativos">0</p>
                 </div>
             </div>
-            <ul class="links nav-links-cell">
-                    <li><a class="link ativo" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Inicio</a></li>
-                    <li><a class="link" href="dashFuncionario.html"><span class="material-symbols-outlined icon">work</span>Empresas</a></li>
-                    <li>
-                        <a href="../index.html" class="btn btn-sair">        
-                            Sair
-                        </a>
-                    </li>
-            </ul>
-        </nav>    
+        </div>
         <div class="container">
             <div class="kpi-container">
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados Pendentes</h3>
-                    <p class="quantidade">12</p>
-                    <span class="material-symbols-outlined icon cadastrada">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Chamados críticos</h3>
-                    <p class="quantidade">4</p>
-                    <span class="material-symbols-outlined icon ativo">apartment</span>
-                </div>
-                <div class="kpi-card">
-                    <h3 class="titulo">Máquinas com problema</h3>
-                    <p class="quantidade">6</p>
-                    <span class="material-symbols-outlined icon solicitacao">apartment</span>
-                </div>
-            </div>
-            <div class="listaEmpresa">
-                <div class="pesquisa">
-                    <div class="ipt_label">
-                        <label for="pesquisa_input">Pesquisar</label>
-                        <input id="pesquisa_input" type="text" placeholder="">
-                        <button class="material-symbols-outlined btn-icon">search</button>
-                    </div>
-                    <div class="selectFiltro">
-                        <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa">
-                            <option value="todos">Todos</option>
-                            <option value="urgente">Urgente</option>
-                            <option value="nIniciado">Não Iniciado</option>
-                        </select>
-                    </div>
-                </div>
-                <table>
+              <div class="chamado">
+                  <table>
                     <thead>
-                        <tr>
-                            <th class="id">ID</th>
-                            <th class="maquina">Máquina</th>
-                            <th class="problema">Problema</th>
-                            <th class="prioridade">Prioridade</th>
-                            <th class="status">Status</th>
-                            <th class="tecnico">Técnico responsável</th>
-                            <th class="acao"></th>
-                        </tr>
+                      <tr>
+                        <th class="id">ID</th>
+                        <th class="maquina">Máquina</th>
+                        <th class="problema">Problema</th>
+                        <th class="prioridade">Prioridade</th>
+                        <th class="dt_abertura">Data</th> <th class="status">Status</th>
+                        <th class="tecnico">Técnico responsável</th>
+                        <th class="acao"></th>
+                      </tr>
                     </thead>
-                    <tbody class="">
-                        <tr>
-                            <td class="id"> <p>908</p></td>
-                            <td class="maquina">015 - Corredor B</td>
-                            <td class="problema">Superaquecimento</td>
-                            <td class="prioridade">Alta</td>
-                            <td class="status"><span class="nIniciado">Não iniciado</span></td>
-                            <td class="tecnico">Não atribuído</td>
-                            <td class="acao">
-                                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                            </td>
-                        </tr>
-                        <tr>
-                             <td class="id"> <p>666</p></td>
-                            <td class="maquina">098 - Corredor G</td>
-                            <td class="problema">uso de GPU abaixo do esperado</td>
-                            <td class="prioridade">Média</td>
-                            <td class="status"><span class="andamento">Em andamento</span></td>
-                            <td class="tecnico">Isaak Guilherme</td>
-                            <td class="acao">
-                                <button class="material-symbols-outlined iniciar" title="Iniciar chamado">play_arrow</button>
-                                <button class="material-symbols-outlined finalizar" title="Finalizar">check_circle</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-    </section>
+                    
+                    <tbody class="" id="tabela_chamados_body">
+                      </tbody>
 
-    <script src="../js/nav.js"></script>
+                  </table>
+                </div>
+              </div>
+          
+              <div class="modal" id="modal_atribuir_tecnico">
+                <div class="modal-container" id="modal_container_atribuir">
+                    <div class="header">
+                        <h1>Atribuir Técnico ao Chamado</h1>
+                        <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+                            close
+                        </button>
+                    </div>
+                    <div class="body" id="lista_tecnicos_container">
+                        </div>
+                </div>
+          </div>
+    </div>
+</section>
+
+<script>
+    // --- Configuração dos Gauges ---
+    const gaugeOptions = {
+        responsive: true,
+        maintainAspectRatio: false, // Permite que o wrapper controle a altura
+        cutout: '80%',
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        circumference: 180, // Meio círculo
+        rotation: -90,      // Começa da esquerda
+    };
+    const gaugeTrackColor = '#3c3a52'; // Cor do "trilho" do gauge
+
+    // Gauge 1: CPU Uso
+    const ctxGaugeCpuUso = document.getElementById('gaugeCpuUso').getContext('2d');
+    const gaugeCpuUso = new Chart(ctxGaugeCpuUso, {
+        type: 'doughnut',
+        data: { datasets: [{ data: [0, 100], backgroundColor: ['#4caf50', gaugeTrackColor], borderColor: 'rgba(0,0,0,0)', borderWidth: 0 }] },
+        options: gaugeOptions
+    });
+
+    // Gauge 2: GPU Uso
+    const ctxGaugeGpuUso = document.getElementById('gaugeGpuUso').getContext('2d');
+    const gaugeGpuUso = new Chart(ctxGaugeGpuUso, {
+        type: 'doughnut',
+        data: { datasets: [{ data: [0, 100], backgroundColor: ['#e4b131', gaugeTrackColor], borderColor: 'rgba(0,0,0,0)', borderWidth: 0 }] },
+        options: gaugeOptions
+    });
+
+    // Gauge 3: Temperatura (CPU)
+    const ctxGaugeCpuTemp = document.getElementById('gaugeCpuTemp').getContext('2d');
+    const gaugeCpuTemp = new Chart(ctxGaugeCpuTemp, {
+        type: 'doughnut',
+        data: { datasets: [{ data: [0, 120], backgroundColor: ['#ff4b4b', gaugeTrackColor], borderColor: 'rgba(0,0,0,0)', borderWidth: 0 }] },
+        options: gaugeOptions
+    });
+
+    // --- Seletores dos Filtros e KPIs dos Gauges ---
+    const inputInicio = document.getElementById('dt_inicio');
+    const inputFim = document.getElementById('dt_fim');
+    const btnAplicar = document.getElementById('btn_aplicar');
+    
+    const kpiusogpu = document.getElementById('kpiusogpu');
+    const kpiusocpu = document.getElementById('kpiusocpu');
+    const kpitempcpu = document.getElementById('kpitempcpu');
+    
+    const kpiMaquinasAtivas = document.getElementById('kpi_maquinas_ativas');
+    const machineCountSpans = document.getElementsByClassName('kpi-machine-count');
+
+    // --- Seletores de TEXTO (dentro dos gauges) ---
+    const kpiGpuUsoValorCentro = kpiusogpu.querySelector('.kpi-value-text');
+    const kpiCpuUsoValorCentro = kpiusocpu.querySelector('.kpi-value-text');
+    const kpiCpuTempValorCentro = kpitempcpu.querySelector('.kpi-value-text');
+
+    // --- Funções (mediana, cores, divergência) ---
+    function mediana(dados, tipo) {
+        const valores = dados.map(d => parseFloat(d[tipo])).sort((a, b) => a - b);
+        const n = valores.length;
+        if (n % 2 === 0) return ((valores[n / 2 - 1] + valores[n / 2]) / 2).toFixed(1);
+        return valores[Math.floor(n / 2)].toFixed(1);
+    }
+
+    function definirCorPadrao(valor, tipo) {
+        if (tipo.includes('uso')) {
+            if (valor < 50) return '#ff4b4b'; // vermelho
+            if (valor < 70) return '#e4b131'; // amarelo
+            return '#4caf50'; // verde
+        } else {
+            if (valor > 80) return '#ff4b4b'; // vermelho
+            if (valor > 70) return '#e4b131'; // amarelo
+            return '#4caf50'; // verde
+        }
+    }
+
+    function aplicarCoresGauges() {
+        const gpuUso = parseFloat(kpiGpuUsoValorCentro.textContent) || 0;
+        const cpuUso = parseFloat(kpiCpuUsoValorCentro.textContent) || 0;
+        const cpuTemp = parseFloat(kpiCpuTempValorCentro.textContent) || 0;
+
+        // A cor do "Uso de CPU" é sempre Verde (ideal alto)
+        gaugeCpuUso.data.datasets[0].backgroundColor[0] = definirCorPadrao(cpuUso, 'uso');
+        // A cor do "Uso de GPU" é Laranja/Amarelo
+        gaugeGpuUso.data.datasets[0].backgroundColor[0] = definirCorPadrao(gpuUso, 'uso');
+        // A cor da "Temperatura" é Vermelha (ideal baixo)
+        gaugeCpuTemp.data.datasets[0].backgroundColor[0] = definirCorPadrao(cpuTemp, 'temp');
+
+        gaugeGpuUso.update();
+        gaugeCpuUso.update();
+        gaugeCpuTemp.update();
+    }
+
+    function verificarDivergencia(media, mediana, metricaNome) {
+        const limitePercentual = 0.10; 
+        if (media === 0 || !media) return; 
+        const diferenca = Math.abs(media - mediana);
+        const diferencaPercentual = diferenca / media;
+        if (diferencaPercentual > limitePercentual) {
+            console.warn(`Alerta de Divergência em ${metricaNome}! Média (${media}) está ${Math.round(diferencaPercentual * 100)}% diferente da Mediana (${mediana}).`);
+        }
+    }
+
+    // --- FUNÇÃO PRINCIPAL (GAUGES) ---
+    async function aplicarPeriodo() {
+        const inicio = inputInicio.value;
+        const fim = inputFim.value;
+
+        if (!inicio || !fim) {
+            alert('Por favor, selecione uma data inicial e final.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/kpis?inicio=${inicio}&fim=${fim}`);
+            if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+
+            const dados = await response.json();
+            
+            // Variáveis para limpar os campos
+            let maquinasNoPeriodo = 0;
+            let mediaGpuUso = 0, mediaCpuUso = 0, mediaCpuTemp = 0;
+            let medianaGpuUso = 0, medianaCpuUso = 0, medianaCpuTemp = 0;
+
+            if (!Array.isArray(dados) || dados.length === 0) {
+                alert('Nenhum dado de hardware encontrado para o período selecionado.');
+                // (Valores já estão 0, então os campos serão limpos)
+            } else {
+                // --- 1. CÁLCULO DE MÁQUINAS ÚNICAS ---
+                // !!! IMPORTANTE: Troque 'idMaquina' se o nome da sua coluna for outro !!!
+                const machineIds = new Set(dados.map(d => d.idMaquina)); 
+                maquinasNoPeriodo = machineIds.size;
+
+                // --- 2. Cálculos de Média e Mediana ---
+                const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+                mediaGpuUso = parseFloat(media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1));
+                mediaCpuUso = parseFloat(media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1));
+                mediaCpuTemp = parseFloat(media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1));
+
+                medianaGpuUso = parseFloat(mediana(dados, "gpu_percent"));
+                medianaCpuUso = parseFloat(mediana(dados, "cpu_percent"));
+                medianaCpuTemp = parseFloat(mediana(dados, "cpu_temperature"));
+            }
+
+            // --- 3. Atualizar Card "Máquinas Ativas" ---
+            kpiMaquinasAtivas.innerHTML = maquinasNoPeriodo;
+            
+            // --- 4. Atualizar Contagem nos Gauges ---
+            for (let i = 0; i < machineCountSpans.length; i++) {
+                machineCountSpans[i].innerHTML = `${maquinasNoPeriodo} Maq`;
+            }
+
+            // --- 5. Atualizar Textos dos KPIs ---
+            kpiGpuUsoValorCentro.textContent = `${mediaGpuUso}%`;
+            kpiCpuUsoValorCentro.textContent = `${mediaCpuUso}%`;
+            kpiCpuTempValorCentro.textContent = `${mediaCpuTemp}°C`;
+
+            // --- 6. Atualizar Dados dos Gráficos Gauge ---
+            const maxTemp = 120;
+            const maxUso = 100;
+            gaugeGpuUso.data.datasets[0].data[0] = mediaGpuUso;
+            gaugeGpuUso.data.datasets[0].data[1] = Math.max(0, maxUso - mediaGpuUso);
+            gaugeCpuUso.data.datasets[0].data[0] = mediaCpuUso;
+            gaugeCpuUso.data.datasets[0].data[1] = Math.max(0, maxUso - mediaCpuUso);
+            gaugeCpuTemp.data.datasets[0].data[0] = mediaCpuTemp;
+            gaugeCpuTemp.data.datasets[0].data[1] = Math.max(0, maxTemp - mediaCpuTemp);
+
+            // --- 7. Chamar Alertas de Divergência ---
+            verificarDivergencia(mediaGpuUso, medianaGpuUso, 'Uso de GPU');
+            verificarDivergencia(mediaCpuUso, medianaCpuUso, 'Uso de CPU');
+            verificarDivergencia(mediaCpuTemp, medianaCpuTemp, 'Temperatura de CPU');
+
+            // --- 8. Funções Finais ---
+            aplicarCoresGauges(); 
+
+        } catch (error) {
+            console.error("Erro ao buscar dados dos gauges:", error);
+            alert("Ocorreu um erro ao buscar os dados de hardware.");
+        }
+    }
+    btnAplicar.addEventListener('click', aplicarPeriodo);
+</script>
+
+
+<script>
+    // --- Seletores da Lógica de Chamados ---
+    const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
+    const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+    const kpiChamadosAtivos = document.getElementById('kpi_chamados_ativos');
+
+    // --- Funções do Modal (fechar, abrir, carregar, atribuir) ---
+    function fecharModalTecnicos() {
+        modalTecnicos.classList.remove("fade-in");
+        modalContainerTecnicos.classList.remove("slide-in-top");
+        modalTecnicos.classList.add("fade-out-flex");
+        modalTecnicos.classList.remove("open");
+    }
+
+    function abrirModalTecnicos(idChamado) {
+        modalTecnicos.dataset.idChamado = idChamado;
+        modalTecnicos.classList.remove("fade-out-flex");
+        modalTecnicos.classList.add("open");
+        modalTecnicos.classList.add("fade-in");
+        modalContainerTecnicos.classList.add("slide-in-top");
+        carregarTecnicos();
+    }
+
+    function carregarTecnicos() {
+        const container = document.getElementById('lista_tecnicos_container');
+        container.innerHTML = "<p>Carregando técnicos...</p>";
+        var idEmpresa = sessionStorage.getItem('idEmpresa');
+        fetch(`/funcionarios/tecnicos/empresa/${idEmpresa}`)
+            .then(res => { if (!res.ok) throw new Error('Erro ao buscar técnicos'); return res.json(); })
+            .then(tecnicos => {
+                container.innerHTML = "";
+                if (tecnicos.length === 0) { container.innerHTML = "<p>Nenhum técnico disponível encontrado.</p>"; return; }
+                tecnicos.forEach(tec => {
+                    var nomeCompleto = `${tec.nome} ${tec.sobrenome}`;
+                    container.innerHTML += `
+                        <div class="tecnico-card">
+                            <div class="info">
+                                <p><strong>Nome:</strong> ${nomeCompleto}</p>
+                                <p><strong>Email:</strong> ${tec.email}</p>
+                                <p><strong>Cargo:</strong> ${tec.cargo}</p>
+                                <p><strong>Empresa:</strong> ${tec.nomeEmpresa}</p>
+                                <p><strong>Chamados Ativos:</strong> ${tec.qtdChamados}</p>
+                            </div>
+                            <button class="btn-atribuir" 
+                                onclick="atribuirChamado(${tec.idFuncionario}, \'${nomeCompleto}\')">
+                                Atribuir
+                            </button>
+                        </div>
+                    `;
+                });
+            })
+            .catch(err => { console.error(err); container.innerHTML = "<p>Erro ao carregar técnicos. Tente novamente.</p>"; });
+    }
+
+    function atribuirChamado(idTecnico, nomeTecnico) {
+        const idChamado = modalTecnicos.dataset.idChamado;
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+
+        if (!idChamado) { console.error('ID do chamado não encontrado!'); return; }
+        fetch(`/chamados/atribuir/${idChamado}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idTecnicoServer: idTecnico }) })
+            .then(res => { if (!res.ok) throw new Error('Erro ao atribuir chamado'); return res.json(); })
+            .then(response => {
+                alert('Técnico atribuído ao chamado!');
+                fecharModalTecnicos();
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    linhaDoChamado.className = 'row-status-em-andamento';
+                    const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
+                    if (celulaTecnico) { 
+                        celulaTecnico.innerText = nomeTecnico;
+                        celulaTecnico.setAttribute('title', nomeTecnico);
+                    }
+                    const celulaStatus = linhaDoChamado.querySelector('.status');
+                    if (celulaStatus) celulaStatus.innerText = 'Em andamento';
+                    const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
+                    if (botaoIniciar) {
+                        botaoIniciar.setAttribute('onclick', "alert('O chamado ja tem um tecnico')");
+                        botaoIniciar.setAttribute('title', 'Este chamado já está em progresso');
+                    }
+                    const botaoFinalizar = linhaDoChamado.querySelector('.finalizar');
+                    if (botaoFinalizar) {
+                        botaoFinalizar.style.opacity = 1;
+                        botaoFinalizar.style.cursor = 'pointer';
+                        botaoFinalizar.setAttribute('onclick', `finalizarChamado(${idChamado})`);
+                        botaoFinalizar.setAttribute('title', 'Finalizar');
+                    }
+                    if (userCargo != '4') {
+                        let botaoRemover = linhaDoChamado.querySelector('.remover-tecnico');
+                        if (botaoRemover) {
+                            botaoRemover.style.display = 'inline-block';
+                        } else {
+                            const acaoCell = linhaDoChamado.querySelector('.acao');
+                            if (acaoCell) {
+                                acaoCell.innerHTML += ` <span class="material-symbols-outlined remover-tecnico" title="Remover técnico" onclick="removerTecnico(${idChamado})">person_remove</span>`;
+                            }
+                        }
+                    }
+                } else { carregarChamados(); }
+            })
+            .catch(err => { console.error(err); alert('Erro ao atribuir o técnico.'); });
+    }
+
+    function finalizarChamado(idChamado) {
+        if (confirm("Esse chamado foi finalizado realmente?")) {
+            fetch(`/chamados/finalizar/${idChamado}`, { method: 'PUT' })
+            .then(res => { if (!res.ok) throw new Error('Erro ao finalizar chamado'); return res.json(); })
+            .then(response => {
+                alert('Chamado finalizado com sucesso!');
+                const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+                if (linhaDoChamado) {
+                    linhaDoChamado.className = 'row-status-resolvido';
+                    const celulaStatus = linhaDoChamado.querySelector('.status');
+                    if (celulaStatus) celulaStatus.innerText = 'Resolvido';
+                    const iniciarBtn = linhaDoChamado.querySelector('.iniciar');
+                    if (iniciarBtn) iniciarBtn.style.display = 'none';
+                    const finalizarBtn = linhaDoChamado.querySelector('.finalizar');
+                    if (finalizarBtn) finalizarBtn.style.display = 'none';
+                    const removerBtn = linhaDoChamado.querySelector('.remover-tecnico');
+                    if (removerBtn) removerBtn.style.display = 'none';
+                } else { carregarChamados(); }
+            })
+            .catch(err => { console.error(err); alert('Erro ao finalizar o chamado.'); });
+        }
+    }
+
+    function removerTecnico(idChamado) {
+        if (!confirm("Tem certeza que deseja remover o técnico deste chamado? O status voltará para 'Não iniciado'.")) {
+            return;
+        }
+        fetch(`/chamados/remover-tecnico/${idChamado}`, { method: 'PUT' })
+        .then(res => { if (!res.ok) throw new Error('Erro ao remover técnico'); return res.json(); })
+        .then(response => {
+            alert('Técnico removido com sucesso!');
+            const linhaDoChamado = document.getElementById(`chamado-${idChamado}`);
+            if (linhaDoChamado) {   
+                linhaDoChamado.className = 'row-status-nao-iniciado';
+                const celulaTecnico = linhaDoChamado.querySelector('.tecnico-nome .truncate-text');
+                if (celulaTecnico) {
+                    celulaTecnico.innerText = 'Não atribuído';
+                    celulaTecnico.setAttribute('title', 'Não atribuído');
+                }
+                const celulaStatus = linhaDoChamado.querySelector('.status');
+                if (celulaStatus) celulaStatus.innerText = 'Não iniciado';
+                const botaoIniciar = linhaDoChamado.querySelector('.iniciar');
+                if (botaoIniciar) {
+                    botaoIniciar.setAttribute('onclick', `abrirModalTecnicos(${idChamado})`);
+                    botaoIniciar.setAttribute('title', 'Iniciar chamado');
+                    botaoIniciar.style.display = 'inline-block';
+                }
+                const botaoRemover = linhaDoChamado.querySelector('.remover-tecnico');
+                if (botaoRemover) botaoRemover.style.display = 'none';
+                const botaoFinalizar = linhaDoChamado.querySelector('.finalizar');
+                if(botaoFinalizar){
+                   botaoFinalizar.style.display = 'inline-block';
+                   botaoFinalizar.style.opacity = 0.5;
+                   botaoFinalizar.style.cursor = 'not-allowed';
+                   botaoFinalizar.setAttribute('title', 'Atribua um técnico primeiro');
+                }
+            } else { carregarChamados(); }
+        })
+        .catch(err => { console.error(err); alert('Erro ao remover o técnico.'); });
+    }
+
+    // --- Função de carregar KPIs dos Chamados ---
+    function carregarKPIs() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
+        const userId = sessionStorage.getItem('ID_USUARIO');
+
+        if (!kpiChamadosAtivos) return; 
+        kpiChamadosAtivos.innerText = '...';
+        
+        let kpiUrl = '';
+        if (userCargo == '4') { kpiUrl = `/chamados/kpi/tecnico/${userId}`; }
+        else { kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`; }
+
+        fetch(kpiUrl)
+            .then(res => { if (!res.ok) throw new Error('Erro ao buscar KPIs'); return res.json(); })
+            .then(data => {
+                var kpis = data[0];
+                kpiChamadosAtivos.innerText = kpis.pendentes; // Assumindo 'pendentes' = 'ativos'
+            })
+            .catch(err => {
+                console.error(err);
+                kpiChamadosAtivos.innerText = '0';
+            });
+    }
+
+    // --- Função de Carregar Chamados (Original) ---
+    function carregarChamados() {
+        const userCargo = sessionStorage.getItem('FK_CARGO');
+        const userId = sessionStorage.getItem('ID_USUARIO');
+        const idEmpresa = sessionStorage.getItem('idEmpresa');
+
+        var tbody = document.getElementById('tabela_chamados_body');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '<tr><td colspan="8">Carregando chamados...</td></tr>';
+
+        fetch(`/chamados/empresa/${idEmpresa}`)
+            .then(res => { if (!res.ok) throw new Error('Erro ao carregar chamados'); return res.json(); })
+            .then(chamados => {
+                tbody.innerHTML = "";
+                let chamadosFiltrados = chamados;
+                if (userCargo == '4') {
+                    chamadosFiltrados = chamados.filter(c => Number(c.idTecnico) == Number(userId));
+                }
+                if (chamadosFiltrados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8">Nenhum chamado encontrado.</td></tr>';
+                    return;
+                }
+
+                chamadosFiltrados.forEach(chamado => {
+                    var nomeTecnico = "Não atribuído";
+                    if (chamado.nomeTecnico) {
+                        nomeTecnico = `${chamado.nomeTecnico} ${chamado.sobrenomeTecnico || ''}`;
+                    }
+                    var classePrioridade = "";
+                    if (chamado.prioridade == 'Alta') classePrioridade = 'prioridade-alta';
+                    else if (chamado.prioridade == 'Média') classePrioridade = 'prioridade-media';
+                    else if (chamado.prioridade == 'Baixa') classePrioridade = 'prioridade-baixa';
+                    else if (chamado.prioridade == 'Crítica') classePrioridade = 'prioridade-crítica';
+
+                    var textoStatus = chamado.status;
+                    var classeLinha = "";
+                    if (chamado.status == 'Aberto') {
+                        textoStatus = 'Não iniciado';
+                        classeLinha = 'row-status-nao-iniciado';
+                    } else if (chamado.status == 'Em andamento') {
+                        classeLinha = 'row-status-em-andamento';
+                    } else if (chamado.status == 'Resolvido') {
+                        classeLinha = 'row-status-resolvido';
+                    }
+
+                    var botaoAtribuirHtml = "";
+                    var botaoFinalizarHtml = "";
+                    var botaoRemoverHtml = "";
+
+                    if (chamado.status == 'Resolvido') {
+                        // Nenhum botão
+                    } else if (userCargo == '4') {
+                        botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                    } else {
+                        if (chamado.status == 'Aberto') {
+                            botaoAtribuirHtml = `<button class="material-symbols-outlined iniciar" title="Iniciar chamado" onclick="abrirModalTecnicos(${chamado.idChamado})">play_arrow</button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Atribua um técnico primeiro" style="opacity: 0.5; cursor: not-allowed;">check_circle</button>`;
+                        } else if (chamado.status == 'Em andamento') {
+                            botaoAtribuirHtml = `<button class="material-symbols-outlined iniciar" title="Este chamado já está em progresso" style="opacity: 0.5; cursor: not-allowed;" onclick="alert('O chamado ja tem um tecnico')">play_arrow</button>`;
+                            botaoFinalizarHtml = `<button class="material-symbols-outlined finalizar" title="Finalizar" onclick="finalizarChamado(${chamado.idChamado})">check_circle</button>`;
+                            botaoRemoverHtml = `<span class="material-symbols-outlined remover-tecnico" title="Remover técnico" onclick="removerTecnico(${chamado.idChamado})">person_remove</span>`;
+                        }
+                    }
+
+                    var linha = `
+                        <tr id="chamado-${chamado.idChamado}" class="${classeLinha}">
+                            <td class="id"><p>${chamado.idChamado}</p></td>
+                            <td class="maquina"><div class="truncate-text" title="${chamado.enderecoMac}">${chamado.enderecoMac}</div></td>
+                            <td class="problema"><div class="truncate-text" title="${chamado.problema}">${chamado.problema}</div></td>
+                            <td class="prioridade"><span class="priority-badge ${classePrioridade}">${chamado.prioridade}</span></td>
+                            <td class="dt_abertura">${chamado.data_abertura}</td>
+                            <td class="status">${textoStatus}</td>
+                            <td class="tecnico tecnico-nome"><div class="truncate-text" title="${nomeTecnico}">${nomeTecnico}</div></td>
+                            <td class="acao">
+                                ${botaoAtribuirHtml} 
+                                ${botaoFinalizarHtml}
+                                ${botaoRemoverHtml}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += linha;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = '<tr><td colspan="8">Erro ao carregar chamados. Tente novamente.</td></tr>';
+            });
+    }
+
+    // --- Carregamento Unificado ---
+    window.addEventListener('DOMContentLoaded', () => {
+        carregarChamados(); // Carrega a tabela de chamados
+        carregarKPIs();     // Carrega o KPI "Chamados Ativos"
+        // aplicarPeriodo(); // Não chama no início, espera o usuário definir data
+    });
+</script>
+
 </body>
 </html>
