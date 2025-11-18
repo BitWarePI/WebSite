@@ -14,7 +14,43 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="icon" href="../assets/icon/favicon2.png">
   <title>Dashboard | BitWare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
 </head>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: "#6D28D9", // This is a deep purple, like violet-700
+          "background-light": "#F3F4F6", // This is gray-100 for light mode
+          "background-dark": "#111827", // This is gray-900 for dark mode
+          "background-neutral-900": "#1F2937", // gray-800
+        },
+        fontFamily: {
+          display: ["Inter", "sans-serif"],
+        },
+        borderRadius: {
+          DEFAULT: "0.75rem", // 12px
+        },
+      },
+    },
+  };
+</script>
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .pie-chart {
+    background: conic-gradient(#A78BFA 0% 40%,
+        #8B5CF6 40% 70%,
+        #6D28D9 70% 90%,
+        #4C1D95 90% 100%);
+  }
+</style>
 
 <body>
 
@@ -68,50 +104,133 @@
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
 
         <!-- GRAFICO -->
-        <div style="flex: 1; min-width: 400px; min-height: 600px;">
-          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Erros nas máquinas</p>
-          <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 480px;">
-            <canvas id="grafico1" style="height: 100%;"></canvas>
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-8">
+          <div class="xl:col-span-3 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="bg-neutral-900 p-6 rounded-lg text-white">
+                <p class="text-sm text-gray-400">Total de Erros (24h)</p>
+                <p class="text-3xl font-bold mt-1">1,204</p>
+              </div>
+              <div class="bg-neutral-900 p-6 rounded-lg text-white">
+                <p class="text-sm text-gray-400">Máquinas com Erro</p>
+                <p class="text-3xl font-bold mt-1">42</p>
+              </div>
+              <div class="bg-neutral-900 p-6 rounded-lg text-white">
+                <p class="text-sm text-gray-400">Principal Problema</p>
+                <p class="text-3xl font-bold mt-1">Temperatura</p>
+              </div>
+              <div class="bg-red-600 p-6 rounded-lg text-white">
+                <p class="text-sm text-red-200">Chamados Críticos</p>
+                <p class="text-3xl font-bold mt-1">6</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              <div class="lg:col-span-3 bg-neutral-900 p-6 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-100 mb-4">Frequência de Erros</h2>
+                <div class="h-80 relative">
+                  <svg class="absolute inset-0 w-full h-full" fill="none" stroke-width="2" viewBox="0 0 400 200">
+                    <line class="stroke-gray-700/50" stroke-dasharray="2,2" x1="0" x2="400" y1="50" y2="50"></line>
+                    <line class="stroke-gray-700/50" stroke-dasharray="2,2" x1="0" x2="400" y1="100" y2="100"></line>
+                    <line class="stroke-gray-700/50" stroke-dasharray="2,2" x1="0" x2="400" y1="150" y2="150"></line>
+                    <path class="stroke-primary"
+                      d="M 0 142.86 L 44 114.28 L 88 171.44 L 132 0 L 176 85.72 L 220 114.28 L 264 85.72 L 308 171.44 L 352 142.86">
+                    </path>
+                    <path
+                      d="M 0 142.86 L 44 114.28 L 88 171.44 L 132 0 L 176 85.72 L 220 114.28 L 264 85.72 L 308 171.44 L 352 142.86 L 352 200 L 0 200 Z"
+                      fill="url(#gradient)"></path>
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="#6D28D9" stop-opacity="0.4"></stop>
+                        <stop offset="100%" stop-color="#6D28D9" stop-opacity="0"></stop>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="absolute bottom-0 left-0 right-0 flex justify-between px-2">
+                    <span class="text-xs text-gray-400">00h</span>
+                    <span class="text-xs text-gray-400">03h</span>
+                    <span class="text-xs text-gray-400">06h</span>
+                    <span class="text-xs text-gray-400">09h</span>
+                    <span class="text-xs text-gray-400">12h</span>
+                    <span class="text-xs text-gray-400">15h</span>
+                    <span class="text-xs text-gray-400">18h</span>
+                    <span class="text-xs text-gray-400">21h</span>
+                    <span class="text-xs text-gray-400">23h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="lg:col-span-2 bg-neutral-900 p-6 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-100 mb-4">Distribuição de Erros</h2>
+                <div class="flex items-center justify-center h-full">
+                  <div class="w-full max-w-xs space-y-6">
+                    <div class="relative w-48 h-48 mx-auto">
+                      <div class="pie-chart w-full h-full rounded-full"></div>
+                      <div
+                        class="absolute inset-2 bg-neutral-900 rounded-full flex flex-col items-center justify-center">
+                        <span class="text-2xl font-bold text-white">1,204</span>
+                        <span class="text-sm text-gray-400">Total</span>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-violet-400"></div>
+                        <span class="text-gray-300">Temperatura (40%)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-violet-500"></div>
+                        <span class="text-gray-300">Memória (30%)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-violet-700"></div>
+                        <span class="text-gray-300">Rede (20%)</span>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-violet-900"></div>
+                        <span class="text-gray-300">Outros (10%)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- LADO DIREITO -->
-        <div style="display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
+          <!-- LADO DIREITO -->
+          <div style="display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
 
-          <!-- FILTRO -->
-          <div style="margin-top: 45px; background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
-            <p style="margin: 0 0 10px 0; font-size: 15px;">Filtro de Dados</p>
-            <select id="filtro"
-              style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
-              <option>Últimas 24h</option>
-              <option>Semanal</option>
-              <option>Mensal</option>
-              <option value="Semestral1">1° Semestre</option>
-              <option value="Semestral2">2° Semestre</option>
-              <option>Anual</option>
-            </select>
-          </div>
+            <!-- FILTRO -->
+            <div style="background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
+              <p style="margin: 0 0 10px 0; font-size: 15px;">Filtro de Dados</p>
+              <select id="filtro"
+                style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
+                <option>Últimas 24h</option>
+                <option>Semanal</option>
+                <option>Mensal</option>
+                <option value="Semestral1">1° Semestre</option>
+                <option value="Semestral2">2° Semestre</option>
+                <option>Anual</option>
+              </select>
+            </div>
 
-          <div id="top5-container"
-            style="font-weight: bold; background-color: #111; border-radius: 16px; padding: 20px 25px; color: #f1f5f9; box-shadow: 0 0 12px rgba(255,255,255,0.05);">
-            <p style="font-size: 1.3rem; margin-bottom: 15px; text-align: center; color: #ffffff;">
-              Top 5 Máquinas com mais ocorrências (24horas)
-            </p>
-            <ul id="top5-lista" style="
+            <div id="top5-container"
+              style="font-weight: bold; background-color: #111; border-radius: 16px; padding: 20px 25px; color: #f1f5f9; box-shadow: 0 0 12px rgba(255,255,255,0.05);">
+              <p style="font-size: 1.3rem; margin-bottom: 15px; text-align: center; color: #ffffff;">
+                Top 5 Máquinas com mais ocorrências (24horas)
+              </p>
+              <ul id="top5-lista" style="
               list-style: none;
               padding-left: 0;
               margin: 0;
               display: flex;
               flex-direction: column;
               gap: 10px;">
-              <li style="color: #ccc; text-align: center;">Carregando...</li>
-            </ul>
+                <li style="color: #ccc; text-align: center;">Carregando...</li>
+              </ul>
+            </div>
+
           </div>
-
-
         </div>
         <div class="chamado" style="margin: 0px;">
-          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
+          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
           <table>
             <thead>
               <tr>
@@ -131,20 +250,20 @@
 
           </table>
         </div>
-      </div>
 
-      <div class="modal" id="modal_atribuir_tecnico">
-        <div class="modal-container" id="modal_container_atribuir">
-          <div class="header">
-            <h1>Atribuir Técnico ao Chamado</h1>
-            <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
-              close
-            </button>
-          </div>
-          <div class="body" id="lista_tecnicos_container">
+
+        <div class="modal" id="modal_atribuir_tecnico">
+          <div class="modal-container" id="modal_container_atribuir">
+            <div class="header">
+              <h1>Atribuir Técnico ao Chamado</h1>
+              <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+                close
+              </button>
+            </div>
+            <div class="body" id="lista_tecnicos_container">
+            </div>
           </div>
         </div>
-      </div>
   </section>
 
   <script src="../js/nav.js"></script>
@@ -191,18 +310,6 @@
     if (valor === 'Últimas 24h') {
       console.log("ENTROU NO IF")
       novosLabels = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'];
-<<<<<<< HEAD
-      novosDados = [1, 2, 2, 2, 2, 2, 2, 1, 2];
-    } 
-    else if (valor === 'Semanal') {
-      novosLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      novosDados = [8, 6, 3, 6, 5, 7, 7];
-    } 
-    else if (valor === 'Mensal') {
-      novosLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      novosDados = [56, 0, 0, 0];
-    } 
-=======
       novosDados = [2, 4, 1, 7, 3, 4, 3, 1, 2];
     }
     else if (valor === 'Semanal') {
@@ -213,7 +320,6 @@
       novosLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
       novosDados = [30, 45, 25, 10];
     }
->>>>>>> d3a670c86176702315997a493984ef331a0f3ea4
     else if (valor === 'Semestral1') {
       novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
       novosDados = [0, 0, 0, 0, 0, 0];
