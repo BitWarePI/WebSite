@@ -180,10 +180,14 @@ module.exports = {
     },
 
     async buscarOcorrencias(req, res) {
-        const { dataAbertura, dataFechamento} = req.params;
+        console.log("entrou")
+        const { dataAbertura, dataFechamento } = req.query;
+
+        console.log('Data Abertura:', dataAbertura);
+        console.log('Data Fechamento:', dataFechamento);
 
         try {
-            const resultado = await maquinaModel.buscarOcorrencias(dataAbertura, dataFechamento);
+            const resultado = await maquinaModel.buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa);
 
             if (resultado.length === 0) {
                 return res.status(200).json([]);
@@ -195,6 +199,4 @@ module.exports = {
             res.status(500).json({ erro: "Erro interno:" });
         }
     }
-
-
 };

@@ -169,7 +169,7 @@ async function topMaquinas(idEmpresa) {
 
 }
 
-function qtdMaquinas(idEmpresa){
+function qtdMaquinas(idEmpresa) {
     const instrucaoSQL = `
         SELECT COUNT(*) AS total
         FROM Maquina 
@@ -178,24 +178,33 @@ function qtdMaquinas(idEmpresa){
     return database.executar(instrucaoSQL)
 }
 
-function buscarOcorrencias(dataAbertura, dataFechamento){
+function buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa) {
     const instrucaoSQL = `
         SELECT
-            id,
-            data_abertura,
-            data_fechamento,
-            descricao,
-            status,
-            maquina_id,
-            trader_id
+            Chamado.idChamado,
+            Chamado.fkMaquina,
+            Chamado.problema,
+            Chamado.prioridade,
+            Chamado.status,
+            Chamado.idTecnico,
+            Chamado.dataAbertura,
+            Chamado.sincronizado
         FROM
-            ocorrencias
+            Chamado
+        JOIN
+            Maquina ON Chamado.fkMaquina = Maquina.idMaquina
+        JOIN
+            Empresa ON Maquina.fkEmpresa = Empresa.idEmpresa
         WHERE
-            data_abertura BETWEEN ${dataAbertura} AND ${dataFechamento}
+            Chamado.dataAbertura BETWEEN ${dataAbertura} AND ${dataFechamento}
+            AND Empresa.idEmpresa = ${fkEmpresa}
         ORDER BY
-            data_abertura DESC;
+            Chamado.dataAbertura DESC;
+
+
     `
     return database.executar(instrucaoSQL)
+
 }
 
 module.exports = {
