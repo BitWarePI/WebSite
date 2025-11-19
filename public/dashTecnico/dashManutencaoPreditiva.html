@@ -192,10 +192,21 @@ Seções (de cima para baixo):
 
   <script>
 
-    fkEmpresa = sessionStorage.getItem('idEmpresa')
+    const fkEmpresa = sessionStorage.getItem('idEmpresa')
 
     window.onload = function () {
-      buscarOcorrencias('mes', fkEmpresa);
+      buscarOcorrencias('mes', 2);
+    }
+
+    function formatarDataParaBanco(data) {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa de 0 (Janeiro = 0)
+      const dia = String(data.getDate()).padStart(2, '0');
+      const hora = String(data.getHours()).padStart(2, '0');
+      const minuto = String(data.getMinutes()).padStart(2, '0');
+      const segundo = String(data.getSeconds()).padStart(2, '0');
+
+      return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
     }
 
     function buscarOcorrencias(periodo, fkEmpresa) {
@@ -222,8 +233,8 @@ Seções (de cima para baixo):
         dataFechamento = new Date();
       }
 
-      const dataAberturaFormatado = dataAbertura.toISOString().split('T')[0]
-      const dataFechamentoFormatado = dataFechamento.toISOString().split('T')[0]
+      const dataAberturaFormatado = formatarDataParaBanco(dataAbertura); // Ex: '2025-11-19 14:37:52'
+      const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
 
       fetch(`/maquina/buscarOcorrencias?dataAbertura=${dataAberturaFormatado}&dataFechamento=${dataFechamentoFormatado}&fkEmpresa=${fkEmpresa}`)
         .then(res => {
