@@ -1,0 +1,121 @@
+/* Fundo escurecido */
+.filtro-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 80;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Painel lateral claro */
+.filtro-slide {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 330px;
+  height: 100%;
+  background: #e8e8e8;
+  color: #1a1a1a;
+  z-index: 99;
+  padding: 25px;
+  transform: translateX(100%);
+  transition: transform .3s ease;
+  box-shadow: -4px 0px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+  
+.filtro-slide.show {
+  transform: translateX(0);
+}
+
+/* Header */
+.filtro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.filtro-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.filtro-close {
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #555;
+  padding: 4px;
+}
+
+.filtro-close:hover {
+  color: #000;
+}
+
+/* Inputs claros */
+.filtro-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 3px;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  color: #1a1a1a;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filtro-input:focus {
+  border-color: #7b2cbf;
+  outline: none;
+}
+
+/* Status */
+.status-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.status-options input {
+  accent-color: #7b2cbf;
+}
+
+/* Botão aplicar */
+.filtro-aplicar {
+  background: #7b2cbf;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.filtro-aplicar:hover {
+  background: #6924a6;
+}
+
+/* Botão limpar */
+.filtro-limpar {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: -10px;
+}
+
+.filtro-limpar:hover {
+  color: #333;
+}
