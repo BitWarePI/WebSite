@@ -96,11 +96,11 @@ Seções (de cima para baixo):
         <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
         <div class="filters">
           <div class="periods">
-            <button class="btn ghost" data-period="24h">24h</button>
-            <button class="btn ghost" data-period="7d">7d</button>
-            <button class="btn ghost" data-period="30d">30d</button>
-            <button class="btn ghost" data-period="90d">90d</button>
-            <button class="btn ghost" data-period="1y">1y</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('hoje')" data-period="24h">24h</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('semana')" data-period="7d">7d</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('mes')" data-period="30d">30d</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('tresMes')" data-period="90d">90d</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('ano')" data-period="1y">1y</button>
           </div>
           <button class="btn" id="refreshBtn">Atualizar</button>
         </div>
@@ -190,6 +190,46 @@ Seções (de cima para baixo):
   </div>
 
   <script>
+
+    window.onload = function () {
+            buscarOcorrencias();
+        }
+
+    function buscarOcorrencias(periodo) {
+      let dataAbertura, dataFechamento;
+
+      if (periodo == 'hoje') {
+        dataAbertura = new Date();
+        dataFechamento = new Date();
+      } else if (periodo == 'semana') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getDate() - 7)
+        dataFechamento = new Date();
+      } else if (periodo == 'mes') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getMonth() - 1)
+        dataFechamento = new Date();
+      } else if (periodo == 'tresMes') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getMonth() - 3)
+        dataFechamento = new Date();
+      } else if (periodo == 'ano') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getMonth() - 12)
+        dataFechamento = new Date();
+      }
+
+      const dataAberturaFormatado = dataAbertura.toISOString().split('T')[0]
+      const dataFechamentoFormatado = dataFechamento.toISOString().split('T')[0]
+
+      fetch(`./maquina/buscarOcorrencias?dataAbertura=${dataAberturaFormatado}&dataFechamento=${dataFechamentoFormatado}`)
+        .then(responde => response.json())
+        .then(data => {
+          console.log(data)
+        })
+      .catch(error => console.error("Error ao buscar ocorrências", error))
+    }
+
     // --- Dados simulados (baseados no seu schema / inserts fornecidos) ---
     const MAQUINAS = [
       { id: 2, enderecoMac: 'a1:b2:c3:d4:e5:f6', nome: 'Setor A', fkEmpresa: 2 },

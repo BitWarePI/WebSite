@@ -178,6 +178,26 @@ function qtdMaquinas(idEmpresa){
     return database.executar(instrucaoSQL)
 }
 
+function buscarOcorrencias(dataAbertura, dataFechamento){
+    const instrucaoSQL = `
+        SELECT
+            id,
+            data_abertura,
+            data_fechamento,
+            descricao,
+            status,
+            maquina_id,
+            trader_id
+        FROM
+            ocorrencias
+        WHERE
+            data_abertura BETWEEN ${dataAbertura} AND ${dataFechamento}
+        ORDER BY
+            data_abertura DESC;
+    `
+    return database.executar(instrucaoSQL)
+}
+
 module.exports = {
     listarPorEmpresa,
     infoMaquinas,
@@ -190,5 +210,6 @@ module.exports = {
     definirParametrosGerais,
     definirParametrosMaquina,
     topMaquinas,
-    qtdMaquinas
+    qtdMaquinas,
+    buscarOcorrencias
 };

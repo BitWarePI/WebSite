@@ -177,6 +177,23 @@ module.exports = {
             console.error("Erro ao buscar quantidade de maquinas:", erro);
             res.status(500).json({ erro: "Erro interno:" });
         }
+    },
+
+    async buscarOcorrencias(req, res) {
+        const { dataAbertura, dataFechamento} = req.params;
+
+        try {
+            const resultado = await maquinaModel.buscarOcorrencias(dataAbertura, dataFechamento);
+
+            if (resultado.length === 0) {
+                return res.status(200).json([]);
+            }
+
+            res.status(200).json(resultado);
+        } catch (erro) {
+            console.error("Erro ao buscar ocorrencias:", erro);
+            res.status(500).json({ erro: "Erro interno:" });
+        }
     }
 
 
