@@ -196,7 +196,7 @@ function buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa) {
         JOIN
             Empresa ON Maquina.fkEmpresa = Empresa.idEmpresa
         WHERE
-            Chamado.dataAbertura BETWEEN ${dataAbertura} AND ${dataFechamento}
+            Chamado.dataAbertura BETWEEN '${dataAbertura}' AND '${dataFechamento}'
             AND Empresa.idEmpresa = ${fkEmpresa}
         ORDER BY
             Chamado.dataAbertura DESC;

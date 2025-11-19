@@ -181,7 +181,7 @@ module.exports = {
 
     async buscarOcorrencias(req, res) {
         console.log("entrou")
-        const { dataAbertura, dataFechamento } = req.query;
+        const { dataAbertura, dataFechamento, fkEmpresa } = req.query;
 
         console.log('Data Abertura:', dataAbertura);
         console.log('Data Fechamento:', dataFechamento);
