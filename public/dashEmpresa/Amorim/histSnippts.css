@@ -1,0 +1,298 @@
+section>div {
+  margin-right: 100px;
+}
+
+section {
+  align-items: start !important;
+}
+
+/* Reset básico para a área nova */
+.new-dashboard-wrapper {
+  background-color: #e8e8e8;
+  border-radius: 10px;
+  color: black;
+  width: 100%;
+  min-height: 85vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.header-date {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-items: center;
+}
+
+/* Grid Principal */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 3fr 1.2fr;
+  gap: 20px;
+  /* height: calc(100vh - 100px); */
+}
+
+/* --- COLUNA ESQUERDA: Tabela --- */
+.process-panel {
+  background-color: #bdbdbd;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input de Busca */
+.search-box {
+  background: rgb(219, 218, 218);
+  border: 1px solid black;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: black;
+  margin-left: 10px;
+  width: 100%;
+  outline: none;
+}
+
+/* Tabela */
+.custom-table {
+  width: 100%;
+  border-left: #000000 1px solid;
+  border-right: #000000 1px solid;
+
+}
+
+.custom-table th {
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.custom-table td {
+  color: black !important;
+  padding: 15px 0;
+  font-size: 0.9rem;
+}
+
+/* Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-running {
+  color: black;
+  background: rgb(137, 190, 77);;
+}
+
+.status-sleeping {
+  color: black;
+  background: rgb(221, 186, 34);
+}
+
+/* GRÁFICOS CIRCULARES (CSS Puro) */
+.chart-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: #000000 solid 0.5px;
+  margin-left: 10px;
+  background: conic-gradient(var(--chart-color) calc(var(--percent) * 1%), rgb(148, 147, 147) 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chart-circle::before {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background-color: var(--panel-bg);
+  border-radius: 50%;
+}
+
+.chart-circle span {
+  position: relative;
+  font-size: 0.65rem;
+  font-weight: bold;
+  z-index: 1;
+}
+
+/* BARRA LINEAR MEMÓRIA */
+.progress-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 10px;
+}
+
+.progress-bg {
+  flex-grow: 1;
+  height: 7px;
+  background-color: #3a3e50;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: rgb(221, 186, 34);
+}
+
+/* --- COLUNA DIREITA: Snippets --- */
+.snippets-panel {
+  background-color: #bdbdbd;
+  border: 1px solid #2a2d3a;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.panel-subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+/* Accordion Simulado */
+.accordion-group {
+  margin-bottom: 15px;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  color: black;
+  font-style: italic;
+  font-weight: 600;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.snippet-card {
+  border: 1px solid transparent;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.snippet-card:hover {
+  background-color: #7f0cacd2;
+}
+
+.snippet-card.active {
+  background-color: #7f0cac5d;
+  border-color: black;
+}
+
+.snippet-card strong {
+  display: block;
+  color: black;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.snippet-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: black;
+}
+
+.scroll-barSnippet {
+  max-height: 250px;
+  overflow: auto;
+  scrollbar-color: #000000 #f4f4f7;
+}
+
+/* Footer de Execução */
+.execution-footer {
+  margin-top: auto;
+  border-top: 1px solid gray;
+  padding-top: 15px;
+}
+
+.code-box {
+  background: black;
+  padding: 10px;
+  border: 1px solid #2a2d3a;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  color: blueviolet;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color:rgb(116, 70, 160);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: blueviolet;
+}
+
+.btn-secondary {
+  width: 100%;
+  background: transparent;
+  border: 1px solid black;
+  color: black;
+  padding: 10px;
+  background-color: rgb(148, 142, 142);
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  color: rgb(132, 0, 255);
+  text-decoration: underline;
+  text-decoration-color: rgb(52, 25, 77);
+}
+
+/* Checkbox customizado */
+input[type="checkbox"] {
+  accent-color: var(--accent-blue);
+  width: 16px;
+  height: 16px;
+}
+
+/* Layout Flex Principal (Ajuste para manter sua nav lateral) */
+section {
+  display: flex;
+}
