@@ -94,7 +94,7 @@
       <div style="display: flex; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 6px;">
           <p style="font-size: 22px; color: rgb(36, 3, 66);">Desempenho</p>
-          <select name="" id="alternar_hardware">
+          <select name="" id="alternar_hardware" style="background-color: #4c1d95;">
             <option value="1">CPU</option>
             <option value="2" selected>GPU</option>
           </select>
@@ -362,7 +362,7 @@
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'line', label: 'Temperatura GPU (°C)', data: [80, 82, 83, 84, 85, 75, 86, 76, 70], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+          [{ type: 'line', label: 'Temperatura GPU (°C)', data: [80, 82, 83, 84, 85, 75, 86, 76, 70], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
@@ -382,7 +382,7 @@
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [77, 75, 76, 68, 76, 67, 76, 76, 77], borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2 }]
+          [{ type: 'line', label: 'Temperatura CPU (°C)', data: [77, 75, 76, 68, 76, 67, 76, 76, 77], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
