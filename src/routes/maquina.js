@@ -4,6 +4,8 @@ const maquinaController = require("../controllers/maquinasController");
 
 router.get("/empresa/:idEmpresa", maquinaController.listarPorEmpresa);
 
+router.get("/quantidade/:idEmpresa", maquinaController.qtdMaquinas)
+
 router.get("/top5/:idEmpresa", maquinaController.topMaquinas);
 
 router.get("/infoMaquinas/:idEmpresa", maquinaController.infoMaquinas);

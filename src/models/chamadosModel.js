@@ -80,6 +80,20 @@ function buscarKPIsTecnico(idTecnico) {
     return database.executar(instrucaoSql);
 }
 
+function buscarChamadosCriticos(fkEmpresa){
+    var instrucaoSql = `
+        SELECT COUNT(*) AS totalCriticos
+        FROM Chamado c
+        JOIN Maquina m ON c.fkMaquina = m.idMaquina
+        WHERE c.prioridade = 'Critica'
+        AND m.fkEmpresa = ${fkEmpresa};
+    `;
+    
+    console.log("Executando SQL (buscarChamadosCriticos):\n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function finalizarChamado(idChamado) {
     var instrucaoSql = `
         UPDATE Chamado 
@@ -106,5 +120,6 @@ module.exports = {
     buscarKPIs,
     buscarKPIsTecnico,
     finalizarChamado,
-    removerTecnico
+    removerTecnico,
+    buscarChamadosCriticos
 };

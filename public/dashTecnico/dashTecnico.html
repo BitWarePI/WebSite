@@ -113,7 +113,7 @@
               </div>
               <div class="bg-violet-900 p-6 rounded-lg text-white">
                 <p class="text-sm text-gray-400">Máquinas com Erro</p>
-                <p class="text-3xl font-bold mt-1">42</p>
+                <p class="text-3xl font-bold mt-1" id="qtdMaquina"></p>
               </div>
               <div class="bg-violet-900 p-6 rounded-lg text-white">
                 <p class="text-sm text-gray-400">Principal Problema</p>
@@ -121,28 +121,35 @@
               </div>
               <div class="bg-red-600 p-6 rounded-lg text-white">
                 <p class="text-sm text-red-200">Chamados Críticos</p>
-                <p class="text-3xl font-bold mt-1">6</p>
+                <p class="text-3xl font-bold mt-1" id="totalCriticos"></p>
               </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-9">
               <div class="lg:col-span-3 bg-neutral-300 p-4 rounded-lg shadow-sm">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Frequência de Erros</h2>
                 <div class="h-[420px] relative">
-                  <canvas id="grafico1" style="height: 100%;"></canvas>
+                  <canvas id="grafico1" height="450" width="700"></canvas>
                 </div>
               </div>
               <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
+
                 <div class="flex items-center justify-center h-full">
                   <div class="w-full max-w-md space-y-6">
+
+                    <!-- Canvas do Doughnut -->
                     <div class="relative w-48 h-48 mx-auto">
-                      <div class="pie-chart w-full h-full rounded-full"></div>
+                      <canvas id="grafico2"></canvas>
+
+                      <!-- Círculo central -->
                       <div
-                        class="absolute inset-2 bg-neutral-300 rounded-full flex flex-col items-center justify-center">
+                        class="absolute inset-10 bg-neutral-300 rounded-full flex flex-col items-center justify-center pointer-events-none">
                         <span class="text-2xl font-bold text-gray-800">1,204</span>
                         <span class="text-sm text-gray-800">Total</span>
                       </div>
                     </div>
+
+                    <!-- Legenda -->
                     <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                       <div class="flex items-center space-x-2">
                         <div class="w-3 h-3 rounded-full bg-violet-400"></div>
@@ -161,9 +168,11 @@
                         <span class="text-gray-800">Outros (10%)</span>
                       </div>
                     </div>
+
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
@@ -244,9 +253,10 @@
 
 </html>
 <script>
+  const ctx = document.getElementById('grafico2').getContext('2d');
   const ctx1 = document.getElementById('grafico1').getContext('2d');
-  const gradient = ctx1.createLinearGradient(0, 0, 0, 200);
-  gradient.addColorStop(0, "rgba(109, 40, 217, 0.4)"); // roxo claro
+  const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
+  gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)"); // roxo claro
   gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
 
   // Definição inicial do gráfico
@@ -334,6 +344,37 @@
     graficoErros.data.datasets[0].data = novosDados;
     graficoErros.update();
   });
+
+  const graficoDistribuicao = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Temperatura (40%)', 'Memória (30%)', 'Rede (20%)', 'Outros (10%)'],
+      datasets: [{
+        data: [40, 30, 20, 10],
+        borderWidth: 0.5,
+        backgroundColor: [
+          '#A78BFA', // Temperatura
+          '#8B5CF6', // Memória
+          '#6D28D9', // Rede
+          '#4C1D95'  // Outros
+        ],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '50%', // borda do donut
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: true
+        }
+      }
+    }
+  });
+
 </script>
 
 
@@ -399,10 +440,45 @@
       lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
     }
   }
+  async function totalCriticos() {
+    const criticos = document.getElementById("totalCriticos");
+
+    try {
+      const idEmpresa = sessionStorage.getItem("idEmpresa");
+
+      const resposta = await fetch(`/chamados/criticos/${idEmpresa}`);
+      console.log(resposta)
+      const dados = await resposta.json();
+
+
+      criticos.innerText = dados[0].totalCriticos;
+      console.log(dados)
+
+    } catch (erro) {
+      console.error("Erro ao buscar quantidade de críticos:", erro);
+      criticos.innerText = "0";
+    }
+  }
+
+  async function qtdMaquinas() {
+    const qtdMaq = document.getElementById("qtdMaquina");
+
+    try{
+      const idEmpresa = sessionStorage.getItem("idEmpresa")
+      const resposta = await fetch(`/maquina/quantidade/${idEmpresa}`)
+      const dados = await resposta.json
+      qtdMaq.innerHTML = dados[0].qtdMaquinas
+    }catch(erro){
+      console.error("Erro ao buscar quantidade de máquinas", erro)
+      qtdMaquinas.innerText = "0"
+    }
+    
+  }
 
   window.onload = function () {
     carregarChamados(),
-      carregarTop5Maquinas();
+    carregarTop5Maquinas(),
+    totalCriticos();
   };
 
   function fecharModalTecnicos() {
