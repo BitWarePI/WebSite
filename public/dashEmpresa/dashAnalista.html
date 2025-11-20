@@ -99,6 +99,13 @@
             <option value="2" selected>GPU</option>
           </select>
 
+          <div style="display: flex; align-items: center;">
+          <div style="display: flex; width: 250px; height: 38px; background-color: #4c1d95; border-radius: 5px; color: white; align-items: center; justify-content: center; gap: 4px;">
+            <p>Quantidade de máquinas:</p>
+            <p id="qtdMaquinas" style="font-weight: bolder;"></p>
+          </div>
+        </div>
+
           <span style="
           position: relative;
           display: inline-block;
@@ -150,7 +157,7 @@
             <input type="date" style="border-radius: 10px; padding: 10px;" id="dt_fim">
           </div>
           <button id="btn_aplicar"
-            style="background-color:#e4b131; color:white; padding:0px 20px;height: 45px; justify-self: flex-end;display: flex; align-items: center; align-self: flex-end; border:none; border-radius:5px; cursor:pointer; font-weight:400; font-size: medium;">
+            style="background-color:#4c1d95; color:white; padding:0px 20px;height: 45px; justify-self: flex-end;display: flex; align-items: center; align-self: flex-end; border:none; border-radius:5px; cursor:pointer; font-weight:400; font-size: medium;">
             Aplicar período
           </button>
         </div>
@@ -197,12 +204,12 @@
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
-                <p style="font-size: 15px; margin: 0; padding: 0;">Desvio padrão do uso</p>
+                <p style="font-size: 15px; margin: 0; padding: 0;">Variação do uso</p>
                 <i class="fa-solid fa-wave-square"></i>
               </div>
               <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
             </div>
-            <p style="font-size: 18px; margin: 0; padding: 0;">Variação estável no período</p>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Desvio padrão estável no período</p>
           </div>
 
           <div class="kpi-card"
@@ -231,13 +238,13 @@
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Uso da GPU</p>
-            <canvas id="grafico1" class="grafico" style="width: 100%; height: 100%;"></canvas>
+            <canvas id="grafico1" class="grafico" style="width: 100%; height: 100%; z-index: 20;"></canvas>
           </div>
           <div style="width: 100%; height: 300px;" class="div-grafico">
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Temperatura da GPU</p>
-            <canvas style="width: 100%; height: 100%;" id="grafico2" class="grafico"></canvas>
+            <canvas style="width: 100%; height: 100%; z-index: 20;" id="grafico2" class="grafico"></canvas>
           </div>
         </div>
       </div>
@@ -283,12 +290,12 @@
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
-                <p style="font-size: 15px; margin: 0; padding: 0;">Desvio padrão do uso</p>
+                <p style="font-size: 15px; margin: 0; padding: 0;">Variação do uso</p>
                 <i class="fa-solid fa-wave-square"></i>
               </div>
               <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
             </div>
-            <p style="font-size: 18px; margin: 0; padding: 0;">Variação estável no período</p>
+            <p style="font-size: 18px; margin: 0; padding: 0;">Desvio padrão estável no período</p>
           </div>
 
           <div class="kpi-card"
@@ -317,13 +324,13 @@
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Uso da CPU</p>
-            <canvas id="grafico3" class="grafico" style="width: 100%; height: 100%;"></canvas>
+            <canvas id="grafico3" class="grafico" style="width: 100%; height: 100%; z-index: 20;"></canvas>
           </div>
           <div style="width: 100%; height: 300px;" class="div-grafico">
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Temperatura da CPU</p>
-            <canvas style="width: 100%; height: 100%;" id="grafico4" class="grafico"></canvas>
+            <canvas style="width: 100%; height: 100%; z-index: 20;" id="grafico4" class="grafico"></canvas>
           </div>
         </div>
       </div>
@@ -427,15 +434,15 @@
   });
 
 
-  // async function quantidadeMaquinas() {
-  //   const empresaId = sessionStorage.getItem('idEmpresa');
-  //   const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
-  //   if (!response.ok) throw new Error('Erro na requisição personalizada');
-  //   const dados = await response.json();
-  //   console.log(dados)
+  async function quantidadeMaquinas() {
+    const empresaId = sessionStorage.getItem('idEmpresa');
+    const response = await fetch(`/maquina/qtdMaquina/${empresaId}`);
+    if (!response.ok) throw new Error('Erro na requisição personalizada');
+    const dados = await response.json();
+    console.log(dados)
 
-  //   qtdMaquinas.innerHTML = dados[0].total
-  // }
+    qtdMaquinas.innerHTML = dados[0].total
+  }
 
   // calcula mediana
   function mediana(dados, tipo) {
@@ -630,6 +637,6 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     aplicarCores()
-    // quantidadeMaquinas()
+    quantidadeMaquinas()
   });
 </script>

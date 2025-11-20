@@ -49,7 +49,7 @@ section nav:hover ~ #tudo {
 }
 
 #btn_aplicar:hover {
-  background-color: #c58002;
+  background-color: #4B2B85;
   transform: scale(1.1);
   transition: all 0.3s ease;
 }
