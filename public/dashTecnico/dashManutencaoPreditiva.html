@@ -278,55 +278,69 @@ Seções (de cima para baixo):
       ocorrencias.forEach(ocorrencia => {
         const problema = ocorrencia.problema.toLowerCase();
 
-        if (problema.includes('gpu')){
+        if (problema.includes('gpu')) {
           componentes.gpu++;
-        } 
+        }
         if (problema.includes('cpu')) {
           componentes.cpu++;
         }
         if (problema.includes('uso')) {
           tipoProblema.uso++;
-        } 
+        }
         if (problema.includes('temperatura')) {
           tipoProblema.temperatura++;
-        } 
+        }
       });
 
-      // Identificando os componentes e tipos de problemas mais frequentes
-      const compMax = comp.gpu >= comp.cpu ? ['GPU', comp.gpu] : ['CPU', comp.cpu];
-      const typeMax = type.temperatura >= type.uso ? ['Temperatura', type.temperatura] : ['Uso', type.uso];
+      let componenteMaior;
+      if (componentes.gpu >= componentes.cpu) {
+        componenteMaior = ['GPU', componentes.gpu];
+      } else {
+        componenteMaior = ['CPU', componentes.cpu];
+      }
 
-      // Agregando informações por máquina (ID da máquina, número de ocorrências, risco, etc)
-      const perMachine = ocorrencias.reduce((acc, ocorrencia) => {
+      let tipoProblemaMaior;
+      if (tipoProblema.temperatura >= tipoProblema.uso) {
+        tipoProblemaMaior = ['Temperatura', tipoProblema.temperatura];
+      } else {
+        tipoProblemaMaior = ['Uso', tipoProblema.uso];
+      }
+
+      const cadaMaquina = {};
+
+      ocorrencias.forEach(ocorrencia => {
         const machineId = ocorrencia.fkMaquina;
 
-        // Se a máquina já estiver no acumulador, incrementa o total
-        if (!acc[machineId]) {
-          acc[machineId] = { id: machineId, total: 0, chamados: [] };
+        if (!cadaMaquina[machineId]) {
+          cadaMaquina[machineId] = { id: machineId, total: 0, chamados: [] };
         }
 
-        // Incrementa a contagem de ocorrências da máquina
-        acc[machineId].total++;
-        acc[machineId].chamados.push(ocorrencia);
-
-        return acc;
-      }, {});
-
-      // Calculando o risco de cada máquina (exemplo simplificado)
-      const perMachineWithRisk = Object.values(perMachine).map(machine => {
-        const score = computeScore(machine.id, machine.chamados);  // Implementar a função computeScore conforme seu critério
-        const [label, cls] = riskLabel(score);  // Implementar a função riskLabel conforme seu critério
-
-        return { ...machine, score, label, cls };
+        cadaMaquina[machineId].total++;
+        cadaMaquina[machineId].chamados.push(ocorrencia);
       });
 
-      // Retorna os dados agregados
+      const cadaMaquinaComRisco = [];
+
+      Object.values(cadaMaquina).forEach(maquina => {
+        const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);  
+
+        const [risco, css] = riscoTexto(pontuacao);
+
+        cadaMaquinaComRisco.push({
+          ...maquina, 
+          pontuacao,  
+          risco,      
+          css         
+        });
+      });
+
       return {
-        total,  // Total de ocorrências
-        comp: { gpu: comp.gpu, cpu: comp.cpu },  // Contagem de GPU e CPU
-        type: { uso: type.uso, temperatura: type.temperatura },  // Contagem de Uso e Temperatura
-        perMachine: perMachineWithRisk  // Detalhes de cada máquina
+        total,
+        componentes: { gpu: componentes.gpu, componentes: comp.cpu },
+        tipoProblema: { uso: tipoProblema.uso, temperatura: tipoProblema.temperatura },
+        cadaMaquina: cadaMaquinaComRisco
       };
+
     }
 
     // --- Dados simulados (baseados no seu schema / inserts fornecidos) ---
