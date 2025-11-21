@@ -251,26 +251,33 @@ Seções (de cima para baixo):
     }
 
     function processarDados(ocorrencias) {
-      // Agrega os dados para gerar os KPIs e os gráficos
-      const dados = guardarOcorrencias(ocorrencias);
+      const dados = tratarOcorrencias(ocorrencias);
 
-      // Atualiza os KPIs na interface
-      document.querySelector('.kpi-total').textContent = aggregations.total; // Total de ocorrências
-      const compMax = aggregations.comp.gpu >= aggregations.comp.cpu
-        ? ['GPU', aggregations.comp.gpu]
-        : ['CPU', aggregations.comp.cpu];
-      document.querySelector('.kpi-component').textContent = `${compMax[0]} — ${compMax[1]}`; // Componente mais problemático
-      const typeMax = aggregations.type.temperatura >= aggregations.type.uso
-        ? ['Temperatura', aggregations.type.temperatura]
-        : ['Uso', aggregations.type.uso];
-      document.querySelector('.kpi-type').textContent = `${typeMax[0]} — ${typeMax[1]}`; // Tipo de problema mais frequente
+      document.querySelector('.kpi-total').textContent = dados.total;
+
+      let componenteMaior;
+      if (dados.componentes.gpu >= dados.componentes.cpu) {
+        componenteMaior = ['GPU', dados.componentes.gpu];
+      } else {
+        componenteMaior = ['CPU', dados.componentes.cpu];
+      }
+      document.querySelector('.kpi-component').textContent = `${componenteMaior[0]} — ${componenteMaior[1]}`;
+
+      let tipoProblemaMaior;
+      if (dados.tipoProblema.temperatura >= dados.tipoProblema.uso) {
+        tipoProblemaMaior = ['Temperatura', dados.tipoProblema.temperatura];
+      } else {
+        tipoProblemaMaior = ['Uso', dados.tipoProblema.uso];
+      }
+      document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
+
 
       atualizarGraficos(dados);
 
       atualizarListaMaquinas(dados.perMachine);
     }
 
-    function guardarOcorrencias(ocorrencias) {
+    function tratarOcorrencias(ocorrencias) {
       const componentes = { cpu: 0, gpu: 0 };
       const tipoProblema = { uso: 0, temperatura: 0 };
       let total = ocorrencias.length;
@@ -322,15 +329,15 @@ Seções (de cima para baixo):
       const cadaMaquinaComRisco = [];
 
       Object.values(cadaMaquina).forEach(maquina => {
-        const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);  
+        const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);
 
         const [risco, css] = riscoTexto(pontuacao);
 
         cadaMaquinaComRisco.push({
-          ...maquina, 
-          pontuacao,  
-          risco,      
-          css         
+          ...maquina,
+          pontuacao,
+          risco,
+          css
         });
       });
 
