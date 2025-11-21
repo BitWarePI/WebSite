@@ -271,7 +271,6 @@ Seções (de cima para baixo):
       }
       document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
 
-
       atualizarGraficos(dados);
 
       atualizarListaMaquinas(dados.perMachine);
@@ -347,52 +346,85 @@ Seções (de cima para baixo):
         tipoProblema: { uso: tipoProblema.uso, temperatura: tipoProblema.temperatura },
         cadaMaquina: cadaMaquinaComRisco
       };
-
     }
 
-    // --- Dados simulados (baseados no seu schema / inserts fornecidos) ---
-    const MAQUINAS = [
-      { id: 2, enderecoMac: 'a1:b2:c3:d4:e5:f6', nome: 'Setor A', fkEmpresa: 2 },
-      { id: 3, enderecoMac: 'ff:ee:dd:cc:bb:aa', nome: 'Setor B', fkEmpresa: 2 },
-      { id: 4, enderecoMac: 'e8:5c:5f:1e:b4:1d', nome: 'Setor C', fkEmpresa: 2 },
-      { id: 6, enderecoMac: 'aa:bb:cc:dd:ee:ff', nome: 'Setor D', fkEmpresa: 2 },
-      { id: 7, enderecoMac: '77:88:99:aa:bb:cc', nome: 'Setor E', fkEmpresa: 2 }
-    ];
+    function atualizarGraficos(dados) {
+      const graficoComponete = document.getElementById('chartComponent').getContext('2d');
+      const graficoTipoProblema = document.getElementById('chartType').getContext('2d');
 
-    const CHAMADOS = [
-      // maquina 2
-      { fkMaquina: 2, problema: 'Temperatura da GPU (C) acima do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-10T08:12:00' },
-      { fkMaquina: 2, problema: 'Uso de CPU (%) abaixo do esperado', prioridade: 'Media', status: 'Em andamento', dataAbertura: '2025-11-08T11:00:00' },
-      { fkMaquina: 2, problema: 'Uso de GPU (%) acima do parametro - Atencao', prioridade: 'Critica', status: 'Aberto', dataAbertura: '2025-11-09T15:00:00' },
-      { fkMaquina: 2, problema: 'Uso de CPU (%) acima do parametro - Atencao', prioridade: 'Critica', status: 'Em andamento', dataAbertura: '2025-11-06T12:00:00' },
-      { fkMaquina: 2, problema: 'Temperatura da CPU (C) acima do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-05T09:00:00' },
-      { fkMaquina: 2, problema: 'Uso de GPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Resolvido', dataAbertura: '2025-10-20T10:00:00' },
-      // maquina 3
-      { fkMaquina: 3, problema: 'Temperatura da CPU (C) abaixo do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-02T09:00:00' },
-      { fkMaquina: 3, problema: 'Uso de GPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Resolvido', dataAbertura: '2025-10-15T11:00:00' },
-      { fkMaquina: 3, problema: 'Uso de CPU (%) abaixo do esperado', prioridade: 'Media', status: 'Em andamento', dataAbertura: '2025-11-08T10:30:00' },
-      { fkMaquina: 3, problema: 'Temperatura da GPU (C) acima do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-10T06:00:00' },
-      { fkMaquina: 3, problema: 'Uso de GPU (%) acima do parametro - Atencao', prioridade: 'Media', status: 'Aberto', dataAbertura: '2025-11-03T14:00:00' },
-      // maquina 4
-      { fkMaquina: 4, problema: 'Uso de CPU (%) acima do parametro - Atencao', prioridade: 'Critica', status: 'Em andamento', dataAbertura: '2025-11-03T12:00:00' },
-      { fkMaquina: 4, problema: 'Temperatura da CPU (C) acima do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-02T13:00:00' },
-      { fkMaquina: 4, problema: 'Uso de GPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Resolvido', dataAbertura: '2025-10-18T08:00:00' },
-      { fkMaquina: 4, problema: 'Temperatura da GPU (C) acima do esperado', prioridade: 'Media', status: 'Aberto', dataAbertura: '2025-11-09T09:00:00' },
-      { fkMaquina: 4, problema: 'Uso de CPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Aberto', dataAbertura: '2025-11-06T07:00:00' },
-      // maquina 6
-      { fkMaquina: 6, problema: 'Uso de GPU (%) acima do parametro - Atencao', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-11T10:00:00' },
-      { fkMaquina: 6, problema: 'Uso de CPU (%) abaixo do esperado', prioridade: 'Media', status: 'Em andamento', dataAbertura: '2025-11-07T09:00:00' },
-      { fkMaquina: 6, problema: 'Temperatura da CPU (C) abaixo do esperado', prioridade: 'Baixa', status: 'Resolvido', dataAbertura: '2025-10-22T11:00:00' },
-      { fkMaquina: 6, problema: 'Temperatura da GPU (C) acima do esperado', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-10T16:00:00' },
-      { fkMaquina: 6, problema: 'Uso de GPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Aberto', dataAbertura: '2025-10-30T12:00:00' },
-      // maquina 7
-      { fkMaquina: 7, problema: 'Uso de CPU (%) abaixo do esperado', prioridade: 'Critica', status: 'Aberto', dataAbertura: '2025-11-05T08:00:00' },
-      { fkMaquina: 7, problema: 'Temperatura da GPU (C) acima do esperado', prioridade: 'Critica', status: 'Em andamento', dataAbertura: '2025-11-09T17:00:00' },
-      { fkMaquina: 7, problema: 'Temperatura da CPU (C) abaixo do esperado', prioridade: 'Media', status: 'Aberto', dataAbertura: '2025-11-02T11:00:00' },
-      { fkMaquina: 7, problema: 'Uso de GPU (%) acima do parametro - Atencao', prioridade: 'Alta', status: 'Aberto', dataAbertura: '2025-11-08T13:00:00' },
-      { fkMaquina: 7, problema: 'Uso de CPU (%) acima do parametro - Atencao', prioridade: 'Critica', status: 'Em andamento', dataAbertura: '2025-11-10T09:00:00' },
-      { fkMaquina: 7, problema: 'Uso de GPU (%) abaixo do esperado', prioridade: 'Baixa', status: 'Resolvido', dataAbertura: '2025-10-28T10:00:00' }
-    ];
+      new Chart(graficoComponete, {
+        type: 'bar',
+        data: {
+          labels: ['CPU', 'GPU'],
+          datasets: [{
+            label: ['CPU','GPU'] ,
+            data: [dados.componentes.cpu, dados.componentes.gpu],
+            backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(111,31,235,0.9)']
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+      });
+
+      new Chart(typeCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Uso', 'Temperatura'],
+          datasets: [{
+            label: ['Perc. Uso', 'Temperatura'],
+            data: [dados.tipoProblema.uso, dados.tipoProblema.temperatura],
+            backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(235,111,31,0.9)']
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+      });
+    }
+
+    // Renderiza a tabela de máquinas
+    function atualizarListaMaquinas(cadaMaquina) {
+      const tbody = el('#machinesTbody');
+      tbody.innerHTML = '';  // Limpa a tabela antes de renderizar
+
+      Object.keys(cadaMaquina).forEach(maquinaId => {
+        const maquina = MAQUINAS.find(m => m.id == maquinaId);  // Ajuste para pegar a máquina
+        const chamados = cadaMaquina[maquinaId];
+        const pontuacao= calcularPontuacao(maquinaId, chamados);
+        const [risco, css] = riscoTexto(pontuacao);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td>${maquina.nome}</td>
+        <td>${maquina.enderecoMac}</td>
+        <td>${chamados.length}</td>
+        <td><span class="risk ${cls}" title="Score: ${pontuacao}">${risco}</span></td>
+        <td class="suggestion">${getSuggestion(chamados)}</td>
+        <td class="actions"><button class="btn ghost btn-details" data-mid="${maquinaId}">Detalhes</button></td>
+      `;
+        tbody.appendChild(tr);
+      });
+
+      // Adiciona eventos de detalhes
+      els('.btn-details').forEach(b => b.addEventListener('click', () => openDetails(b.getAttribute('data-mid'))));
+    }
+
+    function getSuggestion(chamados) {
+      return '-';  // Sugestão básica
+    }
+
+    function openDetails(mid) {
+      const machine = MAQUINAS.find(m => m.id === mid);
+      const modal = el('#modalDetails');
+      el('#modalTitle').textContent = `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
+      const body = el('#modalBody');
+      const chamados = CHAMADOS.filter(c => c.fkMaquina === mid).sort((a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura));
+      body.innerHTML = '';
+      chamados.forEach(c => {
+        const div = document.createElement('div');
+        div.style.padding = '8px'; div.style.borderBottom = '1px solid #eee';
+        div.innerHTML = `<strong>${new Date(c.dataAbertura).toLocaleString()}</strong> — ${c.problema} <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>`;
+        body.appendChild(div);
+      });
+      modal.classList.add('open');
+    }
 
     // --- Helpers (sem usar getElementById nem dataset) ---
     const el = selector => document.querySelector(selector);
@@ -403,11 +435,10 @@ Seções (de cima para baixo):
     function periodToDays(p) { if (p === '24h') return 1; if (p === '7d') return 7; if (p === '30d') return 30; if (p === '90d') return 90; if (p === '1y') return 365; return 30 }
 
     // scoring heuristic (0-100)
-    function computeScore(maquinaId, chamadosFiltered) {
+    function calcularPontuacao(maquinaId, chamadosFiltered) {
       const total = chamadosFiltered.length;
       if (total === 0) return 0;
 
-      // compShare: proporção de ocorrências no componente mais problemático (gpu/cpu)
       const compCounts = { cpu: 0, gpu: 0 };
       let recencyScore = 0;
       const now = new Date();
@@ -417,32 +448,27 @@ Seções (de cima para baixo):
         if (prob.includes('gpu')) compCounts.gpu++;
         if (prob.includes('cpu')) compCounts.cpu++;
 
-        // recency (mais recentes têm mais peso)
         const d = new Date(c.dataAbertura);
         const days = Math.max(1, (now - d) / (1000 * 60 * 60 * 24));
         recencyScore += 1 / Math.log(days + 1);
       });
 
-      const compShare = Math.max(compCounts.gpu, compCounts.cpu) / total; // 0..1
-      const OccNorm = Math.min(1, total / 10); // se tiver 10+ ocorrencias já normaliza
-      const Recency = Math.min(1, recencyScore / total); // 0..1
+      const compShare = Math.max(compCounts.gpu, compCounts.cpu) / total; 
+      const OccNorm = Math.min(1, total / 10); 
+      const Recency = Math.min(1, recencyScore / total); 
 
-      // trend: comparativo entre últimos 30 dias e 30 dias anteriores (simplificado)
       const last30 = chamadosFiltered.filter(c => { const d = new Date(c.dataAbertura); return (new Date() - d) <= 1000 * 60 * 60 * 24 * 30 }).length;
-      // previous 30 days not computed here for simplicity -> use proportion
       const Trend = Math.min(1, last30 / Math.max(1, total));
 
       const score = Math.round(40 * OccNorm * 100 / 100 + 25 * compShare * 100 / 100 + 20 * Recency * 100 / 100 + 15 * Trend * 100 / 100);
       return Math.max(0, Math.min(100, score));
     }
 
-    function riskLabel(score) { if (score >= 67) return ['Alto', 'risk--high']; if (score >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
+    function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (score >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
 
-    // parse period buttons
     els('.periods .btn').forEach(b => b.addEventListener('click', ev => { els('.periods .btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); selectedPeriod = b.getAttribute('data-period'); renderAll(); }))
     el('#refreshBtn').addEventListener('click', () => renderAll());
 
-    // compute aggregations and render
     function filterByPeriod(items, period) {
       const days = periodToDays(period);
       const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
