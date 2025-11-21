@@ -295,6 +295,8 @@
 
     .geral {
         max-width: 100dvw;
+        max-height: 100dvw;
+        height: 1000px;
         background-color: #e0e0e0;
         flex-direction: row;
         color: var(--main-text-inverse-color);
@@ -465,6 +467,7 @@
     }
 
     .modal .inner {
+        color: #000;
         background: #fff;
         width: 760px;
         border-radius: 12px;
