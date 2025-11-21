@@ -33,7 +33,7 @@ h1 {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 150px;
+  height: 100px;
   padding: 10px 50px 10px 20px;
   border-radius: 10px;
   background-color: #7e0cac;
@@ -82,6 +82,7 @@ h2 {
 
 table {
   margin-top: 20px;
+  max-height: 520px !important;
 }
 
 .badge {
@@ -151,7 +152,7 @@ table {
 /* fdsasrsdc */
 
 .command-container {
-  margin-top: 60px;
+  margin-top: 38px;
   flex: 1;
 
 }
@@ -159,7 +160,7 @@ table {
 .command-wrapper {
   background: #bdbdbd;
   padding: 20px;
-  max-height: 550px;
+  max-height: 482px;
   border-radius: 12px;
   overflow: auto;
   scrollbar-color: #ccc #f4f4f7;
@@ -187,7 +188,7 @@ table {
 
 .command-header h3 {
   margin: 0;
-  font-size: 22px;
+  font-size: 23px;
 }
 
 .cmd-add-btn {
