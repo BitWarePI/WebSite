@@ -56,16 +56,28 @@ function buscarPrincipalProblema(fkEmpresa) {
 
 async function totalErros(idEmpresa) {
     const sql = `
-    SELECT COUNT(*) AS total_erros
-FROM Chamado c
-JOIN Maquina m ON c.fkMaquina = m.idMaquina
-WHERE m.fkEmpresa = ${idEmpresa};
+   SELECT COUNT(*) AS total_erros
+    FROM Chamado c
+    JOIN Maquina m ON c.fkMaquina = m.idMaquina
+    WHERE m.fkEmpresa = ${idEmpresa}
+      AND c.status <> 'Resolvido';
   `;
 
     const resultado = await database.executar(sql);
     return resultado[0];
 }
 
+function maquinasComErro(idEmpresa) {
+  const sql = `
+    SELECT COUNT(DISTINCT m.idMaquina) AS maquinas_com_erro
+    FROM Chamado c
+    JOIN Maquina m ON c.fkMaquina = m.idMaquina
+    WHERE m.fkEmpresa = ${idEmpresa}
+      AND c.status <> 'Resolvido';
+  `;
+  
+  return database.executar(sql);
+}
 
 
 function buscarKPIs(idEmpresa) {
@@ -154,5 +166,6 @@ module.exports = {
     removerTecnico,
     buscarChamadosCriticos,
     buscarPrincipalProblema,
-    totalErros
+    totalErros,
+    maquinasComErro
 };

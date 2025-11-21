@@ -65,6 +65,19 @@ async function totalErros(req, res) {
   }
 }
 
+async function maquinasComErro(req, res) {
+  const { idEmpresa } = req.params;
+
+  try {
+    const resultado = await chamadosModel.maquinasComErro(idEmpresa);
+    res.json(resultado[0]);
+  } catch (erro) {
+    console.error("Erro ao buscar máquinas com erro:", erro);
+    res.status(500).json({ erro: "Erro ao buscar máquinas com erro" });
+  }
+}
+
+
 
 
 function buscarKPIs(req, res) {
@@ -149,5 +162,6 @@ module.exports = {
     removerTecnico,
     buscarChamadosCriticos,
     buscarPrincipalProblema,
-    totalErros
+    totalErros,
+    maquinasComErro
 }

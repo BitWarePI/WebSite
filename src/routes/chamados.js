@@ -23,7 +23,9 @@ router.get("/totalErros/:idEmpresa", function (req, res){
     chamadosController.totalErros(req, res)
 });
 
-
+router.get("/maquinasComErro/:idEmpresa", function (req, res){
+    chamadosController.maquinasComErro(req, res)
+})
 
 router.get("/criticos/:idEmpresa", function (req, res){
     chamadosController.buscarChamadosCriticos(req, res)
