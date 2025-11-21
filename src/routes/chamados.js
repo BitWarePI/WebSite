@@ -19,6 +19,11 @@ router.get("/principalProblema/:idEmpresa", function (req, res) {
     chamadosController.buscarPrincipalProblema(req, res);
 });
 
+router.get("/totalErros/:idEmpresa", function (req, res){
+    chamadosController.totalErros(req, res)
+});
+
+
 
 router.get("/criticos/:idEmpresa", function (req, res){
     chamadosController.buscarChamadosCriticos(req, res)

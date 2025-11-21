@@ -53,6 +53,19 @@ function buscarPrincipalProblema(req, res) {
         });
 }
 
+async function totalErros(req, res) {
+  const { idEmpresa } = req.params;
+
+  try {
+    const resultado = await chamadosModel.totalErros(idEmpresa);
+    res.json(resultado);
+  } catch (erro) {
+    console.error("Erro no controller:", erro);
+    res.status(500).json({ erro: "Erro ao buscar total de erros" });
+  }
+}
+
+
 
 function buscarKPIs(req, res) {
     var idEmpresa = req.params.idEmpresa;
@@ -135,5 +148,6 @@ module.exports = {
     finalizarChamado,
     removerTecnico,
     buscarChamadosCriticos,
-    buscarPrincipalProblema
+    buscarPrincipalProblema,
+    totalErros
 }

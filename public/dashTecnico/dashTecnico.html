@@ -76,7 +76,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div class="bg-violet-900 p-6 rounded-lg text-white">
                 <p class="text-sm text-gray-400">Total de Erros (24h)</p>
-                <p class="text-3xl font-bold mt-1" id="total_ocorrencias"></p>
+                <p class="text-3xl font-bold mt-1" id="totalErros"></p>
               </div>
               <div class="bg-violet-900 p-6 rounded-lg text-white">
                 <p class="text-sm text-gray-400">Máquinas com Erro</p>
@@ -428,13 +428,27 @@
   }
 
   async function carregarPrincipalProblema() {
-    const idEmpresa = sessionStorage.getItem("idEmpresa");
+    const idEmpresa = sessionStorage.getItem("idEmpresa")
 
     const resposta = await fetch(`/chamados/principalProblema/${idEmpresa}`);
     const dados = await resposta.json();
 
     document.getElementById("principalProblema").innerText =
-        dados.problema ?? "Nenhum problema encontrado";
+        (dados.problema ?? "Nenhum problema encontrado").replace("acima do esperado", "");
+}
+
+async function totalErros() {
+  const idEmpresa = sessionStorage.getItem("idEmpresa");
+  const kpiErros = document.getElementById("totalErros");
+
+  try {
+    const resposta = await fetch(`/chamados/totalErros/${idEmpresa}`);
+    const dados = await resposta.json();
+
+    kpiErros.textContent = total;
+  } catch (erro) {
+    console.error("Erro ao buscar total de erros:", erro);
+  }
 }
 
 
@@ -457,7 +471,8 @@
     carregarChamados(),
     carregarTop5Maquinas(),
     totalCriticos(),
-    carregarPrincipalProblema();
+    carregarPrincipalProblema(),
+    totalErros();
   };
 
   function fecharModalTecnicos() {

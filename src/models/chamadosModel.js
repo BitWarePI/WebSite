@@ -54,6 +54,19 @@ function buscarPrincipalProblema(fkEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+async function totalErros(idEmpresa) {
+    const sql = `
+    SELECT COUNT(*) AS total_erros
+FROM Chamado c
+JOIN Maquina m ON c.fkMaquina = m.idMaquina
+WHERE m.fkEmpresa = ${idEmpresa};
+  `;
+
+    const resultado = await database.executar(sql);
+    return resultado[0];
+}
+
+
 
 function buscarKPIs(idEmpresa) {
     var instrucaoSql = `
@@ -98,7 +111,7 @@ function buscarKPIsTecnico(idTecnico) {
     return database.executar(instrucaoSql);
 }
 
-function buscarChamadosCriticos(fkEmpresa){
+function buscarChamadosCriticos(fkEmpresa) {
     var instrucaoSql = `
         SELECT COUNT(*) AS totalCriticos
         FROM Chamado c
@@ -106,7 +119,7 @@ function buscarChamadosCriticos(fkEmpresa){
         WHERE c.prioridade = 'Critica'
         AND m.fkEmpresa = ${fkEmpresa};
     `;
-    
+
     console.log("Executando SQL (buscarChamadosCriticos):\n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
@@ -140,5 +153,6 @@ module.exports = {
     finalizarChamado,
     removerTecnico,
     buscarChamadosCriticos,
-    buscarPrincipalProblema
+    buscarPrincipalProblema,
+    totalErros
 };
