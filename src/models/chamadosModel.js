@@ -37,6 +37,24 @@ function listarChamadosPorEmpresa(idEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarPrincipalProblema(fkEmpresa) {
+    var instrucaoSql = `
+        SELECT 
+            c.problema,
+            COUNT(*) AS ocorrencias
+        FROM Chamado c
+        JOIN Maquina m ON c.fkMaquina = m.idMaquina
+        WHERE m.fkEmpresa = ${fkEmpresa}
+        GROUP BY c.problema
+        ORDER BY ocorrencias DESC
+        LIMIT 1;
+    `;
+
+    console.log("Executando SQL (buscarPrincipalProblema):\n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function buscarKPIs(idEmpresa) {
     var instrucaoSql = `
         SELECT 
@@ -121,5 +139,6 @@ module.exports = {
     buscarKPIsTecnico,
     finalizarChamado,
     removerTecnico,
-    buscarChamadosCriticos
+    buscarChamadosCriticos,
+    buscarPrincipalProblema
 };
