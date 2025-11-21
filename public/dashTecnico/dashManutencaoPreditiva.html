@@ -244,9 +244,89 @@ Seções (de cima para baixo):
           return res.json();
         })
         .then(data => {
+          processarDados(data);
           console.log(data)
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
+    }
+
+    function processarDados(ocorrencias) {
+      // Agrega os dados para gerar os KPIs e os gráficos
+      const dados = guardarOcorrencias(ocorrencias);
+
+      // Atualiza os KPIs na interface
+      document.querySelector('.kpi-total').textContent = aggregations.total; // Total de ocorrências
+      const compMax = aggregations.comp.gpu >= aggregations.comp.cpu
+        ? ['GPU', aggregations.comp.gpu]
+        : ['CPU', aggregations.comp.cpu];
+      document.querySelector('.kpi-component').textContent = `${compMax[0]} — ${compMax[1]}`; // Componente mais problemático
+      const typeMax = aggregations.type.temperatura >= aggregations.type.uso
+        ? ['Temperatura', aggregations.type.temperatura]
+        : ['Uso', aggregations.type.uso];
+      document.querySelector('.kpi-type').textContent = `${typeMax[0]} — ${typeMax[1]}`; // Tipo de problema mais frequente
+
+      atualizarGraficos(dados);
+
+      atualizarListaMaquinas(dados.perMachine);
+    }
+
+    function guardarOcorrencias(ocorrencias) {
+      const componentes = { cpu: 0, gpu: 0 };
+      const tipoProblema = { uso: 0, temperatura: 0 };
+      let total = ocorrencias.length;
+
+      ocorrencias.forEach(ocorrencia => {
+        const problema = ocorrencia.problema.toLowerCase();
+
+        if (problema.includes('gpu')){
+          componentes.gpu++;
+        } 
+        if (problema.includes('cpu')) {
+          componentes.cpu++;
+        }
+        if (problema.includes('uso')) {
+          tipoProblema.uso++;
+        } 
+        if (problema.includes('temperatura')) {
+          tipoProblema.temperatura++;
+        } 
+      });
+
+      // Identificando os componentes e tipos de problemas mais frequentes
+      const compMax = comp.gpu >= comp.cpu ? ['GPU', comp.gpu] : ['CPU', comp.cpu];
+      const typeMax = type.temperatura >= type.uso ? ['Temperatura', type.temperatura] : ['Uso', type.uso];
+
+      // Agregando informações por máquina (ID da máquina, número de ocorrências, risco, etc)
+      const perMachine = ocorrencias.reduce((acc, ocorrencia) => {
+        const machineId = ocorrencia.fkMaquina;
+
+        // Se a máquina já estiver no acumulador, incrementa o total
+        if (!acc[machineId]) {
+          acc[machineId] = { id: machineId, total: 0, chamados: [] };
+        }
+
+        // Incrementa a contagem de ocorrências da máquina
+        acc[machineId].total++;
+        acc[machineId].chamados.push(ocorrencia);
+
+        return acc;
+      }, {});
+
+      // Calculando o risco de cada máquina (exemplo simplificado)
+      const perMachineWithRisk = Object.values(perMachine).map(machine => {
+        const score = computeScore(machine.id, machine.chamados);  // Implementar a função computeScore conforme seu critério
+        const [label, cls] = riskLabel(score);  // Implementar a função riskLabel conforme seu critério
+
+        return { ...machine, score, label, cls };
+      });
+
+      // Retorna os dados agregados
+      return {
+        total,  // Total de ocorrências
+        comp: { gpu: comp.gpu, cpu: comp.cpu },  // Contagem de GPU e CPU
+        type: { uso: type.uso, temperatura: type.temperatura },  // Contagem de Uso e Temperatura
+        perMachine: perMachineWithRisk  // Detalhes de cada máquina
+      };
     }
 
     // --- Dados simulados (baseados no seu schema / inserts fornecidos) ---
