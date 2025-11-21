@@ -428,7 +428,7 @@
   }
 
   async function carregarPrincipalProblema() {
-    const idEmpresa = sessionStorage.getItem("idEmpresa")
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
 
     const resposta = await fetch(`/chamados/principalProblema/${idEmpresa}`);
     const dados = await resposta.json();
@@ -444,6 +444,8 @@ async function totalErros() {
   try {
     const resposta = await fetch(`/chamados/totalErros/${idEmpresa}`);
     const dados = await resposta.json();
+
+    const total = dados?.total_erros ?? 0;
 
     kpiErros.textContent = total;
   } catch (erro) {
@@ -472,7 +474,7 @@ async function totalErros() {
     carregarTop5Maquinas(),
     totalCriticos(),
     carregarPrincipalProblema(),
-    totalErros();
+    totalErros()
   };
 
   function fecharModalTecnicos() {
