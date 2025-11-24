@@ -188,7 +188,9 @@ function buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa) {
             Chamado.status,
             Chamado.idTecnico,
             Chamado.dataAbertura,
-            Chamado.sincronizado
+            Chamado.sincronizado,
+            Maquina.nome AS nomeMaquina,
+            Maquina.enderecoMac AS macMaquina
         FROM
             Chamado
         JOIN
@@ -200,7 +202,6 @@ function buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa) {
             AND Empresa.idEmpresa = ${fkEmpresa}
         ORDER BY
             Chamado.dataAbertura DESC;
-
 
     `
     return database.executar(instrucaoSQL)
