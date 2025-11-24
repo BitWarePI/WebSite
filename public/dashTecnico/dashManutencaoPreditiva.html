@@ -157,8 +157,10 @@
   </div>
 
   <script>
-
     const fkEmpresa = sessionStorage.getItem('idEmpresa')
+    let maquinasProcessadas = [];
+    let Componente = null;
+    let TipoProblema = null;
 
     window.onload = function () {
       buscarOcorrencias('mes', 2);
@@ -239,7 +241,7 @@
 
       atualizarGraficos(dados);
 
-      atualizarListaMaquinas(dados.perMachine);
+      atualizarListaMaquinas(dados.cadaMaquina);
     }
 
     function tratarOcorrencias(ocorrencias) {
@@ -308,52 +310,62 @@
 
       return {
         total,
-        componentes: { gpu: componentes.gpu, componentes: comp.cpu },
+        componentes: { gpu: componentes.gpu, cpu: componentes.cpu },
         tipoProblema: { uso: tipoProblema.uso, temperatura: tipoProblema.temperatura },
         cadaMaquina: cadaMaquinaComRisco
       };
     }
 
     function atualizarGraficos(dados) {
-      const graficoComponete = document.getElementById('chartComponent').getContext('2d');
+      const graficoComponente = document.getElementById('chartComponent').getContext('2d');
       const graficoTipoProblema = document.getElementById('chartType').getContext('2d');
 
-      new Chart(graficoComponete, {
-        type: 'bar',
-        data: {
-          labels: ['CPU', 'GPU'],
-          datasets: [{
-            label: ['CPU','GPU'] ,
-            data: [dados.componentes.cpu, dados.componentes.gpu],
-            backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(111,31,235,0.9)']
-          }]
-        },
-        options: { responsive: true, plugins: { legend: { display: false } } }
-      });
+      console.log(dados);
 
-      new Chart(typeCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Uso', 'Temperatura'],
-          datasets: [{
-            label: ['Perc. Uso', 'Temperatura'],
-            data: [dados.tipoProblema.uso, dados.tipoProblema.temperatura],
-            backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(235,111,31,0.9)']
-          }]
-        },
-        options: { responsive: true, plugins: { legend: { display: false } } }
-      });
+      if (!Componente) {
+        Componente = new Chart(graficoComponente, {
+          type: 'bar',
+          data: {
+            labels: ['CPU', 'GPU'],
+            datasets: [{
+              label: ['CPU', 'GPU'],
+              data: [dados.componentes.cpu, dados.componentes.gpu],
+              backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(111,31,235,0.9)']
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+      } else {
+        Componente.data.datasets[0].data = [dados.componentes.cpu, dados.componentes.gpu];
+        Componente.update();
+      }
+
+      if (!TipoProblema) {
+        TipoProblema = new Chart(graficoTipoProblema, {
+          type: 'bar',
+          data: {
+            labels: ['Uso', 'Temperatura'],
+            datasets: [{
+              label: ['Perc. Uso', 'Temperatura'],
+              data: [dados.tipoProblema.temperatura, dados.tipoProblema.uso],
+              backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(235,111,31,0.9)']
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+      } else {
+        TipoProblema.data.datasets[0].data = [dados.tipoProblema.uso, dados.tipoProblema.temperatura];
+        TipoProblema.update();
+      }
     }
 
-    // Renderiza a tabela de máquinas
     function atualizarListaMaquinas(cadaMaquina) {
-      const tbody = el('#machinesTbody');
-      tbody.innerHTML = '';  // Limpa a tabela antes de renderizar
+      const tbody = document.getElementById('machinesTbody');
+      tbody.innerHTML = '';
 
-      Object.keys(cadaMaquina).forEach(maquinaId => {
-        const maquina = MAQUINAS.find(m => m.id == maquinaId);  // Ajuste para pegar a máquina
-        const chamados = cadaMaquina[maquinaId];
-        const pontuacao= calcularPontuacao(maquinaId, chamados);
+      cadaMaquina.forEach(maquina => {
+        const chamados = maquina.chamados;
+        const pontuacao = calcularPontuacao(maquina.id, chamados);
         const [risco, css] = riscoTexto(pontuacao);
 
         const tr = document.createElement('tr');
@@ -361,22 +373,21 @@
         <td>${maquina.nome}</td>
         <td>${maquina.enderecoMac}</td>
         <td>${chamados.length}</td>
-        <td><span class="risk ${cls}" title="Score: ${pontuacao}">${risco}</span></td>
+        <td><span class="risk ${css}" title="Score: ${pontuacao}">${risco}</span></td>
         <td class="suggestion">${getSuggestion(chamados)}</td>
-        <td class="actions"><button class="btn ghost btn-details" data-mid="${maquinaId}">Detalhes</button></td>
+        <td class="actions"><button class="btn ghost btn-details" data-mid="${maquina.id}">Detalhes</button></td>
       `;
         tbody.appendChild(tr);
       });
 
-      // Adiciona eventos de detalhes
-      els('.btn-details').forEach(b => b.addEventListener('click', () => openDetails(b.getAttribute('data-mid'))));
+      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'))));
     }
 
     function getSuggestion(chamados) {
-      return '-';  // Sugestão básica
+      return '-';
     }
 
-    function openDetails(mid) {
+    function abrirDetalhes(mid) {
       const machine = MAQUINAS.find(m => m.id === mid);
       const modal = el('#modalDetails');
       el('#modalTitle').textContent = `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
@@ -401,127 +412,41 @@
     function periodToDays(p) { if (p === '24h') return 1; if (p === '7d') return 7; if (p === '30d') return 30; if (p === '90d') return 90; if (p === '1y') return 365; return 30 }
 
     // scoring heuristic (0-100)
-    function calcularPontuacao(maquinaId, chamadosFiltered) {
-      const total = chamadosFiltered.length;
+    function calcularPontuacao(maquinaId, chamados) {
+      const total = chamados.length;
       if (total === 0) return 0;
 
-      const compCounts = { cpu: 0, gpu: 0 };
+      const contagemComponentes = { cpu: 0, gpu: 0 };
       let recencyScore = 0;
       const now = new Date();
 
-      chamadosFiltered.forEach(c => {
+      chamados.forEach(c => {
         const prob = c.problema.toLowerCase();
-        if (prob.includes('gpu')) compCounts.gpu++;
-        if (prob.includes('cpu')) compCounts.cpu++;
+        if (prob.includes('gpu')) contagemComponentes.gpu++;
+        if (prob.includes('cpu')) contagemComponentes.cpu++;
 
         const d = new Date(c.dataAbertura);
         const days = Math.max(1, (now - d) / (1000 * 60 * 60 * 24));
         recencyScore += 1 / Math.log(days + 1);
       });
 
-      const compShare = Math.max(compCounts.gpu, compCounts.cpu) / total; 
-      const OccNorm = Math.min(1, total / 10); 
-      const Recency = Math.min(1, recencyScore / total); 
+      const compShare = Math.max(contagemComponentes.gpu, contagemComponentes.cpu) / total;
+      const OccNorm = Math.min(1, total / 10);
+      const Recency = Math.min(1, recencyScore / total);
 
-      const last30 = chamadosFiltered.filter(c => { const d = new Date(c.dataAbertura); return (new Date() - d) <= 1000 * 60 * 60 * 24 * 30 }).length;
+      const last30 = chamados.filter(c => { const d = new Date(c.dataAbertura); return (new Date() - d) <= 1000 * 60 * 60 * 24 * 30 }).length;
       const Trend = Math.min(1, last30 / Math.max(1, total));
 
       const score = Math.round(40 * OccNorm * 100 / 100 + 25 * compShare * 100 / 100 + 20 * Recency * 100 / 100 + 15 * Trend * 100 / 100);
       return Math.max(0, Math.min(100, score));
     }
 
-    function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (score >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
-
-    els('.periods .btn').forEach(b => b.addEventListener('click', ev => { els('.periods .btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); selectedPeriod = b.getAttribute('data-period'); renderAll(); }))
-    el('#refreshBtn').addEventListener('click', () => renderAll());
+    function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (pontuacao >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
 
     function filterByPeriod(items, period) {
       const days = periodToDays(period);
       const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
       return items.filter(c => new Date(c.dataAbertura) >= cutoff);
-    }
-
-    function aggregate() {
-      const chamadosPerPeriod = filterByPeriod(CHAMADOS, selectedPeriod);
-
-      const total = chamadosPerPeriod.length;
-
-      // component counts
-      const comp = { cpu: 0, gpu: 0 };
-      // types
-      const type = { uso: 0, temperatura: 0 };
-
-      chamadosPerPeriod.forEach(c => {
-        const p = c.problema.toLowerCase();
-        if (p.includes('gpu')) comp.gpu++;
-        if (p.includes('cpu')) comp.cpu++;
-        if (p.includes('uso')) type.uso++;
-        if (p.includes('temperatura')) type.temperatura++;
-      });
-
-      // per machine counts
-      const perMachine = MAQUINAS.map(m => {
-        const chamados = chamadosPerPeriod.filter(c => c.fkMaquina === m.id);
-        const score = computeScore(m.id, chamados);
-        const [label, cls] = riskLabel(score);
-        // suggestion heuristic
-        const prob = chamados.map(c => c.problema.toLowerCase()).join(' ');
-        let suggestion = '-';
-        if (chamados.length > 0) {
-          if ((prob.match(/gpu/g) || []).length > (prob.match(/cpu/g) || []).length && (prob.match(/temperatura/g) || []).length > 0) { suggestion = 'Suspeita: GPU — aquecimento/refrigeração'; }
-          else if ((prob.match(/cpu/g) || []).length > (prob.match(/gpu/g) || []).length && (prob.match(/temperatura/g) || []).length > 0) { suggestion = 'Suspeita: CPU — aquecimento/pasta térmica'; }
-          else if ((prob.match(/uso/g) || []).length > (prob.match(/temperatura/g) || []).length) { suggestion = 'Suspeita: subutilização ou configuração'; }
-        }
-
-        return { ...m, total: chamados.length, score, label, cls, suggestion, chamados };
-      }).filter(x => x.total > 0); // only machines with occurrences
-
-      return { total, comp, type, perMachine };
-    }
-
-    // render charts & table
-    let chartComp = null, chartType = null;
-    function renderAll() {
-      const a = aggregate();
-      // KPIs
-      el('.kpi-total').textContent = a.total;
-      const compMax = a.comp.gpu >= a.comp.cpu ? ['GPU', a.comp.gpu] : ['CPU', a.comp.cpu];
-      el('.kpi-component').textContent = `${compMax[0]} — ${compMax[1]}`;
-      const typeMax = a.type.temperatura >= a.type.uso ? ['Temperatura', a.type.temperatura] : ['Uso', a.type.uso];
-      el('.kpi-type').textContent = `${typeMax[0]} — ${typeMax[1]}`;
-
-      // charts
-      const compCtx = document.getElementById('chartComponent').getContext('2d');
-      const typeCtx = document.getElementById('chartType').getContext('2d');
-
-      if (chartComp) chartComp.destroy();
-      if (chartType) chartType.destroy();
-
-      chartComp = new Chart(compCtx, { type: 'bar', data: { labels: ['CPU', 'GPU'], datasets: [{ label: 'Ocorrências', data: [a.comp.cpu, a.comp.gpu], backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(111,31,235,0.9)'] }], options: { responsive: true, plugins: { legend: { display: false } } } } });
-
-      chartType = new Chart(typeCtx, { type: 'bar', data: { labels: ['Uso', 'Temperatura'], datasets: [{ label: 'Ocorrências', data: [a.type.uso, a.type.temperatura], backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(235,111,31,0.9)'] }], options: { responsive: true, plugins: { legend: { display: false } } } } });
-
-      // table
-      const tbody = el('#machinesTbody');
-      tbody.innerHTML = '';
-      a.perMachine.forEach(m => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${m.nome}</td>
-          <td>${m.enderecoMac}</td>
-          <td>${m.total}</td>
-          <td><span class="risk ${m.cls}" title="Score: ${m.score}">${m.label}</span></td>
-          <td class="suggestion">${m.suggestion}</td>
-          <td class="actions"><button class="btn ghost btn-details" data-mid="${m.id}">Detalhes</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // attach detail buttons
-      els('.btn-details').forEach(b => b.addEventListener('click', ev => {
-        const mid = parseInt(b.getAttribute('data-mid'));
-        openDetails(mid);
-      }));
     }
 
     // modal details
@@ -542,11 +467,6 @@
     }
 
     el('#closeModal').addEventListener('click', () => el('#modalDetails').classList.remove('open'));
-
-    // init
-    // mark default period button
-    els('.periods .btn').forEach(b => { if (b.getAttribute('data-period') === selectedPeriod) b.classList.add('active') });
-    renderAll();
 
   </script>
 </body>
