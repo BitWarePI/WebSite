@@ -31,7 +31,7 @@
           </li>
           <li>
             <a class="link ativo" href="dashManutencaoPreditiva.html">
-              <span class="material-symbols-outlined icon">Computer</span>
+              <span class="material-symbols-outlined icon">radar</span>
               <span class="titulo">Manutenção Preditiva</span>
             </a>
           </li>
@@ -213,7 +213,6 @@
         })
         .then(data => {
           processarDados(data);
-          console.log(data)
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
@@ -241,6 +240,7 @@
 
       atualizarGraficos(dados);
 
+      maquinasProcessadas = dados.cadaMaquina;
       atualizarListaMaquinas(dados.cadaMaquina);
     }
 
@@ -286,7 +286,13 @@
         const machineId = ocorrencia.fkMaquina;
 
         if (!cadaMaquina[machineId]) {
-          cadaMaquina[machineId] = { id: machineId, total: 0, chamados: [] };
+          cadaMaquina[machineId] = {
+            id: machineId,
+            nome: ocorrencia.nomeMaquina,
+            enderecoMac: ocorrencia.macMaquina,
+            total: 0,
+            chamados: []
+          };
         }
 
         cadaMaquina[machineId].total++;
@@ -319,8 +325,6 @@
     function atualizarGraficos(dados) {
       const graficoComponente = document.getElementById('chartComponent').getContext('2d');
       const graficoTipoProblema = document.getElementById('chartType').getContext('2d');
-
-      console.log(dados);
 
       if (!Componente) {
         Componente = new Chart(graficoComponente, {
@@ -388,20 +392,37 @@
     }
 
     function abrirDetalhes(mid) {
-      const machine = MAQUINAS.find(m => m.id === mid);
-      const modal = el('#modalDetails');
-      el('#modalTitle').textContent = `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
-      const body = el('#modalBody');
-      const chamados = CHAMADOS.filter(c => c.fkMaquina === mid).sort((a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura));
+      const machine = maquinasProcessadas.find(m => m.id == mid);
+      console.log(machine);
+      if (!machine) return;
+
+      const modal = document.querySelector('#modalDetails');
+
+      document.querySelector('#modalTitle').textContent =
+        `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
+
+      const body = document.querySelector('#modalBody');
       body.innerHTML = '';
+
+      const chamados = machine.chamados.sort(
+        (a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura)
+      );
+
       chamados.forEach(c => {
         const div = document.createElement('div');
-        div.style.padding = '8px'; div.style.borderBottom = '1px solid #eee';
-        div.innerHTML = `<strong>${new Date(c.dataAbertura).toLocaleString()}</strong> — ${c.problema} <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>`;
+        div.style.padding = '8px';
+        div.style.borderBottom = '1px solid #eee';
+        div.innerHTML = `
+      <strong>${new Date(c.dataAbertura).toLocaleString()}</strong> —
+      ${c.problema}
+      <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>
+    `;
         body.appendChild(div);
       });
+
       modal.classList.add('open');
     }
+
 
     // --- Helpers (sem usar getElementById nem dataset) ---
     const el = selector => document.querySelector(selector);
