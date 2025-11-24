@@ -1,37 +1,3 @@
-<!--
-Wireframe / Wireflow (visual sketch) - Dashboard Técnico: Manutenção Preventiva (Joaquim)
-
-Seções (de cima para baixo):
-
-1) Header / Nav (padrão Bitware)
-
-2) Filtros de período (24h / 7d / 30d / 90d / 1y) + botão atualizar
-
-3) KPIs (linha):
-   - KPI 1: Total de ocorrências (texto explicativo pequeno abaixo)
-   - KPI 2: Componente com mais ocorrências (ex.: GPU 65%)
-   - KPI 3: Tipo de problema mais frequente (ex.: Temperatura 72%)
-   Observações: cada KPI tem um pequeno ícone de help (?) que ao passar o mouse mostra tooltip explicando cálculo.
-
-4) Gráficos (duas colunas):
-   - Gráfico A (esquerda): Barra comparativa CPU vs GPU (nº ocorrências)
-   - Gráfico B (direita): Barra comparativa Uso vs Temperatura (nº ocorrências)
-   Ambos com legenda e tooltip no hover.
-
-5) Lista de máquinas (tabela simplificada):
-   Colunas: Nome | Endereço MAC | Total ocorrências (período) | Risco (Badge) | Sugestão (texto curto) | Ações (Detalhes)
-   - O badge de risco é um <span> com classes (.risk--low/.risk--med/.risk--high) e tooltip com score numérico.
-   - Sugestão curtas (ex.: "GPU possivelmente desgastada") — geradas pela lógica de scoring.
-
-6) Modal de detalhes (quando clicar em Detalhes):
-   - Lista de chamados da máquina (data, componente, tipo, prioridade, status, observação de sugestão se houver)
-
-7) Notas UX:
-   - Todos os indicadores têm tooltips explicativos.
-   - Pequeno botão "Ver explicação do score" que abre um popover descrevendo a fórmula do score.
-
--->
-
 <!doctype html>
 <html lang="pt-br">
 
