@@ -116,7 +116,6 @@
         </div>
       </section>
 
-      <!-- Machines table -->
       <section style="margin-top:18px">
         <div class="card">
           <h3>Máquinas com ocorrências (período)</h3>
@@ -161,7 +160,7 @@
     let TipoProblema = null;
 
     window.onload = function () {
-      buscarOcorrencias('mes', 2);
+      buscarOcorrencias('mes', fkEmpresa);
     }
 
     function formatarDataParaBanco(data) {
@@ -421,13 +420,8 @@
       modal.classList.add('open');
     }
 
-    // --- Helpers (sem usar getElementById nem dataset) ---
     const el = selector => document.querySelector(selector);
     const els = selector => Array.from(document.querySelectorAll(selector));
-
-    // period handling
-    let selectedPeriod = '30d';
-    function periodToDays(p) { if (p === '24h') return 1; if (p === '7d') return 7; if (p === '30d') return 30; if (p === '90d') return 90; if (p === '1y') return 365; return 30 }
 
     // scoring heuristic (0-100)
     function calcularPontuacao(maquinaId, chamados) {
@@ -460,12 +454,6 @@
     }
 
     function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (pontuacao >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
-
-    function filterByPeriod(items, period) {
-      const days = periodToDays(period);
-      const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-      return items.filter(c => new Date(c.dataAbertura) >= cutoff);
-    }
 
     // modal details
     function openDetails(mid) {
