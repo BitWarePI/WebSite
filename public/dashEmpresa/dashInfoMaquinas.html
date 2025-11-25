@@ -152,30 +152,34 @@
                 <button class="material-symbols-outlined close-icon" onclick="fecharGraficoMaquina()">close</button>
             </div>
             <div class="body">
-                <div class="header-grafico">
+                <div class="titulo-header-grafico">
                     <div>
-                        <div>
-                            <h1 style="font-weight: bold; color: #4c1d95;">Selecionar data desejada</h1>
-                        </div>
-                        <div
-                            style="margin-top: 45px; background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
-                            <p style="margin: 0 0 10px 0; font-size: 15px; color:white">Filtro de Dados</p>
-                            <select id="filtro"
-                                style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
-                                <option value="24horas">Últimas 24h</option>
-                                <option value="Semanal">Semanal</option>
-                                <option value="Mensal">Mensal</option>
-                                <option value="Semestral1">1° Semestre</option>
-                                <option value="Semestral2">2° Semestre</option>
-                                <optio value="Anual">Anual</option>
-                            </select>
-                            <div id="botaoFiltro">
-
-                            </div>
-                        </div>
+                        <h1>
+                            Dashboard de monitoramento
+                        </h1>
+                        <h3>Dados de desempenho da máquina.</h3>
                     </div>
-                    <div id="informacoes-maquina-model">
-                        <h2>SLA</h2>
+                    <div class="informacoes-maquina-header-grafico" style="display: flex; flex-direction: column;"
+                        id="infoMaquina">
+                        <span><b>Mac address:</b> 77:88:99:aa:bb:cc</span>
+                        <span><b>Nome:</b> Setor E</span>
+                    </div>
+                </div>
+                <div class="header-grafico">
+                    <p style="margin: 0 0 10px 0; font-size: 15px; color:black">Filtro de Dados</p>
+                    <div style="display: flex; width: fit-content;">
+                        <select id="filtro" style="background-color: #f3f3f3; color: black; border: none; border-radius: 8px;
+                             padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
+                            <option value="24horas">Últimas 24h</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensal">Mensal</option>
+                            <option value="Semestral1">1° Semestre</option>
+                            <option value="Semestral2">2° Semestre</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                        <div id="botaoFiltro">
+
+                        </div>
                     </div>
                 </div>
 
@@ -318,7 +322,7 @@
 
     <script>
 
-
+        var empresaId = sessionStorage.getItem('idEmpresa');
         const inputInicio = document.getElementById('dt_inicio');
         const inputFim = document.getElementById('dt_fim');
 
@@ -340,7 +344,6 @@
         const filtroSelect = document.getElementById('filtro');
 
         function carregarMaquinas() {
-            var empresaId = sessionStorage.getItem('idEmpresa');
 
             fetch(`/maquina/infoMaquinas/${empresaId}`)
                 .then(res => res.json())
@@ -348,31 +351,22 @@
                     let tbody = document.getElementById("tableMaquinas");
                     tbody.innerHTML = "";
 
-                    fetch("../assets/data/leiturasClientNicolas.csv")
+                    fetch(`/s3/pegarDadosMaquinasClient/${empresaId}`)
                         .then(res => {
-                            if (!res.ok) throw new Error("Erro ao carregar CSV");
-                            return res.text();
+                            if (!res.ok) throw new Error("Erro ao carregar JSON");
+                            return res.json();
                         })
-                        .then(texto => {
-                            const linhas = texto.split("\n").map(l => l.trim());
-                            const dadosCSV = [];
-
-                            for (let i = 1; i < linhas.length; i++) {
-                                const linha = linhas[i];
-                                if (!linha) continue;
-                                const campos = linha.split(";");
-
-                                dadosCSV.push({
-                                    datetime: campos[0],
-                                    cpu_percent: parseFloat(campos[1]),
-                                    gpu_percent: parseFloat(campos[2]),
-                                    cpu_temp: parseFloat(campos[3]),
-                                    gpu_temp: parseFloat(campos[4]),
-                                    chamado: campos[5],
-                                    id_empresa: campos[6],
-                                    mac: campos[7]
-                                });
-                            }
+                        .then(dadosCSV => {
+                            dadosCSV = dadosCSV.map(item => ({
+                                datetime: item.datetime,
+                                cpu_percent: parseFloat(item.cpu_percent),
+                                gpu_percent: parseFloat(item.gpu_percent),
+                                cpu_temp: parseFloat(item.cpu_temperature),
+                                gpu_temp: parseFloat(item.gpu_temperature),
+                                chamado: item.motivo_chamado,
+                                id_empresa: item.id_empresa,
+                                mac: item.mac_address
+                            }));
 
                             document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
                             let contadorQtdForaParam = 0;
@@ -496,7 +490,7 @@
             console.log(macAddress)
             console.log(listaMaquinas.length)
 
-            var divInfoMaquina = document.getElementById("informacoes-maquina-model");
+            var divInfoMaquina = document.getElementById("infoMaquina");
             var infoMaquina = pegarInfoMaquina(macAddress);
 
             const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
@@ -523,54 +517,42 @@
             modalGeralContainer.classList.add("slide-in-top");
             console.log(infoMaquina)
             divInfoMaquina.innerHTML = `
-                <div>
-                    <span id="enderecoMac", value="${infoMaquina.mac}">Mac address: ${infoMaquina.mac}</span>
-                    <br> Nome: ${infoMaquina.nome}
-                    <br> CPU percent: ${parametroCpuPercent}
-                    <br> GPU percent: ${parametroGpuPercent}
-                    <br> CPU temp: ${parametroCpuTemp}
-                    <br> GPU temp: ${parametroGpuTemp}
-                </div>`
+                    <span><b>Mac address:</b> ${infoMaquina.mac}</span>
+                    <span><b>Nome:</b> ${infoMaquina.nome}</span>`
 
 
             var eixo24hrs = []
             var registrosMaquina = []
 
-            fetch("../assets/data/leiturasClientNicolas.csv")
+            fetch(`/s3/pegarDadosClient/${empresaId}/${macAddress}`)
                 .then(res => {
                     if (!res.ok) throw new Error("Erro ao carregar CSV");
-                    return res.text();
+                    return res.json();
                 })
-                .then(texto => {
-                    const linhas = texto.split("\n").map(l => l.trim());
+                .then(lista => {
+                    console.log("RESPOSTA RECEBIDA DO BACKEND:", lista);
+                    const dados = lista.map(item => ({
+                        datetime: item.datetime,
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature),
+                        chamado: item.motivo_chamado,
+                        id_empresa: item.id_empresa,
+                        mac: item.mac_address
+                    }));
 
-                    for (let i = 1; i < linhas.length; i++) {
-                        const linha = linhas[i];
-                        if (!linha) continue;
-                        const campos = linha.split(";");
+                    const agora = new Date();
+                    const limite = new Date(agora.getTime() - 48 * 60 * 60 * 1000);
 
-                        const dataRegistro = new Date(campos[0].replace(" ", "T"));
+                    dados.forEach(reg => {
+                        const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
 
-                        const agora = new Date();
-                        const limite = new Date(agora.getTime() - 48 * 60 * 60 * 1000);
-                        console.log("LIMITE: " + limite)
-
-                        if (campos[7] == macAddress && new Date(dataRegistro) >= limite) {
-                            console.log("ENTROU AQ")
-                            console.log("HORARIO: " + dataRegistro.getHours())
-                            eixo24hrs.push(dataRegistro.getHours())
-                            registrosMaquina.push({
-                                datetime: campos[0],
-                                cpu_percent: parseFloat(campos[1]),
-                                gpu_percent: parseFloat(campos[2]),
-                                cpu_temp: parseFloat(campos[3]),
-                                gpu_temp: parseFloat(campos[4]),
-                                chamado: campos[5],
-                                id_empresa: campos[6],
-                                mac: campos[7]
-                            })
+                        if (reg.mac === macAddress && dataRegistro >= limite) {
+                            eixo24hrs.push(dataRegistro.getHours());
+                            registrosMaquina.push(reg);
                         }
-                    }
+                    });
 
                     console.log("CHEGOU NA CONSTRUÇÃO DOS GRÁFICOS")
                     console.log("TAMANHO DO EIXO: " + eixo24hrs.length)
@@ -599,7 +581,7 @@
                     var corKpiUsoCpu = corUso(mediaCpuPercent, parametroCpuPercent);
 
                     document.getElementById("botaoFiltro").innerHTML = `
-                         <button onclick='aplicarFiltroPeriodo("${macAddress}")'>Aplicar</button>
+                         <button class="botaoFiltro" onclick='aplicarFiltroPeriodo("${macAddress}")'>Aplicar</button>
                     `
 
                     document.getElementById("kpiusogpu").innerHTML = `
@@ -733,31 +715,25 @@
                 return;
             }
 
-            fetch("../assets/data/leiturasClientNicolas.csv")
-                .then(res => {
-                    if (!res.ok) throw new Error("Erro ao carregar CSV");
-                    return res.text();
-                })
-                .then(texto => {
-                    const linhas = texto.split("\n").map(l => l.trim());
-
+            fetch(`/s3/pegarDadosClient/${empresaId}/${macAddress}`)
+                .then(res => res.json())
+                .then(linhas => {
                     if (valorFiltro == "Semanal") {
                         construirGraficosSemanal(linhas, macAddress, infoMaquina, limite);
-                        return
                     } else if (valorFiltro == "Mensal") {
                         construirGraficosMensal(linhas, macAddress, infoMaquina, limite);
                     } else if (valorFiltro == "Semestral1") {
                         construirGraficosSemestral1(linhas, macAddress, infoMaquina, limite);
-                        return;
                     } else if (valorFiltro == "Semestral2") {
                         construirGraficosSemestral2(linhas, macAddress, infoMaquina, limite);
-                        return;
+                    } else {
+                        construirGraficosAnual(linhas, macAddress, infoMaquina, limite);
                     }
-
-                })
+                });
         }
 
-        function construirGraficosSemanal(linhas, macAddress, infoMaquina, limite) {
+        function construirGraficosSemanal(lista, macAddress, infoMaquina, limite) {
+            console.log("ENTROU NO CONSTRUIR GRÁFICOS SEMANAL")
 
             var eixoX = [];
             const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
@@ -768,31 +744,39 @@
             var valoresDentroDoLimite = [];
             var listaDias = {};
 
-            for (let i = 1; i < linhas.length; i++) {
+            lista.forEach(item => {
 
-                const linha = linhas[i];
-                if (!linha) continue;
-                const campos = linha.split(";");
+                const dataRegistro = new Date(item.datetime.replace(" ", "T"));
 
-                const dataRegistro = new Date(campos[0].replace(" ", "T"));
-                console.log("DATA REGISTRO: " + dataRegistro.getDate())
+                if (item.mac_address === macAddress && dataRegistro >= limite) {
 
-                if (campos[7] == macAddress && dataRegistro >= limite) {
-                    if (!eixoX.includes(dataRegistro.getDate())) {
-                        eixoX.push(dataRegistro.getDate())
+                    const dia = dataRegistro.getDate();
+
+                    if (!eixoX.includes(dia)) {
+                        eixoX.push(dia);
                     }
-                    valoresDentroDoLimite.push(
-                        {
-                            datetime: dataRegistro.getDate(),
-                            cpu_percent: parseFloat(campos[1]),
-                            gpu_percent: parseFloat(campos[2]),
-                            cpu_temp: parseFloat(campos[3]),
-                            gpu_temp: parseFloat(campos[4]),
-                            mac: campos[7]
-                        }
-                    )
+
+                    valoresDentroDoLimite.push({
+                        datetime: dia,
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature),
+                        mac: item.mac_address
+                    });
+
+                    if (!listaDias[dia]) {
+                        listaDias[dia] = [];
+                    }
+
+                    listaDias[dia].push({
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature)
+                    });
                 }
-            }
+            });
 
             var listaCpuPercent = [];
             var listaGpuPercent = [];
@@ -911,13 +895,14 @@
                 </div>
             `;
 
-
+            console.log("lista gpu percent: ")
+            console.log(mediasPorDia.gpuPercent)
             graficoGpuSemana = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(listaDias),
                     datasets: [{
-                        type: 'bar', label: 'Uso de GPU (%)', data: listaGpuPercent,
+                        type: 'bar', label: 'Uso de GPU (%)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_percent),
                         borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2
                     }]
                 },
@@ -930,7 +915,7 @@
                     labels: Object.keys(listaDias),
                     datasets:
                         [{
-                            type: 'line', label: 'Temperatura GPU (°C)', data: listaGpuTemp,
+                            type: 'line', label: 'Temperatura GPU (°C)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_temp),
                             borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
                         }]
                 },
@@ -943,7 +928,7 @@
                     labels: Object.keys(listaDias),
                     datasets:
                         [{
-                            type: 'bar', label: 'Uso de CPU (%)', data: listaCpuPercent,
+                            type: 'bar', label: 'Uso de CPU (%)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_percent),
                             backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1
                         }]
                 },
@@ -956,7 +941,7 @@
                     labels: Object.keys(listaDias),
                     datasets:
                         [{
-                            type: 'line', label: 'Temperatura CPU (°C)', data: listaCpuTemp,
+                            type: 'line', label: 'Temperatura CPU (°C)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_temp),
                             borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
                         }]
                 },
@@ -964,7 +949,7 @@
             });
         }
 
-        function construirGraficosMensal(linhas, macAddress, infoMaquina, limite) {
+        function construirGraficosMensal(lista, macAddress, infoMaquina, limite) {
 
             const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
             const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
@@ -980,14 +965,15 @@
 
             var valoresDentroDoLimite = [];
 
-            for (let i = 1; i < linhas.length; i++) {
-                const linha = linhas[i];
-                if (!linha) continue;
+            for (let i = 0; i < lista.length; i++) {
 
-                const campos = linha.split(";");
-                const dataRegistro = new Date(campos[0].replace(" ", "T"));
+                const registro = lista[i];
+                if (!registro) continue;
 
-                if (campos[7] == macAddress && dataRegistro >= limite) {
+                const dataRegistro = new Date(registro.datetime.replace(" ", "T"));
+
+                if (registro.mac_address == macAddress && dataRegistro >= limite) {
+
                     const dia = dataRegistro.getDate();
                     let semana;
 
@@ -997,10 +983,10 @@
                     else semana = "Semana 4";
 
                     const leitura = {
-                        cpu_percent: parseFloat(campos[1]),
-                        gpu_percent: parseFloat(campos[2]),
-                        cpu_temp: parseFloat(campos[3]),
-                        gpu_temp: parseFloat(campos[4])
+                        cpu_percent: parseFloat(registro.cpu_percent),
+                        gpu_percent: parseFloat(registro.gpu_percent),
+                        cpu_temp: parseFloat(registro.cpu_temperature),
+                        gpu_temp: parseFloat(registro.gpu_temperature)
                     };
 
                     semanas[semana].push(leitura);
@@ -1132,7 +1118,7 @@
             });
         }
 
-        function construirGraficosSemestral1(linhas, macAddress, infoMaquina, limite) {
+        function construirGraficosSemestral1(lista, macAddress, infoMaquina, limite) {
 
             const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
             const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
@@ -1150,30 +1136,30 @@
 
             var valoresDentroDoLimite = [];
 
-            for (let i = 1; i < linhas.length; i++) {
-                const linha = linhas[i];
-                if (!linha) continue;
+            lista.forEach(item => {
 
-                const campos = linha.split(";");
-                const dataRegistro = new Date(campos[0].replace(" ", "T"));
+                const dataRegistro = new Date(item.datetime.replace(" ", "T"));
 
-                if (campos[7] == macAddress && dataRegistro >= limite && dataRegistro.getMonth() <= 5) {
+                if (
+                    item.mac_address === macAddress &&
+                    dataRegistro >= limite &&
+                    dataRegistro.getMonth() <= 5
+                ) {
 
                     const leitura = {
-                        cpu_percent: parseFloat(campos[1]),
-                        gpu_percent: parseFloat(campos[2]),
-                        cpu_temp: parseFloat(campos[3]),
-                        gpu_temp: parseFloat(campos[4])
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature)
                     };
 
-                    const monthIndex = dataRegistro.getMonth();
-
                     const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+                    const mesNome = nomes[dataRegistro.getMonth()];
 
-                    meses[nomes[monthIndex]].push(leitura);
+                    meses[mesNome].push(leitura);
                     valoresDentroDoLimite.push(leitura);
                 }
-            }
+            });
 
             function extrairValores(obj, campo) {
                 return Object.keys(obj).map(mes => {
@@ -1299,7 +1285,7 @@
             });
         }
 
-        function construirGraficosSemestral2(linhas, macAddress, infoMaquina, limite) {
+        function construirGraficosSemestral2(lista, macAddress, infoMaquina, limite) {
 
             const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
             const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
@@ -1317,29 +1303,29 @@
 
             var valoresDentroDoLimite = [];
 
-            for (let i = 1; i < linhas.length; i++) {
-                const linha = linhas[i];
-                if (!linha) continue;
+            lista.forEach(registro => {
 
-                const campos = linha.split(";");
-                const dataRegistro = new Date(campos[0].replace(" ", "T"));
+                if (registro.mac_address !== macAddress) return;
 
-                if (campos[7] == macAddress && dataRegistro >= limite && dataRegistro.getMonth() >= 6) {
+                const dataRegistro = new Date(registro.datetime.replace(" ", "T"));
+
+                if (dataRegistro >= limite && dataRegistro.getMonth() >= 6) {
 
                     const leitura = {
-                        cpu_percent: parseFloat(campos[1]),
-                        gpu_percent: parseFloat(campos[2]),
-                        cpu_temp: parseFloat(campos[3]),
-                        gpu_temp: parseFloat(campos[4])
+                        cpu_percent: parseFloat(registro.cpu_percent),
+                        gpu_percent: parseFloat(registro.gpu_percent),
+                        cpu_temp: parseFloat(registro.cpu_temperature),
+                        gpu_temp: parseFloat(registro.gpu_temperature)
                     };
 
-                    const monthIndex = dataRegistro.getMonth();
-
                     const nomes = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-                    meses[nomes[monthIndex - 6]].push(leitura);
+                    const monthIndex = dataRegistro.getMonth();
+                    const nomeMes = nomes[monthIndex - 6];
+
+                    meses[nomeMes].push(leitura);
                     valoresDentroDoLimite.push(leitura);
                 }
-            }
+            });
 
             function extrairValores(obj, campo) {
                 return Object.keys(obj).map(mes => {
@@ -1465,13 +1451,179 @@
             });
         }
 
+        function construirGraficosAnual(lista, macAddress, infoMaquina, limite) {
+
+            console.log("ENTROU NO CONSTRUIR GRÁFICOS ANUAL");
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var meses = {
+                "Jan": [], "Fev": [], "Mar": [], "Abr": [], "Mai": [], "Jun": [],
+                "Jul": [], "Ago": [], "Set": [], "Out": [], "Nov": [], "Dez": []
+            };
+
+            const nomesMes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+                "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+            ];
+
+            var valoresDentroDoLimite = [];
+
+            lista.forEach(leitura => {
+
+                const dataRegistro = new Date(leitura.datetime.replace(" ", "T"));
+                const mesIndex = dataRegistro.getMonth();
+
+                if (leitura.mac_address === macAddress && dataRegistro >= limite) {
+
+                    const dado = {
+                        cpu_percent: parseFloat(leitura.cpu_percent),
+                        gpu_percent: parseFloat(leitura.gpu_percent),
+                        cpu_temp: parseFloat(leitura.cpu_temperature),
+                        gpu_temp: parseFloat(leitura.gpu_temperature)
+                    };
+
+                    meses[nomesMes[mesIndex]].push(dado);
+                    valoresDentroDoLimite.push(dado);
+                }
+            });
+
+            function extrairValores(obj, campo) {
+                return Object.keys(obj).map(mes => {
+                    const listaValores = obj[mes].map(v => v[campo]);
+                    if (listaValores.length === 0) return 0;
+                    return calcularMedia(listaValores);
+                });
+            }
+
+            var mediasCpuPercent = extrairValores(meses, "cpu_percent");
+            var mediasGpuPercent = extrairValores(meses, "gpu_percent");
+            var mediasCpuTemp = extrairValores(meses, "cpu_temp");
+            var mediasGpuTemp = extrairValores(meses, "gpu_temp");
+
+            var todosCpuPercent = valoresDentroDoLimite.map(v => v.cpu_percent);
+            var todosGpuPercent = valoresDentroDoLimite.map(v => v.gpu_percent);
+            var todosCpuTemp = valoresDentroDoLimite.map(v => v.cpu_temp);
+            var todosGpuTemp = valoresDentroDoLimite.map(v => v.gpu_temp);
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(todosCpuPercent),
+                gpu_percent: calcularMedia(todosGpuPercent),
+                cpu_temp: calcularMedia(todosCpuTemp),
+                gpu_temp: calcularMedia(todosGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(todosCpuPercent),
+                gpu_percent: calcularMediana(todosGpuPercent),
+                cpu_temp: calcularMediana(todosCpuTemp),
+                gpu_temp: calcularMediana(todosGpuTemp)
+            };
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            document.getElementById("kpiusogpu").innerHTML = `
+        <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+        </div>
+    `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+        <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+        </div>
+    `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+        <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+        </div>
+    `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+        <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+        </div>
+    `;
+
+            var labelsAno = nomesMes;
+
+            graficoGpuSemana = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsAno,
+                    datasets: [{
+                        label: 'Uso de GPU (%)',
+                        data: mediasGpuPercent,
+                        borderColor: '#4C1D95',
+                        backgroundColor: '#5B21B6'
+                    }]
+                }
+            });
+
+            graficoTempGpuSemana = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: labelsAno,
+                    datasets: [{
+                        label: 'Temperatura GPU (°C)',
+                        data: mediasGpuTemp,
+                        borderColor: '#C48800',
+                        backgroundColor: '#EDA609'
+                    }]
+                }
+            });
+
+            graficoCpuSemana = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: labelsAno,
+                    datasets: [{
+                        label: 'Uso de CPU (%)',
+                        data: mediasCpuPercent,
+                        backgroundColor: '#5B21B6',
+                        borderColor: '#4C1D95'
+                    }]
+                }
+            });
+
+            graficoTempCpuSemana = new Chart(ctx4, {
+                type: 'line',
+                data: {
+                    labels: labelsAno,
+                    datasets: [{
+                        label: 'Temperatura CPU (°C)',
+                        data: mediasCpuTemp,
+                        borderColor: '#C48800',
+                        backgroundColor: '#EDA609'
+                    }]
+                }
+            });
+
+        }
+
+
 
         function calcularMedia(lista) {
             let soma = 0;
             for (let i = 0; i < lista.length; i++) {
                 soma += lista[i];
             }
-            return soma / lista.length;
+
+            return parseFloat((soma / lista.length).toFixed(2));
         }
 
         function calcularMediana(lista) {
@@ -1482,9 +1634,9 @@
             let meio = Math.floor(lista.length / 2);
 
             if (lista.length % 2 !== 0) {
-                return lista[meio];
+                return parseFloat(lista[meio].toFixed(2));
             } else {
-                return (lista[meio - 1] + lista[meio]) / 2;
+                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(2));
             }
         }
 

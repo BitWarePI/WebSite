@@ -48,5 +48,40 @@
 }
 .body .header-grafico{
     display: flex;
+    width: 100%;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.titulo-header-grafico{
+    width: 100%;
+    display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.informacoes-maquina-header-grafico{
+    justify-content: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    height: 80%;
+}
+
+.botaoFiltro{
+    background: none;
+    border: none;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    background-color: #7e0cac;
+    color: white;
+    border-radius: 10px;
 }
