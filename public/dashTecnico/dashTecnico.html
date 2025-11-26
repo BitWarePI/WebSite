@@ -92,18 +92,10 @@
               </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-9">
-              <div class="lg:col-span-3 bg-neutral-300 p-4 rounded-lg shadow-sm">
+              <div class="lg:col-span-4 bg-neutral-300 p-4 rounded-lg shadow-sm">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Frequência de Erros</h2>
-                <div class="h-fullrelative">
-                  <canvas id="grafico1" height="450" width="700"></canvas>
-                </div>
-              </div>
-              <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm">
-                <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
-
-                <!-- Área do gráfico ocupando todo o card -->
-                <div class="relative w-full h-[320px]">
-                  <canvas id="grafico2"></canvas>
+                <div class="h-full">
+                  <canvas id="grafico1"></canvas>
                 </div>
               </div>
             </div>
@@ -154,6 +146,13 @@
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
+          <!-- Área do gráfico ocupando todo o card -->
+          <div class="relative w-full h-[320px]">
+            <canvas id="grafico2"></canvas>
           </div>
         </div>
         <div class="chamado" style="margin: 0px;">
@@ -897,6 +896,15 @@
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
       });
   }  
+</script>
+
+<script>
+  fetch("/utils/getDadosBucket/").then(res =>{
+    res.json().then(JSON =>{
+      console.log(JSON)
+      document.getElementById("distErros")
+    })
+  })
 </script>
 
 </body>
