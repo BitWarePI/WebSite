@@ -52,7 +52,7 @@ async function pegarCsvMaquinas(req, res) {
             return res.status(400).send("O id da empresa está undefined!");
         }
 
-        const key = `${idEmpresa}/21-11-2025/LeiturasCLIENT.csv`;
+        const key = `${idEmpresa}/26-11-2025/LeiturasCLIENT.csv`;
         const bucket = "s3-client-bitwarepi777";
 
         console.log("Lendo do S3:", key);

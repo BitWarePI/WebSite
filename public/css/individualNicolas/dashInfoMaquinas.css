@@ -44,11 +44,11 @@
     width: 100% !important;
     max-width: none !important;
     max-height: none !important;
-    overflow-y: auto;
+    overflow-y: clip;
 }
 .body .header-grafico{
     display: flex;
-    width: 100%;
+    width: 15%;
     flex-direction: column;
     background-color: white;
     border-radius: 10px;

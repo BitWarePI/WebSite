@@ -145,7 +145,6 @@
         </div>
     </section>
 
-    <!-- MODAL PARÂMETROS GERAIS -->
     <div class="modalDashInfo cadastro" id="modal_param_gerais">
         <div class="modal-container" id="modal_container_param_gerais">
             <div class="header">
@@ -183,12 +182,12 @@
                     </div>
                 </div>
 
-                <div>
-                    <div>
+                <div style="display: flex; justify-content: space-between; height: 100%;">
+                    <div style="width: 49%;">
                         <div>
                             <h2
                                 style="font-weight: bold; display: flex; align-items: center; gap: 8px;  margin-right: 30px; color: #4c1d95;">
-                                Desempenho baseado em GPU
+                                Uso da CPU e GPU
                                 <span style="
                                     position: relative;
                                     display: inline-block;
@@ -223,32 +222,29 @@
 
                         </div>
                         <div
-                            style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px;">
-                            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 450px;">
-                                <div id="kpiusogpu">
+                            style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px; height: 100%;">
+                            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 69%;">
+                                <div style="display: flex; gap: 10px;">
+                                    <div id="kpiusocpu">
+
+                                    </div>
+                                    <div id="kpiusogpu">
+
+                                    </div>
 
                                 </div>
+
                                 <div
-                                    style="flex: 1 1 40%; min-width: 250px; width: 80%; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+                                    style="flex: 1 1 40%; width: 100%; height: 200%; background-color:#f1f5f9; padding:10px; border-radius:8px;">
                                     <canvas id="grafico1"></canvas>
                                 </div>
                             </div>
 
-                            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
-                                <div id="kpitempgpu">
-
-                                </div>
-
-                                <div
-                                    style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                                    <canvas id="grafico2"></canvas>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div>
+                    <div style="width: 49%;">
                         <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px; color: #4c1d95;">
-                            Desempenho baseado em CPU
+                            Temperatura da CPU e GPU
                             <span style="
                                 position: relative;
                                 display: inline-block;
@@ -284,25 +280,21 @@
                         <div
                             style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;">
                         </div>
-                        <div
-                            style="display: flex; flex-direction: row;  width: 100%; justify-content: space-between; gap: 60px; height: 450px;">
+                        <div style="display: flex; flex-direction: row;  width: 100%;
+                             justify-content: space-between; gap: 60px;  height: 69%;">
                             <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
-                                <div id="kpiusocpu">
+                                <div style="display: flex; gap: 10px;">
+                                    <div id="kpitempcpu">
 
+                                    </div>
+                                    <div id="kpitempgpu">
+
+                                    </div>
                                 </div>
+
                                 <div
-                                    style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+                                    style="flex: 1 1 40%; width: 100%;; background-color:#f1f5f9; padding:10px; border-radius:8px;">
                                     <canvas id="grafico3"></canvas>
-                                </div>
-                            </div>
-
-                            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
-                                <div id="kpitempcpu">
-
-                                </div>
-                                <div
-                                    style="flex: 1 1 40%; min-width: 350px; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                                    <canvas id="grafico4"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -327,19 +319,18 @@
         const inputFim = document.getElementById('dt_fim');
 
         const ctx1 = document.getElementById('grafico1').getContext('2d');
-        const ctx2 = document.getElementById('grafico2').getContext('2d');
+        //const ctx2 = document.getElementById('grafico2').getContext('2d');
         const ctx3 = document.getElementById('grafico3').getContext('2d');
-        const ctx4 = document.getElementById('grafico4').getContext('2d');
+        //const ctx4 = document.getElementById('grafico4').getContext('2d');
 
-        let graficoCpu24Hrs = null;
-        let graficoGpu24Hrs = null;
+        let graficoTemp24Hrs = null;
+        let GraficoUso24Hrs = null;
         let graficoTempGpu = null;
         let graficoTempCpu = null;
 
-        let graficoGpuSemana = null;
-        let graficoTempGpuSemana = null;
-        let graficoCpuSemana = null;
-        let graficoTempCpuSemana = null;
+
+        let graficoUso = null;
+        let graficoTemp = null;
 
         const filtroSelect = document.getElementById('filtro');
 
@@ -498,17 +489,13 @@
             const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
             const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
 
-            if (graficoCpu24Hrs != null) {
-                graficoGpu24Hrs.destroy();
-                graficoTempGpu24Hrs.destroy();
-                graficoCpu24Hrs.destroy();
-                graficoTempCpu24Hrs.destroy();
+            if (graficoTemp24Hrs != null) {
+                graficoUso24Hrs.destroy();
+                graficoTemp24Hrs.destroy();
             }
-            if (graficoCpuSemana != null) {
-                graficoGpuSemana.destroy();
-                graficoTempGpuSemana.destroy();
-                graficoCpuSemana.destroy();
-                graficoTempCpuSemana.destroy();
+            if (graficoTemp != null) {
+                graficoUso.destroy();
+                graficoTemp.destroy();
             }
 
             modalGeral.classList.remove("fade-out-flex");
@@ -618,56 +605,91 @@
 
 
 
-                    graficoGpu24Hrs = new Chart(ctx1, {
+                    graficoUso24Hrs = new Chart(ctx1, {
                         type: 'bar',
                         data: {
                             labels: eixo24hrs,
-                            datasets: [{
-                                type: 'bar', label: 'Uso de GPU (%)', data: listaGpuPercent,
-                                borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2
-                            }]
+                            datasets: [
+                                {
+                                    label: 'Uso de CPU (%)',
+                                    data: listaCpuPercent,
+                                    backgroundColor: '#5B21B6',
+                                    borderColor: '#4C1D95',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Uso de GPU (%)',
+                                    data: listaGpuPercent,
+                                    backgroundColor: '#9333EA',
+                                    borderColor: '#6B21A8',
+                                    borderWidth: 1
+                                }
+                            ]
                         },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#000' } }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Horário da captura' }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Uso (%)' }
+                                }
+                            }
+                        }
                     });
 
-                    graficoTempGpu24Hrs = new Chart(ctx2, {
-                        type: 'bar',
+
+                    graficoTemp24Hrs = new Chart(ctx3, {
+                        type: 'line',
                         data: {
                             labels: eixo24hrs,
-                            datasets:
-                                [{
-                                    type: 'line', label: 'Temperatura GPU (°C)', data: listaGpuTemp,
-                                    borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
-                                }]
+                            datasets: [
+                                {
+                                    label: 'Temp CPU (°C)',
+                                    data: listaCpuTemp,
+                                    borderColor: '#C48800',
+                                    backgroundColor: '#EDA60933',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: 'Temp GPU (°C)',
+                                    data: listaGpuTemp,
+                                    borderColor: '#FF6A00',
+                                    backgroundColor: '#FFA33333',
+                                    borderWidth: 2
+                                }
+                            ]
                         },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#000' } }
+                            },
+                            tension: 0.2,
+                            scales: {
+                                x: {
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Horário da captura' }
+                                },
+                                y: {
+                                    beginAtZero: false,
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Temperatura (°C)' }
+                                }
+                            }
+                        }
                     });
 
-                    graficoCpu24Hrs = new Chart(ctx3, {
-                        type: 'bar',
-                        data: {
-                            labels: eixo24hrs,
-                            datasets:
-                                [{
-                                    type: 'bar', label: 'Uso de CPU (%)', data: listaCpuPercent,
-                                    backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1
-                                }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
-                    });
 
-                    graficoTempCpu24Hrs = new Chart(ctx4, {
-                        type: 'bar',
-                        data: {
-                            labels: eixo24hrs,
-                            datasets:
-                                [{
-                                    type: 'line', label: 'Temperatura CPU (°C)', data: listaCpuTemp,
-                                    borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
-                                }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
-                    });
                 })
 
         }
@@ -676,17 +698,13 @@
             console.log("ENDEREÇO MAC: " + macAddress)
             var infoMaquina = pegarInfoMaquina(macAddress);
 
-            if (graficoCpu24Hrs != null) {
-                graficoGpu24Hrs.destroy();
-                graficoTempGpu24Hrs.destroy();
-                graficoCpu24Hrs.destroy();
-                graficoTempCpu24Hrs.destroy();
+            if (graficoTemp24Hrs != null) {
+                graficoUso24Hrs.destroy();
+                graficoTemp24Hrs.destroy();
             }
-            if (graficoCpuSemana != null) {
-                graficoGpuSemana.destroy();
-                graficoTempGpuSemana.destroy();
-                graficoCpuSemana.destroy();
-                graficoTempCpuSemana.destroy();
+            if (graficoUso != null) {
+                graficoUso.destroy();
+                graficoTemp.destroy();
             }
 
             var limite;
@@ -897,56 +915,91 @@
 
             console.log("lista gpu percent: ")
             console.log(mediasPorDia.gpuPercent)
-            graficoGpuSemana = new Chart(ctx1, {
+            graficoUso = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(listaDias),
-                    datasets: [{
-                        type: 'bar', label: 'Uso de GPU (%)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_percent),
-                        borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2
-                    }]
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_percent),
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_percent),
+                            backgroundColor: '#9333EA',
+                            borderColor: '#6B21A8',
+                            borderWidth: 1
+                        }
+                    ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Dia da Semana' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
             });
 
-            graficoTempGpuSemana = new Chart(ctx2, {
-                type: 'bar',
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
                 data: {
                     labels: Object.keys(listaDias),
-                    datasets:
-                        [{
-                            type: 'line', label: 'Temperatura GPU (°C)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_temp),
-                            borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
-                        }]
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_temp),
+                            borderColor: '#C48800',
+                            backgroundColor: '#EDA60933',
+                            borderWidth: 2,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_temp),
+                            borderColor: '#FF6A00',
+                            backgroundColor: '#FFA33333',
+                            borderWidth: 2,
+                            tension: 0.2
+                        }
+                    ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Dia da Semana' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
             });
 
-            graficoCpuSemana = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(listaDias),
-                    datasets:
-                        [{
-                            type: 'bar', label: 'Uso de CPU (%)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_percent),
-                            backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1
-                        }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
-            });
 
-            graficoTempCpuSemana = new Chart(ctx4, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(listaDias),
-                    datasets:
-                        [{
-                            type: 'line', label: 'Temperatura CPU (°C)', data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_temp),
-                            borderColor: '#C48800', backgroundColor: '#EDA609', borderWidth: 2
-                        }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
-            });
         }
 
         function construirGraficosMensal(lista, macAddress, infoMaquina, limite) {
@@ -1065,55 +1118,86 @@
 
             const labelsMes = ["Semana 1", "Semana 2", "Semana 3", "Semana 4"];
 
-            graficoGpuSemana = new Chart(ctx1, {
+            graficoUso = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: labelsMes,
-                    datasets: [{
-                        label: 'Uso de GPU (%)',
-                        data: mediasGpuPercent,
-                        borderColor: '#4C1D95',
-                        backgroundColor: '#5B21B6'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#9333EA',
+                            borderColor: '#6B21A8',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Semanas do mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
                 }
             });
 
-            graficoTempGpuSemana = new Chart(ctx2, {
+            graficoTemp = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: labelsMes,
-                    datasets: [{
-                        label: 'Temperatura GPU (°C)',
-                        data: mediasGpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
-                }
-            });
-
-            graficoCpuSemana = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: labelsMes,
-                    datasets: [{
-                        label: 'Uso de CPU (%)',
-                        data: mediasCpuPercent,
-                        backgroundColor: '#5B21B6',
-                        borderColor: '#4C1D95'
-                    }]
-                }
-            });
-
-            graficoTempCpuSemana = new Chart(ctx4, {
-                type: 'line',
-                data: {
-                    labels: labelsMes,
-                    datasets: [{
-                        label: 'Temperatura CPU (°C)',
-                        data: mediasCpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#EDA60933',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#FF6A00',
+                            backgroundColor: '#FFA33333',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Semanas do mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
                 }
             });
         }
@@ -1232,57 +1316,89 @@
 
             const labelsSemestre = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
 
-            graficoGpuSemana = new Chart(ctx1, {
+            graficoUso = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Uso de GPU (%)',
-                        data: mediasGpuPercent,
-                        borderColor: '#4C1D95',
-                        backgroundColor: '#5B21B6'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#9333EA',
+                            borderColor: '#6B21A8',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
                 }
             });
 
-            graficoTempGpuSemana = new Chart(ctx2, {
+            graficoTemp = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Temperatura GPU (°C)',
-                        data: mediasGpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#EDA60933',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#FF6A00',
+                            backgroundColor: '#FFA33333',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
                 }
             });
 
-            graficoCpuSemana = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Uso de CPU (%)',
-                        data: mediasCpuPercent,
-                        backgroundColor: '#5B21B6',
-                        borderColor: '#4C1D95'
-                    }]
-                }
-            });
-
-            graficoTempCpuSemana = new Chart(ctx4, {
-                type: 'line',
-                data: {
-                    labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Temperatura CPU (°C)',
-                        data: mediasCpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
-                }
-            });
         }
 
         function construirGraficosSemestral2(lista, macAddress, infoMaquina, limite) {
@@ -1397,58 +1513,91 @@
     `;
 
             const labelsSemestre = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-
-            graficoGpuSemana = new Chart(ctx1, {
+            graficoUso = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Uso de GPU (%)',
-                        data: mediasGpuPercent,
-                        borderColor: '#4C1D95',
-                        backgroundColor: '#5B21B6'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#9333EA',
+                            borderColor: '#6B21A8',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
                 }
             });
 
-            graficoTempGpuSemana = new Chart(ctx2, {
+            graficoTemp = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Temperatura GPU (°C)',
-                        data: mediasGpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#EDA60933',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#FF6A00',
+                            backgroundColor: '#FFA33333',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
                 }
             });
 
-            graficoCpuSemana = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Uso de CPU (%)',
-                        data: mediasCpuPercent,
-                        backgroundColor: '#5B21B6',
-                        borderColor: '#4C1D95'
-                    }]
-                }
-            });
 
-            graficoTempCpuSemana = new Chart(ctx4, {
-                type: 'line',
-                data: {
-                    labels: labelsSemestre,
-                    datasets: [{
-                        label: 'Temperatura CPU (°C)',
-                        data: mediasCpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
-                }
-            });
+
         }
 
         function construirGraficosAnual(lista, macAddress, infoMaquina, limite) {
@@ -1561,55 +1710,83 @@
 
             var labelsAno = nomesMes;
 
-            graficoGpuSemana = new Chart(ctx1, {
+            graficoUso = new Chart(ctx1, {
                 type: 'bar',
                 data: {
                     labels: labelsAno,
-                    datasets: [{
-                        label: 'Uso de GPU (%)',
-                        data: mediasGpuPercent,
-                        borderColor: '#4C1D95',
-                        backgroundColor: '#5B21B6'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#9333EA',
+                            borderColor: '#6B21A8',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#000' } } },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
                 }
             });
 
-            graficoTempGpuSemana = new Chart(ctx2, {
+            graficoTemp = new Chart(ctx3, {
                 type: 'line',
                 data: {
                     labels: labelsAno,
-                    datasets: [{
-                        label: 'Temperatura GPU (°C)',
-                        data: mediasGpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
-                }
-            });
-
-            graficoCpuSemana = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: labelsAno,
-                    datasets: [{
-                        label: 'Uso de CPU (%)',
-                        data: mediasCpuPercent,
-                        backgroundColor: '#5B21B6',
-                        borderColor: '#4C1D95'
-                    }]
-                }
-            });
-
-            graficoTempCpuSemana = new Chart(ctx4, {
-                type: 'line',
-                data: {
-                    labels: labelsAno,
-                    datasets: [{
-                        label: 'Temperatura CPU (°C)',
-                        data: mediasCpuTemp,
-                        borderColor: '#C48800',
-                        backgroundColor: '#EDA609'
-                    }]
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#EDA60933',
+                            borderWidth: 2,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#FF6A00',
+                            backgroundColor: '#FFA33333',
+                            borderWidth: 2,
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#000' } } },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
                 }
             });
 
