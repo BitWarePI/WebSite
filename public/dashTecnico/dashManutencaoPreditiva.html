@@ -63,7 +63,7 @@
         <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
         <div class="filters">
           <div class="periods">
-            <button class="btn ghost" onclick="buscarOcorrencias('hoje', fkEmpresa)" >24h</button>
+            <button class="btn ghost" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
             <button class="btn ghost" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
             <button class="btn ghost" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
             <button class="btn ghost" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
@@ -81,16 +81,14 @@
             <div class="help" title="Total de chamados contabilizados dentro do período filtrado.">?</div>
           </div>
           <div class="value kpi-total">0</div>
-          <div class="muted small">Quantidade de chamados usados nos gráficos</div>
         </div>
 
         <div class="kpi">
           <div style="display:flex;align-items:center;gap:8px">
-            <div class="label">Componente mais problemático</div>
+            <div class="label">Componente com mais ocorrências (Quantidade)</div>
             <div class="help" title="Componente (CPU/GPU) com maior número de ocorrências no período filtrado.">?</div>
           </div>
           <div class="value kpi-component">—</div>
-          <div class="muted small">Ex.: GPU — 65% das ocorrências</div>
         </div>
 
         <div class="kpi">
@@ -99,11 +97,9 @@
             <div class="help" title="Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.">?</div>
           </div>
           <div class="value kpi-type">—</div>
-          <div class="muted small">Ex.: Temperatura — 72% das ocorrências</div>
         </div>
       </section>
 
-      <!-- Charts -->
       <section class="charts">
         <div class="card">
           <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
@@ -132,13 +128,11 @@
                 </tr>
               </thead>
               <tbody id="machinesTbody">
-                <!-- preenchido por JS -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
-
     </main>
   </section>
 
@@ -198,7 +192,7 @@
         dataFechamento = new Date();
       }
 
-      const dataAberturaFormatado = formatarDataParaBanco(dataAbertura); 
+      const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
 
       fetch(`/maquina/buscarOcorrencias?dataAbertura=${dataAberturaFormatado}&dataFechamento=${dataFechamentoFormatado}&fkEmpresa=${fkEmpresa}`)
@@ -331,7 +325,7 @@
             datasets: [{
               label: ['CPU', 'GPU'],
               data: [dados.componentes.cpu, dados.componentes.gpu],
-              backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(111,31,235,0.9)']
+              backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
           options: { responsive: true, plugins: { legend: { display: false } } }
@@ -349,7 +343,7 @@
             datasets: [{
               label: ['Perc. Uso', 'Temperatura'],
               data: [dados.tipoProblema.temperatura, dados.tipoProblema.uso],
-              backgroundColor: ['rgba(31,111,235,0.9)', 'rgba(235,111,31,0.9)']
+              backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
           options: { responsive: true, plugins: { legend: { display: false } } }
@@ -376,7 +370,7 @@
         <td>${chamados.length}</td>
         <td><span class="risk ${css}" title="Score: ${pontuacao}">${risco}</span></td>
         <td class="suggestion">${getSuggestion(chamados)}</td>
-        <td class="actions"><button class="btn ghost btn-details" data-mid="${maquina.id}">Detalhes</button></td>
+        <td class="actions"><button class="btn btn-details" data-mid="${maquina.id}">Detalhes</button></td>
       `;
         tbody.appendChild(tr);
       });
@@ -425,33 +419,77 @@
 
     // scoring heuristic (0-100)
     function calcularPontuacao(maquinaId, chamados) {
-      const total = chamados.length;
-      if (total === 0) return 0;
 
-      const contagemComponentes = { cpu: 0, gpu: 0 };
-      let recencyScore = 0;
-      const now = new Date();
+      // Quantidade total de chamados da máquina
+      const totalChamados = chamados.length;
+      if (totalChamados === 0) return 0;
 
-      chamados.forEach(c => {
-        const prob = c.problema.toLowerCase();
-        if (prob.includes('gpu')) contagemComponentes.gpu++;
-        if (prob.includes('cpu')) contagemComponentes.cpu++;
+      // Contadores para identificar qual componente aparece mais nos problemas
+      const contadorComponentes = {
+        cpu: 0,
+        gpu: 0
+      };
 
-        const d = new Date(c.dataAbertura);
-        const days = Math.max(1, (now - d) / (1000 * 60 * 60 * 24));
-        recencyScore += 1 / Math.log(days + 1);
+      // Acumulador que mede quão recentes os chamados são
+      let somaRecencia = 0;
+      const agora = new Date();
+
+      // Processa os chamados
+      chamados.forEach(chamado => {
+        const descricao = chamado.problema.toLowerCase();
+
+        // Verifica se o texto menciona CPU ou GPU
+        if (descricao.includes("gpu")) contadorComponentes.gpu++;
+        if (descricao.includes("cpu")) contadorComponentes.cpu++;
+
+        // Calcula há quantos dias o chamado foi aberto
+        const dataAbertura = new Date(chamado.dataAbertura);
+        const diasDesdeAbertura = Math.max(
+          1,
+          (agora - dataAbertura) / (1000 * 60 * 60 * 24)
+        );
+
+        // Recência: chamados mais novos valem mais
+        somaRecencia += 1 / Math.log(diasDesdeAbertura + 1);
       });
 
-      const compShare = Math.max(contagemComponentes.gpu, contagemComponentes.cpu) / total;
-      const OccNorm = Math.min(1, total / 10);
-      const Recency = Math.min(1, recencyScore / total);
+      // Parte 1 — normaliza o número total de chamados (até 10 vira 100%)
+      const fatorOcorencias = Math.min(1, totalChamados / 10);
 
-      const last30 = chamados.filter(c => { const d = new Date(c.dataAbertura); return (new Date() - d) <= 1000 * 60 * 60 * 24 * 30 }).length;
-      const Trend = Math.min(1, last30 / Math.max(1, total));
+      // Parte 2 — divide quantos chamados pertencem ao componente mais problemático
+      const maiorComponente = Math.max(
+        contadorComponentes.cpu,
+        contadorComponentes.gpu
+      );
+      const fatorComponente = maiorComponente / totalChamados;
 
-      const score = Math.round(40 * OccNorm * 100 / 100 + 25 * compShare * 100 / 100 + 20 * Recency * 100 / 100 + 15 * Trend * 100 / 100);
-      return Math.max(0, Math.min(100, score));
+      // Parte 3 — quanto mais recentes os chamados, maior a nota
+      const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
+
+      // Parte 4 — quantos chamados ocorreram nos últimos 30 dias (tendência)
+      const trintaDiasMs = 1000 * 60 * 60 * 24 * 30;
+      const chamadosUltimos30Dias = chamados.filter(chamado => {
+        const dataAbertura = new Date(chamado.dataAbertura);
+        return agora - dataAbertura <= trintaDiasMs;
+      }).length;
+
+      const fatorTendencia = Math.min(
+        1,
+        chamadosUltimos30Dias / Math.max(1, totalChamados)
+      );
+
+      // Calculo da pontuação final
+      const pontuacao = Math.round(
+        40 * fatorOcorencias +  // peso 40%
+        25 * fatorComponente +  // peso 25%
+        20 * fatorRecencia +    // peso 20%
+        15 * fatorTendencia     // peso 15%
+      );
+
+      // Garante que a pontuação fique entre 0 e 100
+      return Math.max(0, Math.min(100, pontuacao));
     }
+
 
     function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (pontuacao >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
 
