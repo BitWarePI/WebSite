@@ -194,8 +194,9 @@
 
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
+      const caminho = `${fkEmpresa}/chamados.csv`
 
-      fetch(`/maquina/buscarOcorrencias?dataAbertura=${dataAberturaFormatado}&dataFechamento=${dataFechamentoFormatado}&fkEmpresa=${fkEmpresa}`)
+      fetch(`/s3/arquivo/${caminho}`)
         .then(res => {
           if (!res.ok) {
             throw new Error('Falha na requisição');
