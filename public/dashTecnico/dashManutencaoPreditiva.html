@@ -194,9 +194,10 @@
 
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
-      const caminho = `${fkEmpresa}/chamados.csv`
+      const caminho = `chamados.csv`
+      const empresa = fkEmpresa;
 
-      fetch(`/s3/arquivo/${caminho}`)
+      fetch(`/s3/arquivo/${empresa}/${caminho}`)
         .then(res => {
           if (!res.ok) {
             throw new Error('Falha na requisição');
@@ -210,6 +211,7 @@
     }
 
     function processarDados(ocorrencias) {
+      console.log(ocorrencias);
       const dados = tratarOcorrencias(ocorrencias);
 
       document.querySelector('.kpi-total').textContent = dados.total;
@@ -281,7 +283,7 @@
           cadaMaquina[machineId] = {
             id: machineId,
             nome: ocorrencia.nomeMaquina,
-            enderecoMac: ocorrencia.macMaquina,
+            enderecoMac: ocorrencia.enderecoMac,
             total: 0,
             chamados: []
           };
