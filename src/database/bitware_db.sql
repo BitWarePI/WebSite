@@ -64,10 +64,10 @@ CREATE TABLE Parametro (
 
 CREATE TABLE ParametrosGeraisEmpresa (
   fkEmpresa INT PRIMARY KEY,
-  cpu_percent INT CHECK (cpu_percent BETWEEN 0 AND 100),
-  gpu_percent INT CHECK (gpu_percent BETWEEN 0 AND 100),
-  cpu_temperature INT CHECK (cpu_temperature BETWEEN 0 AND 120),
-  gpu_temperature INT CHECK (gpu_temperature BETWEEN 0 AND 120),
+  cpu_percent INT CHECK (cpu_percent BETWEEN 0 AND 100) DEFAULT 70,
+  gpu_percent INT CHECK (gpu_percent BETWEEN 0 AND 100) DEFAULT 70,
+  cpu_temperature INT CHECK (cpu_temperature BETWEEN 0 AND 120) DEFAULT 70,
+  gpu_temperature INT CHECK (gpu_temperature BETWEEN 0 AND 120) DEFAULT 70,
   CONSTRAINT fk_Empresa_ParametrosGerais FOREIGN KEY (fkEmpresa) REFERENCES Empresa (idEmpresa)
     ON DELETE CASCADE
 );
