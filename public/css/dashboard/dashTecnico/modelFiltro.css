@@ -2,8 +2,6 @@
 .filtro-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(3px);
   z-index: 80;
 }
 
