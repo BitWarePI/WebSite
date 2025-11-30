@@ -45,7 +45,8 @@ async function getS3FileContent(pathFileKey) {
     }
 
     // Retorna a string em JSON formatada
-    return JSON.stringify(content, null, 2);
+    // return JSON.stringify(content, null, 2);
+    return content;
 
   } catch (err) {
     console.error('Erro ao buscar arquivo:', err.message);
