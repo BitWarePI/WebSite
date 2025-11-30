@@ -51,8 +51,15 @@ async function pegarCsvMaquinas(req, res) {
         if (!idEmpresa) {
             return res.status(400).send("O id da empresa está undefined!");
         }
+        const hoje = new Date();
+        const dia = String(hoje.getDate()).padStart(2, "0");
+        const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+        const ano = hoje.getFullYear();
 
-        const key = `${idEmpresa}/26-11-2025/LeiturasCLIENT.csv`;
+        const dataAtual = `${dia}-${mes}-${ano}`;
+
+        const key = `${idEmpresa}/27-11-2025/LeiturasCLIENT.csv`;
+
         const bucket = "s3-client-bitwarepi777";
 
         console.log("Lendo do S3:", key);

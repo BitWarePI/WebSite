@@ -23,6 +23,7 @@
     flex-direction: column;
     border-radius: 12px;
     width: 100% !important;
+    background-color: #e0e0e0;
 }
 .modal-container .header{
     display: flex;
@@ -48,18 +49,68 @@
 }
 .body .header-grafico{
     display: flex;
-    width: 15%;
     flex-direction: column;
     background-color: white;
     border-radius: 10px;
     padding: 15px;
+    height: fit-content;
 }
 
 .titulo-header-grafico{
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+#tela-carregando {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
     align-items: center;
+}
+
+.caixa-carregando {
+    background: #fff;
+    padding: 20px 35px;
+    border-radius: 12px;
+    text-align: center;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.animacao-roda {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d3d3d3;
+    border-top-color: #4caf50; 
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.caixa-carregando p {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #333;
 }
 
 .informacoes-maquina-header-grafico{
@@ -84,4 +135,79 @@
     background-color: #7e0cac;
     color: white;
     border-radius: 10px;
+}
+
+table tr:hover{
+    cursor: pointer;
+}
+
+.div-info-maquina{
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-infoMaquina{
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+    color-scheme: light dark;
+    height: 70px;
+    background-color: #4b2b85;
+}
+
+
+.card-info-titulo {
+    font-size: 24px;        
+    font-weight: 500;           
+    color: white;
+    padding: 0px;         
+    margin: 0px;
+}
+
+.card-info-valor {
+    margin-top: 0.25rem;        
+    font-size: 32px !important;        
+    font-weight: 600;           
+    color: white !important;
+    padding: 0px;    
+    margin: 0px;
+                  
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info {
+        background-color: #111827;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info-title {
+    color: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info-value {
+    color: white;
+    }
+}
+
+#info-macAddress{
+    width: 24%;
+}
+
+#info-nome{
+    width: 24%;
+
+}
+
+#info-cpu{
+    width: 24%;
+
+}
+
+
+#info-gpu{
+    width: 24%;
+
 }

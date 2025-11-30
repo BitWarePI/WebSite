@@ -94,15 +94,56 @@
             </div>
             <div class="kpi-container">
 
-                <div class="kpi-card">
-                    <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
+                <div class="kpi-card" style="background-color: #4b2b85; color: white; border-radius: 0.5rem;">
+                    <h3 class="titulo" style="font-size: 25px;"><b>Máquinas <br>cadastradas</b></h3>
                     <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">computer</span>
                 </div>
-                <div class="kpi-card">
-                    <h3 class="titulo" style="font-size: 25px;">Máquinas ultrapassando os <br>parâmetros</h3>
-                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em; color: red;">0</p>
-                    <span class="material-symbols-outlined icon solicitacao">warning</span>
+                <div class="kpi-card" style="background-color: #4b2b85; color: white; border-radius: 0.5rem;">
+                    <h3 class="titulo" style="font-size: 25px;"><b>Máquinas ultrapassando os <br>parâmetros</b></h3>
+                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em;">0</p>
+                </div>
+                <div class="kpi-card" style="border-radius: 0.5rem">
+                    <canvas id="graficoComponentes"></canvas>
+                </div>
+                <div class="kpi-card" style="border-radius: 0.5rem">
+                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho</b>
+                    </h3>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #4caf50;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #4caf50;">Verde</b>: ideal</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #e4b131;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #e4b131;">Amarelo</b>: estado de alerta</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #ff4b4b;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #ff4b4b;">Vermelho</b>: crítico</span>
+                    </div>
                 </div>
             </div>
 
@@ -140,10 +181,18 @@
                     </thead>
                     <tbody id="tableMaquinas">
                     </tbody>
+
                 </table>
             </div>
         </div>
     </section>
+
+    <div id="tela-carregando">
+        <div class="caixa-carregando">
+            <div class="animacao-roda"></div>
+            <p>Carregando dados...</p>
+        </div>
+    </div>
 
     <div class="modalDashInfo cadastro" id="modal_param_gerais">
         <div class="modal-container" id="modal_container_param_gerais">
@@ -152,35 +201,93 @@
             </div>
             <div class="body">
                 <div class="titulo-header-grafico">
-                    <div>
-                        <h1>
+                    <div style="justify-content: start;">
+                        <h1 style="font-size: 48px; margin: 0px;">
                             Dashboard de monitoramento
                         </h1>
-                        <h3>Dados de desempenho da máquina.</h3>
+                        <h3 style="font-size: 32px; margin: 0px;">Dados de desempenho da máquina</h3>
                     </div>
-                    <div class="informacoes-maquina-header-grafico" style="display: flex; flex-direction: column;"
-                        id="infoMaquina">
-                        <span><b>Mac address:</b> 77:88:99:aa:bb:cc</span>
-                        <span><b>Nome:</b> Setor E</span>
-                    </div>
-                </div>
-                <div class="header-grafico">
-                    <p style="margin: 0 0 10px 0; font-size: 15px; color:black">Filtro de Dados</p>
-                    <div style="display: flex; width: fit-content;">
-                        <select id="filtro" style="background-color: #f3f3f3; color: black; border: none; border-radius: 8px;
-                             padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
-                            <option value="24horas">Últimas 24h</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensal">Mensal</option>
-                            <option value="Semestral1">1° Semestre</option>
-                            <option value="Semestral2">2° Semestre</option>
-                            <option value="Anual">Anual</option>
-                        </select>
-                        <div id="botaoFiltro">
 
+                    <div style="display: flex;">
+                        <div class="header-grafico" style="margin-right: 16px;">
+                            <p style="margin: 0 0 10px 0; font-size: 15px; color:black">Filtro de Dados</p>
+                            <div style="display: flex; width: fit-content;">
+                                <select id="filtro" style="background-color: #f3f3f3; color: black; border: none; border-radius: 8px;
+                             padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
+                                    <option value="24horas">Últimas 24h</option>
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Mensal">Mensal</option>
+                                    <option value="Semestral1">1° Semestre</option>
+                                    <option value="Semestral2">2° Semestre</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                                <div id="botaoFiltro">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-grafico">
+                            <div>
+                                <div style="padding-bottom: 16px;">
+                                    <strong>Legenda de desempenho:</strong><br>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #4caf50;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #4caf50;">Verde</b>: ideal</span>
+                                </div>
+
+                                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #e4b131;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #e4b131;">Amarelo</b>: estado de alerta</span>
+                                </div>
+
+                                <div style="display: flex; align-items: center;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #ff4b4b;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #ff4b4b;">Vermelho</b>: crítico</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
+
+                <div class="div-info-maquina">
+                    <div id="info-macAddress">
+
+                    </div>
+                    <div id="info-nome">
+
+                    </div>
+                    <div id="info-cpu">
+
+                    </div>
+                    <div id="info-gpu">
+
+                    </div>
+                </div>
+
 
                 <div style="display: flex; justify-content: space-between; height: 100%;">
                     <div style="width: 49%;">
@@ -212,10 +319,6 @@
                                         z-index: 10;
                                         box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                                     ">
-                                        <strong>Legenda de desempenho:</strong><br>
-                                        <b style="color: #4caf50;">Verde</b>: ideal<br>
-                                        <b style="color: #e4b131;">Amarelo</b>: estado de alerta<br>
-                                        <b style="color: #ff4b4b;">Vermelho</b>: crítico
                                     </span>
                                 </span>
                             </h2>
@@ -225,18 +328,18 @@
                             style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px; height: 100%;">
                             <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 69%;">
                                 <div style="display: flex; gap: 10px;">
-                                    <div id="kpiusocpu">
+                                    <div id="kpiusocpu" style="width: 50%;">
 
                                     </div>
-                                    <div id="kpiusogpu">
+                                    <div id="kpiusogpu" style="width: 50%;">
 
                                     </div>
 
                                 </div>
 
                                 <div
-                                    style="flex: 1 1 40%; width: 100%; height: 200%; background-color:#f1f5f9; padding:10px; border-radius:8px;">
-                                    <canvas id="grafico1"></canvas>
+                                    style="flex: 1 1 40%; max-height: 75%; width: 100%; height: 200%; background-color:#f1f5f9; border-radius:8px;">
+                                    <canvas id="grafico1" style="height: 90%;"></canvas>
                                 </div>
                             </div>
 
@@ -269,10 +372,6 @@
                                     z-index: 10;
                                     box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                                     ">
-                                    <strong>Legenda de desempenho:</strong><br>
-                                    <b style="color: #4caf50;">Verde</b>: ideal<br>
-                                    <b style="color: #e4b131;">Amarelo</b>: estado de alerta<br>
-                                    <b style="color: #ff4b4b;">Vermelho</b>: crítico
                                 </span>
                             </span>
                         </h2>
@@ -284,16 +383,16 @@
                              justify-content: space-between; gap: 60px;  height: 69%;">
                             <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
                                 <div style="display: flex; gap: 10px;">
-                                    <div id="kpitempcpu">
+                                    <div id="kpitempcpu" style="width: 50%;">
 
                                     </div>
-                                    <div id="kpitempgpu">
+                                    <div id="kpitempgpu" style="width: 50%;">
 
                                     </div>
                                 </div>
 
                                 <div
-                                    style="flex: 1 1 40%; width: 100%;; background-color:#f1f5f9; padding:10px; border-radius:8px;">
+                                    style="flex: 1 1 40%; max-height: 75%; width: 100%;; background-color:#f1f5f9; border-radius:8px;">
                                     <canvas id="grafico3"></canvas>
                                 </div>
                             </div>
@@ -318,10 +417,9 @@
         const inputInicio = document.getElementById('dt_inicio');
         const inputFim = document.getElementById('dt_fim');
 
+        const ctxComponentes = document.getElementById('graficoComponentes').getContext('2d');
         const ctx1 = document.getElementById('grafico1').getContext('2d');
-        //const ctx2 = document.getElementById('grafico2').getContext('2d');
         const ctx3 = document.getElementById('grafico3').getContext('2d');
-        //const ctx4 = document.getElementById('grafico4').getContext('2d');
 
         let graficoTemp24Hrs = null;
         let GraficoUso24Hrs = null;
@@ -361,6 +459,10 @@
 
                             document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
                             let contadorQtdForaParam = 0;
+                            let contadorQtdForaTempGpu = 0;
+                            let contadorQtdForaTempCpu = 0;
+                            let contadorQtdForaUsoGpu = 0;
+                            let contadorQtdForaUsoCpu = 0;
 
                             maquinas.forEach(maquina => {
                                 const macMaquina = maquina.enderecoMac.trim().toLowerCase();
@@ -405,6 +507,23 @@
 
                                     if (corKpiTempGpu != "#4caf50" || corKpiTempCpu != "#4caf50" || corKpiUsoGpu != "#4caf50" || corKpiUsoCpu != "#4caf50") {
                                         contadorQtdForaParam++;
+                                        maquinaForaDoParametro = true;
+                                        if (corKpiTempGpu != "#4caf50") {
+                                            foraDoParametro.gpu_temp = true;
+                                            contadorQtdForaTempGpu++;
+                                        }
+                                        if (corKpiTempCpu != "#4caf50") {
+                                            foraDoParametro.cpu_temp = true;
+                                            contadorQtdForaTempCpu++;
+                                        }
+                                        if (corKpiUsoGpu != "#4caf50") {
+                                            foraDoParametro.gpu_percent = true;
+                                            contadorQtdForaUsoGpu++;
+                                        }
+                                        if (corKpiUsoCpu != "#4caf50") {
+                                            foraDoParametro.cpu_percent = true;
+                                            contadorQtdForaUsoCpu++
+                                        }
                                     }
 
                                     listaMaquinas.push({
@@ -429,6 +548,7 @@
                                                 gpu_temp: corKpiTempGpu
                                             }
                                         },
+                                        maquinaForaDoParametro,
                                         foraDoParametro
                                     });
 
@@ -445,9 +565,42 @@
                                 }
                             });
 
+                            graficoUsoComponentes = new Chart(ctxComponentes, {
+                                type: 'bar',
+                                data: {
+                                    labels: ["Uso GPU", "Uso CPU", "Temp. GPU", "Temp. CPU"],
+                                    datasets: [
+                                        {
+                                            label: 'Quantidade de parâmetros ultrapassados',
+                                            data: [contadorQtdForaUsoGpu, contadorQtdForaUsoCpu, contadorQtdForaTempGpu, contadorQtdForaTempCpu],
+                                            backgroundColor: '#5B21B6',
+                                            borderColor: '#4C1D95',
+                                            borderWidth: 1
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { labels: { color: '#000' } }
+                                    },
+                                    scales: {
+                                        x: {
+                                            ticks: { color: '#000' }
+                                        },
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: { color: '#000' }
+                                        }
+                                    }
+                                }
+                            })
+
                             document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
                             console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
                             console.log("Lista de máquinas:", listaMaquinas);
+                            esconderCarregando();
                         })
                         .catch(err => console.error("Erro ao ler CSV:", err));
                 })
@@ -477,6 +630,7 @@
 
 
         function abrirGraficosMaquina(macAddress) {
+            mostrarCarregando();
             console.log("ENTROU NO ABRIR GRÁFICOS")
             console.log(macAddress)
             console.log(listaMaquinas.length)
@@ -502,10 +656,35 @@
             modalGeral.classList.add("open");
             modalGeral.classList.add("fade-in");
             modalGeralContainer.classList.add("slide-in-top");
+            console.log("INFO MAQUINA:")
             console.log(infoMaquina)
-            divInfoMaquina.innerHTML = `
-                    <span><b>Mac address:</b> ${infoMaquina.mac}</span>
-                    <span><b>Nome:</b> ${infoMaquina.nome}</span>`
+            var infoMacAddress = document.getElementById("info-macAddress")
+            infoMacAddress.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Mac address</h3>
+                <p class="card-info-valor">${infoMaquina.mac}</p>
+            </div>
+                                    `
+            var infoNome = document.getElementById("info-nome")
+            infoNome.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Nome</h3>
+                <p class="card-info-valor">${infoMaquina.nome}</p>
+            </div>
+                                    `
+            var parametrosCpu = document.getElementById("info-cpu")
+            parametrosCpu.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Parâmetros CPU</h3>
+                <p class="card-info-valor">Uso: ${infoMaquina.parametros.cpu_percent}% / Temp: ${infoMaquina.parametros.cpu_temp}°C</p>
+            </div>`
+
+            var parametrosGpu = document.getElementById("info-gpu")
+            parametrosGpu.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Parâmetros GPU</h3>
+                <p class="card-info-valor">Uso: ${infoMaquina.parametros.gpu_percent}% / Temp: ${infoMaquina.parametros.gpu_temp}°C</p>
+            </div>`
 
 
             var eixo24hrs = []
@@ -548,7 +727,8 @@
                     var listaGpuTemp = registrosMaquina.map(r => r.gpu_temp);
                     var listaCpuPercent = registrosMaquina.map(r => r.cpu_percent);
                     var listaCpuTemp = registrosMaquina.map(r => r.cpu_temp);
-
+                    console.log("LISTA GPU PERCENT: ")
+                    console.log(listaGpuPercent)
                     var mediaGpuPercent = calcularMedia(listaGpuPercent);
                     var medianaGpuPercent = calcularMediana(listaGpuPercent);
 
@@ -570,36 +750,36 @@
                     document.getElementById("botaoFiltro").innerHTML = `
                          <button class="botaoFiltro" onclick='aplicarFiltroPeriodo("${macAddress}")'>Aplicar</button>
                     `
-
+                    console.log("MEDIANA GPU PERCENT: " + medianaGpuPercent)
                     document.getElementById("kpiusogpu").innerHTML = `
                         <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
                             <p style="color:white; margin:0;">Uso médio da GPU</p>
-                            <p style="color:white; font-size:30px; margin:0;">${mediaGpuPercent}%</p>
-                            <p style="color:white; margin:0;">Mediana: ${medianaGpuPercent}%</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGpuPercent}%</b></p>
+                            <p style="color:white; margin:0;"Mediana: <b>${medianaGpuPercent}%</b></p>
                         </div>
                     `;
 
                     document.getElementById("kpitempgpu").innerHTML = `
                         <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
                             <p style="color:white; margin:0;">Temperatura média da GPU</p>
-                            <p style="color:white; font-size:30px; margin:0;">${mediaGpuTemp}°C</p>
-                            <p style="color:white; margin:0;">Mediana: ${medianaGpuTemp}°C</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGpuTemp}°C</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaGpuTemp}°C</b></p>
                         </div>
                     `;
 
                     document.getElementById("kpiusocpu").innerHTML = `
                         <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
                             <p style="color:white; margin:0;">Uso médio da CPU</p>
-                            <p style="color:white; font-size:30px; margin:0;">${mediaCpuPercent}%</p>
-                            <p style="color:white; margin:0;">Mediana: ${medianaCpuTemp}%</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaCpuPercent}%</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaCpuPercent}%</b></p>
                         </div>
                     `;
 
                     document.getElementById("kpitempcpu").innerHTML = `
                         <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
                             <p style="color:white; margin:0;">Temperatura média da CPU</p>
-                            <p style="color:white; font-size:30px; margin:0;">${mediaCpuTemp}°C</p>
-                            <p style="color:white; margin:0;">Mediana: ${medianaCpuTemp}°C</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaCpuTemp}°C</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaCpuTemp}°C</b></p>
                         </div>
                     `;
 
@@ -620,8 +800,8 @@
                                 {
                                     label: 'Uso de GPU (%)',
                                     data: listaGpuPercent,
-                                    backgroundColor: '#9333EA',
-                                    borderColor: '#6B21A8',
+                                    backgroundColor: '#e4b131',
+                                    borderColor: '#C48800',
                                     borderWidth: 1
                                 }
                             ]
@@ -655,15 +835,15 @@
                                 {
                                     label: 'Temp CPU (°C)',
                                     data: listaCpuTemp,
-                                    borderColor: '#C48800',
-                                    backgroundColor: '#EDA60933',
+                                    borderColor: '#4C1D95',
+                                    backgroundColor: '#5B21B6',
                                     borderWidth: 2
                                 },
                                 {
                                     label: 'Temp GPU (°C)',
                                     data: listaGpuTemp,
-                                    borderColor: '#FF6A00',
-                                    backgroundColor: '#FFA33333',
+                                    borderColor: '#C48800',
+                                    backgroundColor: '#e4b131',
                                     borderWidth: 2
                                 }
                             ]
@@ -689,12 +869,13 @@
                         }
                     });
 
-
+                    esconderCarregando();
                 })
 
         }
 
         function aplicarFiltroPeriodo(macAddress) {
+            mostrarCarregando();
             console.log("ENDEREÇO MAC: " + macAddress)
             var infoMaquina = pegarInfoMaquina(macAddress);
 
@@ -738,14 +919,19 @@
                 .then(linhas => {
                     if (valorFiltro == "Semanal") {
                         construirGraficosSemanal(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
                     } else if (valorFiltro == "Mensal") {
                         construirGraficosMensal(linhas, macAddress, infoMaquina, limite);
+                         esconderCarregando();
                     } else if (valorFiltro == "Semestral1") {
                         construirGraficosSemestral1(linhas, macAddress, infoMaquina, limite);
+                         esconderCarregando();
                     } else if (valorFiltro == "Semestral2") {
                         construirGraficosSemestral2(linhas, macAddress, infoMaquina, limite);
+                         esconderCarregando();
                     } else {
                         construirGraficosAnual(linhas, macAddress, infoMaquina, limite);
+                         esconderCarregando();
                     }
                 });
         }
@@ -884,32 +1070,32 @@
             document.getElementById("kpiusogpu").innerHTML = `
                 <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Uso médio da GPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
                 </div>
             `;
 
             document.getElementById("kpitempgpu").innerHTML = `
                 <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Temperatura média da GPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
                 </div>
             `;
 
             document.getElementById("kpiusocpu").innerHTML = `
                 <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Uso médio da CPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
                 </div>
             `;
 
             document.getElementById("kpitempcpu").innerHTML = `
                 <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Temperatura média da CPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
                 </div>
             `;
 
@@ -930,8 +1116,8 @@
                         {
                             label: 'Uso de GPU (%)',
                             data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_percent),
-                            backgroundColor: '#9333EA',
-                            borderColor: '#6B21A8',
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
                             borderWidth: 1
                         }
                     ]
@@ -964,16 +1150,16 @@
                         {
                             label: 'Temp CPU (°C)',
                             data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_temp),
-                            borderColor: '#C48800',
-                            backgroundColor: '#EDA60933',
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
                             borderWidth: 2,
                             tension: 0.2
                         },
                         {
                             label: 'Temp GPU (°C)',
                             data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_temp),
-                            borderColor: '#FF6A00',
-                            backgroundColor: '#FFA33333',
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
                             borderWidth: 2,
                             tension: 0.2
                         }
@@ -1087,32 +1273,32 @@
             document.getElementById("kpiusogpu").innerHTML = `
                 <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Uso médio da GPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
                 </div>
             `;
 
             document.getElementById("kpitempgpu").innerHTML = `
                 <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Temperatura média da GPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
                 </div>
             `;
 
             document.getElementById("kpiusocpu").innerHTML = `
                 <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Uso médio da CPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
                 </div>
             `;
 
             document.getElementById("kpitempcpu").innerHTML = `
                 <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
                     <p style="color:white; margin:0;">Temperatura média da CPU</p>
-                    <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
-                    <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
                 </div>
             `;
 
@@ -1133,8 +1319,8 @@
                         {
                             label: 'Uso de GPU (%)',
                             data: mediasGpuPercent,
-                            backgroundColor: '#9333EA',
-                            borderColor: '#6B21A8',
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
                             borderWidth: 1
                         }
                     ]
@@ -1167,15 +1353,15 @@
                         {
                             label: 'Temp CPU (°C)',
                             data: mediasCpuTemp,
-                            borderColor: '#C48800',
-                            backgroundColor: '#EDA60933',
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
                             borderWidth: 2
                         },
                         {
                             label: 'Temp GPU (°C)',
                             data: mediasGpuTemp,
-                            borderColor: '#FF6A00',
-                            backgroundColor: '#FFA33333',
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
                             borderWidth: 2
                         }
                     ]
@@ -1331,8 +1517,8 @@
                         {
                             label: 'Uso de GPU (%)',
                             data: mediasGpuPercent,
-                            backgroundColor: '#9333EA',
-                            borderColor: '#6B21A8',
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
                             borderWidth: 1
                         }
                     ]
@@ -1365,15 +1551,15 @@
                         {
                             label: 'Temp CPU (°C)',
                             data: mediasCpuTemp,
-                            borderColor: '#C48800',
-                            backgroundColor: '#EDA60933',
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
                             borderWidth: 2
                         },
                         {
                             label: 'Temp GPU (°C)',
                             data: mediasGpuTemp,
-                            borderColor: '#FF6A00',
-                            backgroundColor: '#FFA33333',
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
                             borderWidth: 2
                         }
                     ]
@@ -1483,32 +1669,32 @@
             document.getElementById("kpiusogpu").innerHTML = `
         <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Uso médio da GPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
         </div>
     `;
 
             document.getElementById("kpitempgpu").innerHTML = `
         <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Temperatura média da GPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
         </div>
     `;
 
             document.getElementById("kpiusocpu").innerHTML = `
         <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Uso médio da CPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
         </div>
     `;
 
             document.getElementById("kpitempcpu").innerHTML = `
         <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Temperatura média da CPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
         </div>
     `;
 
@@ -1528,8 +1714,8 @@
                         {
                             label: 'Uso de GPU (%)',
                             data: mediasGpuPercent,
-                            backgroundColor: '#9333EA',
-                            borderColor: '#6B21A8',
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
                             borderWidth: 1
                         }
                     ]
@@ -1562,15 +1748,15 @@
                         {
                             label: 'Temp CPU (°C)',
                             data: mediasCpuTemp,
-                            borderColor: '#C48800',
-                            backgroundColor: '#EDA60933',
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
                             borderWidth: 2
                         },
                         {
                             label: 'Temp GPU (°C)',
                             data: mediasGpuTemp,
-                            borderColor: '#FF6A00',
-                            backgroundColor: '#FFA33333',
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
                             borderWidth: 2
                         }
                     ]
@@ -1679,32 +1865,32 @@
             document.getElementById("kpiusogpu").innerHTML = `
         <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Uso médio da GPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
         </div>
     `;
 
             document.getElementById("kpitempgpu").innerHTML = `
         <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Temperatura média da GPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
         </div>
     `;
 
             document.getElementById("kpiusocpu").innerHTML = `
         <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Uso médio da CPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
         </div>
     `;
 
             document.getElementById("kpitempcpu").innerHTML = `
         <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
             <p style="color:white; margin:0;">Temperatura média da CPU</p>
-            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
-            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
         </div>
     `;
 
@@ -1725,8 +1911,8 @@
                         {
                             label: 'Uso de GPU (%)',
                             data: mediasGpuPercent,
-                            backgroundColor: '#9333EA',
-                            borderColor: '#6B21A8',
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
                             borderWidth: 1
                         }
                     ]
@@ -1757,16 +1943,16 @@
                         {
                             label: 'Temp CPU (°C)',
                             data: mediasCpuTemp,
-                            borderColor: '#C48800',
-                            backgroundColor: '#EDA60933',
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
                             borderWidth: 2,
                             tension: 0.2
                         },
                         {
                             label: 'Temp GPU (°C)',
                             data: mediasGpuTemp,
-                            borderColor: '#FF6A00',
-                            backgroundColor: '#FFA33333',
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
                             borderWidth: 2,
                             tension: 0.2
                         }
@@ -1800,25 +1986,24 @@
                 soma += lista[i];
             }
 
-            return parseFloat((soma / lista.length).toFixed(2));
+            return parseFloat((soma / lista.length).toFixed(0));
         }
 
         function calcularMediana(lista) {
             lista.sort(function (a, b) {
                 return a - b;
             });
-
+            console.log("LISTA MEDIANA: " + lista)
             let meio = Math.floor(lista.length / 2);
 
             if (lista.length % 2 !== 0) {
-                return parseFloat(lista[meio].toFixed(2));
+                return parseFloat(lista[meio].toFixed(0));
             } else {
-                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(2));
+                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(0));
             }
         }
 
         function corTemperatura(media, parametro) {
-
             if (media <= parametro) {
                 return "#4caf50";
             }
@@ -1875,6 +2060,7 @@
 
                 filtroUltrapassando.addEventListener("change", function () {
                     const componente = filtroUltrapassando.value;
+                    console.log(listaMaquinas.filter(m => m.foraDoParametro));
                     const maquinasFiltradas = listaMaquinas.filter(m => m.foraDoParametro[componente]);
 
                     tbody.innerHTML = "";
@@ -1926,6 +2112,14 @@
                         <td style="font-size:20px; background-color:${cores.gpu_temp}; border: 1px solid black">${leitura.gpu_temp}</td>
                     </tr>`;
             });
+        }
+
+        function mostrarCarregando() {
+            document.getElementById("tela-carregando").style.display = "flex";
+        }
+
+        function esconderCarregando() {
+            document.getElementById("tela-carregando").style.display = "none";
         }
 
 
