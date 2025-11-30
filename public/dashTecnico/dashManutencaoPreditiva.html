@@ -205,7 +205,16 @@
           return res.json();
         })
         .then(data => {
-          processarDados(data);
+          console.log("Ocorrências buscadas:", data);
+          chamadosFiltrados = data.filter(chamado => {
+            const dataChamado = new Date(chamado.dataAbertura);
+            const inicio = new Date(dataAberturaFormatado);
+            const fim = new Date(dataFechamentoFormatado);
+
+            return dataChamado >= inicio && dataChamado <= fim;
+          });
+          console.log("Ocorrências filtradas:", chamadosFiltrados);
+          processarDados(chamadosFiltrados);
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
@@ -372,7 +381,7 @@
         <td>${maquina.enderecoMac}</td>
         <td>${chamados.length}</td>
         <td><span class="risk ${css}" title="Score: ${pontuacao}">${risco}</span></td>
-        <td class="suggestion">${getSuggestion(chamados)}</td>
+        <td class="suggestion">${pegarSugestao(chamados, pontuacao)}</td>
         <td class="actions"><button class="btn btn-details" data-mid="${maquina.id}">Detalhes</button></td>
       `;
         tbody.appendChild(tr);
@@ -381,9 +390,27 @@
       document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'))));
     }
 
-    function getSuggestion(chamados) {
-      return '-';
+    function pegarSugestao(chamados, pontuacao) {
+      let cpu = 0, gpu = 0;
+      chamados.forEach(c => {
+        const txt = c.problema.toLowerCase();
+        if (txt.includes("cpu")) cpu++;
+        if (txt.includes("gpu")) gpu++;
+      });
+
+      const componente = cpu >= gpu ? "CPU" : "GPU";
+
+      if (pontuacao >= 67) {
+        return `Risco alto — Alta chance de avaria na ${componente}. Revisão imediata recomendada.`;
+      }
+
+      if (pontuacao >= 34) {
+        return `Risco médio — Monitorar a ${componente}. Inspeção preventiva sugerida.`;
+      }
+
+      return `Risco baixo — ${componente} estável. Sem ações urgentes.`;
     }
+
 
     function abrirDetalhes(mid) {
       const machine = maquinasProcessadas.find(m => m.id == mid);
@@ -493,8 +520,11 @@
       return Math.max(0, Math.min(100, pontuacao));
     }
 
-
-    function riscoTexto(pontuacao) { if (pontuacao >= 67) return ['Alto', 'risk--high']; if (pontuacao >= 34) return ['Médio', 'risk--med']; return ['Baixo', 'risk--low']; }
+    function riscoTexto(pontuacao) {
+      if (pontuacao >= 67) return ['Alto', 'risk--high'];
+      if (pontuacao >= 34) return ['Médio', 'risk--med'];
+      return ['Baixo', 'risk--low'];
+    }
 
     // modal details
     function openDetails(mid) {
