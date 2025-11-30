@@ -63,11 +63,11 @@
         <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
         <div class="filters">
           <div class="periods">
-            <button class="btn ghost" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
-            <button class="btn ghost" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
-            <button class="btn ghost" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
-            <button class="btn ghost" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
-            <button class="btn ghost" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
+            <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
+            <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
+            <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
+            <button class="btn ghost" id="tresMesBtn" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
+            <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
           </div>
           <button class="btn" id="refreshBtn">Atualizar</button>
         </div>
@@ -171,25 +171,32 @@
     function buscarOcorrencias(periodo, fkEmpresa) {
       let dataAbertura, dataFechamento;
 
+      document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
+
       if (periodo == 'hoje') {
         dataAbertura = new Date();
         dataFechamento = new Date();
+        document.getElementById('hojeBtn').classList.remove('ghost');
       } else if (periodo == 'semana') {
         dataAbertura = new Date();
         dataAbertura.setDate(dataAbertura.getDate() - 7)
         dataFechamento = new Date();
+        document.getElementById('semanaBtn').classList.remove('ghost');
       } else if (periodo == 'mes') {
         dataAbertura = new Date();
         dataAbertura.setMonth(dataAbertura.getMonth() - 1)
         dataFechamento = new Date();
+        document.getElementById('mesBtn').classList.remove('ghost');
       } else if (periodo == 'tresMes') {
         dataAbertura = new Date();
         dataAbertura.setMonth(dataAbertura.getMonth() - 3)
         dataFechamento = new Date();
+        document.getElementById('tresMesBtn').classList.remove('ghost');
       } else if (periodo == 'ano') {
         dataAbertura = new Date();
         dataAbertura.setFullYear(dataAbertura.getFullYear() - 1)
         dataFechamento = new Date();
+        document.getElementById('anoBtn').classList.remove('ghost');
       }
 
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
