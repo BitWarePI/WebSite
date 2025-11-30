@@ -13,129 +13,130 @@
 </head>
 
 <body>
-  <section class="geral">
-    <nav>
-      <div class="main-nav">
-        <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
-        <ul class="links nav-links-pc">
-          <li><a class="link" href="dashTecnico.html">
-              <span class="material-symbols-outlined icon">handyman</span>
-              <span class="titulo">Dash técnico</span>
-            </a>
-          </li>
-          <li>
-            <a class="link" href="dashInfoMaquinas.html">
-              <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Informações máquinas</span>
-            </a>
-          </li>
-          <li>
-            <a class="link ativo" href="dashManutencaoPreditiva.html">
-              <span class="material-symbols-outlined icon">radar</span>
-              <span class="titulo">Manutenção Preditiva</span>
-            </a>
-          </li>
-        </ul>
-        <a href="../index.html" class="btn btn-sair nav-links-pc">
-          Sair
-        </a>
-        <div id="nav-menu-icon">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-      <ul class="links nav-links-cell">
-        <li><a class="link" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Inicio</a></li>
-        <li><a class="link ativo" href="dashFuncionario.html"><span
-              class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
-        <li>
-          <a href="../index.html" class="btn btn-sair">
+
+  <div class="global">
+    <div class="navDiv">
+      <nav>
+        <div class="main-nav">
+          <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
+          <ul class="links nav-links-pc">
+            <li><a class="link" href="dashTecnico.html">
+                <span class="material-symbols-outlined icon">handyman</span>
+                <span class="titulo">Dash técnico</span>
+              </a>
+            </li>
+            <li>
+              <a class="link" href="dashInfoMaquinas.html">
+                <span class="material-symbols-outlined icon">Computer</span>
+                <span class="titulo">Informações máquinas</span>
+              </a>
+            </li>
+            <li>
+              <a class="link ativo" href="dashManutencaoPreditiva.html">
+                <span class="material-symbols-outlined icon">radar</span>
+                <span class="titulo">Manutenção Preditiva</span>
+              </a>
+            </li>
+          </ul>
+          <a href="../index.html" class="btn btn-sair nav-links-pc">
             Sair
           </a>
-        </li>
-      </ul>
-    </nav>
-
-    <main class="container">
-      <div class="top-row">
-        <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
-        <div class="filters">
-          <div class="periods">
-            <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
-            <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
-            <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
-            <button class="btn ghost" id="tresMesBtn" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
-            <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
+          <div id="nav-menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <button class="btn" id="refreshBtn">Atualizar</button>
         </div>
-      </div>
+      </nav>
+    </div>
 
-      <!-- KPIs -->
-      <section class="kpi-row">
-        <div class="kpi">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="label">Total de ocorrências (período)</div>
-            <div class="help" title="Total de chamados contabilizados dentro do período filtrado.">?</div>
+    <div class="sectionDiv">
+      <section class="geral">
+        <main class="container">
+          <div class="top-row">
+            <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
+            <div class="filters">
+              <div class="periods">
+                <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
+                <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
+                <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
+                <button class="btn ghost" id="tresMesBtn" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
+                <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
+              </div>
+              <button class="btn" id="refreshBtn">Atualizar</button>
+            </div>
           </div>
-          <div class="value kpi-total">0</div>
-        </div>
 
-        <div class="kpi">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="label">Componente com mais ocorrências</div>
-            <div class="help" title="Componente (CPU/GPU) com maior número de ocorrências no período filtrado.">?</div>
-          </div>
-          <div class="value kpi-component">—</div>
-        </div>
+          <!-- KPIs -->
+          <section class="kpi-row">
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Total de ocorrências (período)</div>
+                <div class="help" title="Total de chamados contabilizados dentro do período filtrado.">?</div>
+              </div>
+              <div class="value kpi-total">0</div>
+            </div>
 
-        <div class="kpi">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="label">Tipo de problema mais frequente</div>
-            <div class="help" title="Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.">?</div>
-          </div>
-          <div class="value kpi-type">—</div>
-        </div>
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Componente com mais ocorrências</div>
+                <div class="help" title="Componente (CPU/GPU) com maior número de ocorrências no período filtrado.">?
+                </div>
+              </div>
+              <div class="value kpi-component">—</div>
+            </div>
+
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Tipo de problema mais frequente</div>
+                <div class="help" title="Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.">?</div>
+              </div>
+              <div class="value kpi-type">—</div>
+            </div>
+          </section>
+
+          <section class="charts">
+            <div class="card">
+              <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
+              <div class="chart-container">
+                <canvas id="chartComponent"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Comparativo: Tipo de problema (Uso vs Temperatura)</h3>
+              <div class="chart-container">
+                <canvas id="chartType"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <section style="margin-top:18px">
+            <div class="card">
+              <h3>Máquinas com ocorrências (período)</h3>
+              <div style="overflow:auto;margin-top:8px">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Endereço MAC</th>
+                      <th>Total ocorrências</th>
+                      <th>Risco</th>
+                      <th>Sugestão</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="machinesTbody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </main>
       </section>
-
-      <section class="charts">
-        <div class="card">
-          <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
-          <canvas id="chartComponent"></canvas>
-        </div>
-
-        <div class="card">
-          <h3>Comparativo: Tipo de problema (Uso vs Temperatura)</h3>
-          <canvas id="chartType"></canvas>
-        </div>
-      </section>
-
-      <section style="margin-top:18px">
-        <div class="card">
-          <h3>Máquinas com ocorrências (período)</h3>
-          <div style="overflow:auto;margin-top:8px">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Endereço MAC</th>
-                  <th>Total ocorrências</th>
-                  <th>Risco</th>
-                  <th>Sugestão</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="machinesTbody">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    </main>
-  </section>
-
+    </div>
+  </div>
   <div class="modal" id="modalDetails">
     <div class="inner">
       <div style="display:flex;justify-content:space-between;align-items:center">
@@ -347,7 +348,15 @@
               backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
-          options: { responsive: true, plugins: { legend: { display: false } } }
+          options: { 
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+              legend: { 
+                display: false 
+              } 
+            } 
+          }
         });
       } else {
         Componente.data.datasets[0].data = [dados.componentes.cpu, dados.componentes.gpu];
@@ -365,7 +374,15 @@
               backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
-          options: { responsive: true, plugins: { legend: { display: false } } }
+          options: { 
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+              legend: { 
+                display: false 
+              } 
+            } 
+          }
         });
       } else {
         TipoProblema.data.datasets[0].data = [dados.tipoProblema.uso, dados.tipoProblema.temperatura];
