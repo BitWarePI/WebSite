@@ -9,6 +9,7 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
   <link rel="stylesheet" href="../css/dashboard/dashTecnico/dashManutencaoPreditiva.css">
   <link rel="icon" href="../assets/icon/favicon2.png">
+  <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -60,8 +61,10 @@
                 <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
                 <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
                 <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
-                <button class="btn ghost" id="segundoSemestreBtn" onclick="buscarOcorrencias('segundoSemestre', fkEmpresa)">2º semestre</button>
-                <button class="btn ghost" id="primeiroSemestreBtn" onclick="buscarOcorrencias('primeiroSemestre', fkEmpresa)">1º semestre</button>
+                <button class="btn ghost" id="segundoSemestreBtn"
+                  onclick="buscarOcorrencias('segundoSemestre', fkEmpresa)">2º semestre</button>
+                <button class="btn ghost" id="primeiroSemestreBtn"
+                  onclick="buscarOcorrencias('primeiroSemestre', fkEmpresa)">1º semestre</button>
                 <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
               </div>
             </div>
@@ -72,7 +75,32 @@
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
                 <div class="label">Total de ocorrências (período)</div>
-                <div class="help" title="Total de chamados contabilizados dentro do período filtrado.">?</div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipTotal').style.display='block'"
+                  onmouseout="document.getElementById('tooltipTotal').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+                  <span id="tooltipTotal" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Total de chamados contabilizados dentro do período filtrado.
+                  </span>
+                </span>
               </div>
               <div class="value kpi-total">0</div>
             </div>
@@ -80,8 +108,33 @@
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
                 <div class="label">Componente com mais ocorrências</div>
-                <div class="help" title="Componente (CPU/GPU) com maior número de ocorrências no período filtrado.">?
-                </div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipComponente').style.display='block'"
+                  onmouseout="document.getElementById('tooltipComponente').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+
+                  <span id="tooltipComponente" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Componente (CPU/GPU) com maior número de ocorrências no período filtrado.
+                  </span>
+                </span>
               </div>
               <div class="value kpi-component">—</div>
             </div>
@@ -89,7 +142,33 @@
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
                 <div class="label">Tipo de problema mais frequente</div>
-                <div class="help" title="Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.">?</div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipTipo').style.display='block'"
+                  onmouseout="document.getElementById('tooltipTipo').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+
+                  <span id="tooltipTipo" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.
+                  </span>
+                </span>
               </div>
               <div class="value kpi-type">—</div>
             </div>
