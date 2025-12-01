@@ -98,7 +98,8 @@ async function getListCommandSnippt(req, res) {
 
   try {
     const listCommand = await model.getListCommandSnippt(fkEmpresa);
-    
+    console.log("listCommand ", listCommand);
+
     return res.json(listCommand);
 
   } catch (error) {
@@ -109,9 +110,112 @@ async function getListCommandSnippt(req, res) {
   }
 }
 
+async function posListCommandSnippt(req, res) {
+  const { fkEmpresa } = req.params;
+  const { nameCommand } = req.body;
+
+  if (fkEmpresa === undefined || isNaN(fkEmpresa)) {
+    return res.status(400).send("Valor inválido de fkEmpresa!");
+  }
+
+  if (!nameCommand || nameCommand.trim() === "") {
+    return res.status(400).send("Nome do comando é obrigatório!");
+  }
+
+  console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+  try {
+    const resultado = await model.createCommandSnippt(fkEmpresa, nameCommand);
+    console.log("Comando criado:", resultado);
+
+    return res.json({
+      id: resultado.insertId,
+      nameCommand: nameCommand,
+      fkEmpresa: fkEmpresa,
+      mensagem: "Comando criado com sucesso"
+    });
+
+  } catch (error) {
+    console.log("Houve um erro ao criar o comando!", error.sqlMessage || error);
+    return res.status(500).json({
+      erro: error.sqlMessage || "Erro interno"
+    });
+  }
+}
+
+async function putListCommandSnippt(req, res) {
+  const { id } = req.params;
+  const { nameCommand } = req.body;
+
+  if (id === undefined || isNaN(id)) {
+    return res.status(400).send("Valor inválido de id!");
+  }
+
+  if (!nameCommand || nameCommand.trim() === "") {
+    return res.status(400).send("Nome do comando é obrigatório!");
+  }
+
+  console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+  try {
+    const resultado = await model.updateCommandSnippt(id, nameCommand);
+    console.log("Comando atualizado:", resultado);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).send("Comando não encontrado!");
+    }
+
+    return res.json({
+      id: id,
+      nameCommand: nameCommand,
+      mensagem: "Comando atualizado com sucesso"
+    });
+
+  } catch (error) {
+    console.log("Houve um erro ao atualizar o comando!", error.sqlMessage || error);
+    return res.status(500).json({
+      erro: error.sqlMessage || "Erro interno"
+    });
+  }
+}
+
+async function deleteListCommandSnippt(req, res) {
+  const { id } = req.params;
+
+  if (id === undefined || isNaN(id)) {
+    return res.status(400).send("Valor inválido de id!");
+  }
+
+  console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+  try {
+    const resultado = await model.deleteCommandSnippt(id);
+    console.log("Comando deletado:", resultado);
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).send("Comando não encontrado!");
+    }
+
+    return res.json({
+      id: id,
+      mensagem: "Comando deletado com sucesso"
+    });
+
+  } catch (error) {
+    console.log("Houve um erro ao deletar o comando!", error.sqlMessage || error);
+    return res.status(500).json({
+      erro: error.sqlMessage || "Erro interno"
+    });
+  }
+}
+
+
 
 module.exports = {
   getInfoKpis,
   listendInfoMachine,
-  getListCommandSnippt
+  getListCommandSnippt,
+  posListCommandSnippt,
+  putListCommandSnippt,
+  deleteListCommandSnippt
 }

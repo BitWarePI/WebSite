@@ -92,16 +92,97 @@ async function aplicarFiltros() {
 }
 
 async function listendSnippts() {
-  const { fkEmpresa } = sessionStorage.getItem('idEmpresa');
-  
+  const fkEmpresa = sessionStorage.getItem('idEmpresa');
+
   const response = await fetch(`/dashProcess/listendCommand/${fkEmpresa}`);
   if (!response.ok) throw new Error("Erro na requisição da lista de comandos");
 
   const snippts = await response.json();
   console.log("Validando res:  ", snippts)
-  
 
-  
-  
-  
+  const listElement = document.getElementById("command-wrapper");
+  listElement.innerHTML = "";
+  const htmlContent = snippts.map((s) => {
+    return `
+    <div class="command-item" data-id="${s.id}">
+              <div class="cmd-left">
+                <span class="cmd-title">${s.nameCommand}</span>
+              </div>
+              <div class="cmd-actions">
+                <a class="edit" onclick="editarComando(${s.id})">Editar</a>
+                <a class="delete" onclick="excluirComando(${s.id})">Excluir</a>
+              </div>
+    </div>
+    `}).join('');
+
+  listElement.innerHTML = htmlContent;
+}
+
+async function posListCommandSnippt(comando) {
+  const id = sessionStorage.getItem('idEmpresa');
+
+  try {
+    const response = await fetch(`/dashProcess/listendCommand/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(comando)
+    });
+
+    if (!response.ok) throw new Error("Erro ao criar comando");
+
+    const resultado = await response.json();
+    console.log("Comando criado:", resultado);
+    listendSnippts();
+    return resultado;
+
+  } catch (erro) {
+    console.log("Erro ao criar comando:", erro);
+    throw erro;
+  }
+}
+
+async function editarComando(id) {
+  const novoComando = prompt("Digite o novo comando:");
+  if (!novoComando) return;
+
+  try {
+    const response = await fetch(`/dashProcess/listendCommand/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nameCommand: novoComando })
+    });
+
+    if (!response.ok) throw new Error("Erro ao atualizar comando");
+
+    const resultado = await response.json();
+    console.log("Comando atualizado:", resultado);
+    listendSnippts();
+    return resultado;
+
+  } catch (erro) {
+    console.error("Erro ao atualizar comando:", erro);
+    throw erro;
+  }
+}
+
+async function excluirComando(id) {
+  if (!confirm("Tem certeza que deseja excluir este comando?")) return;
+
+  try {
+    const response = await fetch(`/dashProcess/listendCommand/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    if (!response.ok) throw new Error("Erro ao excluir comando");
+
+    const resultado = await response.json();
+    console.log("Comando excluído:", resultado);
+    listendSnippts();
+    return resultado;
+
+  } catch (erro) {
+    console.error("Erro ao excluir comando:", erro);
+    throw erro;
+  }
 }

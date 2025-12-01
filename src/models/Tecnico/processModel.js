@@ -45,8 +45,40 @@ function ListendMachine(fkEmpresa) {
 }
 
 function getListCommandSnippt(fkEmpresa) {
-  var instrucaoSql = `select * from comando_personalizado 
-                      where fk_empresa = 1;`;
+  var instrucaoSql = `select
+                      id,
+                      cp.nome as nameCommand,
+                      cp.comando as commandSnippt
+                      from comando_personalizado cp
+                      where fk_empresa = ${fkEmpresa};`;
+
+  console.log("Executando a instrução SQL: \n", instrucaoSql);
+  return db.executar(instrucaoSql);
+
+}
+
+function createCommandSnippt(fkEmpresa, nameCommand) {
+  var instrucaoSql = `INSERT INTO comando_personalizado (nome, fk_empresa) 
+                      VALUES ('${nameCommand}', ${fkEmpresa});`;
+
+  console.log("Executando a instrução SQL: \n", instrucaoSql);
+  return db.executar(instrucaoSql);
+
+}
+
+function updateCommandSnippt(id, nameCommand) {
+  var instrucaoSql = `UPDATE comando_personalizado 
+                      SET nome = '${nameCommand}' 
+                      WHERE id = ${id};`;
+
+  console.log("Executando a instrução SQL: \n", instrucaoSql);
+  return db.executar(instrucaoSql);
+
+}
+
+function deleteCommandSnippt(id) {
+  var instrucaoSql = `DELETE FROM comando_personalizado 
+                      WHERE id = ${id};`;
 
   console.log("Executando a instrução SQL: \n", instrucaoSql);
   return db.executar(instrucaoSql);
@@ -58,5 +90,8 @@ module.exports = {
   getAlertMachineUse,
   getCommandExecMachine,
   ListendMachine,
-  getListCommandSnippt
+  getListCommandSnippt,
+  createCommandSnippt,
+  updateCommandSnippt,
+  deleteCommandSnippt
 }
