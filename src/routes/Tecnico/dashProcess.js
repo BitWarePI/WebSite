@@ -15,15 +15,15 @@ router.get("/listendCommand/:fkEmpresa", (req, res) => {
   dashProcess.getListCommandSnippt(req, res);
 })
 
-router.post("/listendCommand:1", (req, res) => {
+router.post("/listendCommand/:id", (req, res) => {
   dashProcess.posListCommandSnippt(req, res);
 })
 
-router.delete("/listendCommand:2", (req, res) => {
-  dashProcess.getListCommandSnippt(req, res);
+router.delete("/listendCommand/:id", (req, res) => {
+  dashProcess.deleteListCommandSnippt(req, res);
 })
 
-router.put("/listendCommand:3", (req, res) => {
+router.put("/listendCommand/:id", (req, res) => {
   dashProcess.putListCommandSnippt(req, res);
 })
 
