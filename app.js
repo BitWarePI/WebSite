@@ -29,7 +29,7 @@ var maquinaRouter = require("./src/routes/maquina")
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
-
+var s3Router = require('./src/routes/dadosBucket');
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
+app.use('/dadosBucket', s3Router);
 app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);

@@ -1,59 +1,53 @@
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const AWS = require('aws-sdk');
 const Papa = require('papaparse');
 
-async function getS3FileContent(pathFileKey) {
-  const s3Client = new S3Client({
-    region: process.env.AWS_REGION
-  });
+AWS.config.update({ region: process.env.AWS_REGION });
+const s3 = new AWS.S3();
 
-  const BucketClient = 's3-client-bitwarepi';
-  
-  if (!pathFileKey) {
-    throw new Error('Path, caminho que se encontra o arquivo é obrigatório.');
-  }
-
-  const connection = {
-    Bucket: BucketClient,
-    Key: pathFileKey
-  };
-
-  console.log(`Lendo do S3: ${connection.Bucket} | ${connection.Key}`);
+async function lerArquivo(req, res) {
+  console.log("=== DEBUG ENV ===");
+  console.log("AWS_REGION:", process.env.AWS_REGION);
+  console.log("S3_BUCKET:", process.env.S3_BUCKET);
 
   try {
-    const command = new GetObjectCommand(connection);
-    const response = await s3Client.send(command);
+    const fileKey = req.params.arquivo;
 
-    const text = await response.Body.transformToString('utf-8');
-    const trimmedText = text.trim();
+    if (!/^[\w.\-]+$/.test(fileKey)) {
+      return res.status(400).send('❌ Nome de arquivo inválido.');
+    }
+
+    const params = {
+      Bucket: process.env.S3_BUCKET,
+      Key: fileKey
+    };
+
+    console.log(`📥 Lendo do S3: ${params.Bucket}/${params.Key}`);
+
+    const data = await s3.getObject(params).promise();
+
+    console.log("DATA RECEBIDA DO S3:", data.Body.length, "bytes");
+
+    const text = data.Body.toString('utf-8').trim();
 
     let content;
-
-    // Verifica se é JSON ou tenta CSV/PapaParse
-    if (trimmedText.startsWith('[') || trimmedText.startsWith('{')) {
-      content = JSON.parse(trimmedText);
-      console.log(`Arquivo ${pathFileKey} lido como JSON.`);
-
+    if (text.startsWith('[') || text.startsWith('{')) {
+      content = JSON.parse(text);
     } else {
-      const parsed = Papa.parse(trimmedText, {
+      const parsed = Papa.parse(text, {
         header: true,
-        delimiter: ';',
+        delimiter: text.includes(';') ? ';' : ',',
         skipEmptyLines: true
       });
       content = parsed.data;
-      console.log(`Arquivo '${pathFileKey}' lido como CSV.`);
-
     }
 
-    // Retorna a string em JSON formatada
-    return JSON.stringify(content, null, 2);
-
+    res.json(content);
   } catch (err) {
-    console.error('Erro ao buscar arquivo:', err.message);
-    throw new Error(`Erro ao buscar arquivo '${pathFileKey}': ${err.message}`);
+    console.error('❌ Erro ao buscar arquivo:', err.message);
+    res.status(500).send('Erro ao buscar arquivo: ' + err.message);
   }
 }
 
-
 module.exports = {
-  getS3FileContent
+  lerArquivo
 };

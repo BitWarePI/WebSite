@@ -19,6 +19,31 @@
 </head>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: {
+            DEFAULT: "#6D28D9",
+            light: "#8B5CF6",
+          },
+          "background-dark": "#111827",
+          "surface-dark": "#1F2937",
+          "border-dark": "#374151",
+        },
+        fontFamily: {
+          display: ["Inter", "sans-serif"],
+        },
+        borderRadius: {
+          DEFAULT: "0.75rem",
+        },
+      },
+    },
+  };
+</script>
+
 <body>
 
   <section>
@@ -82,28 +107,36 @@
                 <p class="text-sm text-gray-400">Máquinas com Erro</p>
                 <p class="text-3xl font-bold mt-1" id="maquinasComErro"></p>
               </div>
-              <div class="bg-violet-900 p-6 rounded-lg text-white">
-                <p class="text-sm text-gray-400">Principal Problema</p>
-                <p class="text-3xl font-bold mt-1" id="principalProblema"></p>
-              </div>
               <div class="bg-red-600 p-6 rounded-lg text-white">
                 <p class="text-sm text-red-200">Chamados Críticos</p>
                 <p class="text-3xl font-bold mt-1" id="totalCriticos"></p>
               </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-9">
-              <div class="lg:col-span-4 bg-neutral-300 p-4 rounded-lg shadow-sm">
+
+              <!-- GRÁFICO PRINCIPAL (linha inteira) -->
+              <div class="lg:col-span-5 bg-neutral-300 p-4 rounded-lg shadow-sm h-[450px]">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Frequência de Erros</h2>
-                <div class="h-full">
+                <div class="h-[380px]">
                   <canvas id="grafico1"></canvas>
                 </div>
               </div>
+
+              <!-- GRÁFICO DE BARRAS (5 colunas) -->
+              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
+                <div class="relative w-full h-[250px]">
+                  <canvas id="grafico2"></canvas>
+                </div>
+              </div>
+
+              <!-- CARD PRINCIPAL COMPONENTE (2 colunas) -->
+
             </div>
           </div>
 
           <!-- LADO DIREITO -->
           <div style="display: flex; flex-direction: column; gap: 15px; min-width: 150px;">
-
             <!-- FILTRO -->
             <div style="display: flex; flex-direction: column; gap: 60px; min-width: 150px;">
               <div style="background-color: #111; border-radius: 12px; padding: 15px 20px; color: white;">
@@ -145,16 +178,24 @@
                   <li style="color: #ccc; text-align: center;">Carregando...</li>
                 </ul>
               </div>
+              <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm h-[250px] flex flex-col justify-center">
+                <h3 class="text-gray-800 font-semibold mb-4">Principal Problema</h3>
+
+                <div class="flex items-center space-x-3">
+                  <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
+                    <span class="text-lg font-bold text-gray-800">GPU</span>
+                  </div>
+
+                  <p class="text-gray-800 text-lg leading-tight" id="principalProblema">
+                  </p>
+                </div>
+
+                <span class="text-gray-800 mt-3">Chamados em aberto</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
-          <!-- Área do gráfico ocupando todo o card -->
-          <div class="relative w-full h-[320px]">
-            <canvas id="grafico2"></canvas>
-          </div>
-        </div>
+
         <div class="chamado" style="margin: 0px;">
           <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
           <table>
@@ -198,55 +239,134 @@
 </html>
 <script>
   const ctx = document.getElementById('grafico2').getContext('2d');
-  const ctx1 = document.getElementById('grafico1').getContext('2d');
-  const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
-  gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)"); // roxo claro
-  gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+  async function carregarDadosParaGraficoErros() {
+    const caminho = window.location.pathname;
+    const isVer = caminho.includes("/ver/");
+    const isDados = caminho.includes("/dados/");
+    const arquivo = caminho.split(isVer ? "/ver/" : "/dados/")[1];
 
-  // Definição inicial do gráfico
-  const graficoErros = new Chart(ctx1, {
-    type: 'line',
-    data: {
-      labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-      datasets: [{
-        label: 'Erros Semanais',
-        data: [2, 4, 1, 7, 3, 4, 3, 1, 2],
-        borderRadius: 10,
-        borderColor: "#6D28D9",
-        backgroundColor: () => gradient,
-        borderWidth: 2,
-        fill: true,
-        pointRadius: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false,
-            borderColor: "transparent"
-          },
-          ticks: {
-            color: "#6B7280", // gray-500
-            font: { size: 10 }
+    if (!arquivo) return; // Se não houver arquivo, sai.
+
+    try {
+      const urlBusca = `/dadosBucket/dados/${arquivo}`;
+      console.log("URL de busca:", urlBusca);
+      const resposta = await fetch(urlBusca);
+
+
+      if (!Array.isArray(data) || data.length === 0) return;
+
+      // Exibe os dados brutos (opcional, para debug)
+      document.getElementById("raw-data").textContent =
+        JSON.stringify(data, null, 2);
+
+
+      const horasGrafico = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'];
+      const erroPorHora = new Array(horasGrafico.length).fill(0);
+
+      data.forEach(item => {
+        // Converte valores para números
+        const cpuTemp = Number(item.cpu_temperature);
+        const gpuTemp = Number(item.gpu_temperature);
+        const cpuPerc = Number(item.cpu_percent);
+        const gpuPerc = Number(item.gpu_percent);
+
+
+        const isError =
+          (cpuTemp > 70 || gpuTemp > 70) || 
+          (cpuPerc < 50 || gpuPerc < 50);  
+
+        if (isError) {
+         
+          const datetime = item.datetime;
+          const hora = datetime ? datetime.substring(11, 13) : null;
+
+          if (hora) {
+
+            const horaFormatada = `${hora}h`;
+            const index = horasGrafico.indexOf(horaFormatada);
+
+         
+            if (index !== -1) {
+              erroPorHora[index]++;
+            } else {
+              // Lógica avançada: Agrupar 04h, 05h no índice 03h (para simplificar)
+              // Para este exemplo, vamos agrupar apenas as horas exatas definidas.
+              // Se necessário, podemos implementar lógica de arredondamento.
+              // Por simplicidade, ignoramos horas que não estão em horasGrafico.
+            }
           }
+        }
+      });
+
+      console.log("Contagem de Erros por Hora:", erroPorHora); 
+
+      
+      atualizarGraficoErros(erroPorHora, horasGrafico);
+
+    } catch (error) {
+      console.error("Erro ao carregar ou processar dados:", error);
+    }
+  }
+
+
+  function atualizarGraficoErros(erros, labels) {
+    const canvas = document.getElementById('grafico1');
+    if (!canvas) {
+      console.error("Canvas com ID 'grafico1' não encontrado.");
+      return;
+    }
+
+    
+    const ctx1 = canvas.getContext('2d');
+    const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
+    gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+
+   
+    if (window.graficoErrosInstance) {
+      window.graficoErrosInstance.data.labels = labels;
+      window.graficoErrosInstance.data.datasets[0].data = erros;
+      window.graficoErrosInstance.update();
+      return;
+    }
+
+   
+    window.graficoErrosInstance = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Frequência de Erros',
+          data: erros, 
+          borderRadius: 10,
+          borderColor: "#6D28D9",
+          backgroundColor: () => gradient,
+          borderWidth: 2,
+          fill: true,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
         },
-        y: {
-          grid: {
-            color: "rgba(107,114,128,0.3)", // gray grid dashed
-            borderDash: [4, 4]
+        scales: {
+          x: {
+            grid: { display: false, borderColor: "transparent" },
+            ticks: { color: "#6B7280", font: { size: 10 } }
           },
-          ticks: {
-            display: false
+          y: {
+            grid: { color: "rgba(107,114,128,0.3)", borderDash: [4, 4] },
+            ticks: { display: false }
           }
         }
       }
-    }
-  });
+    });
+  }
+
+  carregarDadosParaGraficoErros();
 
   // Pega o select do filtro
   const filtroSelect = document.getElementById('filtro');
@@ -309,6 +429,7 @@
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      indexAxis: 'y',
 
 
       layout: {
@@ -899,8 +1020,8 @@
 </script>
 
 <script>
-  fetch("/utils/getDadosBucket/").then(res =>{
-    res.json().then(JSON =>{
+  fetch("/utils/getDadosBucket/").then(res => {
+    res.json().then(JSON => {
       console.log(JSON)
       document.getElementById("distErros")
     })
