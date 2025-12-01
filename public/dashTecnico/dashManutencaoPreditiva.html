@@ -13,7 +13,6 @@
 </head>
 
 <body>
-
   <div class="global">
     <div class="navDiv">
       <nav>
@@ -61,10 +60,10 @@
                 <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
                 <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
                 <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
-                <button class="btn ghost" id="tresMesBtn" onclick="buscarOcorrencias('tresMes', fkEmpresa)">90d</button>
+                <button class="btn ghost" id="segundoSemestreBtn" onclick="buscarOcorrencias('segundoSemestre', fkEmpresa)">2º semestre</button>
+                <button class="btn ghost" id="primeiroSemestreBtn" onclick="buscarOcorrencias('primeiroSemestre', fkEmpresa)">1º semestre</button>
                 <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
               </div>
-              <button class="btn" id="refreshBtn">Atualizar</button>
             </div>
           </div>
 
@@ -143,6 +142,7 @@
         <h3 id="modalTitle">Detalhes da máquina</h3>
         <button class="btn ghost" id="closeModal">Fechar</button>
       </div>
+      <canvas id="chartMachineScore" height="120"></canvas>
       <div id="modalBody" style="margin-top:10px;max-height:320px;overflow:auto">
       </div>
     </div>
@@ -151,6 +151,7 @@
   <script>
     const fkEmpresa = sessionStorage.getItem('idEmpresa')
     let maquinasProcessadas = [];
+    let chartMachineScore = null;
     let Componente = null;
     let TipoProblema = null;
 
@@ -174,29 +175,33 @@
 
       document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
 
-      if (periodo == 'hoje') {
+      dataFechamento = new Date();
+
+      if (periodo === '24h') {
         dataAbertura = new Date();
-        dataFechamento = new Date();
-        document.getElementById('hojeBtn').classList.remove('ghost');
-      } else if (periodo == 'semana') {
+        dataAbertura.setDate(dataAbertura.getDate() - 1);
+        document.getElementById('btn24h').classList.remove('ghost');
+      } else if (periodo === 'semana') {
         dataAbertura = new Date();
-        dataAbertura.setDate(dataAbertura.getDate() - 7)
-        dataFechamento = new Date();
+        dataAbertura.setDate(dataAbertura.getDate() - 7);
         document.getElementById('semanaBtn').classList.remove('ghost');
-      } else if (periodo == 'mes') {
+      } else if (periodo === 'mes') {
         dataAbertura = new Date();
-        dataAbertura.setMonth(dataAbertura.getMonth() - 1)
-        dataFechamento = new Date();
+        dataAbertura.setMonth(dataAbertura.getMonth() - 1);
         document.getElementById('mesBtn').classList.remove('ghost');
-      } else if (periodo == 'tresMes') {
+      } else if (periodo === 'primeiroSemestre') {
+        const anoAtual = new Date().getFullYear();
+        dataAbertura = new Date(`${anoAtual}-01-01`);
+        dataFechamento = new Date(`${anoAtual}-06-30 23:59:59`);
+        document.getElementById('primeiroSemestreBtn').classList.remove('ghost');
+      } else if (periodo === 'segundoSemestre') {
+        const anoAtual = new Date().getFullYear();
+        dataAbertura = new Date(`${anoAtual}-07-01`);
+        dataFechamento = new Date(`${anoAtual}-12-31 23:59:59`);
+        document.getElementById('segundoSemestreBtn').classList.remove('ghost');
+      } else if (periodo === 'ano') {
         dataAbertura = new Date();
-        dataAbertura.setMonth(dataAbertura.getMonth() - 3)
-        dataFechamento = new Date();
-        document.getElementById('tresMesBtn').classList.remove('ghost');
-      } else if (periodo == 'ano') {
-        dataAbertura = new Date();
-        dataAbertura.setFullYear(dataAbertura.getFullYear() - 1)
-        dataFechamento = new Date();
+        dataAbertura.setFullYear(dataAbertura.getFullYear() - 1);
         document.getElementById('anoBtn').classList.remove('ghost');
       }
 
@@ -348,14 +353,14 @@
               backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
-          options: { 
+          options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { 
-              legend: { 
-                display: false 
-              } 
-            } 
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
           }
         });
       } else {
@@ -374,14 +379,14 @@
               backgroundColor: ['#4B2B85', '#4B2B85']
             }]
           },
-          options: { 
+          options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { 
-              legend: { 
-                display: false 
-              } 
-            } 
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
           }
         });
       } else {
@@ -435,7 +440,6 @@
       return `Risco baixo — ${componente} estável. Sem ações urgentes.`;
     }
 
-
     function abrirDetalhes(mid) {
       const machine = maquinasProcessadas.find(m => m.id == mid);
       console.log(machine);
@@ -465,6 +469,55 @@
         body.appendChild(div);
       });
 
+      const ctx = document.getElementById("chartMachineScore").getContext("2d");
+
+      // destruir grafico anterior se existir
+      if (chartMachineScore) {
+        chartMachineScore.destroy();
+      }
+
+      // gerar labels (datas)
+      const labels = chamados.map(c =>
+        new Date(c.dataAbertura).toLocaleDateString('pt-BR')
+      );
+
+      // gerar pontos (pontuação recalculada a cada chamado)
+      const pontuacoes = [];
+      chamados.forEach((_, indice) => {
+        const subconjunto = chamados.slice(0, indice + 1);
+        const pontuacaoParcial = calcularPontuacao(machine.id, subconjunto);
+        pontuacoes.push(pontuacaoParcial);
+      });
+
+      chartMachineScore = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Evolução do Score",
+            data: pontuacoes,
+            borderWidth: 3,
+            borderColor: "#4B2B85",
+            backgroundColor: "rgba(75, 43, 133, .2)",
+            tension: 0.25,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
       modal.classList.add('open');
     }
 
@@ -473,6 +526,8 @@
 
     // scoring heuristic (0-100)
     function calcularPontuacao(maquinaId, chamados) {
+
+      console.log("Chamados pontuacao:", chamados);
 
       // Quantidade total de chamados da máquina
       const totalChamados = chamados.length;
@@ -520,16 +575,10 @@
       // Parte 3 — quanto mais recentes os chamados, maior a nota
       const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
 
-      // Parte 4 — quantos chamados ocorreram nos últimos 30 dias (tendência)
-      const trintaDiasMs = 1000 * 60 * 60 * 24 * 30;
-      const chamadosUltimos30Dias = chamados.filter(chamado => {
-        const dataAbertura = new Date(chamado.dataAbertura);
-        return agora - dataAbertura <= trintaDiasMs;
-      }).length;
-
+      // tendência baseada no próprio período filtrado
       const fatorTendencia = Math.min(
         1,
-        chamadosUltimos30Dias / Math.max(1, totalChamados)
+        totalChamados > 0 ? totalChamados / 10 : 0
       );
 
       // Calculo da pontuação final
@@ -550,25 +599,7 @@
       return ['Baixo', 'risk--low'];
     }
 
-    // modal details
-    function openDetails(mid) {
-      const machine = MAQUINAS.find(m => m.id === mid);
-      const modal = el('#modalDetails');
-      el('#modalTitle').textContent = `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
-      const body = el('#modalBody');
-      const chamados = CHAMADOS.filter(c => c.fkMaquina === mid).sort((a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura));
-      body.innerHTML = '';
-      chamados.forEach(c => {
-        const div = document.createElement('div');
-        div.style.padding = '8px'; div.style.borderBottom = '1px solid #eee';
-        div.innerHTML = `<strong>${new Date(c.dataAbertura).toLocaleString()}</strong> — ${c.problema} <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>`;
-        body.appendChild(div);
-      });
-      modal.classList.add('open');
-    }
-
     el('#closeModal').addEventListener('click', () => el('#modalDetails').classList.remove('open'));
-
   </script>
 </body>
 
