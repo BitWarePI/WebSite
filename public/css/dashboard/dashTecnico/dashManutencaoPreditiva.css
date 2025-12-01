@@ -440,7 +440,8 @@
     }
 
     thead th {
-        background: #fff;
+        background: #000;
+        color: #fff;
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #eee
@@ -503,7 +504,8 @@
     .modal .inner {
         color: #000;
         background: #fff;
-        width: 760px;
+        height: auto;
+        width: 1420px;
         border-radius: 12px;
         padding: 18px
     }
