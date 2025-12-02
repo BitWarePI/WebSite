@@ -3,6 +3,6 @@ const router = express.Router();
 
 const dadosBucketController = require('../controllers/dadosBucketController');
 
-router.get('/dados/:arquivo', dadosBucketController.lerArquivo);
+router.get('/empresa/:id', dadosBucketController.lerEmpresa);
 
 module.exports = router;

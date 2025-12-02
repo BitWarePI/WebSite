@@ -1,35 +1,55 @@
 const AWS = require('aws-sdk');
 const Papa = require('papaparse');
+const maquinaModel = require("../models/maquinaModel");
 
 AWS.config.update({ region: process.env.AWS_REGION });
 const s3 = new AWS.S3();
 
-async function getS3FileContent(fileKey) {
-  try {
-    const params = {
-      Bucket: process.env.S3_BUCKET,
-      Key: fileKey
-    };
+async function lerCsv(bucket, key) {
+  const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
+  const texto = data.Body.toString("utf-8");
 
-    const data = await s3.getObject(params).promise();
-    const text = data.Body.toString('utf-8').trim();
-
-    // detectar CSV ou JSON automáticamente
-    if (text.startsWith('{') || text.startsWith('[')) {
-      return text; // JSON puro
-    } else {
-      const parsed = Papa.parse(text, {
-        header: true,
-        delimiter: text.includes(';') ? ';' : ',',
-        skipEmptyLines: true
-      });
-
-      return JSON.stringify(parsed.data); // JSON convertido
-    }
-
-  } catch (err) {
-    throw new Error("S3 error: " + err.message);
-  }
+  return Papa.parse(texto, {
+    header: true,
+    delimiter: texto.includes(";") ? ";" : ",",
+    skipEmptyLines: true
+  }).data;
 }
 
-module.exports = { getS3FileContent };
+async function getCsvFromEmpresa(idEmpresa) {
+  const bucket = process.env.S3_BUCKET;
+
+  // Buscar MACs no banco
+  const macsDb = await maquinaModel.buscarMacsDaEmpresa(idEmpresa);
+  if (!macsDb.length) return [];
+
+  // Normalizar MACs
+  const macs = macsDb.map(m =>
+    m.enderecoMac.toLowerCase().replace(/:/g, "-")
+  );
+
+  const resultados = [];
+
+  for (const mac of macs) {
+    const key = `${idEmpresa}/maquinas/${mac}.csv`;
+
+    try {
+      console.log("📄 Lendo arquivo:", key);
+      const dados = await lerCsv(bucket, key);
+
+      resultados.push({
+        maquina: mac,
+        arquivo: key,
+        dados
+      });
+
+    } catch (err) {
+      console.log("⚠️ Arquivo não encontrado:", key);
+      continue;
+    }
+  }
+
+  return resultados;
+}
+
+module.exports = { getCsvFromEmpresa };

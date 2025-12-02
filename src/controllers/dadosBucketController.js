@@ -1,14 +1,12 @@
-const { getS3FileContent } = require('../utils/getDadosBucket');
+const { getCsvFromEmpresa } = require("../utils/getDadosBucket");
 
-async function lerArquivo(req, res) {
+exports.lerEmpresa = async (req, res) => {
   try {
-    const { arquivo } = req.params;
-    const jsonString = await getS3FileContent(arquivo);
+    const empresaId = req.params.id;
+    const dados = await getCsvFromEmpresa(empresaId);
 
-    res.json(JSON.parse(jsonString));
-  } catch (err) {
-    res.status(500).json({ erro: err.message });
+    res.json(dados);
+  } catch (erro) {
+    res.status(500).json({ erro: erro.message });
   }
-}
-
-module.exports = { lerArquivo };
+};

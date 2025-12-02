@@ -238,83 +238,98 @@
 
 </html>
 <script>
-  async function carregarErros() {
-    const arquivo = "leituras.csv";
-    const url = `/dadosBucket/dados/${arquivo}`;
+ async function carregarDadosEmpresa() {
+  const idEmpresa = sessionStorage.getItem("idEmpresa");
 
-    const response = await fetch(url);
-    const dados = await response.json();
-    return dados;
-  }
-  function contarErrosPorHorario(dados) {
-    const erros = {};
+  const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+  const dados = await response.json();
 
-    dados.forEach(item => {
-      const hora = item.datetime.split(" ")[1].slice(0, 5); // pega HH:MM
-      if (!erros[hora]) erros[hora] = 0;
+  console.log("Dados do bucket:", dados);
+  return dados;
+}
 
-      const cpuTemp = Number(item.cpu_temperature);
-      const gpuTemp = Number(item.gpu_temperature);
-      const cpuPercent = Number(item.cpu_percent);
-      const gpuPercent = Number(item.gpu_percent);
+async function carregarErros() {
+  const idEmpresa = sessionStorage.getItem("idEmpresa");
 
-      // coloque aqui seus critérios reais
-      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-        erros[hora]++;
-      }
-    });
+  const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+  const listaArquivos = await response.json();
 
-    return erros;
-  }
+  let todos = [];
 
-  async function geraGrafico() {
-    const dados = await carregarErros();
+  listaArquivos.forEach(item => {
+    todos = todos.concat(item.dados);
+  });
 
-    const errosPorHorario = contarErrosPorHorario(dados);
+  return todos;
+}
 
-    const labels = Object.keys(errosPorHorario);
-    const valores = Object.values(errosPorHorario);
+function contarErrosPorHorario(dados) {
+  const erros = {};
 
-    const ctx1 = document.getElementById('grafico1').getContext('2d');
-    const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
-    gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
-    gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+  dados.forEach(item => {
+    const hora = item.datetime.split(" ")[1].slice(0, 5); // HH:MM
+    if (!erros[hora]) erros[hora] = 0;
 
-    new Chart(ctx1, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Erros',
-          data: valores,
-          borderRadius: 10,
-          borderColor: "#6D28D9",
-          backgroundColor: gradient,
-          borderWidth: 2,
-          fill: true,
-          pointRadius: 0
-        }]
+    const cpuTemp = Number(item.cpu_temperature);
+    const gpuTemp = Number(item.gpu_temperature);
+    const cpuPercent = Number(item.cpu_percent);
+    const gpuPercent = Number(item.gpu_percent);
+
+    // seus critérios
+    if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+      erros[hora]++;
+    }
+  });
+
+  return erros;
+}
+
+async function geraGrafico() {
+  const dados = await carregarErros();
+  console.log("Dados mesclados:", dados);
+
+  const errosPorHorario = contarErrosPorHorario(dados);
+
+  const labels = Object.keys(errosPorHorario);
+  const valores = Object.values(errosPorHorario);
+
+  const ctx1 = document.getElementById('grafico1').getContext('2d');
+
+  const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
+  gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
+  gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+
+  new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Erros',
+        data: valores,
+        borderColor: "#6D28D9",
+        // backgroundColor: "#815eb8",
+        borderWidth: 2,
+        fill: true,
+        pointRadius: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
       },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false,
-              borderColor: "transparent"
-            },
-            ticks: {
-              color: "#6B7280",
-              font: { size: 10 }
-            }
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: "#6B7280",
+            font: { size: 10 }
           }
         }
       }
-    });
-  }
+    }
+  });
+}
 
 
   // Pega o select do filtro
@@ -388,10 +403,10 @@
     const erros = contarErrosPorTipo(dados);
 
     const labels = [
-      "CPU Temp Alta",
-      "GPU Temp Alta",
-      "CPU Uso Baixo",
-      "GPU Uso Baixo"
+      "Alta Temp CPU",
+      "Alta Temp GPU",
+      "Baixo Uso CPU",
+      "Baixo Uso GPU"
     ];
 
     const valores = [
