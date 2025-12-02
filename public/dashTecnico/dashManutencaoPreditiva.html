@@ -15,6 +15,13 @@
 
 <body>
   <div class="global">
+    <div id="tela-carregando">
+      <div class="caixa-carregando">
+        <div class="animacao-roda"></div>
+        <p>Carregando dados...</p>
+      </div>
+    </div>
+
     <div class="navDiv">
       <nav>
         <div class="main-nav">
@@ -250,6 +257,7 @@
     }
 
     function buscarOcorrencias(periodo, fkEmpresa) {
+      mostrarCarregando()
       let dataAbertura, dataFechamento;
 
       document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
@@ -307,6 +315,7 @@
           });
           console.log("Ocorrências filtradas:", chamadosFiltrados);
           processarDados(chamadosFiltrados);
+          esconderCarregando()
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
@@ -679,6 +688,15 @@
     }
 
     el('#closeModal').addEventListener('click', () => el('#modalDetails').classList.remove('open'));
+
+    function mostrarCarregando() {
+      document.getElementById("tela-carregando").style.display = "flex";
+    }
+
+    function esconderCarregando() {
+      document.getElementById("tela-carregando").style.display = "none";
+    }
+
   </script>
 </body>
 
