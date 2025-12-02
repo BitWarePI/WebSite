@@ -26,4 +26,6 @@ router.post("/parametros/maquina/:idMaquina", maquinaController.definirParametro
 
 router.get("/qtdMaquina/:idEmpresa", maquinaController.qtdMaquinas);
 
+router.get("/buscarOcorrencias", maquinaController.buscarOcorrencias)
+
 module.exports = router;

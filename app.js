@@ -26,11 +26,10 @@ var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
 var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
-//var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
+var chamadosRouter = require("./src/routes/chamados");
 var s3Router = require("./src/routes/s3");
 
-var chamadosRouter = require("./src/routes/chamados");
 
 // Middlewares
 app.use(express.json());
@@ -48,8 +47,7 @@ app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
-app.use("/s3", s3Router)
-//app.use("/emails", emailRouter);
+app.use('/s3', s3Router);
 
 // Inicia o servidor
 app.listen(PORTA_APP, HOST_APP, function () {

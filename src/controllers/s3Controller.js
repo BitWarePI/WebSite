@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const Papa = require('papaparse');
+const { getS3FileContent } = require('../utilits/getCsvBucket');
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -92,7 +93,27 @@ async function pegarCsvMaquinas(req, res) {
     }
 }
 
+async function buscarArquivoS3(req, res) {
+    const { empresa, arquivo } = req.params;
+    const caminho = `${empresa}/${arquivo}`;
+
+    try {
+        console.log(`Requisição para buscar arquivo S3: ${caminho}`);
+
+        if (!caminho) {
+            return res.status(400).json({ erro: "Caminho do arquivo é obrigatório." });
+        }
+
+        const data = await getS3FileContent(caminho);
+        return res.json(data);
+
+    } catch (e) {
+        return res.status(500).json({ erro: e.message });
+    }
+}
+
 module.exports = {
+    buscarArquivoS3,
     pegarCsvPorMaquina,
     pegarCsvMaquinas
 };
