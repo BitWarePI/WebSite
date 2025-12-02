@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
   <link rel="stylesheet" href="../css/dashboard/dashTecnico/modelFiltroHistorico.css">
   <link rel="stylesheet" href="../css/animacao.css">
+  <script src="../js/TecnicoProcess/dashHistoricoSnippts.js"></script>
 
   <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
 
@@ -22,7 +23,7 @@
   <title>Dashboard | BitWare</title>
 </head>
 
-<body>
+<body onclick="listendModelMachine()">
   <section>
 
     <!-- NAV LATERAL -->
@@ -77,7 +78,6 @@
         </div>
       </div>
 
-      <!-- NAV MOBILE -->
       <ul class="links nav-links-cell">
         <li><a class="link ativo" href="dashHome.html">
             <span class="material-symbols-outlined icon">home</span> Início
@@ -95,7 +95,7 @@
     <div class="content">
 
       <div class="top-bar">
-        <h1>Monitoramento de Processos: <i>Machine-ID-001</i></h1>
+        <h1>Monitoramento de Processos: <i id="Mac-Address-title">Machine-ID-001</i></h1>
       </div>
 
       <div class="new-dashboard-wrapper">
@@ -125,29 +125,29 @@
                   <div class="detail-section">
                     <div class="detail-row">
                       <span class="detail-label">MAC/ID</span>
-                      <span class="detail-value">00:1B:44:11:3A:B7</span>
+                      <span class="detail-value" id="model-macAddress">00:1B:44:11:3A:B7</span>
                     </div>
 
                     <div class="detail-row">
                       <span class="detail-label">Status</span>
-                      <span class="detail-value status-indicator">
+                      <span class="detail-value status-indicator" id="model-status">
                         <span class="status-dot online"></span> Online
                       </span>
                     </div>
 
                     <div class="detail-row">
                       <span class="detail-label">Sistema Operacional</span>
-                      <span class="detail-value">Ubuntu 20.04.1 LTS</span>
+                      <span class="detail-value" id="model-so">Ubuntu 20.04.1 LTS</span>
                     </div>
 
                     <div class="detail-row">
-                      <span class="detail-label">Setor</span>
-                      <span class="detail-value">Bloco C-12</span>
+                      <span class="detail-label">Nome</span>
+                      <span class="detail-value" id="model-setor">Bloco C-12</span>
                     </div>
 
                     <div class="detail-row">
                       <span class="detail-label">Última Atualização</span>
-                      <span class="detail-value">12/10/2023 14:45:01</span>
+                      <span class="detail-value" id="model-ultimoUpdate">12/10/2023 14:45:01</span>
                     </div>
                   </div>
 
@@ -158,17 +158,17 @@
 
                     <div class="detail-row">
                       <span class="detail-label">RAM</span>
-                      <span class="detail-value">16 GB</span>
+                      <span class="detail-value" id="model-ram">16 GB</span>
                     </div>
 
                     <div class="detail-row">
                       <span class="detail-label">CPU</span>
-                      <span class="detail-value">8 Cores</span>
+                      <span class="detail-value" id="model-cpu">8 Cores</span>
                     </div>
 
                     <div class="detail-row">
                       <span class="detail-label">Disco</span>
-                      <span class="detail-value">512 GB SSD</span>
+                      <span class="detail-value" id="model-disco">512 GB SSD</span>
                     </div>
                   </div>
 
@@ -179,7 +179,7 @@
 
                     <div class="detail-row">
                       <span class="detail-label">VRAM GPU</span>
-                      <span class="detail-value">8 GB</span>
+                      <span class="detail-value" id="model-gpu">8 GB</span>
                     </div>
                   </div>
                 </div>
@@ -358,6 +358,7 @@
 </body>
 
 </html>
+<script src="../js/TecnicoProcess/dashHistoricoSnippts.js"></script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -376,7 +377,6 @@
       if (backdrop) backdrop.classList.add("hidden");
     }
 
-    // Adiciona os eventos apenas se os elementos existirem (Proteção contra erro null)
     if (openBtn) openBtn.addEventListener("click", abrirFiltro);
     if (closeBtn) closeBtn.addEventListener("click", fecharFiltro);
     if (backdrop) backdrop.addEventListener("click", fecharFiltro);
