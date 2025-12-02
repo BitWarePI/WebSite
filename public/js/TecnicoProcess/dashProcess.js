@@ -35,7 +35,7 @@ async function listendInfoMachine() {
         <td>${m.so}</td>
         <td><span class="badge ${m.status}">${m.status}</span></td>
         <td>
-          <a href="./historico&snnipts.html?mac={m.addressMac}">Open</a>
+          <a href="./dashHistoricoSnippts.html?mac=${m.addressMac}">Open</a>
         </td>
       </tr>
     `;
@@ -82,7 +82,7 @@ async function aplicarFiltros() {
         <td>${m.so}</td>
         <td><span class="badge ${m.status}">${m.status}</span></td>
         <td>
-            <a href="./historico&snnipts.html?mac=${m.addressMac}">Open</a>
+            <a href="./dashHistoricoSnippts.html?mac=${m.addressMac}">Open</a>
         </td>
     </tr>
   `).join('');
