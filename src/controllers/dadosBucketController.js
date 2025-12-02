@@ -4,7 +4,8 @@ async function lerArquivo(req, res) {
   try {
     const { arquivo } = req.params;
     const jsonString = await getS3FileContent(arquivo);
-    res.json(JSON.parse(jsonString)); // já retorna JSON direto para o front
+
+    res.json(JSON.parse(jsonString));
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }

@@ -4,50 +4,32 @@ const Papa = require('papaparse');
 AWS.config.update({ region: process.env.AWS_REGION });
 const s3 = new AWS.S3();
 
-async function lerArquivo(req, res) {
-  console.log("=== DEBUG ENV ===");
-  console.log("AWS_REGION:", process.env.AWS_REGION);
-  console.log("S3_BUCKET:", process.env.S3_BUCKET);
-
+async function getS3FileContent(fileKey) {
   try {
-    const fileKey = req.params.arquivo;
-
-    if (!/^[\w.\-]+$/.test(fileKey)) {
-      return res.status(400).send('❌ Nome de arquivo inválido.');
-    }
-
     const params = {
       Bucket: process.env.S3_BUCKET,
       Key: fileKey
     };
 
-    console.log(`📥 Lendo do S3: ${params.Bucket}/${params.Key}`);
-
     const data = await s3.getObject(params).promise();
-
-    console.log("DATA RECEBIDA DO S3:", data.Body.length, "bytes");
-
     const text = data.Body.toString('utf-8').trim();
 
-    let content;
-    if (text.startsWith('[') || text.startsWith('{')) {
-      content = JSON.parse(text);
+    // detectar CSV ou JSON automáticamente
+    if (text.startsWith('{') || text.startsWith('[')) {
+      return text; // JSON puro
     } else {
       const parsed = Papa.parse(text, {
         header: true,
         delimiter: text.includes(';') ? ';' : ',',
         skipEmptyLines: true
       });
-      content = parsed.data;
+
+      return JSON.stringify(parsed.data); // JSON convertido
     }
 
-    res.json(content);
   } catch (err) {
-    console.error('❌ Erro ao buscar arquivo:', err.message);
-    res.status(500).send('Erro ao buscar arquivo: ' + err.message);
+    throw new Error("S3 error: " + err.message);
   }
 }
 
-module.exports = {
-  lerArquivo
-};
+module.exports = { getS3FileContent };

@@ -98,17 +98,17 @@
         <!-- GRAFICO -->
         <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-8">
           <div class="xl:col-span-3 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div class="bg-violet-900 p-6 rounded-lg text-white">
-                <p class="text-sm text-gray-400">Chamados pendentes</p>
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Chamados pendentes</p>
                 <p class="text-3xl font-bold mt-1" id="totalErros"></p>
               </div>
-              <div class="bg-violet-900 p-6 rounded-lg text-white">
-                <p class="text-sm text-gray-400">Máquinas com Erro</p>
+              <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Máquinas com Erro</p>
                 <p class="text-3xl font-bold mt-1" id="maquinasComErro"></p>
               </div>
-              <div class="bg-red-600 p-6 rounded-lg text-white">
-                <p class="text-sm text-red-200">Chamados Críticos</p>
+              <div class="bg-[#ff4b4b] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Chamados Críticos</p>
                 <p class="text-3xl font-bold mt-1" id="totalCriticos"></p>
               </div>
             </div>
@@ -142,7 +142,7 @@
               <div style="background-color: #111; border-radius: 12px; padding: 15px 20px; color: white;">
                 <p style="margin: 0 0 8px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
                 <select id="filtro"
-                  style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
+                  style="background-color: #4c1d95; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
                   <option>Últimas 24h</option>
                   <option>Semanal</option>
                   <option>Mensal</option>
@@ -250,10 +250,16 @@
     const erros = {};
 
     dados.forEach(item => {
-      const hora = item.horario;
+      const hora = item.datetime.split(" ")[1].slice(0, 5); // pega HH:MM
       if (!erros[hora]) erros[hora] = 0;
 
-      if (item.temperatura > 70 || item.uso < 50) {
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
+
+      // coloque aqui seus critérios reais
+      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
         erros[hora]++;
       }
     });
@@ -261,9 +267,6 @@
     return erros;
   }
 
-
-
-  const ctx = document.getElementById('grafico2').getContext('2d');
   async function geraGrafico() {
     const dados = await carregarErros();
 
@@ -313,7 +316,6 @@
     });
   }
 
-  geraGrafico();
 
   // Pega o select do filtro
   const filtroSelect = document.getElementById('filtro');
@@ -356,51 +358,82 @@
     graficoErros.update();
   });
 
-  const graficoDistribuicao = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Temperatura (40%)', 'Memória (30%)', 'Rede (20%)', 'Outros (10%)'],
-      datasets: [{
-        data: [40, 30, 20, 10],
-        borderWidth: 0,
-        backgroundColor: [
-          '#A78BFA',
-          '#8B5CF6',
-          '#6D28D9',
-          '#4C1D95'
-        ],
-        barThickness: 22,
-        borderRadius: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      indexAxis: 'y',
+  function contarErrosPorTipo(dados) {
+    const erros = {
+      temperatura_cpu: 0,
+      temperatura_gpu: 0,
+      cpu_baixa: 0,
+      gpu_baixa: 0
+    };
+
+    dados.forEach(item => {
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
+
+      if (cpuTemp > 70) erros.temperatura_cpu++;
+      if (gpuTemp > 70) erros.temperatura_gpu++;
+      if (cpuPercent < 50) erros.cpu_baixa++;
+      if (gpuPercent < 50) erros.gpu_baixa++;
+    });
+
+    return erros;
+  }
 
 
-      layout: {
-        padding: { bottom: 0 }
+  async function gerarGraficoDistribuicao() {
+    const dados = await carregarErros();
+
+    const erros = contarErrosPorTipo(dados);
+
+    const labels = [
+      "CPU Temp Alta",
+      "GPU Temp Alta",
+      "CPU Uso Baixo",
+      "GPU Uso Baixo"
+    ];
+
+    const valores = [
+      erros.temperatura_cpu,
+      erros.temperatura_gpu,
+      erros.cpu_baixa,
+      erros.gpu_baixa
+    ];
+
+    const ctx2 = document.getElementById('grafico2').getContext('2d');
+
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: valores,
+          backgroundColor: [
+            "#8b5cf6",
+            "#7c3aed",
+            "#6d28d9",
+            "#5b21b6"
+          ],
+          borderRadius: 8
+        }]
       },
-
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: { display: false },
-          ticks: {
-            padding: 0  // 🔥 remove espaço inferior
-          }
+      options: {
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false }
         },
-        y: {
-          grid: { display: false }
+        scales: {
+          x: {
+            grid: { display: false }
+          },
+          y: {
+            ticks: { color: "#333" }
+          }
         }
-      },
-
-      plugins: {
-        legend: { display: false }
       }
-    }
-  });
+    });
+  }
 
 
 </script>
@@ -558,7 +591,10 @@
       totalCriticos(),
       carregarPrincipalProblema(),
       totalErros(),
-      maquinasComErro()
+      maquinasComErro(),
+      geraGrafico(),
+      gerarGraficoDistribuicao();
+
   };
 
   function fecharModalTecnicos() {

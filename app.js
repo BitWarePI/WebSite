@@ -1,10 +1,12 @@
 // Define o ambiente: desenvolvimento ou produção
-var ambiente_processo = 'desenvolvimento';
-//var ambiente_processo = 'producao';
+console.log("BUCKET:", process.env.S3_BUCKET);
+
+//var ambiente_processo = 'desenvolvimento';
+var ambiente_processo = 'producao';
 
 // Define o arquivo de ambiente
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-require("dotenv").config({ path: caminho_env });
+require("dotenv").config({ path: ".env" });
 
 // Importa pacotes
 var express = require("express");
