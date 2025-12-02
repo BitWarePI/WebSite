@@ -85,6 +85,18 @@ function deleteCommandSnippt(id) {
 
 }
 
+function listendModelMachine(fkEmpresa, macAddress) {
+  var instrucaoSql = `select 
+                      maq.enderecoMac as addressMac,
+                      maq.nome as setor
+                      from Maquina maq where fkEmpresa = ${fkEmpresa} and
+                      enderecoMac = '${macAddress}';`;
+
+  console.log("Executando a instrução SQL: \n", instrucaoSql);
+  return db.executar(instrucaoSql);
+
+}
+
 module.exports = {
   getMachineUse,
   getAlertMachineUse,
@@ -93,5 +105,6 @@ module.exports = {
   getListCommandSnippt,
   createCommandSnippt,
   updateCommandSnippt,
-  deleteCommandSnippt
+  deleteCommandSnippt,
+  listendModelMachine
 }
