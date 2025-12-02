@@ -7,9 +7,11 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="stylesheet" href="../css/default.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/empDashFunc.css">
     <link rel="stylesheet" href="../css/dashboard/dashEmpresa/dashMaquinas.css">
+    <link rel="stylesheet" href="../css/individualNicolas/dashInfoMaquinas.css">
     <link rel="stylesheet" href="../css/animacao.css">
     <link rel="icon" href="../assets/icon/favicon2.png">
     <title>Dashboard | BitWare</title>
@@ -92,15 +94,56 @@
             </div>
             <div class="kpi-container">
 
-                <div class="kpi-card">
-                    <h3 class="titulo" style="font-size: 25px;">Máquinas <br>cadastradas</h3>
+                <div class="kpi-card" style="background-color: #4b2b85; color: white; border-radius: 0.5rem;">
+                    <h3 class="titulo" style="font-size: 25px;"><b>Máquinas <br>cadastradas</b></h3>
                     <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
-                    <span class="material-symbols-outlined icon cadastrada">computer</span>
                 </div>
-                <div class="kpi-card">
-                    <h3 class="titulo" style="font-size: 25px;">Máquinas ultrapassando os <br>parâmetros</h3>
-                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em; color: red;">0</p>
-                    <span class="material-symbols-outlined icon solicitacao">warning</span>
+                <div class="kpi-card" style="background-color: #4b2b85; color: white; border-radius: 0.5rem;">
+                    <h3 class="titulo" style="font-size: 25px;"><b>Máquinas ultrapassando os <br>parâmetros</b></h3>
+                    <p class="quantidade" id="qtdForaParam" style="font-size: 5em;">0</p>
+                </div>
+                <div class="kpi-card" style="border-radius: 0.5rem">
+                    <canvas id="graficoComponentes"></canvas>
+                </div>
+                <div class="kpi-card" style="border-radius: 0.5rem">
+                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho</b>
+                    </h3>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #4caf50;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #4caf50;">Verde</b>: ideal</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #e4b131;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #e4b131;">Amarelo</b>: estado de alerta</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center;">
+                        <span style="
+                            display: inline-block;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 9999px;
+                            background-color: #ff4b4b;
+                            margin-right: 0.5rem;
+                        "></span>
+                        <span><b style="color: #ff4b4b;">Vermelho</b>: crítico</span>
+                    </div>
                 </div>
             </div>
 
@@ -137,65 +180,1867 @@
                         </tr>
                     </thead>
                     <tbody id="tableMaquinas">
-                        <!-- preenchido via JS -->
                     </tbody>
+
                 </table>
             </div>
         </div>
     </section>
 
-    <!-- MODAL PARÂMETROS GERAIS -->
-    <div class="modal cadastro" id="modal_param_gerais">
-        <div class="modal-container" id="modal_container_param_gerais">
-            <div class="header">
-                <h1>Parâmetros Gerais</h1>
-                <button class="material-symbols-outlined close-icon"
-                    onclick="abrirModalParametrosGerais()">close</button>
-            </div>
-            <div class="body">
-                <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuGeral"
-                            min="0" max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuGeral"
-                            min="0" max="100"></div>
-                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuGeral"
-                            min="0"></div>
-                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuGeral"
-                            min="0"></div>
-                    <button class="btn submit" onclick="salvarParametrosGerais()">Salvar</button>
-                </div>
-            </div>
+    <div id="tela-carregando">
+        <div class="caixa-carregando">
+            <div class="animacao-roda"></div>
+            <p>Carregando dados...</p>
         </div>
     </div>
 
-    <!-- MODAL PARÂMETROS INDIVIDUAIS -->
-    <div class="modal cadastro" id="modal_param_maquina">
-        <div class="modal-container" id="modal_container_param_maquina">
+    <div class="modalDashInfo cadastro" id="modal_param_gerais">
+        <div class="modal-container" id="modal_container_param_gerais">
             <div class="header">
-                <h1 id="tituloModalMaquina">Parâmetros da Máquina</h1>
-                <button class="material-symbols-outlined close-icon"
-                    onclick="abrirModalParametrosMaquina()">close</button>
+                <button class="material-symbols-outlined close-icon" onclick="fecharGraficoMaquina()">close</button>
             </div>
             <div class="body">
-                <div class="formulario">
-                    <div class="ipt_label"><label>Uso máximo CPU (%)</label><input type="number" id="usoCpuInd" min="0"
-                            max="100"></div>
-                    <div class="ipt_label"><label>Uso máximo GPU (%)</label><input type="number" id="usoGpuInd" min="0"
-                            max="100"></div>
-                    <div class="ipt_label"><label>Temp. máxima CPU (°C)</label><input type="number" id="tempCpuInd"
-                            min="0"></div>
-                    <div class="ipt_label"><label>Temp. máxima GPU (°C)</label><input type="number" id="tempGpuInd"
-                            min="0"></div>
-                    <button class="btn submit" onclick="salvarParametrosIndividuais()">Salvar</button>
+                <div class="titulo-header-grafico">
+                    <div style="justify-content: start;">
+                        <h1 style="font-size: 48px; margin: 0px;">
+                            Dashboard de monitoramento
+                        </h1>
+                        <h3 style="font-size: 32px; margin: 0px;">Dados de desempenho da máquina</h3>
+                    </div>
+
+                    <div style="display: flex;">
+                        <div class="header-grafico" style="margin-right: 16px;">
+                            <p style="margin: 0 0 10px 0; font-size: 15px; color:black">Filtro de Dados</p>
+                            <div style="display: flex; width: fit-content;">
+                                <select id="filtro" style="background-color: #f3f3f3; color: black; border: none; border-radius: 8px;
+                             padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
+                                    <option value="24horas">Últimas 24h</option>
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Mensal">Mensal</option>
+                                    <option value="Semestral1">1° Semestre</option>
+                                    <option value="Semestral2">2° Semestre</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                                <div id="botaoFiltro">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-grafico">
+                            <div>
+                                <div style="padding-bottom: 16px;">
+                                    <strong>Legenda de desempenho:</strong><br>
+                                </div>
+                                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #4caf50;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #4caf50;">Verde</b>: ideal</span>
+                                </div>
+
+                                <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #e4b131;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #e4b131;">Amarelo</b>: estado de alerta</span>
+                                </div>
+
+                                <div style="display: flex; align-items: center;">
+                                    <span style="
+                                        display: inline-block;
+                                        width: 16px;
+                                        height: 16px;
+                                        border-radius: 9999px;
+                                        background-color: #ff4b4b;
+                                        margin-right: 0.5rem;
+                                    "></span>
+                                    <span><b style="color: #ff4b4b;">Vermelho</b>: crítico</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
+
+                <div class="div-info-maquina">
+                    <div id="info-macAddress">
+
+                    </div>
+                    <div id="info-nome">
+
+                    </div>
+                    <div id="info-cpu">
+
+                    </div>
+                    <div id="info-gpu">
+
+                    </div>
+                </div>
+
+
+                <div style="display: flex; justify-content: space-between; height: 100%;">
+                    <div style="width: 49%;">
+                        <div>
+                            <h2
+                                style="font-weight: bold; display: flex; align-items: center; gap: 8px;  margin-right: 30px; color: #4c1d95;">
+                                Uso da CPU e GPU
+                                <span style="
+                                    position: relative;
+                                    display: inline-block;
+                                    cursor: pointer;
+                                    color: #4c1d95;
+                                    font-size: 20px;
+                                    font-weight: bold;
+                                    " onmouseover="document.getElementById('tooltipGPU').style.display='block'"
+                                    onmouseout="document.getElementById('tooltipGPU').style.display='none'">
+                                    <i class="fa-solid fa-circle-info" style="color: black;"></i>
+                                    <span id="tooltipGPU" style="
+                                        display: none;
+                                        position: absolute;
+                                        top: 25px;
+                                        left: 0;
+                                        background-color: #1e1e1e;
+                                        color: white;
+                                        padding: 8px 12px;
+                                        border-radius: 6px;
+                                        font-size: 14px;
+                                        width: 260px;
+                                        z-index: 10;
+                                        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                                    ">
+                                    </span>
+                                </span>
+                            </h2>
+
+                        </div>
+                        <div
+                            style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; gap: 60px; height: 100%;">
+                            <div style="display: flex; flex-direction: column; gap: 20px; width: 100%; height: 69%;">
+                                <div style="display: flex; gap: 10px;">
+                                    <div id="kpiusocpu" style="width: 50%;">
+
+                                    </div>
+                                    <div id="kpiusogpu" style="width: 50%;">
+
+                                    </div>
+
+                                </div>
+
+                                <div
+                                    style="flex: 1 1 40%; max-height: 75%; width: 100%; height: 200%; background-color:#f1f5f9; border-radius:8px;">
+                                    <canvas id="grafico1" style="height: 90%;"></canvas>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div style="width: 49%;">
+                        <h2 style="font-weight: bold; display: flex; align-items: center; gap: 8px; color: #4c1d95;">
+                            Temperatura da CPU e GPU
+                            <span style="
+                                position: relative;
+                                display: inline-block;
+                                cursor: pointer;
+                                color: #4c1d95;
+                                font-size: 20px;
+                                font-weight: bold;
+                        " onmouseover="document.getElementById('tooltipCPU').style.display='block'"
+                                onmouseout="document.getElementById('tooltipCPU').style.display='none'">
+                                <i class="fa-solid fa-circle-info" style="color: black;"></i>
+                                <span id="tooltipCPU" style="
+                                    display: none;
+                                    position: absolute;
+                                    top: 25px;
+                                    left: 0;
+                                    background-color: #1e1e1e;
+                                    color: white;
+                                    padding: 8px 12px;
+                                    border-radius: 6px;
+                                    font-size: 14px;
+                                    width: 260px;
+                                    z-index: 10;
+                                    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                                    ">
+                                </span>
+                            </span>
+                        </h2>
+
+                        <div
+                            style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; margin-top: 20px;">
+                        </div>
+                        <div style="display: flex; flex-direction: row;  width: 100%;
+                             justify-content: space-between; gap: 60px;  height: 69%;">
+                            <div style="display: flex;flex-direction: column; gap: 20px; width: 100%;">
+                                <div style="display: flex; gap: 10px;">
+                                    <div id="kpitempcpu" style="width: 50%;">
+
+                                    </div>
+                                    <div id="kpitempgpu" style="width: 50%;">
+
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="flex: 1 1 40%; max-height: 75%; width: 100%;; background-color:#f1f5f9; border-radius:8px;">
+                                    <canvas id="grafico3"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+    </div>
+    </div>
     </div>
     </div>
 
     <script src="../js/nav.js"></script>
 
     <script>
+
+        var empresaId = sessionStorage.getItem('idEmpresa');
+        const inputInicio = document.getElementById('dt_inicio');
+        const inputFim = document.getElementById('dt_fim');
+
+        const ctxComponentes = document.getElementById('graficoComponentes').getContext('2d');
+        const ctx1 = document.getElementById('grafico1').getContext('2d');
+        const ctx3 = document.getElementById('grafico3').getContext('2d');
+
+        let graficoTemp24Hrs = null;
+        let GraficoUso24Hrs = null;
+        let graficoTempGpu = null;
+        let graficoTempCpu = null;
+
+
+        let graficoUso = null;
+        let graficoTemp = null;
+
+        const filtroSelect = document.getElementById('filtro');
+
+        function carregarMaquinas() {
+
+            fetch(`/maquina/infoMaquinas/${empresaId}`)
+                .then(res => res.json())
+                .then(maquinas => {
+                    let tbody = document.getElementById("tableMaquinas");
+                    tbody.innerHTML = "";
+
+                    fetch(`/s3/pegarDadosMaquinasClient/${empresaId}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error("Erro ao carregar JSON");
+                            return res.json();
+                        })
+                        .then(dadosCSV => {
+                            dadosCSV = dadosCSV.map(item => ({
+                                datetime: item.datetime,
+                                cpu_percent: parseFloat(item.cpu_percent),
+                                gpu_percent: parseFloat(item.gpu_percent),
+                                cpu_temp: parseFloat(item.cpu_temperature),
+                                gpu_temp: parseFloat(item.gpu_temperature),
+                                chamado: item.motivo_chamado,
+                                id_empresa: item.id_empresa,
+                                mac: item.mac_address
+                            }));
+
+                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
+                            let contadorQtdForaParam = 0;
+                            let contadorQtdForaTempGpu = 0;
+                            let contadorQtdForaTempCpu = 0;
+                            let contadorQtdForaUsoGpu = 0;
+                            let contadorQtdForaUsoCpu = 0;
+
+                            maquinas.forEach(maquina => {
+                                const macMaquina = maquina.enderecoMac.trim().toLowerCase();
+                                const maquinaNome = maquina.nome;
+
+                                const parametroCpuPercent = maquina.cpu_percent;
+                                const parametroGpuPercent = maquina.gpu_percent;
+                                const parametroCpuTemperature = maquina.cpu_temperature;
+                                const parametroGpuTemperature = maquina.gpu_temperature;
+
+                                const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
+                                console.log("REGISTROS: " + JSON.stringify(registros, null, 2)); if (registros.length > 0) {
+                                    const ultimo = registros[registros.length - 1];
+
+                                    let corCpuPercent = "#89be4d";
+                                    let corGpuPercent = "#89be4d";
+                                    let corCpuTemp = "#89be4d";
+                                    let corGpuTemp = "#89be4d";
+
+                                    let maquinaForaDoParametro = false;
+                                    let foraDoParametro = {
+                                        cpu_percent: false,
+                                        gpu_percent: false,
+                                        cpu_temp: false,
+                                        gpu_temp: false
+                                    };
+
+                                    const cpuPercent = ultimo.cpu_percent;
+                                    const gpuPercent = ultimo.gpu_percent;
+                                    const cpuTemp = ultimo.cpu_temp;
+                                    const gpuTemp = ultimo.gpu_temp;
+
+                                    console.log("CPU TEMP: " + cpuTemp)
+                                    var corKpiTempGpu = corTemperatura(gpuTemp, parametroGpuTemperature);
+                                    var corKpiTempCpu = corTemperatura(cpuTemp, parametroCpuTemperature);
+
+                                    console.log("COR KPI TEMP CPU: " + corKpiTempCpu)
+
+                                    var corKpiUsoGpu = corUso(gpuPercent, parametroGpuPercent);
+                                    var corKpiUsoCpu = corUso(cpuPercent, parametroCpuPercent);
+
+                                    if (corKpiTempGpu != "#4caf50" || corKpiTempCpu != "#4caf50" || corKpiUsoGpu != "#4caf50" || corKpiUsoCpu != "#4caf50") {
+                                        contadorQtdForaParam++;
+                                        maquinaForaDoParametro = true;
+                                        if (corKpiTempGpu != "#4caf50") {
+                                            foraDoParametro.gpu_temp = true;
+                                            contadorQtdForaTempGpu++;
+                                        }
+                                        if (corKpiTempCpu != "#4caf50") {
+                                            foraDoParametro.cpu_temp = true;
+                                            contadorQtdForaTempCpu++;
+                                        }
+                                        if (corKpiUsoGpu != "#4caf50") {
+                                            foraDoParametro.gpu_percent = true;
+                                            contadorQtdForaUsoGpu++;
+                                        }
+                                        if (corKpiUsoCpu != "#4caf50") {
+                                            foraDoParametro.cpu_percent = true;
+                                            contadorQtdForaUsoCpu++
+                                        }
+                                    }
+
+                                    listaMaquinas.push({
+                                        mac: macMaquina,
+                                        nome: maquinaNome,
+                                        parametros: {
+                                            cpu_percent: parametroCpuPercent,
+                                            gpu_percent: parametroGpuPercent,
+                                            cpu_temp: parametroCpuTemperature,
+                                            gpu_temp: parametroGpuTemperature
+                                        },
+                                        leituraAtual: {
+                                            datetime: ultimo.datetime,
+                                            cpu_percent: cpuPercent,
+                                            gpu_percent: gpuPercent,
+                                            cpu_temp: cpuTemp,
+                                            gpu_temp: gpuTemp,
+                                            cores: {
+                                                cpu_percent: corKpiUsoCpu,
+                                                gpu_percent: corKpiUsoGpu,
+                                                cpu_temp: corKpiTempCpu,
+                                                gpu_temp: corKpiTempGpu
+                                            }
+                                        },
+                                        maquinaForaDoParametro,
+                                        foraDoParametro
+                                    });
+
+                                    tbody.innerHTML += `
+                                <tr onclick="abrirGraficosMaquina('${macMaquina}')">
+                                    <td>${macMaquina}</td>
+                                    <td>${maquinaNome}</td>
+                                    <td>${ultimo.datetime}</td>
+                                    <td style="font-size:20px; background-color:${corKpiUsoCpu}; border: 1px solid black">${cpuPercent}</td>
+                                    <td style="font-size:20px; background-color:${corKpiUsoGpu}; border: 1px solid black">${gpuPercent}</td>
+                                    <td style="font-size:20px; background-color:${corKpiTempCpu}; border: 1px solid black">${cpuTemp}</td>
+                                    <td style="font-size:20px; background-color:${corKpiTempGpu}; border: 1px solid black">${gpuTemp}</td>
+                                </tr>`;
+                                }
+                            });
+
+                            graficoUsoComponentes = new Chart(ctxComponentes, {
+                                type: 'bar',
+                                data: {
+                                    labels: ["Uso GPU", "Uso CPU", "Temp. GPU", "Temp. CPU"],
+                                    datasets: [
+                                        {
+                                            label: 'Quantidade de parâmetros ultrapassados (total)',
+                                            data: [contadorQtdForaUsoGpu, contadorQtdForaUsoCpu, contadorQtdForaTempGpu, contadorQtdForaTempCpu],
+                                            backgroundColor: '#5B21B6',
+                                            borderColor: '#4C1D95',
+                                            borderWidth: 1
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { labels: { color: '#000' } }
+                                    },
+                                    scales: {
+                                        x: {
+                                            ticks: { color: '#000' }
+                                        },
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                color: '#000',
+                                                callback: function (value) {
+                                                    if (Number.isInteger(value)) {
+                                                        return value;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
+                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
+                            console.log("Lista de máquinas:", listaMaquinas);
+                            esconderCarregando();
+                        })
+                        .catch(err => console.error("Erro ao ler CSV:", err));
+                })
+                .catch(err => console.error("Erro ao carregar máquinas:", err));
+        }
+
+        function pegarInfoMaquina(macAddress) {
+            var infoMaquina;
+            console.log("lista maquinas:" + listaMaquinas)
+            listaMaquinas.forEach(m => {
+                console.log(m.mac)
+                if (m.mac == macAddress) {
+                    console.log("ENCONTROU")
+                    infoMaquina = m;
+                }
+            })
+            return infoMaquina;
+        }
+
+        function fecharGraficoMaquina() {
+            modalGeral.classList.remove("fade-in");
+            modalGeralContainer.classList.remove("slide-in-top");
+            modalGeral.classList.add("fade-out-flex");
+            modalGeral.classList.remove("open");
+            return;
+        }
+
+
+        function abrirGraficosMaquina(macAddress) {
+            mostrarCarregando();
+            console.log("ENTROU NO ABRIR GRÁFICOS")
+            console.log(macAddress)
+            console.log(listaMaquinas.length)
+
+            var divInfoMaquina = document.getElementById("infoMaquina");
+            var infoMaquina = pegarInfoMaquina(macAddress);
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            if (graficoTemp24Hrs != null) {
+                graficoUso24Hrs.destroy();
+                graficoTemp24Hrs.destroy();
+            }
+            if (graficoTemp != null) {
+                graficoUso.destroy();
+                graficoTemp.destroy();
+            }
+
+            modalGeral.classList.remove("fade-out-flex");
+            modalGeral.classList.add("open");
+            modalGeral.classList.add("fade-in");
+            modalGeralContainer.classList.add("slide-in-top");
+            console.log("INFO MAQUINA:")
+            console.log(infoMaquina)
+            var infoMacAddress = document.getElementById("info-macAddress")
+            infoMacAddress.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Mac address</h3>
+                <p class="card-info-valor">${infoMaquina.mac}</p>
+            </div>
+                                    `
+            var infoNome = document.getElementById("info-nome")
+            infoNome.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Nome</h3>
+                <p class="card-info-valor">${infoMaquina.nome}</p>
+            </div>
+                                    `
+            var parametrosCpu = document.getElementById("info-cpu")
+            parametrosCpu.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Parâmetros CPU</h3>
+                <p class="card-info-valor">Uso: ${infoMaquina.parametros.cpu_percent}% / Temp: ${infoMaquina.parametros.cpu_temp}°C</p>
+            </div>`
+
+            var parametrosGpu = document.getElementById("info-gpu")
+            parametrosGpu.innerHTML = `
+            <div class="card-infoMaquina">
+                <h3 class="card-info-titulo">Parâmetros GPU</h3>
+                <p class="card-info-valor">Uso: ${infoMaquina.parametros.gpu_percent}% / Temp: ${infoMaquina.parametros.gpu_temp}°C</p>
+            </div>`
+
+
+            var eixo24hrs = []
+            var registrosMaquina = []
+
+            fetch(`/s3/pegarDadosClient/${empresaId}/${macAddress}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Erro ao carregar CSV");
+                    return res.json();
+                })
+                .then(lista => {
+                    console.log("RESPOSTA RECEBIDA DO BACKEND:", lista);
+                    const dados = lista.map(item => ({
+                        datetime: item.datetime,
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature),
+                        chamado: item.motivo_chamado,
+                        id_empresa: item.id_empresa,
+                        mac: item.mac_address
+                    }));
+
+                    const hoje = new Date();
+                    const diaHoje = hoje.toISOString().split("T")[0];
+
+                    dados.forEach(reg => {
+                        const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
+                        const diaRegistro = reg.datetime.split(" ")[0];
+
+                        if (reg.mac === macAddress && diaRegistro === diaHoje) {
+                            eixo24hrs.push(dataRegistro.getHours());
+                            registrosMaquina.push(reg);
+                        }
+                    });
+
+                    console.log("CHEGOU NA CONSTRUÇÃO DOS GRÁFICOS")
+                    console.log("TAMANHO DO EIXO: " + eixo24hrs.length)
+
+                    var listaGpuPercent = registrosMaquina.map(r => r.gpu_percent);
+                    var listaGpuTemp = registrosMaquina.map(r => r.gpu_temp);
+                    var listaCpuPercent = registrosMaquina.map(r => r.cpu_percent);
+                    var listaCpuTemp = registrosMaquina.map(r => r.cpu_temp);
+                    console.log("LISTA GPU PERCENT: ")
+                    console.log(listaGpuPercent)
+                    var mediaGpuPercent = calcularMedia(listaGpuPercent);
+                    var medianaGpuPercent = calcularMediana(listaGpuPercent);
+
+                    var mediaGpuTemp = calcularMedia(listaGpuTemp);
+                    var medianaGpuTemp = calcularMediana(listaGpuTemp);
+
+                    var mediaCpuPercent = calcularMedia(listaCpuPercent);
+                    var medianaCpuPercent = calcularMediana(listaCpuPercent);
+
+                    var mediaCpuTemp = calcularMedia(listaCpuTemp);
+                    var medianaCpuTemp = calcularMediana(listaCpuTemp);
+
+                    var corKpiTempGpu = corTemperatura(mediaGpuTemp, parametroGpuTemp);
+                    var corKpiTempCpu = corTemperatura(mediaCpuTemp, parametroCpuTemp);
+
+                    var corKpiUsoGpu = corUso(mediaGpuPercent, parametroGpuPercent);
+                    var corKpiUsoCpu = corUso(mediaCpuPercent, parametroCpuPercent);
+
+                    document.getElementById("botaoFiltro").innerHTML = `
+                         <button class="botaoFiltro" onclick='aplicarFiltroPeriodo("${macAddress}")'>Aplicar</button>
+                    `
+                    console.log("MEDIANA GPU PERCENT: " + medianaGpuPercent)
+                    document.getElementById("kpiusogpu").innerHTML = `
+                        <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+                            <p style="color:white; margin:0;">Uso médio da GPU</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGpuPercent}%</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaGpuPercent}%</b></p>
+                        </div>
+                    `;
+
+                    document.getElementById("kpitempgpu").innerHTML = `
+                        <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+                            <p style="color:white; margin:0;">Temperatura média da GPU</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGpuTemp}°C</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaGpuTemp}°C</b></p>
+                        </div>
+                    `;
+
+                    document.getElementById("kpiusocpu").innerHTML = `
+                        <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+                            <p style="color:white; margin:0;">Uso médio da CPU</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaCpuPercent}%</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaCpuPercent}%</b></p>
+                        </div>
+                    `;
+
+                    document.getElementById("kpitempcpu").innerHTML = `
+                        <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+                            <p style="color:white; margin:0;">Temperatura média da CPU</p>
+                            <p style="color:white; font-size:30px; margin:0;"><b>${mediaCpuTemp}°C</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaCpuTemp}°C</b></p>
+                        </div>
+                    `;
+
+
+
+                    graficoUso24Hrs = new Chart(ctx1, {
+                        type: 'bar',
+                        data: {
+                            labels: eixo24hrs,
+                            datasets: [
+                                {
+                                    label: 'Uso de CPU (%)',
+                                    data: listaCpuPercent,
+                                    backgroundColor: '#5B21B6',
+                                    borderColor: '#4C1D95',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Uso de GPU (%)',
+                                    data: listaGpuPercent,
+                                    backgroundColor: '#e4b131',
+                                    borderColor: '#C48800',
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#000' } }
+                            },
+                            scales: {
+                                x: {
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Horário da captura' }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Uso (%)' }
+                                }
+                            }
+                        }
+                    });
+
+
+                    graficoTemp24Hrs = new Chart(ctx3, {
+                        type: 'line',
+                        data: {
+                            labels: eixo24hrs,
+                            datasets: [
+                                {
+                                    label: 'Temp CPU (°C)',
+                                    data: listaCpuTemp,
+                                    borderColor: '#4C1D95',
+                                    backgroundColor: '#5B21B6',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: 'Temp GPU (°C)',
+                                    data: listaGpuTemp,
+                                    borderColor: '#C48800',
+                                    backgroundColor: '#e4b131',
+                                    borderWidth: 2
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: '#000' } }
+                            },
+                            tension: 0.2,
+                            scales: {
+                                x: {
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Horário da captura' }
+                                },
+                                y: {
+                                    beginAtZero: false,
+                                    ticks: { color: '#000' },
+                                    title: { display: true, text: 'Temperatura (°C)' }
+                                }
+                            }
+                        }
+                    });
+
+                    esconderCarregando();
+                })
+
+        }
+
+        function aplicarFiltroPeriodo(macAddress) {
+            mostrarCarregando();
+            console.log("ENDEREÇO MAC: " + macAddress)
+            var infoMaquina = pegarInfoMaquina(macAddress);
+
+            if (graficoTemp24Hrs != null) {
+                graficoUso24Hrs.destroy();
+                graficoTemp24Hrs.destroy();
+            }
+            if (graficoUso != null) {
+                graficoUso.destroy();
+                graficoTemp.destroy();
+            }
+
+            var limite;
+
+            modalGeral.classList.remove("fade-out-flex");
+            modalGeral.classList.add("open");
+            modalGeral.classList.add("fade-in");
+            modalGeralContainer.classList.add("slide-in-top");
+
+            const valorFiltro = filtroSelect.value;
+
+            const agora = new Date();
+
+            if (valorFiltro == "Semanal") {
+                limite = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+            } else if (valorFiltro == "Mensal") {
+                limite = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+            } else if (valorFiltro == "Semestral1") {
+                limite = new Date(agora.getFullYear(), 0, 1);
+            } else if (valorFiltro == "Semestral2") {
+                limite = new Date(agora.getFullYear(), 6, 1);
+            } else if (valorFiltro == "Anual") {
+                limite = new Date(agora.getTime() - 365 * 24 * 60 * 60 * 1000);
+            } else {
+                abrirGraficosMaquina(macAddress);
+                return;
+            }
+
+            fetch(`/s3/pegarDadosClient/${empresaId}/${macAddress}`)
+                .then(res => res.json())
+                .then(linhas => {
+                    if (valorFiltro == "Semanal") {
+                        construirGraficosSemanal(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
+                    } else if (valorFiltro == "Mensal") {
+                        construirGraficosMensal(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
+                    } else if (valorFiltro == "Semestral1") {
+                        construirGraficosSemestral1(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
+                    } else if (valorFiltro == "Semestral2") {
+                        construirGraficosSemestral2(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
+                    } else {
+                        construirGraficosAnual(linhas, macAddress, infoMaquina, limite);
+                        esconderCarregando();
+                    }
+                });
+        }
+
+        function construirGraficosSemanal(lista, macAddress, infoMaquina, limite) {
+            console.log("ENTROU NO CONSTRUIR GRÁFICOS SEMANAL")
+
+            var eixoX = [];
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var valoresDentroDoLimite = [];
+            var listaDias = {};
+
+            lista.forEach(item => {
+
+                const dataRegistro = new Date(item.datetime.replace(" ", "T"));
+
+                if (item.mac_address === macAddress && dataRegistro >= limite) {
+
+                    const dia = dataRegistro.toLocaleDateString("pt-BR", { weekday: "short" });
+
+                    if (!eixoX.includes(dia)) {
+                        eixoX.push(dia);
+                    }
+
+                    valoresDentroDoLimite.push({
+                        datetime: dia,
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature),
+                        mac: item.mac_address
+                    });
+
+                    if (!listaDias[dia]) {
+                        listaDias[dia] = [];
+                    }
+
+                    listaDias[dia].push({
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature)
+                    });
+                }
+            });
+
+            var listaCpuPercent = [];
+            var listaGpuPercent = [];
+            var listaCpuTemp = [];
+            var listaGpuTemp = [];
+
+            valoresDentroDoLimite.forEach(v => {
+                listaCpuPercent.push(v.cpu_percent);
+                listaGpuPercent.push(v.gpu_percent);
+                listaCpuTemp.push(v.cpu_temp);
+                listaGpuTemp.push(v.gpu_temp);
+
+                const data = v.datetime;
+
+                if (!listaDias[data]) {
+                    listaDias[data] = [];
+                }
+
+                listaDias[data].push(v);
+            });
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(listaCpuPercent),
+                gpu_percent: calcularMedia(listaGpuPercent),
+                cpu_temp: calcularMedia(listaCpuTemp),
+                gpu_temp: calcularMedia(listaGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(listaCpuPercent),
+                gpu_percent: calcularMediana(listaGpuPercent),
+                cpu_temp: calcularMediana(listaCpuTemp),
+                gpu_temp: calcularMediana(listaGpuTemp)
+            };
+
+            console.log("LISTA DIAS: " + listaDias)
+            console.log(listaDias)
+
+            var mediasPorDia = {};
+
+            Object.keys(listaDias).forEach(dia => {
+                const registros = listaDias[dia];
+
+                let somaCpuPercent = 0;
+                let somaGpuPercent = 0;
+                let somaCpuTemp = 0;
+                let somaGpuTemp = 0;
+
+                registros.forEach(r => {
+                    somaCpuPercent += r.cpu_percent;
+                    somaGpuPercent += r.gpu_percent;
+                    somaCpuTemp += r.cpu_temp;
+                    somaGpuTemp += r.gpu_temp;
+                });
+
+                const qtd = registros.length;
+
+                mediasPorDia[dia] = {
+                    cpu_percent: somaCpuPercent / qtd,
+                    gpu_percent: somaGpuPercent / qtd,
+                    cpu_temp: somaCpuTemp / qtd,
+                    gpu_temp: somaGpuTemp / qtd
+                };
+            });
+
+            console.log("MEDIAS POR DIA: ")
+            console.log(mediasPorDia)
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            console.log("COR USO TEMP GPU: " + corKpiTempGpu)
+            console.log("COR USO TEMP CPU: " + corKpiTempCpu)
+
+            console.log("COR USO PERCENT CPU: " + corKpiUsoCpu)
+            console.log("COR USO PERCENT GPU: " + corKpiUsoGpu)
+
+            console.log("MEDIA GERAL GPU TEMP: " + mediaGeral.gpu_temp)
+            console.log("MEDIA GERAL CPU TEMP: " + mediaGeral.cpu_temp)
+
+            console.log("MEDIA GERAL CPU PERCENT: " + mediaGeral.cpu_percent)
+            console.log("MEDIA GERAL GPU PERCENT: " + mediaGeral.gpu_percent)
+
+            document.getElementById("kpiusogpu").innerHTML = `
+                <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Uso médio da GPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+                <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Temperatura média da GPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+                <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Uso médio da CPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+                <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Temperatura média da CPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
+                </div>
+            `;
+
+            console.log("lista gpu percent: ")
+            console.log(mediasPorDia.gpuPercent)
+            graficoUso = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(listaDias),
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_percent),
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_percent),
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Dia da Semana' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
+            });
+
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(listaDias),
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].cpu_temp),
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
+                            borderWidth: 2,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: Object.keys(listaDias).map(dia => mediasPorDia[dia].gpu_temp),
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
+                            borderWidth: 2,
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Dia da Semana' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+
+
+        }
+
+        function construirGraficosMensal(lista, macAddress, infoMaquina, limite) {
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var semanas = {
+                "Semana 1": [],
+                "Semana 2": [],
+                "Semana 3": [],
+                "Semana 4": []
+            };
+
+            var valoresDentroDoLimite = [];
+
+            for (let i = 0; i < lista.length; i++) {
+
+                const registro = lista[i];
+                if (!registro) continue;
+
+                const dataRegistro = new Date(registro.datetime.replace(" ", "T"));
+
+                if (registro.mac_address == macAddress && dataRegistro >= limite) {
+
+                    const dia = dataRegistro.getDate();
+                    let semana;
+
+                    if (dia <= 7) semana = "Semana 1";
+                    else if (dia <= 14) semana = "Semana 2";
+                    else if (dia <= 21) semana = "Semana 3";
+                    else semana = "Semana 4";
+
+                    const leitura = {
+                        cpu_percent: parseFloat(registro.cpu_percent),
+                        gpu_percent: parseFloat(registro.gpu_percent),
+                        cpu_temp: parseFloat(registro.cpu_temperature),
+                        gpu_temp: parseFloat(registro.gpu_temperature)
+                    };
+
+                    semanas[semana].push(leitura);
+                    valoresDentroDoLimite.push(leitura);
+                }
+            }
+
+            function extrairValores(obj, campo) {
+                return Object.keys(obj).map(sem => {
+                    const lista = obj[sem].map(v => v[campo]);
+                    if (lista.length === 0) return 0;
+                    return calcularMedia(lista);
+                });
+            }
+
+            var mediasCpuPercent = extrairValores(semanas, "cpu_percent");
+            var mediasGpuPercent = extrairValores(semanas, "gpu_percent");
+            var mediasCpuTemp = extrairValores(semanas, "cpu_temp");
+            var mediasGpuTemp = extrairValores(semanas, "gpu_temp");
+
+            var todosCpuPercent = valoresDentroDoLimite.map(v => v.cpu_percent);
+            var todosGpuPercent = valoresDentroDoLimite.map(v => v.gpu_percent);
+            var todosCpuTemp = valoresDentroDoLimite.map(v => v.cpu_temp);
+            var todosGpuTemp = valoresDentroDoLimite.map(v => v.gpu_temp);
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(todosCpuPercent),
+                gpu_percent: calcularMedia(todosGpuPercent),
+                cpu_temp: calcularMedia(todosCpuTemp),
+                gpu_temp: calcularMedia(todosGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(todosCpuPercent),
+                gpu_percent: calcularMediana(todosGpuPercent),
+                cpu_temp: calcularMediana(todosCpuTemp),
+                gpu_temp: calcularMediana(todosGpuTemp)
+            };
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            document.getElementById("kpiusogpu").innerHTML = `
+                <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Uso médio da GPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+                <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Temperatura média da GPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+                <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Uso médio da CPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
+                </div>
+            `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+                <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+                    <p style="color:white; margin:0;">Temperatura média da CPU</p>
+                    <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+                    <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
+                </div>
+            `;
+
+            const labelsMes = gerarLabelsSemanas(limite);
+
+            graficoUso = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsMes,
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Semanas do mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
+            });
+
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: labelsMes,
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Semanas do mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function construirGraficosSemestral1(lista, macAddress, infoMaquina, limite) {
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var meses = {
+                "Jan": [],
+                "Fev": [],
+                "Mar": [],
+                "Abr": [],
+                "Mai": [],
+                "Jun": []
+            };
+
+            var valoresDentroDoLimite = [];
+
+            lista.forEach(item => {
+
+                const dataRegistro = new Date(item.datetime.replace(" ", "T"));
+
+                if (
+                    item.mac_address === macAddress &&
+                    dataRegistro >= limite &&
+                    dataRegistro.getMonth() <= 5
+                ) {
+
+                    const leitura = {
+                        cpu_percent: parseFloat(item.cpu_percent),
+                        gpu_percent: parseFloat(item.gpu_percent),
+                        cpu_temp: parseFloat(item.cpu_temperature),
+                        gpu_temp: parseFloat(item.gpu_temperature)
+                    };
+
+                    const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+                    const mesNome = nomes[dataRegistro.getMonth()];
+
+                    meses[mesNome].push(leitura);
+                    valoresDentroDoLimite.push(leitura);
+                }
+            });
+
+            function extrairValores(obj, campo) {
+                return Object.keys(obj).map(mes => {
+                    const lista = obj[mes].map(v => v[campo]);
+                    if (lista.length === 0) return 0;
+                    return calcularMedia(lista);
+                });
+            }
+
+            var mediasCpuPercent = extrairValores(meses, "cpu_percent");
+            var mediasGpuPercent = extrairValores(meses, "gpu_percent");
+            var mediasCpuTemp = extrairValores(meses, "cpu_temp");
+            var mediasGpuTemp = extrairValores(meses, "gpu_temp");
+
+            var todosCpuPercent = valoresDentroDoLimite.map(v => v.cpu_percent);
+            var todosGpuPercent = valoresDentroDoLimite.map(v => v.gpu_percent);
+            var todosCpuTemp = valoresDentroDoLimite.map(v => v.cpu_temp);
+            var todosGpuTemp = valoresDentroDoLimite.map(v => v.gpu_temp);
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(todosCpuPercent),
+                gpu_percent: calcularMedia(todosGpuPercent),
+                cpu_temp: calcularMedia(todosCpuTemp),
+                gpu_temp: calcularMedia(todosGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(todosCpuPercent),
+                gpu_percent: calcularMediana(todosGpuPercent),
+                cpu_temp: calcularMediana(todosCpuTemp),
+                gpu_temp: calcularMediana(todosGpuTemp)
+            };
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            document.getElementById("kpiusogpu").innerHTML = `
+        <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_percent}%</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_percent}%</p>
+        </div>
+    `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+        <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.gpu_temp}°C</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.gpu_temp}°C</p>
+        </div>
+    `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+        <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_percent}%</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_percent}%</p>
+        </div>
+    `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+        <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;">${mediaGeral.cpu_temp}°C</p>
+            <p style="color:white; margin:0;">Mediana: ${medianaGeral.cpu_temp}°C</p>
+        </div>
+    `;
+
+            const labelsSemestre = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+
+            graficoUso = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsSemestre,
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
+            });
+
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: labelsSemestre,
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+
+        }
+
+        function construirGraficosSemestral2(lista, macAddress, infoMaquina, limite) {
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var meses = {
+                "Jul": [],
+                "Ago": [],
+                "Set": [],
+                "Out": [],
+                "Nov": [],
+                "Dez": []
+            };
+
+            var valoresDentroDoLimite = [];
+
+            lista.forEach(registro => {
+
+                if (registro.mac_address !== macAddress) return;
+
+                const dataRegistro = new Date(registro.datetime.replace(" ", "T"));
+
+                if (dataRegistro >= limite && dataRegistro.getMonth() >= 6) {
+
+                    const leitura = {
+                        cpu_percent: parseFloat(registro.cpu_percent),
+                        gpu_percent: parseFloat(registro.gpu_percent),
+                        cpu_temp: parseFloat(registro.cpu_temperature),
+                        gpu_temp: parseFloat(registro.gpu_temperature)
+                    };
+
+                    const nomes = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+                    const monthIndex = dataRegistro.getMonth();
+                    const nomeMes = nomes[monthIndex - 6];
+
+                    meses[nomeMes].push(leitura);
+                    valoresDentroDoLimite.push(leitura);
+                }
+            });
+
+            function extrairValores(obj, campo) {
+                return Object.keys(obj).map(mes => {
+                    const lista = obj[mes].map(v => v[campo]);
+                    if (lista.length === 0) return 0;
+                    return calcularMedia(lista);
+                });
+            }
+
+            var mediasCpuPercent = extrairValores(meses, "cpu_percent");
+            var mediasGpuPercent = extrairValores(meses, "gpu_percent");
+            var mediasCpuTemp = extrairValores(meses, "cpu_temp");
+            var mediasGpuTemp = extrairValores(meses, "gpu_temp");
+
+            var todosCpuPercent = valoresDentroDoLimite.map(v => v.cpu_percent);
+            var todosGpuPercent = valoresDentroDoLimite.map(v => v.gpu_percent);
+            var todosCpuTemp = valoresDentroDoLimite.map(v => v.cpu_temp);
+            var todosGpuTemp = valoresDentroDoLimite.map(v => v.gpu_temp);
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(todosCpuPercent),
+                gpu_percent: calcularMedia(todosGpuPercent),
+                cpu_temp: calcularMedia(todosCpuTemp),
+                gpu_temp: calcularMedia(todosGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(todosCpuPercent),
+                gpu_percent: calcularMediana(todosGpuPercent),
+                cpu_temp: calcularMediana(todosCpuTemp),
+                gpu_temp: calcularMediana(todosGpuTemp)
+            };
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            document.getElementById("kpiusogpu").innerHTML = `
+        <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+        <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+        <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+        <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
+        </div>
+    `;
+
+            const labelsSemestre = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            graficoUso = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsSemestre,
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
+            });
+
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: labelsSemestre,
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#000' } }
+                    },
+                    tension: 0.2,
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+
+
+
+        }
+
+        function construirGraficosAnual(lista, macAddress, infoMaquina, limite) {
+
+            console.log("ENTROU NO CONSTRUIR GRÁFICOS ANUAL");
+
+            const parametroCpuPercent = infoMaquina.parametros.cpu_percent;
+            const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
+            const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
+            const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            var meses = {
+                "Jan": [], "Fev": [], "Mar": [], "Abr": [], "Mai": [], "Jun": [],
+                "Jul": [], "Ago": [], "Set": [], "Out": [], "Nov": [], "Dez": []
+            };
+
+            const nomesMes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+                "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+            ];
+
+            var valoresDentroDoLimite = [];
+
+            lista.forEach(leitura => {
+
+                const dataRegistro = new Date(leitura.datetime.replace(" ", "T"));
+                const mesIndex = dataRegistro.getMonth();
+
+                if (leitura.mac_address === macAddress && dataRegistro >= limite) {
+
+                    const dado = {
+                        cpu_percent: parseFloat(leitura.cpu_percent),
+                        gpu_percent: parseFloat(leitura.gpu_percent),
+                        cpu_temp: parseFloat(leitura.cpu_temperature),
+                        gpu_temp: parseFloat(leitura.gpu_temperature)
+                    };
+
+                    meses[nomesMes[mesIndex]].push(dado);
+                    valoresDentroDoLimite.push(dado);
+                }
+            });
+
+            function extrairValores(obj, campo) {
+                return Object.keys(obj).map(mes => {
+                    const listaValores = obj[mes].map(v => v[campo]);
+                    if (listaValores.length === 0) return 0;
+                    return calcularMedia(listaValores);
+                });
+            }
+
+            var mediasCpuPercent = extrairValores(meses, "cpu_percent");
+            var mediasGpuPercent = extrairValores(meses, "gpu_percent");
+            var mediasCpuTemp = extrairValores(meses, "cpu_temp");
+            var mediasGpuTemp = extrairValores(meses, "gpu_temp");
+
+            var todosCpuPercent = valoresDentroDoLimite.map(v => v.cpu_percent);
+            var todosGpuPercent = valoresDentroDoLimite.map(v => v.gpu_percent);
+            var todosCpuTemp = valoresDentroDoLimite.map(v => v.cpu_temp);
+            var todosGpuTemp = valoresDentroDoLimite.map(v => v.gpu_temp);
+
+            var mediaGeral = {
+                cpu_percent: calcularMedia(todosCpuPercent),
+                gpu_percent: calcularMedia(todosGpuPercent),
+                cpu_temp: calcularMedia(todosCpuTemp),
+                gpu_temp: calcularMedia(todosGpuTemp)
+            };
+
+            var medianaGeral = {
+                cpu_percent: calcularMediana(todosCpuPercent),
+                gpu_percent: calcularMediana(todosGpuPercent),
+                cpu_temp: calcularMediana(todosCpuTemp),
+                gpu_temp: calcularMediana(todosGpuTemp)
+            };
+
+            var corKpiTempGpu = corTemperatura(mediaGeral.gpu_temp, parametroGpuTemp);
+            var corKpiTempCpu = corTemperatura(mediaGeral.cpu_temp, parametroCpuTemp);
+            var corKpiUsoGpu = corUso(mediaGeral.gpu_percent, parametroGpuPercent);
+            var corKpiUsoCpu = corUso(mediaGeral.cpu_percent, parametroCpuPercent);
+
+            document.getElementById("kpiusogpu").innerHTML = `
+        <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_percent}%</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpitempgpu").innerHTML = `
+        <div style="background-color:${corKpiTempGpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da GPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.gpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.gpu_temp}°C</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpiusocpu").innerHTML = `
+        <div style="background-color:${corKpiUsoCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Uso médio da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_percent}%</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_percent}%</b></p>
+        </div>
+    `;
+
+            document.getElementById("kpitempcpu").innerHTML = `
+        <div style="background-color:${corKpiTempCpu}; border-radius:10px; padding:20px;">
+            <p style="color:white; margin:0;">Temperatura média da CPU</p>
+            <p style="color:white; font-size:30px; margin:0;"><b>${mediaGeral.cpu_temp}°C</b></p>
+            <p style="color:white; margin:0;">Mediana: <b>${medianaGeral.cpu_temp}°C</b></p>
+        </div>
+    `;
+
+            var labelsAno = nomesMes;
+
+            graficoUso = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labelsAno,
+                    datasets: [
+                        {
+                            label: 'Uso de CPU (%)',
+                            data: mediasCpuPercent,
+                            backgroundColor: '#5B21B6',
+                            borderColor: '#4C1D95',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Uso de GPU (%)',
+                            data: mediasGpuPercent,
+                            backgroundColor: '#e4b131',
+                            borderColor: '#C48800',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#000' } } },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Uso (%)' }
+                        }
+                    }
+                }
+            });
+
+            graficoTemp = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: labelsAno,
+                    datasets: [
+                        {
+                            label: 'Temp CPU (°C)',
+                            data: mediasCpuTemp,
+                            borderColor: '#4C1D95',
+                            backgroundColor: '#5B21B6',
+                            borderWidth: 2,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Temp GPU (°C)',
+                            data: mediasGpuTemp,
+                            borderColor: '#C48800',
+                            backgroundColor: '#e4b131',
+                            borderWidth: 2,
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#000' } } },
+                    scales: {
+                        x: {
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Mês' }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: { color: '#000' },
+                            title: { display: true, text: 'Temperatura (°C)' }
+                        }
+                    }
+                }
+            });
+
+        }
+
+
+
+        function calcularMedia(lista) {
+            let soma = 0;
+            for (let i = 0; i < lista.length; i++) {
+                soma += lista[i];
+            }
+
+            return parseFloat((soma / lista.length).toFixed(0));
+        }
+
+        function calcularMediana(lista) {
+            lista.sort(function (a, b) {
+                return a - b;
+            });
+            console.log("LISTA MEDIANA: " + lista)
+            let meio = Math.floor(lista.length / 2);
+
+            if (lista.length % 2 !== 0) {
+                return parseFloat(lista[meio].toFixed(0));
+            } else {
+                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(0));
+            }
+        }
+
+        function corTemperatura(media, parametro) {
+            if (media <= parametro) {
+                return "#4caf50";
+            }
+
+            const acima = media - parametro;
+
+            if (acima <= parametro * 0.10) {
+                return "rgb(228, 177, 49)";
+            }
+
+            return "#ff4b4b";
+        }
+
+        function corUso(media, parametro) {
+
+            if (media >= parametro) {
+                return "#4caf50";
+            }
+
+            const abaixo = parametro - media;
+
+            if (abaixo <= parametro * 0.10) {
+                return "rgb(228, 177, 49)";
+            }
+
+            return "#ff4b4b";
+        }
+
+        let modalGeral = document.getElementById('modal_param_gerais');
+        let modalGeralContainer = document.getElementById('modal_container_param_gerais');
 
         let listaMaquinas = [];
 
@@ -222,6 +2067,7 @@
 
                 filtroUltrapassando.addEventListener("change", function () {
                     const componente = filtroUltrapassando.value;
+                    console.log(listaMaquinas.filter(m => m.foraDoParametro));
                     const maquinasFiltradas = listaMaquinas.filter(m => m.foraDoParametro[componente]);
 
                     tbody.innerHTML = "";
@@ -236,7 +2082,7 @@
                         const cores = leitura.cores;
 
                         tbody.innerHTML += `
-                            <tr>
+                            <tr onclick="abrirGraficosMaquina('${maquina.mac}')">
                                 <td>${maquina.mac}</td>
                                 <td>${maquina.nome}</td>
                                 <td>${leitura.datetime}</td>
@@ -263,7 +2109,7 @@
                 const cores = leitura.cores;
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr onclick="abrirGraficosMaquina('${maquina.mac}')">
                         <td>${maquina.mac}</td>
                         <td>${maquina.nome}</td>
                         <td>${leitura.datetime}</td>
@@ -275,189 +2121,17 @@
             });
         }
 
+        function mostrarCarregando() {
+            document.getElementById("tela-carregando").style.display = "flex";
+        }
 
-        const filtro = document.getElementById("filtroPesquisa");
-        filtro.addEventListener("change", aplicarFiltro);
-
-        function carregarMaquinas() {
-            var empresaId = sessionStorage.getItem('idEmpresa');
-
-            fetch(`/maquina/infoMaquinas/${empresaId}`)
-                .then(res => res.json())
-                .then(maquinas => {
-                    let tbody = document.getElementById("tableMaquinas");
-                    tbody.innerHTML = "";
-
-                    fetch("../assets/data/leiturasClient.csv")
-                        .then(res => {
-                            if (!res.ok) throw new Error("Erro ao carregar CSV");
-                            return res.text();
-                        })
-                        .then(texto => {
-                            const linhas = texto.split("\n").map(l => l.trim());
-                            const dadosCSV = [];
-
-                            for (let i = 1; i < linhas.length; i++) {
-                                const linha = linhas[i];
-                                if (!linha) continue;
-                                const campos = linha.split(";");
-
-                                dadosCSV.push({
-                                    datetime: campos[0],
-                                    cpu_percent: parseFloat(campos[1]),
-                                    gpu_percent: parseFloat(campos[2]),
-                                    cpu_temp: parseFloat(campos[3]),
-                                    gpu_temp: parseFloat(campos[4]),
-                                    chamado: campos[5],
-                                    id_empresa: campos[6],
-                                    mac: campos[7]
-                                });
-                            }
-
-                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
-                            let contadorQtdForaParam = 0;
-
-                            maquinas.forEach(maquina => {
-                                const macMaquina = maquina.enderecoMac.trim().toLowerCase();
-                                const maquinaNome = maquina.nome;
-
-                                const parametroCpuPercent = maquina.cpu_percent;
-                                const parametroGpuPercent = maquina.gpu_percent;
-                                const parametroCpuTemperature = maquina.cpu_temperature;
-                                const parametroGpuTemperature = maquina.gpu_temperature;
-
-                                const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
-
-                                if (registros.length > 0) {
-                                    const ultimo = registros[registros.length - 1];
-
-                                    let corCpuPercent = "#89be4d";
-                                    let corGpuPercent = "#89be4d";
-                                    let corCpuTemp = "#89be4d";
-                                    let corGpuTemp = "#89be4d";
-
-                                    let maquinaForaDoParametro = false;
-                                    let foraDoParametro = {
-                                        cpu_percent: false,
-                                        gpu_percent: false,
-                                        cpu_temp: false,
-                                        gpu_temp: false
-                                    };
-
-                                    const cincoCpuPercent = parametroCpuPercent * 0.05;
-                                    const dezCpuPercent = parametroCpuPercent * 0.10;
-
-                                    const cincoGpuPercent = parametroGpuPercent * 0.05;
-                                    const dezGpuPercent = parametroGpuPercent * 0.10;
-
-                                    const cincoCpuTemp = parametroCpuTemperature * 0.05;
-                                    const dezCpuTemp = parametroCpuTemperature * 0.10;
-
-                                    const cincoGpuTemp = parametroGpuTemperature * 0.05;
-                                    const dezGpuTemp = parametroGpuTemperature * 0.10;
-
-                                    // ---- CPU USO ----
-                                    if (ultimo.cpu_percent < parametroCpuPercent - dezCpuPercent) {
-                                        corCpuPercent = "red";
-                                        foraDoParametro.cpu_percent = true;
-                                        maquinaForaDoParametro = true;
-                                    } else if (ultimo.cpu_percent < parametroCpuPercent - cincoCpuPercent) {
-                                        corCpuPercent = "yellow";
-                                        foraDoParametro.cpu_percent = true;
-                                        maquinaForaDoParametro = true;
-                                    } else {
-                                        corCpuPercent = "#89be4d";
-                                    }
-
-                                    // ---- GPU USO ----
-                                    if (ultimo.gpu_percent < parametroGpuPercent - dezGpuPercent) {
-                                        corGpuPercent = "red";
-                                        foraDoParametro.gpu_percent = true;
-                                        maquinaForaDoParametro = true;
-                                    } else if (ultimo.gpu_percent < parametroGpuPercent - cincoGpuPercent) {
-                                        corGpuPercent = "yellow";
-                                        foraDoParametro.gpu_percent = true;
-                                        maquinaForaDoParametro = true;
-                                    } else {
-                                        corGpuPercent = "#89be4d";
-                                    }
-
-                                    // ---- CPU TEMP ----
-                                    if (ultimo.cpu_temp > parametroCpuTemperature + dezCpuTemp) {
-                                        corCpuTemp = "red";
-                                        foraDoParametro.cpu_temp = true;
-                                        maquinaForaDoParametro = true;
-                                    } else if (ultimo.cpu_temp > parametroCpuTemperature + cincoCpuTemp) {
-                                        corCpuTemp = "yellow";
-                                        foraDoParametro.cpu_temp = true;
-                                        maquinaForaDoParametro = true;
-                                    } else {
-                                        corCpuTemp = "#89be4d";
-                                    }
-
-                                    // ---- GPU TEMP ----
-                                    if (ultimo.gpu_temp > parametroGpuTemperature + dezGpuTemp) {
-                                        corGpuTemp = "red";
-                                        foraDoParametro.gpu_temp = true;
-                                        maquinaForaDoParametro = true;
-                                    } else if (ultimo.gpu_temp > parametroGpuTemperature + cincoGpuTemp) {
-                                        corGpuTemp = "yellow";
-                                        foraDoParametro.gpu_temp = true;
-                                        maquinaForaDoParametro = true;
-                                    } else {
-                                        corGpuTemp = "#89be4d";
-                                    }
-
-                                    if (maquinaForaDoParametro) contadorQtdForaParam++;
-
-                                    listaMaquinas.push({
-                                        mac: macMaquina,
-                                        nome: maquinaNome,
-                                        parametros: {
-                                            cpu_percent: parametroCpuPercent,
-                                            gpu_percent: parametroGpuPercent,
-                                            cpu_temp: parametroCpuTemperature,
-                                            gpu_temp: parametroGpuTemperature
-                                        },
-                                        leituraAtual: {
-                                            datetime: ultimo.datetime,
-                                            cpu_percent: ultimo.cpu_percent,
-                                            gpu_percent: ultimo.gpu_percent,
-                                            cpu_temp: ultimo.cpu_temp,
-                                            gpu_temp: ultimo.gpu_temp,
-                                            cores: {
-                                                cpu_percent: corCpuPercent,
-                                                gpu_percent: corGpuPercent,
-                                                cpu_temp: corCpuTemp,
-                                                gpu_temp: corGpuTemp
-                                            }
-                                        },
-                                        foraDoParametro
-                                    });
-
-                                    tbody.innerHTML += `
-                                <tr>
-                                    <td>${macMaquina}</td>
-                                    <td>${maquinaNome}</td>
-                                    <td>${ultimo.datetime}</td>
-                                    <td style="font-size:20px; background-color:${corCpuPercent}; border: 1px solid black">${ultimo.cpu_percent}</td>
-                                    <td style="font-size:20px; background-color:${corGpuPercent}; border: 1px solid black">${ultimo.gpu_percent}</td>
-                                    <td style="font-size:20px; background-color:${corCpuTemp}; border: 1px solid black">${ultimo.cpu_temp}</td>
-                                    <td style="font-size:20px; background-color:${corGpuTemp}; border: 1px solid black">${ultimo.gpu_temp}</td>
-                                </tr>`;
-                                }
-                            });
-
-                            document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
-                            console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
-                            console.log("Lista de máquinas:", listaMaquinas);
-                        })
-                        .catch(err => console.error("Erro ao ler CSV:", err));
-                })
-                .catch(err => console.error("Erro ao carregar máquinas:", err));
+        function esconderCarregando() {
+            document.getElementById("tela-carregando").style.display = "none";
         }
 
 
+        const filtro = document.getElementById("filtroPesquisa");
+        filtro.addEventListener("change", aplicarFiltro);
 
         function salvarParametrosIndividuais() {
             if (!maquinaSelecionada) return alert("Selecione uma máquina.");
@@ -521,6 +2195,20 @@
                     console.error(err);
                 });
         }
+
+        function gerarLabelsSemanas(limite) {
+            const ano = limite.getFullYear();
+            const mes = limite.getMonth();
+            const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+
+            return [
+                `01 - 07`,
+                `08 - 14`,
+                `15 - 21`,
+                `22 - ${ultimoDia}`
+            ];
+        }
+
 
         function verificarParametrosGerais() {
             const idEmpresa = sessionStorage.getItem('idEmpresa');

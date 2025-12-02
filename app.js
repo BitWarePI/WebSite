@@ -28,6 +28,8 @@ var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
+var s3Router = require("./src/routes/s3");
+
 var chamadosRouter = require("./src/routes/chamados");
 
 // Middlewares
@@ -46,6 +48,7 @@ app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
+app.use("/s3", s3Router)
 //app.use("/emails", emailRouter);
 
 // Inicia o servidor
