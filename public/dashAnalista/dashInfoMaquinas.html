@@ -474,8 +474,7 @@
                                 const parametroGpuTemperature = maquina.gpu_temperature;
 
                                 const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
-
-                                if (registros.length > 0) {
+                                console.log("REGISTROS: " + JSON.stringify(registros, null, 2)); if (registros.length > 0) {
                                     const ultimo = registros[registros.length - 1];
 
                                     let corCpuPercent = "#89be4d";
@@ -571,7 +570,7 @@
                                     labels: ["Uso GPU", "Uso CPU", "Temp. GPU", "Temp. CPU"],
                                     datasets: [
                                         {
-                                            label: 'Quantidade de parâmetros ultrapassados',
+                                            label: 'Quantidade de parâmetros ultrapassados (total)',
                                             data: [contadorQtdForaUsoGpu, contadorQtdForaUsoCpu, contadorQtdForaTempGpu, contadorQtdForaTempCpu],
                                             backgroundColor: '#5B21B6',
                                             borderColor: '#4C1D95',
@@ -591,11 +590,18 @@
                                         },
                                         y: {
                                             beginAtZero: true,
-                                            ticks: { color: '#000' }
+                                            ticks: {
+                                                color: '#000',
+                                                callback: function (value) {
+                                                    if (Number.isInteger(value)) {
+                                                        return value;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            })
+                            });
 
                             document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
                             console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
@@ -708,13 +714,14 @@
                         mac: item.mac_address
                     }));
 
-                    const agora = new Date();
-                    const limite = new Date(agora.getTime() - 48 * 60 * 60 * 1000);
+                    const hoje = new Date();
+                    const diaHoje = hoje.toISOString().split("T")[0];
 
                     dados.forEach(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
+                        const diaRegistro = reg.datetime.split(" ")[0];
 
-                        if (reg.mac === macAddress && dataRegistro >= limite) {
+                        if (reg.mac === macAddress && diaRegistro === diaHoje) {
                             eixo24hrs.push(dataRegistro.getHours());
                             registrosMaquina.push(reg);
                         }
@@ -755,7 +762,7 @@
                         <div style="background-color:${corKpiUsoGpu}; border-radius:10px; padding:20px;">
                             <p style="color:white; margin:0;">Uso médio da GPU</p>
                             <p style="color:white; font-size:30px; margin:0;"><b>${mediaGpuPercent}%</b></p>
-                            <p style="color:white; margin:0;"Mediana: <b>${medianaGpuPercent}%</b></p>
+                            <p style="color:white; margin:0;">Mediana: <b>${medianaGpuPercent}%</b></p>
                         </div>
                     `;
 
@@ -922,16 +929,16 @@
                         esconderCarregando();
                     } else if (valorFiltro == "Mensal") {
                         construirGraficosMensal(linhas, macAddress, infoMaquina, limite);
-                         esconderCarregando();
+                        esconderCarregando();
                     } else if (valorFiltro == "Semestral1") {
                         construirGraficosSemestral1(linhas, macAddress, infoMaquina, limite);
-                         esconderCarregando();
+                        esconderCarregando();
                     } else if (valorFiltro == "Semestral2") {
                         construirGraficosSemestral2(linhas, macAddress, infoMaquina, limite);
-                         esconderCarregando();
+                        esconderCarregando();
                     } else {
                         construirGraficosAnual(linhas, macAddress, infoMaquina, limite);
-                         esconderCarregando();
+                        esconderCarregando();
                     }
                 });
         }
@@ -954,7 +961,7 @@
 
                 if (item.mac_address === macAddress && dataRegistro >= limite) {
 
-                    const dia = dataRegistro.getDate();
+                    const dia = dataRegistro.toLocaleDateString("pt-BR", { weekday: "short" });
 
                     if (!eixoX.includes(dia)) {
                         eixoX.push(dia);
@@ -1302,7 +1309,7 @@
                 </div>
             `;
 
-            const labelsMes = ["Semana 1", "Semana 2", "Semana 3", "Semana 4"];
+            const labelsMes = gerarLabelsSemanas(limite);
 
             graficoUso = new Chart(ctx1, {
                 type: 'bar',
@@ -2188,6 +2195,20 @@
                     console.error(err);
                 });
         }
+
+        function gerarLabelsSemanas(limite) {
+            const ano = limite.getFullYear();
+            const mes = limite.getMonth();
+            const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+
+            return [
+                `01 - 07`,
+                `08 - 14`,
+                `15 - 21`,
+                `22 - ${ultimoDia}`
+            ];
+        }
+
 
         function verificarParametrosGerais() {
             const idEmpresa = sessionStorage.getItem('idEmpresa');
