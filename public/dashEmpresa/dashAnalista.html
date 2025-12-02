@@ -146,7 +146,7 @@
           </span>
         </div>
 
-        <div
+        <!-- <div
           style="display: flex;justify-content: flex-start;align-self: flex-start; flex-direction: row; gap: 20px; margin-bottom: 20px;">
           <div>
             <p style="margin: 3px; font-size: 18px; color: rgb(36, 3, 66);">Data inicial</p>
@@ -160,6 +160,19 @@
             style="background-color:#4c1d95; color:white; padding:0px 20px;height: 45px; justify-self: flex-end;display: flex; align-items: center; align-self: flex-end; border:none; border-radius:5px; cursor:pointer; font-weight:400; font-size: medium;">
             Aplicar período
           </button>
+        </div> -->
+        <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <p style="margin: 0; font-weight: bold; color: rgb(36, 3, 66);">Filtro de dados</p>
+          <div>
+            <select name="" id="alterar_data" style="display: flex; gap: 20px;">
+              <option value="1" selected>Últimas 24h</option>
+              <option value="2">Semanal</option>
+              <option value="2">Mensal</option>
+              <option value="3">1° Semestre</option>
+              <option value="4">2° Semestre</option>
+              <option value="5">Anual</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -590,50 +603,50 @@
     grafico4.update()
   }
 
-  async function aplicarPeriodo() {
-    const inicio = inputInicio.value;
-    const fim = inputFim.value;
+  // async function aplicarPeriodo() {
+  //   const inicio = inputInicio.value;
+  //   const fim = inputFim.value;
 
-    if (!inicio || !fim) return alert('Selecione as duas datas!');
-    if (inicio > fim) return alert('Datas incoerentes!');
+  //   if (!inicio || !fim) return alert('Selecione as duas datas!');
+  //   if (inicio > fim) return alert('Datas incoerentes!');
 
-    try {
-      const response = await fetch(`http://localhost:3333/kpis?inicio=${inicio}&fim=${fim}`);
-      if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+  //   try {
+  //     const response = await fetch(`http://localhost:3333/kpis?inicio=${inicio}&fim=${fim}`);
+  //     if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
 
-      const dados = await response.json();
-      if (!Array.isArray(dados) || dados.length === 0) {
-        alert('Nenhum dado encontrado para o período selecionado.');
-        return;
-      }
+  //     const dados = await response.json();
+  //     if (!Array.isArray(dados) || dados.length === 0) {
+  //       alert('Nenhum dado encontrado para o período selecionado.');
+  //       return;
+  //     }
 
-      const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
-      const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
-      const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
-      const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
-      const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
+  //     const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+  //     const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
+  //     const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
+  //     const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
+  //     const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
 
-      kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
-      kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
-      kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
-      kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
+  //     kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
+  //     kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
+  //     kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
+  //     kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
 
-      kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
-      kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
-      kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
-      kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
+  //     kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
+  //     kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
+  //     kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
+  //     kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
 
-      graficos(dados)
+  //     graficos(dados)
 
-      aplicarCores();
+  //     aplicarCores();
 
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
-      alert("Ocorreu um erro ao buscar os dados.");
-    }
-  }
+  //   } catch (error) {
+  //     console.error("Erro ao buscar dados:", error);
+  //     alert("Ocorreu um erro ao buscar os dados.");
+  //   }
+  // }
 
-  btnAplicar.addEventListener('click', aplicarPeriodo);
+  // btnAplicar.addEventListener('click', aplicarPeriodo);
 
   window.addEventListener('DOMContentLoaded', () => {
     aplicarCores()
