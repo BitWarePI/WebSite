@@ -234,6 +234,7 @@
         align-items: center;
         width: 100%;
         max-height: 100dvh;
+        overflow-y: hidden;
     }
 
     .navDiv {
@@ -245,14 +246,15 @@
     .sectionDiv {
         flex: 1;
         width: 100% - 156px;
-        min-height: 100dvh;
+        max-height: 100dvh;
         display: flex;
         background-color: #e0e0e0;
         flex-direction: row;
-        padding: 24px;
+        padding: 0px 0px 24px 0px;
         color: var(--main-text-inverse-color);
         transition: padding-left .3s;
         overflow-x: hidden;
+        overflow-y: hidden;
     }
 
     nav .links .link {
@@ -505,7 +507,9 @@
         color: #000;
         background: #fff;
         height: auto;
-        width: 1420px;
+        width: 800px;
+        margin-left: 156px;
+        margin-top: 100px;
         border-radius: 12px;
         padding: 18px
     }
@@ -524,6 +528,10 @@
     @media screen and (max-width:900px) {
         nav {
             width: 100px;
+        }
+
+        .navDiv{
+            width: 0px;
         }
 
         nav {

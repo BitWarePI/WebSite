@@ -58,7 +58,7 @@
             <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
             <div class="filters">
               <div class="periods">
-                <button class="btn ghost" id="hojeBtn" onclick="buscarOcorrencias('hoje', fkEmpresa)">24h</button>
+                <button class="btn ghost" id="24hBtn" onclick="buscarOcorrencias('24h', fkEmpresa)">24h</button>
                 <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
                 <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
                 <button class="btn ghost" id="segundoSemestreBtn"
@@ -259,7 +259,7 @@
       if (periodo === '24h') {
         dataAbertura = new Date();
         dataAbertura.setDate(dataAbertura.getDate() - 1);
-        document.getElementById('btn24h').classList.remove('ghost');
+        document.getElementById('24hBtn').classList.remove('ghost');
       } else if (periodo === 'semana') {
         dataAbertura = new Date();
         dataAbertura.setDate(dataAbertura.getDate() - 7);
