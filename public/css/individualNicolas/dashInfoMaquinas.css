@@ -1,0 +1,213 @@
+
+
+.modalDashInfo{
+    z-index: 101;
+    position: absolute;
+    width: 100dvw;
+    height: 100dvh;
+    box-sizing: border-box;
+    padding: 42px;
+    background-color: var(--low-bg-color);
+    display: none;
+    justify-content: center;
+}
+.modalDashInfo.open{
+    display: flex;
+}
+.modal-container{
+    background-color: var(--bg-inverse-color);
+    color: var(--main-text-inverse-color);
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    width: 100% !important;
+    background-color: #e0e0e0;
+}
+.modal-container .header{
+    display: flex;
+    justify-content: space-between;
+}
+.modal-container .header .close-icon{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 2em;
+    color: var(--main-text-inverse-color);
+}
+.modal-container .header .close-icon:hover{
+    color: var(--error-color);
+}
+.modal-container .body{
+    height: 100% !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow-y: clip;
+}
+.body .header-grafico{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    height: fit-content;
+}
+
+.titulo-header-grafico{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+#tela-carregando {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.caixa-carregando {
+    background: #fff;
+    padding: 20px 35px;
+    border-radius: 12px;
+    text-align: center;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.animacao-roda {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d3d3d3;
+    border-top-color: #4caf50; 
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.caixa-carregando p {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #333;
+}
+
+.informacoes-maquina-header-grafico{
+    justify-content: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    height: 80%;
+}
+
+.botaoFiltro{
+    background: none;
+    border: none;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    background-color: #7e0cac;
+    color: white;
+    border-radius: 10px;
+}
+
+table tr:hover{
+    cursor: pointer;
+}
+
+.div-info-maquina{
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-infoMaquina{
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+    color-scheme: light dark;
+    height: 70px;
+    background-color: #4b2b85;
+}
+
+
+.card-info-titulo {
+    font-size: 24px;        
+    font-weight: 500;           
+    color: white;
+    padding: 0px;         
+    margin: 0px;
+}
+
+.card-info-valor {
+    margin-top: 0.25rem;        
+    font-size: 32px !important;        
+    font-weight: 600;           
+    color: white !important;
+    padding: 0px;    
+    margin: 0px;
+                  
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info {
+        background-color: #111827;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info-title {
+    color: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-info-value {
+    color: white;
+    }
+}
+
+#info-macAddress{
+    width: 24%;
+}
+
+#info-nome{
+    width: 24%;
+
+}
+
+#info-cpu{
+    width: 24%;
+
+}
+
+
+#info-gpu{
+    width: 24%;
+
+}
