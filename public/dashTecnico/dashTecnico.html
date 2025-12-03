@@ -238,140 +238,99 @@
 
 </html>
 <script>
- async function carregarDadosEmpresa() {
-  const idEmpresa = sessionStorage.getItem("idEmpresa");
+  async function carregarDadosEmpresa() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
 
-  const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
-  const dados = await response.json();
+    const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+    const dados = await response.json();
 
-  console.log("Dados do bucket:", dados);
-  return dados;
-}
+    console.log("Dados do bucket:", dados);
+    return dados;
+  }
 
-async function carregarErros() {
-  const idEmpresa = sessionStorage.getItem("idEmpresa");
+  async function carregarErros() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
 
-  const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
-  const listaArquivos = await response.json();
+    const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+    const listaArquivos = await response.json();
 
-  let todos = [];
+    let todos = [];
 
-  listaArquivos.forEach(item => {
-    todos = todos.concat(item.dados);
-  });
+    listaArquivos.forEach(item => {
+      todos = todos.concat(item.dados);
+    });
 
-  return todos;
-}
+    return todos;
+  }
 
-function contarErrosPorHorario(dados) {
-  const erros = {};
+  function contarErrosPorHorario(dados) {
+    const erros = {};
 
-  dados.forEach(item => {
-    const hora = item.datetime.split(" ")[1].slice(0, 5); // HH:MM
-    if (!erros[hora]) erros[hora] = 0;
+    dados.forEach(item => {
+      const hora = item.datetime.split(" ")[1].slice(0, 5); // HH:MM
+      if (!erros[hora]) erros[hora] = 0;
 
-    const cpuTemp = Number(item.cpu_temperature);
-    const gpuTemp = Number(item.gpu_temperature);
-    const cpuPercent = Number(item.cpu_percent);
-    const gpuPercent = Number(item.gpu_percent);
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
 
-    // seus critérios
-    if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-      erros[hora]++;
-    }
-  });
+      // seus critérios
+      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+        erros[hora]++;
+      }
+    });
 
-  return erros;
-}
+    return erros;
+  }
 
-async function geraGrafico() {
-  const dados = await carregarErros();
-  console.log("Dados mesclados:", dados);
+  async function geraGrafico() {
+    const dados = await carregarErros();
+    console.log("Dados mesclados:", dados);
 
-  const errosPorHorario = contarErrosPorHorario(dados);
+    const errosPorHorario = contarErrosPorHorario(dados);
 
-  const labels = Object.keys(errosPorHorario);
-  const valores = Object.values(errosPorHorario);
+    const labels = Object.keys(errosPorHorario);
+    const valores = Object.values(errosPorHorario);
 
-  const ctx1 = document.getElementById('grafico1').getContext('2d');
+    const ctx1 = document.getElementById('grafico1').getContext('2d');
 
-  const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
-  gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
-  gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+    const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
+    gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
 
-  new Chart(ctx1, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Erros',
-        data: valores,
-        borderColor: "#6D28D9",
-        // backgroundColor: "#815eb8",
-        borderWidth: 2,
-        fill: true,
-        pointRadius: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Erros',
+          data: valores,
+          borderColor: "#6D28D9",
+          // backgroundColor: "#815eb8",
+          borderWidth: 2,
+          fill: true,
+          pointRadius: 0
+        }]
       },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: {
-            color: "#6B7280",
-            font: { size: 10 }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: "#6B7280",
+              font: { size: 10 }
+            }
           }
         }
       }
-    }
-  });
-}
-
-
-  // Pega o select do filtro
-  const filtroSelect = document.getElementById('filtro');
-
-  // Quando o filtro muda, atualiza o gráfico
-  filtroSelect.addEventListener('change', () => {
-    const valor = filtroSelect.value;
-
-    let novosLabels = [];
-    let novosDados = [];
-    if (valor === 'Últimas 24h') {
-      console.log("ENTROU NO IF")
-      novosLabels = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'];
-      novosDados = [2, 4, 1, 7, 3, 4, 3, 1, 2];
-    }
-    else if (valor === 'Semanal') {
-      novosLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-      novosDados = [12, 9, 15, 11, 7, 4, 8];
-    }
-    else if (valor === 'Mensal') {
-      novosLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      novosDados = [30, 45, 25, 10];
-    }
-    else if (valor === 'Semestral1') {
-      novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-      novosDados = [0, 0, 0, 0, 0, 0];
-    }
-    else if (valor === 'Semestral2') {
-      novosLabels = ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [0, 0, 0, 56, 0,];
-    }
-    else if (valor === 'Anual') {
-      novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0,];
-    }
-
-    // Atualiza os dados do gráfico
-    graficoErros.data.labels = novosLabels;
-    graficoErros.data.datasets[0].data = novosDados;
-    graficoErros.update();
-  });
+    });
+  }
 
   function contarErrosPorTipo(dados) {
     const erros = {
@@ -430,13 +389,21 @@ async function geraGrafico() {
             "#6d28d9",
             "#5b21b6"
           ],
-          borderRadius: 8
+          borderRadius: 4
         }]
       },
       options: {
         indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: false }
+        },
+        layout: {
+            padding: {
+                // Remove o padding interno do Chart.js na direita
+                right: 0 
+            }
         },
         scales: {
           x: {

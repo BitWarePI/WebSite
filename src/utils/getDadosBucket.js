@@ -34,7 +34,7 @@ async function getCsvFromEmpresa(idEmpresa) {
     const key = `${idEmpresa}/maquinas/${mac}.csv`;
 
     try {
-      console.log("📄 Lendo arquivo:", key);
+      console.log("Lendo arquivo:", key);
       const dados = await lerCsv(bucket, key);
 
       resultados.push({
@@ -44,7 +44,7 @@ async function getCsvFromEmpresa(idEmpresa) {
       });
 
     } catch (err) {
-      console.log("⚠️ Arquivo não encontrado:", key);
+      console.log("Arquivo não encontrado:", key);
       continue;
     }
   }
