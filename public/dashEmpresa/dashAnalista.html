@@ -100,11 +100,12 @@
           </select>
 
           <div style="display: flex; align-items: center;">
-          <div style="display: flex; width: 250px; height: 38px; background-color: #4c1d95; border-radius: 5px; color: white; align-items: center; justify-content: center; gap: 4px;">
-            <p>Quantidade de máquinas:</p>
-            <p id="qtdMaquinas" style="font-weight: bolder;"></p>
+            <div
+              style="display: flex; width: 250px; height: 38px; background-color: #4c1d95; border-radius: 5px; color: white; align-items: center; justify-content: center; gap: 4px;">
+              <p>Quantidade de máquinas:</p>
+              <p id="qtdMaquinas" style="font-weight: bolder;"></p>
+            </div>
           </div>
-        </div>
 
           <span style="
           position: relative;
@@ -167,10 +168,11 @@
             <select name="" id="alterar_data" style="display: flex; gap: 20px;">
               <option value="1" selected>Últimas 24h</option>
               <option value="2">Semanal</option>
-              <option value="2">Mensal</option>
-              <option value="3">1° Semestre</option>
-              <option value="4">2° Semestre</option>
-              <option value="5">Anual</option>
+              <option value="3">Mensal</option>
+              <option value="4">1° Semestre</option>
+              <option value="5">2° Semestre</option>
+              <option value="6">Anual</option>
+
             </select>
           </div>
         </div>
@@ -220,7 +222,7 @@
                 <p style="font-size: 15px; margin: 0; padding: 0;">Variação do uso</p>
                 <i class="fa-solid fa-wave-square"></i>
               </div>
-              <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
+              <p id="desvio_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
             </div>
             <p style="font-size: 18px; margin: 0; padding: 0;">Desvio padrão estável no período</p>
           </div>
@@ -306,7 +308,7 @@
                 <p style="font-size: 15px; margin: 0; padding: 0;">Variação do uso</p>
                 <i class="fa-solid fa-wave-square"></i>
               </div>
-              <p id="media_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
+              <p id="desvio_cpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
             </div>
             <p style="font-size: 18px; margin: 0; padding: 0;">Desvio padrão estável no período</p>
           </div>
@@ -321,11 +323,11 @@
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; gap: 6px;">
                   <p style="font-size: 20px; margin: 0; padding: 0;">Máximo: </p>
-                  <p id="maximo_gpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">87%</p>
+                  <p id="maximo_cpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">87%</p>
                 </div>
                 <div style="display: flex; gap: 6px;">
                   <p style="font-size: 20px; margin: 0; padding: 0;">Minímo: </p>
-                  <p id="minimo_gpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">07%</p>
+                  <p id="minimo_cpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">07%</p>
                 </div>
               </div>
             </div>
@@ -425,21 +427,30 @@
   const kpiMedianaTempCpu = document.getElementsByClassName('kpi-cpu-temp-mediana')[0];
   const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
   const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
+  
+  const minimoCpu = document.getElementById('minimo_cpu')
+  const maximoCpu = document.getElementById('maximo_cpu')
+  const minimoGpu = document.getElementById('minimo_gpu')
+  const maximoGpu = document.getElementById('maximo_gpu')
+
+  const desvioCpu = document.getElementById('desvio_cpu')
+  const desvioGpu = document.getElementById('desvio_gpu')
 
   const info = document.getElementsByClassName("info");
 
   const alternar = document.getElementById('alternar_hardware');
+  const alternarPeriodo = document.getElementById('alternar_data');
   const divGPU = document.getElementById('div-gpu');
   const divCPU = document.getElementById('div-cpu');
 
   alternar.addEventListener('change', function () {
     const valor = alternar.value;
 
-    if (valor == "1") { 
+    if (valor == "1") {
       // CPU selecionado
       divCPU.style.display = "block";
       divGPU.style.display = "none";
-    } else { 
+    } else {
       // GPU selecionado
       divCPU.style.display = "none";
       divGPU.style.display = "block";
@@ -508,20 +519,6 @@
     const cpuUso = parseFloat(kpiCpuUsoValor.textContent);
     const cpuTemp = parseFloat(kpiCpuTempValor.textContent);
 
-    // if (modo === "2") {
-    //   // personalizado
-    //   kpiusogpu.style.backgroundColor = await definirCorPersonalizada(gpuUso, 'usogpu');
-    //   kpitempgpu.style.backgroundColor = await definirCorPersonalizada(gpuTemp, 'tempgpu');
-    //   kpiusocpu.style.backgroundColor = await definirCorPersonalizada(cpuUso, 'usocpu');
-    //   kpitempcpu.style.backgroundColor = await definirCorPersonalizada(cpuTemp, 'tempcpu');
-    //   document.getElementById("tituloParam").innerHTML = "";
-
-    //   for (let i = 0; i < info.length; i++) {
-    //     info[i].style.display = 'none';
-    //   }
-    //   console.log(info[0])
-    // } else {
-    // padrão
     for (let i = 0; i < info.length; i++) {
       info[i].style.display = 'flex';
     }
@@ -533,32 +530,47 @@
     kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
   }
 
-  // }
+  let hardwareDados = []
 
-  // parametro.addEventListener('change', aplicarCores);
-  // parametro.addEventListener('change', tirarParametrosPadrao())
-
-  // function tirarParametrosPadrao() {
-  //   console.log("PARAMETRO: " + parametro.value)
-  //   console.log("entrou aq")
-  //   if (parametro.value == 2) {
-  //     document.getElementById("tituloParam").innerHTML = "";
-  //   }
-
-  // }
-
-  function graficos(dados) {
-    var valores = {}
-    for (var i = 0; i < dados.length; i++) {
-      const data = valores[dados[i].data]
-      if (data) {
-        data.push(dados[i])
-      } else {
-        valores[dados[i].data] = [dados[i]]
-      }
+  function calcularKpi(){
+    const resultado = {
+      media_cpu_percent: 0,
+      media_cpu_temperature: 0,
+      media_gpu_percent: 0,
+      media_gpu_temperature: 0,
+      mediana_cpu_percent: 0,
+      mediana_cpu_temperature: 0,
+      mediana_gpu_percent: 0,
+      mediana_gpu_temperature: 0,
+    };
+    
+    for(let dado of hardwareDados){
+      resultado.media_cpu_percent += dado.media_cpu_percent;
+      resultado.media_cpu_temperature += dado.media_cpu_temperature;
+      resultado.media_gpu_percent += dado.media_gpu_percent;
+      resultado.media_gpu_temperature += dado.media_gpu_temperature;
     }
 
-    var resultado2 = {}
+    const total = hardwareDados.length;
+    resultado.media_cpu_percent = (resultado.media_cpu_percent / total).toFixed(1);
+    resultado.media_cpu_temperature = (resultado.media_cpu_temperature / total).toFixed(1);
+    resultado.media_gpu_percent = (resultado.media_gpu_percent / total).toFixed(1);
+    resultado.media_gpu_temperature = (resultado.media_gpu_temperature / total).toFixed(1);
+
+    resultado.mediana_cpu_percent = mediana(hardwareDados, 'media_cpu_percent');
+    resultado.mediana_cpu_temperature = mediana(hardwareDados, 'media_cpu_temperature');
+    resultado.mediana_gpu_percent = mediana(hardwareDados, 'media_gpu_percent');
+    resultado.mediana_gpu_temperature = mediana(hardwareDados, 'media_gpu_temperature');
+
+    return resultado
+  }
+
+  async function pegarDados(periodo){
+    const data = await fetch(`/s3/pegarLeiturasFormatadas/${sessionStorage.getItem('idEmpresa')}?periodo=${periodo}`)
+    const dados = await data.json()
+
+    hardwareDados = dados.resultado
+
     grafico1.data.labels = []
     grafico1.data.datasets[0].data = []
     grafico2.data.labels = []
@@ -568,88 +580,69 @@
     grafico4.data.labels = []
     grafico4.data.datasets[0].data = []
 
-    for (const [key, valor] of Object.entries(valores)) {
-      console.log(valor)
-      resultados = valor.reduce((total, atual, index) => {
-        total.gpu_percent += atual.gpu_percent
-        total.cpu_percent += atual.cpu_percent
-        total.gpu_temperature += atual.gpu_temperature
-        total.cpu_temperature += atual.cpu_temperature
-        if (index == valor.length - 1) {
-          total.gpu_percent /= valor.length
-          total.cpu_percent /= valor.length
-          total.gpu_temperature /= valor.length
-          total.cpu_temperature /= valor.length
-        }
-        return total
-      })
+    for(let d of hardwareDados){
+      grafico1.data.datasets[0].data.push(d.media_gpu_percent)
+      grafico1.data.labels.push(d.periodo)
 
-      grafico1.data.datasets[0].data.push(resultados.gpu_percent)
-      grafico1.data.labels.push(key)
+      grafico2.data.datasets[0].data.push(d.media_gpu_temperature)
+      grafico2.data.labels.push(d.periodo)
 
-      grafico2.data.datasets[0].data.push(resultados.gpu_temperature)
-      grafico2.data.labels.push(key)
+      grafico3.data.datasets[0].data.push(d.media_cpu_percent)
+      grafico3.data.labels.push(d.periodo)
 
-      grafico3.data.datasets[0].data.push(resultados.cpu_percent)
-      grafico3.data.labels.push(key)
-
-      grafico4.data.datasets[0].data.push(resultados.cpu_temperature)
-      grafico4.data.labels.push(key)
-
+      grafico4.data.datasets[0].data.push(d.media_cpu_temperature)
+      grafico4.data.labels.push(d.periodo)
     }
+    
     grafico1.update()
     grafico2.update()
     grafico3.update()
     grafico4.update()
+
+    const kpis = calcularKpi()
+    kpiGpuUsoValor.textContent = `${kpis.media_gpu_percent}%`
+    kpiGpuTempValor.textContent = `${kpis.media_gpu_temperature}°C` 
+    kpiCpuUsoValor.textContent = `${kpis.media_cpu_percent}%`
+    kpiCpuTempValor.textContent = `${kpis.media_cpu_temperature}°C`
+
+    kpiMedianaUsoGpu.textContent = `${kpis.mediana_gpu_percent}%`
+    kpiMedianaTempGpu.textContent = `${kpis.mediana_gpu_temperature}°C`
+    kpiMedianaUsoCpu.textContent = `${kpis.mediana_cpu_percent}%`
+    kpiMedianaTempCpu.textContent = `${kpis.mediana_cpu_temperature}°C`
+
+    const picos = {
+      maximo_gpu: Math.max(...hardwareDados.map(d => d.media_gpu_percent)).toFixed(1),
+      minimo_gpu: Math.min(...hardwareDados.map(d => d.media_gpu_percent)).toFixed(1),
+      maximo_cpu: Math.max(...hardwareDados.map(d => d.media_cpu_percent)).toFixed(1),
+      minimo_cpu: Math.min(...hardwareDados.map(d => d.media_cpu_percent)).toFixed(1),
+    }
+
+    maximoCpu.textContent = `${picos.maximo_cpu}%`
+    minimoCpu.textContent = `${picos.minimo_cpu}%`
+    maximoGpu.textContent = `${picos.maximo_gpu}%`
+    minimoGpu.textContent = `${picos.minimo_gpu}%`
+
   }
 
-  // async function aplicarPeriodo() {
-  //   const inicio = inputInicio.value;
-  //   const fim = inputFim.value;
+  async function pegarDesvioPadrao(periodo){
+    const data = await fetch(`/s3/pegarCsvMedias/${sessionStorage.getItem('idEmpresa')}?periodo=${periodo}`)
+    const dados = await data.json()
 
-  //   if (!inicio || !fim) return alert('Selecione as duas datas!');
-  //   if (inicio > fim) return alert('Datas incoerentes!');
+    desvioCpu.textContent = `${dados.cpu.toFixed(2)}%`
+    desvioGpu.textContent = `${dados.gpu.toFixed(2)}%`
+  }
 
-  //   try {
-  //     const response = await fetch(`http://localhost:3333/kpis?inicio=${inicio}&fim=${fim}`);
-  //     if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+  alterar_data.addEventListener('change', (t) => {
+    pegarDados(t.target.value);
+    pegarDesvioPadrao(t.target.value);
+    aplicarCores()
 
-  //     const dados = await response.json();
-  //     if (!Array.isArray(dados) || dados.length === 0) {
-  //       alert('Nenhum dado encontrado para o período selecionado.');
-  //       return;
-  //     }
-
-  //     const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
-  //     const mediaGpuUso = media(dados.map(d => parseFloat(d.gpu_percent))).toFixed(1);
-  //     const mediaGpuTemp = media(dados.map(d => parseFloat(d.gpu_temperature))).toFixed(1);
-  //     const mediaCpuUso = media(dados.map(d => parseFloat(d.cpu_percent))).toFixed(1);
-  //     const mediaCpuTemp = media(dados.map(d => parseFloat(d.cpu_temperature))).toFixed(1);
-
-  //     kpiGpuUsoValor.textContent = `${mediaGpuUso}%`;
-  //     kpiGpuTempValor.textContent = `${mediaGpuTemp}°C`;
-  //     kpiCpuUsoValor.textContent = `${mediaCpuUso}%`;
-  //     kpiCpuTempValor.textContent = `${mediaCpuTemp}°C`;
-
-  //     kpiMedianaTempCpu.textContent = `${mediana(dados, "cpu_temperature")}°C`;
-  //     kpiMedianaTempGpu.textContent = `${mediana(dados, "gpu_temperature")}°C`;
-  //     kpiMedianaUsoCpu.textContent = `${mediana(dados, "cpu_percent")}%`;
-  //     kpiMedianaUsoGpu.textContent = `${mediana(dados, "gpu_percent")}%`;
-
-  //     graficos(dados)
-
-  //     aplicarCores();
-
-  //   } catch (error) {
-  //     console.error("Erro ao buscar dados:", error);
-  //     alert("Ocorreu um erro ao buscar os dados.");
-  //   }
-  // }
-
-  // btnAplicar.addEventListener('click', aplicarPeriodo);
+  });
 
   window.addEventListener('DOMContentLoaded', () => {
     aplicarCores()
     quantidadeMaquinas()
+    pegarDesvioPadrao(alterar_data.value);
+    pegarDados(alterar_data.value)
   });
 </script>
