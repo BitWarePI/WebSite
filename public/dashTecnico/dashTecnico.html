@@ -266,8 +266,10 @@
   function contarErrosPorHorario(dados) {
     const erros = {};
 
+    console.log("DADOS CONTAGM: ", dados);
+    
     dados.forEach(item => {
-      const hora = item.datetime.split(" ")[1].slice(0, 5); // HH:MM
+      const hora = item.datetime.split(" ")[1].slice(0, 5); 
       if (!erros[hora]) erros[hora] = 0;
 
       const cpuTemp = Number(item.cpu_temperature);
@@ -284,15 +286,44 @@
     return erros;
   }
 
+
+  function contarErrosPorDiaEHorario(dados, inicio, fim) {
+  const resultado = {};
+
+  dados.forEach(item => {
+    const [data, horarioCompleto] = item.datetime.split(" ");
+    const horario = horarioCompleto.slice(0, 5);
+
+    if (horario < inicio || horario > fim) return;
+
+    if (!resultado[data]) resultado[data] = {};
+
+    if (!resultado[data][horario]) {
+      resultado[data][horario] = 0;
+    }
+
+    const cpuTemp = Number(item.cpu_temperature);
+    const gpuTemp = Number(item.gpu_temperature);
+    const cpuPercent = Number(item.cpu_percent);
+
+    if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+      resultado[data][horario]++;
+    }
+  });
+
+      console.log("DADOS DIAS E HORARIO" + resultado)
+
+  return resultado;
+}
+
   async function geraGrafico() {
     const dados = await carregarErros();
     console.log("Dados mesclados:", dados);
 
     const errosPorHorario = contarErrosPorHorario(dados);
-
+    contarErrosPorDiaEHorario(dados)
     const labels = Object.keys(errosPorHorario);
     const valores = Object.values(errosPorHorario);
-
     const ctx1 = document.getElementById('grafico1').getContext('2d');
 
     const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
@@ -401,7 +432,6 @@
         },
         layout: {
             padding: {
-                // Remove o padding interno do Chart.js na direita
                 right: 0 
             }
         },
@@ -784,53 +814,53 @@
       });
   }
 
-  function carregarKPIs() {
-    const userCargo = sessionStorage.getItem('FK_CARGO');
-    const idEmpresa = sessionStorage.getItem('idEmpresa');
-    const userId = sessionStorage.getItem('ID_USUARIO');
+  // function carregarKPIs() {
+  //   const userCargo = sessionStorage.getItem('FK_CARGO');
+  //   const idEmpresa = sessionStorage.getItem('idEmpresa');
+  //   const userId = sessionStorage.getItem('ID_USUARIO');
 
-    const kpiPendentes = document.getElementById('kpi_pendentes');
-    const kpiCriticos = document.getElementById('kpi_criticos');
-    const kpiMaquinas = document.getElementById('kpi_maquinas');
+  //   const kpiPendentes = document.getElementById('kpi_pendentes');
+  //   const kpiCriticos = document.getElementById('kpi_criticos');
+  //   const kpiMaquinas = document.getElementById('kpi_maquinas');
 
-    if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
-      console.log("KPIs não encontrados nesta página.");
-      return;
-    }
+  //   if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
+  //     console.log("KPIs não encontrados nesta página.");
+  //     return;
+  //   }
 
-    kpiPendentes.innerText = '...';
-    kpiCriticos.innerText = '...';
-    kpiMaquinas.innerText = '...';
+  //   kpiPendentes.innerText = '...';
+  //   kpiCriticos.innerText = '...';
+  //   kpiMaquinas.innerText = '...';
 
-    let kpiUrl = '';
+  //   let kpiUrl = '';
 
-    if (userCargo == '4') {
-      kpiUrl = `/chamados/kpi/tecnico/${userId}`;
-    }
-    else {
-      kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
-    }
+  //   if (userCargo == '4') {
+  //     kpiUrl = `/chamados/kpi/tecnico/${userId}`;
+  //   }
+  //   else {
+  //     kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
+  //   }
 
-    console.log("Buscando KPIs da URL:", kpiUrl);
+  //   console.log("Buscando KPIs da URL:", kpiUrl);
 
-    fetch(kpiUrl)
-      .then(res => {
-        if (!res.ok) throw new Error('Erro ao buscar KPIs');
-        return res.json();
-      })
-      .then(data => {
-        var kpis = data[0];
-        kpiPendentes.innerText = kpis.pendentes;
-        kpiCriticos.innerText = kpis.criticos;
-        kpiMaquinas.innerText = kpis.maquinasComProblema;
-      })
-      .catch(err => {
-        console.error(err);
-        kpiPendentes.innerText = 'Erro';
-        kpiCriticos.innerText = 'Erro';
-        kpiMaquinas.innerText = 'Erro';
-      });
-  }
+  //   fetch(kpiUrl)
+  //     .then(res => {
+  //       if (!res.ok) throw new Error('Erro ao buscar KPIs');
+  //       return res.json();
+  //     })
+  //     .then(data => {
+  //       var kpis = data[0];
+  //       kpiPendentes.innerText = kpis.pendentes;
+  //       kpiCriticos.innerText = kpis.criticos;
+  //       kpiMaquinas.innerText = kpis.maquinasComProblema;
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //       kpiPendentes.innerText = 'Erro';
+  //       kpiCriticos.innerText = 'Erro';
+  //       kpiMaquinas.innerText = 'Erro';
+  //     });
+  // }
 
   function carregarChamados() {
     const userCargo = sessionStorage.getItem('FK_CARGO');

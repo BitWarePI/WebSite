@@ -19,14 +19,11 @@ async function lerCsv(bucket, key) {
 async function getCsvFromEmpresa(idEmpresa) {
   const bucket = process.env.S3_BUCKET;
 
-  // Buscar MACs no banco
   const macsDb = await maquinaModel.buscarMacsDaEmpresa(idEmpresa);
   if (!macsDb.length) return [];
 
-  // Normalizar MACs
-  const macs = macsDb.map(m =>
-    m.enderecoMac.toLowerCase().replace(/:/g, "-")
-  );
+
+  const macs = macsDb.map(m => m.enderecoMac);
 
   const resultados = [];
 
