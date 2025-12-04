@@ -9,9 +9,8 @@
     --secondary-color: hsl(49, 73%, 50%); 
     --bg-sidebar: #181818; 
     --bg-content: #f4f7fa; /* Fundo claro (da imagem) */
-    --text-sidebar: #f0f0f0; 
     --text-content: #1d1c1c; /* Texto escuro */
-    --active-color: #4c1d95; /* Roxo principal */
+    --active-color: #4c1d95; /* Roxo principal da Analista */
     --card-bg: #ffffff; /* Fundo dos cards (branco) */
     --card-border: #e0e0e0; /* Borda dos cards */
     --text-muted: #555; /* Cor do texto cinza */
@@ -25,9 +24,9 @@
     --bg-inverse-color: #f3f3f3;
     --main-text-color: #f0f0f0;
     --main-text-inverse-color: #1d1c1c;
-    --error-color: #ff3f3f;
-    --sucess-color:rgb(137, 190, 77);
-    --attention-color: rgb(221, 186, 34);
+    --error-color: #ff4b4b; /* Ajustado para a cor de erro padrão da Analista/Geral */
+    --sucess-color: #4caf50; /* Ajustado para o verde de sucesso da Analista/Geral */
+    --attention-color: #e4b131; /* Ajustado para o amarelo de atenção da Analista/Geral */
 }
 
 * {
@@ -44,23 +43,30 @@ body {
     overflow-x: hidden;
 }
 
-/* 2. NAVBAR ANIMADA (A CORRETA DE 90px) */
+/* 2. NAVBAR ANIMADA (UNIFICADA COM A LÓGICA DA ANALISTA) */
 nav {
     height: 100dvh;
-    width: 156px;
+    /* LARGURA INICIAL DA ANALISTA */
+    width: 80px; 
     border-radius: 0;
     padding: 4px 42px;
     position:fixed;
 
+    /* SEUS ESTILOS DE COR/FUNDO (MANTIDOS) */
     background: rgb(36, 35, 35);
-    box-shadow: 0 4px 30px rgba(181, 3, 235, 0.1);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
     border: 1px solid rgba(255, 255, 255, 0.3);
     outline: 1px solid rgba(234, 0, 255, 0.3);
-    transition: .3s;
+    transition: width .3s ease; /* Transição de largura */
     box-sizing: border-box;
     z-index: 100;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    
+    /* Para a estrutura interna */
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column;
 }
 
 nav .main-nav{
@@ -79,13 +85,14 @@ nav .logo img{
 nav .main-nav .logo{
     margin: 0;
     object-fit: cover;
-    width: 42px;
+    width: 42px; /* Largura do logo quando recolhido */
     overflow: hidden;
     transition: .3s;
 }
 
+/* LARGURA EXPANDIDA DA ANALISTA */
 nav:hover {
-    width: 320px;
+    width: 240px;
 }
 
 nav:hover .main-nav .logo{
@@ -97,7 +104,7 @@ nav .links {
     align-items: center;
     flex-direction: column;
     width: 100%;
-    gap: 82px;
+    gap: 8px; /* Ajustado para um espaçamento mais limpo */
     padding: 0;
     list-style: none;
     box-sizing: border-box;
@@ -113,7 +120,7 @@ nav .links li {
 }
 
 nav .links li:has(.link.ativo) {
-    background-color: var(--active-color); 
+    background-color: var(--active-color); /* Roxo da Analista */
 }
 
 nav .links li .link.ativo{
@@ -122,37 +129,40 @@ nav .links li .link.ativo{
 
 nav .links .link {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* Alinha o texto do link à esquerda */
     align-items: center;
     width: 100%;
-    padding-left: 42px;
+    padding: 10px 42px; /* Ajustado para ter padding na esquerda */
     box-sizing: border-box;
     position: relative;
     transition: .3s;
+    text-decoration: none;
+    color: #ffffff;
 }
 
 nav .links .link .icon {
     font-size: 1.15em; 
     position: absolute;
     left: 8px;
-    background-color: var(--bg-color);
+    background-color: transparent; 
     padding: 4px;
     border-radius: 6px;
 }
 
+/* Título escondido quando NAV está recolhida */
 nav .links .link .titulo {
     width: 0px;
-    display: flex; 
+    margin-left: 20px; /* Afasta do ícone */
     white-space: nowrap;
     transition: .3s;
     overflow: hidden;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    font-size: 1.25em; 
 }
 
+/* Título visível quando NAV está expandida */
 nav:hover .links .link .titulo {
     width: fit-content;
+    display: block;
 }
 
 nav .btn-sair {
@@ -164,33 +174,12 @@ nav .btn-sair {
     padding: 10px;
     border-radius: 8px;
     transition: .3s;
+    text-decoration: none;
+    margin-bottom: 20px;
 }
 
 nav:hover .btn-sair {
    background: #eb2e2e;
-}
-
-nav .nav-links-cell{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 0px;
-    overflow: hidden;
-    transition: 0.3s ease;
-    margin: 0;
-}
-@media screen and (max-width: 768px) {
-    nav .nav-links-pc{
-        display: none;
-    }
-    nav #nav-menu-icon{
-        display: block;
-    }
-    .footer{
-        flex-direction: column-reverse;
-        align-items: center;
-    }
 }
 
 nav a{
@@ -207,94 +196,31 @@ nav .links li a{
 nav .links li a:hover{
     color: var(--secondary-color);
 }
+/* Fim da seção NAV */
 
 
-
-
-#nav-menu-icon {
-    display: none;
-    width: 30px;
-    height: 20px;
-    position: relative;
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-    -webkit-transition: .5s ease-in-out;
-    -moz-transition: .5s ease-in-out;
-    -o-transition: .5s ease-in-out;
-    transition: .5s ease-in-out;
-    cursor: pointer;
-}
-#nav-menu-icon span{
-    display: block;
-    position: absolute;
-    height: 3px;
-    width: 100%;
-    background: var(--main-text-color);
-    border-radius: 12px;
-    opacity: 1;
-    left: 0;
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-    -webkit-transition: .25s ease-in-out;
-    -moz-transition: .25s ease-in-out;
-    -o-transition: .25s ease-in-out;
-    transition: .25s ease-in-out;
-}
-nav #nav-menu-icon span:nth-child(1) {
-    top: 0px;
-}
-nav #nav-menu-icon span:nth-child(2),nav #nav-menu-icon span:nth-child(3) {
-    top: 8px;
-}
-nav #nav-menu-icon span:nth-child(4) {
-    top: 16px;
-}
-nav #nav-menu-icon.open span:nth-child(1) {
-    top: 8px;
-    width: 0%;
-    left: 50%;
-}
-nav #nav-menu-icon.open span:nth-child(2) {
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-nav #nav-menu-icon.open span:nth-child(3) {
-    -webkit-transform: rotate(-45deg);
-    -moz-transform: rotate(-45deg);
-    -o-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-}
-nav #nav-menu-icon.open span:nth-child(4) {
-    top: 8px;
-    width: 0%;
-    left: 50%;
-}
-
-
-/* 3. CONTAINER PRINCIPAL DO CONTEÚDO */
-.container {
+/* 3. CONTAINER PRINCIPAL DO CONTEÚDO (#tudo) */
+.container, #tudo {
+    /* O container original era .container, o novo é #tudo. Aplicamos a ambos. */
     width: 100%;
     padding: 40px 40px;
-    padding-left: 100px;
     overflow-y: auto;
     height: 100vh;
     
-    /* Pula a navbar fechada */
-    margin-left: 90px; 
-    width: calc(100% - 90px);
-    transition: margin-left .3s, width .3s;
+    /* LÓGICA DA DASH ANALISTA */
+    margin-left: 80px; /* Baseado na NAV fechada de 80px */
+    width: calc(100% - 80px);
+    transition: all 0.3s ease;
+    flex-grow: 1;
 }
 
-/* Ajusta o container quando a nav expande */
-nav:hover ~ .container {
-    margin-left: 250px;
-    width: calc(100% - 250px);
+/* LÓGICA DA DASH ANALISTA (NAV EXPANDIDA) */
+nav:hover ~ #tudo {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    transform: scale(0.92); 
+    transform-origin: center;
+    filter: brightness(0.95);
 }
 
 /* 4. HEADER (TÍTULO E FILTROS DE DATA) */
@@ -302,13 +228,13 @@ nav:hover ~ .container {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Alinha o título à esquerda como na Analista */
     margin-bottom: 30px;
 }
 
 .main-header h1 {
     font-size: 36px;
-    color: var(--text-content); /* Texto escuro */
+    color: var(--active-color); /* Título na cor roxa da Analista */
 }
 
 .main-header p {
@@ -317,56 +243,22 @@ nav:hover ~ .container {
     margin-bottom: 20px;
 }
 
-.main-header .date-filter {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.main-header .date-filter input[type="date"] {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    color: var(--text-content);
-    padding: 10px;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: none; /* Inverte o ícone de calendário */
-}
-
-.main-header .date-filter button {
-    background-color: var(--active-color); /* Cor roxa */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.main-header .date-filter button:hover {
-    background-color: #5f25b3;
-}
-
-/* 5. LINHA DE KPIs E GAUGES */
+/* 5. LINHA DE KPIs E GAUGES (ESTILO ANALISTA) */
 .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
     gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
     margin-bottom: 40px;
 }
 
 /* Card de KPI Simples (Máquinas Ativas) */
 .kpi-card {
-    background-color: var(--card-bg); /* Fundo branco */
-    border: 1px solid var(--card-border);
+    background-color: var(--active-color); /* Roxo principal */
+    border: none;
     border-radius: 10px;
     padding: 20px;
-    height: 160px;
+    height: 220px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -374,32 +266,52 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
     gap: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    flex: 1;
+    min-width: 200px;
+    transition: all 0.3s ease;
+    color: white; 
 }
 
-.kpi-card .material-symbols-outlined {
-    font-size: 3.5rem;
-    color: #4caf50; /* Verde */
+/* Efeito de Hover da Analista */
+.kpi-card:hover, .kpi-card-gauge:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
+.kpi-card .material-symbols-outlined, .kpi-card .kpi-value {
+    color: white;
+    font-size: 1.5rem;
+
+}
 .kpi-card .kpi-title {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    color: #f0f0f0;
+    font-size: 1.5rem;
 }
 
-.kpi-card .kpi-value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-content);
+.kpi-card .kpi-total-machines {
+    color: #f0f0f0;
+    font-size: 1.5rem;
 }
 
-/* Card de KPI com Gauge */
+.kpi-card.alerta, .kpi-card-gauge.alerta {
+    background-color: var(--attention-color) !important; /* Amarelo */
+}
+
+.kpi-card.critico, .kpi-card-gauge.critico {
+    background-color: var(--error-color) !important; /* Vermelho */
+}
+
+.kpi-card.ideal, .kpi-card-gauge.ideal {
+    background-color: var(--sucess-color) !important; /* Verde */
+}
+
+/* Card de KPI com Gauge (BASE STYLE) */
 .kpi-card-gauge {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
+    background-color: var(--card-bg); /* Será sobrescrito abaixo */
+    border: none;
     border-radius: 10px;
     padding: 20px;
-    height: 160px;
+    height: 220px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -407,18 +319,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
     gap: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    flex: 1;
+    min-width: 200px;
+    transition: all 0.3s ease;
+}
+
+/* Cores específicas dos cards Gauge (Visual Analista) */
+/* Uso Médio de CPU (Amarelo) */
+#kpiusocpu { 
+    color: white; 
+}
+/* Uso Médio de GPU (Roxo) */
+#kpiusogpu { 
+    color: white; 
+}
+/* Temperatura Média CPU (Verde) */
+#kpitempcpu { 
+    color: white; 
 }
 
 .kpi-card-gauge .gauge-wrapper {
-    width: 100px;
-    height: 70px;
+    width: 250px;
+    height: 150px;
     position: relative;
     margin-bottom: 5px;
 }
 
 .kpi-card-gauge .gauge-text {
     position: absolute;
-    bottom: 0px;
+    bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -427,30 +356,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .kpi-card-gauge .kpi-value-text {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     font-weight: 700;
     line-height: 1.2;
-    color: var(--text-content);
+    /* Força a cor branca para os gauges coloridos */
+    color: white !important; 
 }
 
 .kpi-card-gauge .kpi-machine-count {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     font-weight: 400;
-    color: var(--text-muted);
+    /* Força a cor branca para os gauges coloridos */
+    color: white !important;
     opacity: 0.7;
 }
 
 .kpi-card-gauge .gauge-label {
     font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    font-weight: 700;
+    /* Força a cor branca para os gauges coloridos */
+    color: white !important;
 }
 
 /* 6. HEADER DE CHAMADOS */
 .chamados-header {
     display: flex;
-    justify-content: left;
-    align-items: end;
+    justify-content: space-between; 
+    align-items: center;
     margin-bottom: 30px;
     position: relative;
     width: 100%;
@@ -476,115 +408,210 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-family: 'Inter', sans-serif;
 }
 
-/* Card "Chamados Ativos" */
+/* Card "Chamados Ativos" (Fundo Roxo) */
 .chamados-header .kpi-card-small {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
+    background-color: var(--active-color);
+    border: none;
     border-radius: 10px;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     gap: 15px;
-    position: absolute;
-    right: 0;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
-.chamados-header .kpi-card-small .material-symbols-outlined {
-    font-size: 2.5rem;
-    color: var(--text-muted);
-}
-
+.chamados-header .kpi-card-small .material-symbols-outlined,
+.chamados-header .kpi-card-small .kpi-value,
 .chamados-header .kpi-card-small .kpi-title {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-.chamados-header .kpi-card-small .kpi-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-content);
+    color: white !important;
 }
 
 /* 7. TABELA DE CHAMADOS (TEMA CLARO) */
 .chamado {
     width: 100%;
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    overflow: hidden; 
+    /* Removendo overflow: hidden aqui para que o tbody possa ter overflow */
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    background-color: var(--card-bg); /* Fundo claro da tabela */
+    border: 1px solid var(--card-border);
+    overflow: hidden; /* Mantém o border-radius no container */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    height: fit-content;
+    max-height: 600px;
+    display: flex; /* Habilita layout flexível */
+    flex-direction: column;
+    color: var(--bg-content) !important;
 }
 
-thead {
-    background-color: #f1f5f9; /* Header da tabela (cinza claro) */
+/* Cabeçalho Fixo da Tabela */
+table thead {
+    position: sticky;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    min-width: fit-content;
+    width: 100%;
+    background-color: rgb(36, 35, 35); 
+    color: white; /* Texto do Cabeçalho */
+    z-index: 1;
 }
 
-th {
-    padding: 15px;
-    text-align: left;
-    color: var(--text-muted);
-    font-weight: 500;
-    font-size: 14px;
+/* Garante que o texto do cabeçalho seja branco */
+table thead tr th {
+    color: white; 
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
-tbody tr {
-    border-bottom: 1px solid var(--card-border);
+/* Corpo Scrollável da Tabela */
+table tbody {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    scrollbar-color: var(--text-muted) var(--bg-content);
 }
 
-tbody tr:last-child {
-    border-bottom: none;
+/* Cor do texto do Corpo da Tabela (Deve ser escuro para o fundo claro) */
+table tbody tr td {
+    color: var(--text-content); 
 }
 
-td {
-    padding: 15px;
-    color: var(--text-content);
+table tr {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    transition: .2s;
+    align-items: center;
+}
+
+table tr th,
+table tr td {
+    text-align: start;
+    padding: 15px; /* Mantendo o padding original da dashGeral */
+    flex: 1;
+    max-height: 56px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
     font-size: 14px;
 }
 
+/* Cores das linhas (Zebrado e Hover) */
+tbody tr:nth-child(odd) {
+    background-color: var(--card-bg); /* Fundo do Card (branco) */
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--bg-content); /* Fundo do Conteúdo (cinza claro/off-white) */
+}
+
+tbody tr:hover {
+    background-color: #dbacf7; /* Cor roxa clara de hover do Técnico */
+}
+
+/* ==========================
+   LARGURA DAS COLUNAS (FLEX)
+   ========================== */
+/* Usando as proporções de largura do Técnico */
+table tr .id { flex: 0.25; }
+table tr .maquina { flex: 0.50; }
+table tr .problema { flex: 0.50; }
+table tr .prioridade { flex: 0.25; }
+table tr .tecnico { flex: 0.8; min-width: 150px; }
+
+/* Coluna Status Fixa */
+table tr .status,
+table tr th.status {
+    flex: 0 0 160px; /* Largura fixa do Técnico */
+    box-sizing: border-box;
+}
+
+/* Coluna Ação Fixa */
+table tr .acao {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex: 0 0 100px; /* Largura ajustada para caber os botões */
+    justify-content: center;
+}
+
+/* Ajuste de Texto (Truncate) */
 td .truncate-text {
-    max-width: 150px;
+    max-width: 100%; /* Ajuste a largura dentro do container flex */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.chamado td.maquina .truncate-text { max-width: 130px; }
+.chamado td.problema .truncate-text { max-width: 200px; }
+.chamado td.tecnico .truncate-text { max-width: 140px; }
 
-/* Badges de Prioridade (da imagem) */
+/* ==========================
+   BADGES & DETALHES VISUAIS
+   ========================== */
+
+/* Badges de Status - Fundo com cores de status do Técnico */
+table tr td.status span {
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.nIniciado { background-color: var(--error-color); color: var(--main-text-color); }
+.andamento { background-color: var(--attention-color); color: var(--main-text-color); }
+.concluidos, .resolvido { background-color: var(--sucess-color); color: var(--main-text-color); }
+
+/* Badges de Prioridade - Cores do Técnico */
 .priority-badge {
     padding: 4px 10px;
     border-radius: 15px;
     font-weight: 700;
     font-size: 12px;
+    color: white;
 }
-.prioridade-crítica { background-color: #8c1a1a; color: white; } 
-.prioridade-alta { background-color: #b93b3b; color: white; }
-.prioridade-media { background-color: #b9813b; color: white; }
-.prioridade-baixa { background-color: #3b8b3b; color: white; }
+.prioridade-alta { background-color: #E53935; }
+.prioridade-media { background-color: #FDD835; color: #333; }
+.prioridade-baixa { background-color: #4CAF50; }
+.prioridade-crítica { background-color: #4A148C; }
 
-/* Ações da Tabela */
-td.acao .material-symbols-outlined {
+
+/* Borda lateral por status (Estética do Técnico) */
+.chamado table td.id {
+    padding-left: 10px;
+    border-left-width: 5px;
+    border-left-style: solid;
+}
+.chamado table tr.row-status-nao-iniciado td.id { border-left-color: #E53935; } /* Vermelho */
+.chamado table tr.row-status-em-andamento td.id { border-left-color: #FDD835; } /* Amarelo */
+.chamado table tr.row-status-resolvido td.id { border-left-color: #4CAF50; } /* Verde */
+
+/* Botões de Ação (Estética do Técnico, se o HTML tiver os buttons) */
+td.acao button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
     cursor: pointer;
-    margin-right: 8px;
-    font-size: 20px;
-    vertical-align: middle;
-    transition: color 0.3s ease;
+    color: var(--main-text-color);
 }
-td.acao .iniciar { color: #4caf50; }
-td.acao .iniciar:hover { color: #6ee072; }
-td.acao .finalizar { color: #4b89da; }
-td.acao .finalizar:hover { color: #6ea7f2; }
-td.acao .remover-tecnico { color: #b93b3b; }
-td.acao .remover-tecnico:hover { color: #d45656; }
+td.acao button.iniciar { background-color: var(--secondary-color); }
+td.acao button.finalizar { background-color: var(--sucess-color); }
+td.acao button.ver-mais { background-color: #636363; }
 
-
-/* 8. MODAL (TEMA CLARO) */
+/* 8. MODAL (TEMA CLARO) - MANTIDO INTACTO */
 .modal {
     display: none; /* Escondido por padrão */
     position: fixed; /* Cobre a tela inteira */

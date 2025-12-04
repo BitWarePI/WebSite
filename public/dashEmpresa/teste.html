@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/icon/favicon2.png">
+    <link rel="stylesheet" href="../css/dashboard/dashEmpresa/dashGeral.css"> 
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <title>Dashboard | Admin | BitWare</title>
+</head>
+
+<body>
+    
+    <nav>
+        <div class="main-nav">
+            <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt="Bitware Logo"></h1>
+            
+            <ul class="links nav-links-pc">
+                <li><a class="link" href="dashHome.html">
+                        <span class="material-symbols-outlined icon">home</span>
+                        <span class="titulo">Início</span>
+                    </a>
+                </li>
+                <li class="active-link"><a class="link ativo" href="dashAdmin.html">
+                        <span class="material-symbols-outlined icon">verified_user</span>
+                        <span class="titulo">Dash Admin</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="link" href="dashFuncionario.html">
+                        <span class="material-symbols-outlined icon">group</span>
+                        <span class="titulo">Funcionários</span>
+                    </a>
+                </li>
+                 <li>
+                    <a class="link" href="dashInfoMaquinas.html">
+                        <span class="material-symbols-outlined icon">computer</span>
+                        <span class="titulo">Informações máquinas</span>
+                    </a>
+                </li>
+                </ul>
+        </div>
+        
+        <a href="../index.html" class="btn btn-sair">
+            Sair
+        </a>
+    </nav>
+    
+    <div id="tudo">
+        
+        <div class="main-header">
+            <h1>Dashboard - Administração</h1>
+            <p>Visão Estratégica e Gerencial da Operação</p>
+        </div>
+
+        <div class="kpi-row">
+            
+            <div class="kpi-card ideal">
+                <span class="material-symbols-outlined">dns</span>
+                <p class="kpi-title">Ativos Monitorados</p>
+                <p class="kpi-value" id="kpi_ativos_monitorados_valor">0</p>
+                <span class="kpi-total-machines" id="kpi_ativos_monitorados_total">0/0</span>
+            </div>
+
+            <div id="kpi_saude_frota" class="kpi-card-gauge">
+                <div class="gauge-wrapper">
+                    <canvas id="gaugeSaudeFrota"></canvas>
+                    <div class="gauge-text">
+                        <span class="kpi-value-text" id="saude_frota_percent">0%</span>
+                        <span class="kpi-machine-count" id="saude_frota_abs">0 Maq</span>
+                    </div>
+                </div>
+                <p class="gauge-label">Máquinas em Status Crítico</p>
+            </div>
+
+            <div id="kpi_idade_media" class="kpi-card-gauge">
+                <span class="material-symbols-outlined">schedule</span>
+                <p class="kpi-value" id="idade_media_valor">0</p>
+                <p class="kpi-label">Idade Média da Frota (Anos)</p>
+            </div>
+
+            <div id="kpi_ociosidade" class="kpi-card-gauge">
+                <span class="material-symbols-outlined">trending_down</span>
+                <p class="kpi-value" id="ociosidade_valor">0%</p>
+                <p class="kpi-label">Uso Médio Geral</p>
+            </div>
+        </div>
+        
+        <div class="main-header">
+             <h2>Performance da Equipe</h2>
+        </div>
+        <div class="kpi-row">
+            
+            <div class="kpi-card alerta">
+                <span class="material-symbols-outlined">timer</span>
+                <p class="kpi-title">Tempo Médio de Resolução (TMR)</p>
+                <p class="kpi-value" id="kpi_tmr_valor">0h 00m</p>
+                <span class="kpi-total-machines">Meta: 2h</span>
+            </div>
+
+            <div class="kpi-card ideal">
+                <span class="material-symbols-outlined">assignment_ind</span>
+                <p class="kpi-title">Média de Chamados por Técnico</p>
+                <p class="kpi-value" id="kpi_carga_tecnico">0.0</p>
+                <span class="kpi-total-machines">Total: 0 Técnicos</span>
+            </div>
+
+            <div class="kpi-card critico">
+                <span class="material-symbols-outlined">restart_alt</span>
+                <p class="kpi-title">% Reabertura de Chamados</p>
+                <p class="kpi-value" id="kpi_reabertura_valor">0%</p>
+                <span class="kpi-total-machines">Meta: 5%</span>
+            </div>
+        </div>
+        
+        <div class="main-header" style="margin-top: 40px;">
+             <h2>Distribuição e Backlog</h2>
+        </div>
+        
+        <div class="kpi-row" style="display: flex; gap: 20px;">
+            <div class="chamado" style="flex: 1 1 50%; min-height: 400px;">
+                <canvas id="grafico_backlog_prioridade"></canvas>
+            </div>
+            
+             <div class="chamado" style="flex: 1 1 50%; min-height: 400px;">
+                <canvas id="grafico_desempenho_tecnico"></canvas>
+            </div>
+        </div>
+        
+        <div class="chamados-header" style="margin-top: 40px;">
+            <h2>Chamados (Auditoria)</h2>
+            </div>
+        </div> 
+    
+    </body>
+</html>

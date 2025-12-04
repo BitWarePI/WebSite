@@ -29,6 +29,7 @@ var maquinaRouter = require("./src/routes/maquina")
 //var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
+var custeAws = require("./src/routes/aws");
 
 // Middlewares
 app.use(express.json());
@@ -46,6 +47,7 @@ app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
+app.use("/aws", custeAws);
 //app.use("/emails", emailRouter);
 
 // Inicia o servidor
