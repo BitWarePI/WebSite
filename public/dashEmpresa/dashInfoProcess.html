@@ -19,7 +19,14 @@
   <title>Dashboard | BitWare</title>
 </head>
 
-<body onload="insertInfoKpi(), listendInfoMachine(), listendSnippts()">
+<body onload="mostrarCarregando(), insertInfoKpi(), listendInfoMachine(), listendSnippts(), setTimeout(esconderCarregando, 2000)">
+  <div id="tela-carregando2">
+    <div class="caixa-carregando2">
+      <div class="animacao-roda2"></div>
+      <p id="textoCarregamento">Carregando dados...</p>
+    </div>
+  </div>
+
   <section>
     <nav class="slide-in-left">
       <div class="main-nav">
@@ -91,12 +98,13 @@
       </ul>
     </nav>
 
+    
+
     <div>
 
       <div>
         <div class="inicio">
           <h1>Painel de Monitoramento de Processos</h1>
-          <!-- <p class="dateTime id=" dateTime>15/05/25 15:24:02</p> -->
         </div>
 
         <div class="process-container">
@@ -111,7 +119,7 @@
           </div>
 
           <div class="card-metrica">
-            <h3>Scripts executados hoje</h3>
+            <h3>Scripts executados</h3>
             <p class="metrica-qtdMaquinas" id="scriptExec">85</p>
           </div>
         </div>
@@ -421,4 +429,12 @@
   openBtn.addEventListener("click", abrirFiltro);
   closeBtn.addEventListener("click", fecharFiltro);
   backdrop.addEventListener("click", fecharFiltro);
+
+  function mostrarCarregando() {
+    document.getElementById("tela-carregando2").style.display = "flex";
+  }
+
+  function esconderCarregando() {
+    document.getElementById("tela-carregando2").style.display = "none";
+  }
 </script>
