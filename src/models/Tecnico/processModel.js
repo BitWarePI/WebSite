@@ -97,6 +97,18 @@ function listendModelMachine(fkEmpresa, macAddress) {
 
 }
 
+function getListCommandSnippt(fkEmpresa) {
+  var instrucaoSql = `select
+                      id,
+                      cp.nome as nameCommand,
+                      cp.comando as commandSnippt
+                      from comando_personalizado cp
+                      where fk_empresa = ${fkEmpresa};`;
+  console.log("Executando a instrução SQL: \n", instrucaoSql);
+  return db.executar(instrucaoSql);
+}
+
+
 module.exports = {
   getMachineUse,
   getAlertMachineUse,
@@ -106,5 +118,6 @@ module.exports = {
   createCommandSnippt,
   updateCommandSnippt,
   deleteCommandSnippt,
-  listendModelMachine
+  listendModelMachine,
+  getListCommandSnippt
 }

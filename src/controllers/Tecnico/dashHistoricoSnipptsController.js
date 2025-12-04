@@ -1,5 +1,4 @@
 const model = require('../../models/Tecnico/processModel');
-const { get } = require('../../routes/Tecnico/dashProcess');
 const { getS3FileContent } = require('../../utils/getDadosBucket');
 
 async function listendModelMachine(req, res) {
@@ -30,8 +29,8 @@ async function listendModelMachine(req, res) {
 
       for (let i = 0; i < 7; i++) {
          const tentativa = new Date(ano, mes - 1, diaHoje - i);
-         const diaT = tentativa.getDate();
-         const mesT = tentativa.getMonth() + 1;
+         const diaT = String(tentativa.getDate()).padStart(2, "0");
+         const mesT = String(tentativa.getMonth() + 1).padStart(2, "0");
          const anoT = tentativa.getFullYear();
          const pathFileKeyHorario = `${fkEmpresa}/${diaT}-${mesT}-${anoT}/processos.csv`;
 
@@ -94,6 +93,135 @@ async function listendModelMachine(req, res) {
    }
 }
 
+async function listendSnippts(req, res) {
+   const { fkEmpresa } = req.params;
+
+   console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+   if (fkEmpresa === undefined || isNaN(fkEmpresa)) {
+      return res.status(400).send("Valor inválido de fkEmpresa!");
+   }
+
+   try {
+      const listCommand = await model.getListCommandSnippt(fkEmpresa);
+      console.log("listCommand ", listCommand);
+      return res.json(listCommand);
+
+   } catch (error) {
+      console.log("Houve um erro na captura dos dados!", error.sqlMessage || error);
+      return res.status(500).json({
+         erro: error.sqlMessage || "Erro interno"
+      });
+   }
+
+}
+
+async function listendProcessMachine(req, res) {
+   const { fkEmpresa } = req.params;
+   const macAddress = req.query.mac;
+
+   if (!fkEmpresa || isNaN(fkEmpresa)) {
+      return res.status(400).send("Valor inválido de fkEmpresa!");
+   }
+
+   if (!macAddress) {
+      return res.status(400).send("MacAddress não informado!");
+   }
+
+   console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+   const dataTimeNow = new Date();
+   const ano = dataTimeNow.getFullYear();
+   const mes = dataTimeNow.getMonth() + 1;
+   const diaHoje = dataTimeNow.getDate();
+
+   let listaProcessosFinal = [];
+
+   for (let i = 0; i < 7; i++) {
+      const dataTentativa = new Date(ano, mes - 1, diaHoje - i);
+
+      const diaT = String(dataTentativa.getDate()).padStart(2, "0");
+      const mesT = String((dataTentativa.getMonth() + 1)).padStart(2, "0");
+      const anoT = dataTentativa.getFullYear();
+
+      const pathFileKeyProcessos = `${fkEmpresa}/${diaT}-${mesT}-${anoT}/processos.csv`;
+      console.log(`✝️✝️✝️✝️ Tentando acessar arquivo: ${pathFileKeyProcessos}`);
+
+      try {
+         const tentativaConteudo = await getS3FileContent(pathFileKeyProcessos);
+
+         if (Array.isArray(tentativaConteudo) && tentativaConteudo.length > 0) {
+            console.log(`Arquivo encontrado com ${tentativaConteudo.length} linhas`);
+
+            const processosDaMaquina = tentativaConteudo.filter(proc =>
+               proc.mac_address === macAddress && proc.pid > 1
+            );
+
+            const processosUnicosMap = new Map();
+
+            processosDaMaquina.forEach(proc => {
+               const dataProcessoAtual = new Date(proc.datetime);
+
+               if (processosUnicosMap.has(proc.pid)) {
+                  const procSalvo = processosUnicosMap.get(proc.pid);
+                  const dataProcessoSalvo = new Date(procSalvo.datetime);
+
+                  if (dataProcessoAtual > dataProcessoSalvo) {
+                     processosUnicosMap.set(proc.pid, proc);
+                  }
+               } else {
+                  processosUnicosMap.set(proc.pid, proc);
+               }
+            });
+
+            listaProcessosFinal = Array.from(processosUnicosMap.values());
+
+            console.log(`Processos filtrados e únicos: ${listaProcessosFinal.length}`);
+
+            break;
+         }
+
+      } catch (error) {
+         const erroMsg = error.sqlMessage || error.message || error;
+         console.log(`Arquivo não encontrado ou erro na data ${diaT}/${mesT}:`, erroMsg);
+      }
+   }
+
+   return res.status(200).json(listaProcessosFinal);
+}
+
+async function getUrlMachine(req, res) {
+   const { fkEmpresa } = req.params;
+   const macAddress = req.query.mac;
+
+   if (!fkEmpresa || isNaN(fkEmpresa)) {
+      return res.status(400).send("Valor inválido de fkEmpresa!");
+   }
+
+   console.log(`Rota acessada: ${req.method} | ${req.path}`);
+
+   try {
+      const pathFileKey = `${fkEmpresa}/hardware.csv`;
+      const data = await getS3FileContent(pathFileKey);
+      
+      data = data.filter(item => item.ipPublico == macAddress);
+      console.log("data url machine ", data || 'Nenhum dado encontrado');
+      
+      return res.status(200).json({ ipPublico: data[0]?.ipPublico || null });
+
+   } catch (error) {
+      console.log("Houve um erro na captura dos dados!", error.sqlMessage || error);
+      return res.status(500).json({
+         erro: error.sqlMessage || "Erro interno"
+      });
+   }
+
+}
+
+
 module.exports = {
    listendModelMachine,
+   listendSnippts,
+   listendProcessMachine,
+   getUrlMachine
 };
