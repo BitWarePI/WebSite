@@ -267,9 +267,9 @@
     const erros = {};
 
     console.log("DADOS CONTAGM: ", dados);
-    
+
     dados.forEach(item => {
-      const hora = item.datetime.split(" ")[1].slice(0, 5); 
+      const hora = item.datetime.split(" ")[1].slice(0, 5);
       if (!erros[hora]) erros[hora] = 0;
 
       const cpuTemp = Number(item.cpu_temperature);
@@ -286,42 +286,45 @@
     return erros;
   }
 
+  function contarErrosDashboard(dados, dtInicio, dtFim) {
+    const resultado = {};
+    const erros = [];
 
-  function contarErrosPorDiaEHorario(dados, inicio, fim) {
-  const resultado = {};
+    dados.forEach(item => {
+      const dataTeste = item.datetime.split(" ")[0]
 
-  dados.forEach(item => {
-    const [data, horarioCompleto] = item.datetime.split(" ");
-    const horario = horarioCompleto.slice(0, 5);
+      if (!resultado[dataTeste]) resultado[dataTeste] = 0;
+      if (dtFim < dataTeste || dtInicio > dataTeste) { return }
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
 
-    if (horario < inicio || horario > fim) return;
+      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+        resultado[dataTeste]++;
+      }
+    });
+    Object.keys(resultado).forEach(data => {
+      if (resultado[data] > 0) {
+        erros.push({
+          data,
+          erros: resultado[data]
+        });
+      }
+    });
+    return erros;
+  }
 
-    if (!resultado[data]) resultado[data] = {};
-
-    if (!resultado[data][horario]) {
-      resultado[data][horario] = 0;
-    }
-
-    const cpuTemp = Number(item.cpu_temperature);
-    const gpuTemp = Number(item.gpu_temperature);
-    const cpuPercent = Number(item.cpu_percent);
-
-    if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-      resultado[data][horario]++;
-    }
-  });
-
-      console.log("DADOS DIAS E HORARIO" + resultado)
-
-  return resultado;
-}
 
   async function geraGrafico() {
     const dados = await carregarErros();
     console.log("Dados mesclados:", dados);
 
+    const teste = contarErrosDashboard(dados, "2025-12-29", "2025-12-31")
+    console.log("TESTE =", teste);
+
+
     const errosPorHorario = contarErrosPorHorario(dados);
-    contarErrosPorDiaEHorario(dados)
     const labels = Object.keys(errosPorHorario);
     const valores = Object.values(errosPorHorario);
     const ctx1 = document.getElementById('grafico1').getContext('2d');
@@ -431,9 +434,9 @@
           legend: { display: false }
         },
         layout: {
-            padding: {
-                right: 0 
-            }
+          padding: {
+            right: 0
+          }
         },
         scales: {
           x: {
