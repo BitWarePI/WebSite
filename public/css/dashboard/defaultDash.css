@@ -676,7 +676,6 @@ option:focus {
 
 option .icon {
   font-size: 1.6rem;
-  text-box: trim-both cap alphabetic;
 }
 
 option:checked {
