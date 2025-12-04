@@ -13,13 +13,12 @@
   <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <script src="../js/TecnicoProcess/dashProcess.js"></script>
 
   <link rel="icon" href="../assets/icon/favicon2.png">
   <title>Dashboard | BitWare</title>
 </head>
 
-<body onload="mostrarCarregando(), insertInfoKpi(), listendInfoMachine(), listendSnippts(), setTimeout(esconderCarregando, 2000)">
+<body>
   <div id="tela-carregando2">
     <div class="caixa-carregando2">
       <div class="animacao-roda2"></div>
@@ -98,7 +97,7 @@
       </ul>
     </nav>
 
-    
+
 
     <div>
 
@@ -161,6 +160,30 @@
               <button class="filtro-aplicar" onclick="aplicarFiltros()">Aplicar Filtros</button>
               <button class="filtro-limpar" onclick="listendInfoMachine()">Limpar</button>
             </div>
+
+            <!-- Modal esquerdo para adicionar/editar comando -->
+            <div id="modal-comando" class="comando-slide" aria-hidden="true">
+              <div class="comando-header">
+                <h2 id="comando-titulo">Novo Comando</h2>
+                <button id="comando-close" class="comando-close" aria-label="Fechar">×</button>
+              </div>
+
+              <label>Nome/Descrição:</label>
+              <input type="text" id="comando-input-name" class="comando-input" placeholder="Ex: Matar processo pelo PID">
+
+              <label style="margin-top:8px;">Script/Comando:</label>
+              <textarea id="comando-input-script" class="comando-input" rows="4"
+                placeholder="Ex: kill -9 {pid}"></textarea>
+
+              <small style="color:#666">Use <code>{pid}</code> ou <code>{nome_processo}</code> no script quando necessário usalos em algum comando.</small>
+
+              <button class="comando-salvar" id="btnSalvarComando">Salvar</button>
+            </div>
+
+            <!-- BACKDROP REUTILIZADO -->
+            <div id="comando-backdrop" class="backdrop hidden"></div>
+
+
           </div>
 
           <table>
@@ -333,7 +356,7 @@
         <div class="command-container">
           <div class="command-header">
             <h3>Comandos Utilitários</h3>
-            <button class="cmd-add-btn">+ Adicionar Novo Comando</button>
+            <button class="cmd-add-btn" onclick="adicionarComando()">+ Adicionar Novo Comando</button>
           </div>
 
           <div class="command-wrapper" id="command-wrapper">
@@ -393,13 +416,13 @@
                 <a class="delete">Excluir</a>
               </div>
             </div>
-            
-            </div>
 
           </div>
-        </div>
 
+        </div>
       </div>
+
+    </div>
 
 
     </div>
@@ -411,30 +434,132 @@
 <script src="../js/TecnicoProcess/dashProcess.js"></script>
 
 <script>
-  const openBtn = document.querySelector(".filter-btn");
-  const slide = document.getElementById("filtro-slide");
-  const backdrop = document.getElementById("filtro-backdrop");
-  const closeBtn = document.getElementById("filtro-close");
+  // elementos do modal
+  const modalComando = document.getElementById("modal-comando");
+  const backdropComando = document.getElementById("comando-backdrop");
+  const closeComando = document.getElementById("comando-close");
+  const tituloComando = document.getElementById("comando-titulo");
+  const inputName = document.getElementById("comando-input-name");
+  const inputScript = document.getElementById("comando-input-script");
+  const btnSalvar = document.getElementById("btnSalvarComando");
 
-  function abrirFiltro() {
-    slide.classList.add("show");
-    backdrop.classList.remove("hidden");
+  let modo = "";         // "editar" ou "novo"
+  let idEditando = null; // id do comando quando editar
+
+  function abrirModalComando(tipo, valorName = "", valorScript = "", id = null) {
+    modo = tipo || "novo";
+    idEditando = id ?? null;
+
+    if (inputName) inputName.value = valorName || "";
+    if (inputScript) inputScript.value = valorScript || "";
+
+    if (tituloComando)
+      tituloComando.textContent = modo === "editar" ? "Editar Comando" : "Novo Comando";
+
+    if (modalComando) modalComando.classList.add("show");
+    if (backdropComando) backdropComando.classList.remove("hidden");
+    if (modalComando) modalComando.setAttribute("aria-hidden", "false");
   }
-
-  function fecharFiltro() {
-    slide.classList.remove("show");
-    backdrop.classList.add("hidden");
-  }
-
-  openBtn.addEventListener("click", abrirFiltro);
-  closeBtn.addEventListener("click", fecharFiltro);
-  backdrop.addEventListener("click", fecharFiltro);
 
   function mostrarCarregando() {
-    document.getElementById("tela-carregando2").style.display = "flex";
+    const el = document.getElementById("tela-carregando2");
+    if (el) el.style.display = "flex";
+  }
+  function esconderCarregando() {
+    const el = document.getElementById("tela-carregando2");
+    if (el) el.style.display = "none";
   }
 
-  function esconderCarregando() {
-    document.getElementById("tela-carregando2").style.display = "none";
+  function fecharModalComando() {
+    if (modalComando) modalComando.classList.remove("show");
+    if (backdropComando) backdropComando.classList.add("hidden");
+    if (modalComando) modalComando.setAttribute("aria-hidden", "true");
+
+    // limpar estado opcional
+    modo = "";
+    idEditando = null;
+    if (inputName) inputName.value = "";
+    if (inputScript) inputScript.value = "";
   }
+
+  if (closeComando) closeComando.addEventListener("click", fecharModalComando);
+  if (backdropComando) backdropComando.addEventListener("click", fecharModalComando);
+
+  // Função para abrir em modo editar: busca os dados do comando pelo ID e preenche modal
+  window.editarComando = async function (id) {
+    try {
+      // Tenta buscar os detalhes do comando. Assumo que GET /dashProcess/listendCommand/:id retorne o objeto.
+      const resp = await fetch(`/dashProcess/listendCommand/${id}`);
+      if (!resp.ok) {
+        // Se backend não suportar GET por id, abre o modal sem preencher
+        console.warn("Não foi possível buscar comando (GET). Abrindo modal vazio para edição.");
+        abrirModalComando("editar", "", "", id);
+        return;
+      }
+
+      const cmd = await resp.json(); // esperar objeto { id, nameCommand, command, ... }
+      const name = cmd.nameCommand ?? cmd.nome ?? "";
+      const script = cmd.command ?? cmd.comando ?? cmd.script ?? "";
+
+      abrirModalComando("editar", name, script, id);
+
+    } catch (e) {
+      console.error("Erro ao carregar comando para editar:", e);
+      abrirModalComando("editar", "", "", id); // fallback: abre vazio para editar
+    }
+  };
+
+  // Função para abrir modal novo
+  window.adicionarComando = function () {
+    abrirModalComando("novo", "", "", null);
+  };
+
+  // Salvar (POST ou PUT) — envia BOTH: nameCommand e command
+  if (btnSalvar) {
+    btnSalvar.addEventListener("click", async () => {
+      const nameVal = inputName ? inputName.value.trim() : "";
+      const scriptVal = inputScript ? inputScript.value.trim() : "";
+
+      if (!nameVal) return alert("Preencha o nome/descrição do comando.");
+      if (!scriptVal) return alert("Preencha o script/comando.");
+
+      try {
+        if (modo === "editar") {
+          if (!idEditando) return alert("ID do comando não definido para edição.");
+
+          const resp = await fetch(`/dashProcess/listendCommand/${idEditando}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nameCommand: nameVal,
+              command: scriptVal
+            })
+          });
+          if (!resp.ok) throw new Error("Erro no PUT ao atualizar comando.");
+
+        } else { // novo
+          const fkEmpresa = sessionStorage.getItem("idEmpresa");
+          if (!fkEmpresa) return alert("Empresa não definida. Faça login novamente.");
+
+          const resp = await fetch(`/dashProcess/listendCommand/${fkEmpresa}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nameCommand: nameVal,
+              command: scriptVal
+            })
+          });
+          if (!resp.ok) throw new Error("Erro no POST ao criar comando.");
+        }
+
+        fecharModalComando();
+        if (typeof listendSnippts === "function") listendSnippts(); // atualizar lista
+
+      } catch (e) {
+        console.error("Erro salvando comando:", e);
+        alert("Erro ao salvar comando. Veja console para detalhes.");
+      }
+    });
+  }
+
 </script>

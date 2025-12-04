@@ -1,3 +1,16 @@
+document.addEventListener('DOMContentLoaded', () => {
+  mostrarCarregando()
+
+  try {
+    insertInfoKpi();
+    listendInfoMachine();
+    listendSnippts();
+    setTimeout(esconderCarregando, 2000);
+  } catch (e) {
+    console.log('Erro ao chamar inicializadores:', e);
+  }
+});
+
 async function insertInfoKpi() {
   const fkEmpresa = sessionStorage.getItem('idEmpresa');
 
@@ -118,52 +131,15 @@ async function listendSnippts() {
   listElement.innerHTML = htmlContent;
 }
 
-async function posListCommandSnippt(comando) {
-  const id = sessionStorage.getItem('idEmpresa');
-
-  try {
-    const response = await fetch(`/dashProcess/listendCommand/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(comando)
-    });
-
-    if (!response.ok) throw new Error("Erro ao criar comando");
-
-    const resultado = await response.json();
-    console.log("Comando criado:", resultado);
-    listendSnippts();
-    return resultado;
-
-  } catch (erro) {
-    console.log("Erro ao criar comando:", erro);
-    throw erro;
-  }
+function adicionarComando() {
+  abrirModalComando("novo");
 }
 
-async function editarComando(id) {
-  const novoComando = prompt("Digite o novo comando:");
-  if (!novoComando) return;
-
-  try {
-    const response = await fetch(`/dashProcess/listendCommand/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nameCommand: novoComando })
-    });
-
-    if (!response.ok) throw new Error("Erro ao atualizar comando");
-
-    const resultado = await response.json();
-    console.log("Comando atualizado:", resultado);
-    listendSnippts();
-    return resultado;
-
-  } catch (erro) {
-    console.error("Erro ao atualizar comando:", erro);
-    throw erro;
-  }
+function editarComando(id) {
+  const tipo = "editar";
+  abrirModalComando(tipo, "", id);
 }
+
 
 async function excluirComando(id) {
   if (!confirm("Tem certeza que deseja excluir este comando?")) return;

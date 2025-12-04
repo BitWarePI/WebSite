@@ -297,3 +297,83 @@ table {
   font-size: 18px;
   color: black !important;
 }
+
+/* Painel lateral esquerdo */
+.comando-slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 330px;
+  height: 100%;
+  background: #e8e8e8;
+  color: #1a1a1a;
+  padding: 25px;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform .3s ease;
+  box-shadow: 4px 0px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comando-slide.show {
+  transform: translateX(0);
+}
+
+/* Header */
+.comando-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comando-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.comando-close {
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #555;
+}
+
+.comando-input {
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.comando-salvar {
+  background: #7b2cbf;
+  border: none;
+  padding: 12px;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comando-salvar:hover {
+  background: #6924a6;
+}
+
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.45);
+  z-index: 99;
+}
+
+.hidden {
+  display: none;
+}
