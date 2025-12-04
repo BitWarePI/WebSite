@@ -222,7 +222,7 @@
                 <p style="font-size: 15px; margin: 0; padding: 0;">Variação do uso</p>
                 <i class="fa-solid fa-wave-square"></i>
               </div>
-              <p id="desvio_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">12%</p>
+              <p id="desvio_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;">4%</p>
             </div>
             <p style="font-size: 18px; margin: 0; padding: 0;">Desvio padrão estável no período</p>
           </div>
@@ -464,7 +464,6 @@
     if (!response.ok) throw new Error('Erro na requisição personalizada');
     const dados = await response.json();
     console.log(dados)
-
     qtdMaquinas.innerHTML = dados[0].total
   }
 

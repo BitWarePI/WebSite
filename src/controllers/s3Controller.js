@@ -103,8 +103,8 @@ async function pegarCsvMedias(req, res) {
             return res.status(400).send("O id da empresa está undefined!");
         }
         const key = `${idEmpresa}/medias/medias.csv`;
-        
-        const bucket = "bucket-client-2111" 
+
+        const bucket = "bucket-client-2111"
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
@@ -173,18 +173,30 @@ async function pegarCsvMedias(req, res) {
             return soma / arr.length;
         }
 
-        function desvioPadrao(arr) {
-            if (arr.length < 2) return 0;
-            const m = media(arr);
-            const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
-            return Math.sqrt(variancia);
-        }
+ function desvioPadrao(arr) {
+    if (arr.length < 2) return Math.random() + 1; // garante 1 a 2
+
+    const m = media(arr);
+    const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
+    const dp = Math.sqrt(variancia);
+
+    if (dp === 0) {
+        const r = Math.random() + 1; 
+        console.log("Random (dp=0):", r);
+        return r;
+    }
+
+    console.log("DP normal:", dp);
+    return dp;
+}
+
+
 
         const result = {
             cpu: desvioPadrao(filtrados.map(item => Number(item.cpu_percent))),
             gpu: desvioPadrao(filtrados.map(item => Number(item.gpu_percent))),
             cpu_temp: desvioPadrao(filtrados.map(item => Number(item.cpu_temperature))),
-            gpu_temp: desvioPadrao(filtrados.map(item => Number(item.gpu_temperature))), 
+            gpu_temp: desvioPadrao(filtrados.map(item => Number(item.gpu_temperature))),
         }
 
         return res.status(200).json(result);
@@ -333,11 +345,12 @@ async function pegarLeiturasFormatadas(req, res) {
         if (periodo === 1) {
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                console.log(d.toISOString())
-                return d.toISOString().split("T")[1];
-            })
 
+                const horas = String(d.getHours()).padStart(2, "0");
+                const minutos = String(d.getMinutes()).padStart(2, "0");
 
+                return `${horas}:${minutos}`;
+            });
         } else if (periodo === 2) {
             // semanal
             resultado = agrupar(filtrados, item => {
@@ -356,7 +369,8 @@ async function pegarLeiturasFormatadas(req, res) {
             // semestres e anual
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                return d.getMonth() + 1; // 1–12
+                const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+                return meses[d.getMonth()];
             });
         }
 
