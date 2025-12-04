@@ -190,8 +190,6 @@ async function pegarCsvMedias(req, res) {
     return dp;
 }
 
-
-
         const result = {
             cpu: desvioPadrao(filtrados.map(item => Number(item.cpu_percent))),
             gpu: desvioPadrao(filtrados.map(item => Number(item.gpu_percent))),
