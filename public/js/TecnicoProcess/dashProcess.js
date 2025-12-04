@@ -24,7 +24,7 @@ async function insertInfoKpi() {
 
   document.getElementById("qtdMaquina").innerText = qtdMaquinaRes;
   document.getElementById("alertParametro").innerText = alertasUsoRes;
-  // document.getElementById("scriptExec").innerText = scriptsExecutadosRes;
+  document.getElementById("scriptExec").innerText = scriptsExecutadosRes;
 
 }
 

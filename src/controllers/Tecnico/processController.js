@@ -18,15 +18,15 @@ async function getInfoKpis(req, res) {
     const qtdAlertaRes = await model.getAlertMachineUse(fkEmpresa);
     console.log("qtdAlertaRes res: ", qtdAlertaRes[0]);
 
-    // const qtdScriptsRes  = await model.getCommandExecMachine(fkEmpresa);
-    // console.log("qtdScriptsRes  res: " + qtdScriptsRes[0]);
+    const qtdScriptsRes  = await model.getCommandExecMachine(fkEmpresa);
+    console.log("qtdScriptsRes  res: " + qtdScriptsRes[0]);
 
     // ? evita quebrar o codigo se vier vazio o array
     // ?? só ativa quando o valor é null ou undefined
     return res.json({
       qtdMaquinaRes: qtdMaquinaRes[0]?.qtdMaquina ?? 0,
       alertasUsoRes: qtdAlertaRes[0]?.qtdAlertaRes ?? 0,
-      // scriptsExecutadosRes: qtdScriptsRes[0]?.qtdScriptsRes ?? 0
+      scriptsExecutadosRes: qtdScriptsRes[0]?.qtdScriptsRes ?? 0
     });
 
   } catch (error) {
@@ -112,10 +112,14 @@ async function getListCommandSnippt(req, res) {
 
 async function posListCommandSnippt(req, res) {
   const { fkEmpresa } = req.params;
-  const { nameCommand } = req.body;
+  const { nameCommand, command } = req.body;
 
   if (fkEmpresa === undefined || isNaN(fkEmpresa)) {
     return res.status(400).send("Valor inválido de fkEmpresa!");
+  }
+
+  if (!command || command.trim() === "") {
+    return res.status(400).send("Comando é obrigatório!");
   }
 
   if (!nameCommand || nameCommand.trim() === "") {
@@ -125,13 +129,14 @@ async function posListCommandSnippt(req, res) {
   console.log(`Rota acessada: ${req.method} | ${req.path}`);
 
   try {
-    const resultado = await model.createCommandSnippt(fkEmpresa, nameCommand);
+    const resultado = await model.createCommandSnippt(fkEmpresa, nameCommand, command);
     console.log("Comando criado:", resultado);
 
     return res.json({
       id: resultado.insertId,
       nameCommand: nameCommand,
       fkEmpresa: fkEmpresa,
+      command: command,
       mensagem: "Comando criado com sucesso"
     });
 
@@ -145,10 +150,14 @@ async function posListCommandSnippt(req, res) {
 
 async function putListCommandSnippt(req, res) {
   const { id } = req.params;
-  const { nameCommand } = req.body;
+  const { nameCommand, command } = req.body;
 
   if (id === undefined || isNaN(id)) {
     return res.status(400).send("Valor inválido de id!");
+  }
+
+  if (!command || command.trim() === "") {
+    return res.status(400).send("Comando é obrigatório!");
   }
 
   if (!nameCommand || nameCommand.trim() === "") {
@@ -158,7 +167,7 @@ async function putListCommandSnippt(req, res) {
   console.log(`Rota acessada: ${req.method} | ${req.path}`);
 
   try {
-    const resultado = await model.updateCommandSnippt(id, nameCommand);
+    const resultado = await model.updateCommandSnippt(id, nameCommand, command);
     console.log("Comando atualizado:", resultado);
 
     if (resultado.affectedRows === 0) {
@@ -168,9 +177,10 @@ async function putListCommandSnippt(req, res) {
     return res.json({
       id: id,
       nameCommand: nameCommand,
+      command: command,
       mensagem: "Comando atualizado com sucesso"
     });
-
+    
   } catch (error) {
     console.log("Houve um erro ao atualizar o comando!", error.sqlMessage || error);
     return res.status(500).json({

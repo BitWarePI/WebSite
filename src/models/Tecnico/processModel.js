@@ -27,7 +27,9 @@ function getAlertMachineUse(fkEmpresa) {
 }
 
 function getCommandExecMachine(fkEmpresa) {
-  var instrucaoSql = ``;
+  var instrucaoSql = `select sum(qtdExec) as qtdScriptsRes
+                      from comando_personalizado 
+                      where fk_empresa = ${fkEmpresa};`;
 
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return db.executar(instrucaoSql);
@@ -57,18 +59,18 @@ function getListCommandSnippt(fkEmpresa) {
 
 }
 
-function createCommandSnippt(fkEmpresa, nameCommand) {
-  var instrucaoSql = `INSERT INTO comando_personalizado (nome, fk_empresa) 
-                      VALUES ('${nameCommand}', ${fkEmpresa});`;
+function createCommandSnippt(fkEmpresa, nameCommand, command) {
+  var instrucaoSql = `INSERT INTO comando_personalizado (nome, comando, fk_empresa) 
+                      VALUES ('${nameCommand}', '${command}', ${fkEmpresa});`;
 
   console.log("Executando a instrução SQL: \n", instrucaoSql);
   return db.executar(instrucaoSql);
 
 }
 
-function updateCommandSnippt(id, nameCommand) {
+function updateCommandSnippt(id, nameCommand, command) {
   var instrucaoSql = `UPDATE comando_personalizado 
-                      SET nome = '${nameCommand}' 
+                      SET nome = '${nameCommand}', comando = '${command}'
                       WHERE id = ${id};`;
 
   console.log("Executando a instrução SQL: \n", instrucaoSql);
