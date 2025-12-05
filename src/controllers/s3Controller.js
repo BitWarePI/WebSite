@@ -1,6 +1,6 @@
-const AWS = require('aws-sdk');
-const Papa = require('papaparse');
 const { getS3FileContent } = require('../utilits/getCsvBucket');
+const AWS = require('aws-sdk')
+const Papa = require('papaparse')
 const { parse } = require('path');
 
 AWS.config.update({ region: "us-east-1" });
@@ -343,12 +343,11 @@ async function pegarLeiturasFormatadas(req, res) {
         if (periodo === 1) {
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
+                console.log(d.toISOString())
+                return d.toISOString().split("T")[1];
+            })
 
-                const horas = String(d.getHours()).padStart(2, "0");
-                const minutos = String(d.getMinutes()).padStart(2, "0");
 
-                return `${horas}:${minutos}`;
-            });
         } else if (periodo === 2) {
             // semanal
             resultado = agrupar(filtrados, item => {
@@ -367,8 +366,7 @@ async function pegarLeiturasFormatadas(req, res) {
             // semestres e anual
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-                return meses[d.getMonth()];
+                return d.getMonth() + 1; // 1–12
             });
         }
 
@@ -384,10 +382,4 @@ async function pegarLeiturasFormatadas(req, res) {
     }
 }
 
-module.exports = {
-    buscarArquivoS3,
-    pegarCsvPorMaquina,
-    pegarCsvMaquinas,
-    pegarLeiturasFormatadas,
-    pegarCsvMedias
-};
+module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas};
