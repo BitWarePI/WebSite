@@ -23,7 +23,7 @@
   <title>Dashboard | BitWare</title>
 </head>
 
-  <body onclick="listenProcessSelection()">
+<body onclick="listenProcessSelection()">
   <section>
 
     <!-- NAV LATERAL -->
@@ -107,8 +107,8 @@
             <div style="display:flex; gap:12px; align-items:flex-end; width:100%;">
               <div class="search-box" style="flex:1; display:flex; align-items:center;">
                 <i class="fas fa-search"></i>
-                <input type="text" id="inp_filterProcess" oninput="filterProcess()" placeholder="Filtrar por nome do processo ou PID..."
-                  style="flex:1; margin-left:8px;" />
+                <input type="text" id="inp_filterProcess" oninput="filterProcess()"
+                  placeholder="Filtrar por nome do processo ou PID..." style="flex:1; margin-left:8px;" />
               </div>
 
               <div style="display:flex; align-items:flex-end;">
@@ -189,7 +189,9 @@
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th style="width: 40px;"><p></p></th>
+                  <th style="width: 40px;">
+                    <p></p>
+                  </th>
                   <th>PID</th>
                   <th>Process Name</th>
                   <th>Status</th>
@@ -283,7 +285,7 @@
               </tbody>
             </table>
           </div>
-          
+
           <!-- Tela de status pop -->
           <div id="tela-popStatus">
             <div class="tela-popStatus">
@@ -299,6 +301,32 @@
               <p id="textoCarregamento">Carregando dados...</p>
             </div>
           </div>
+
+          <!-- Mostra resultado do url -->
+          <div id="modal-comando" class="comando-slide">
+          </div>
+
+          <div id="modal-resultado" class="comando-slide">
+            <div class="comando-header">
+              <h2 id="resultado-titulo">Resultado da Execução</h2>
+              <button id="resultado-close" class="comando-close" aria-label="Fechar">×</button>
+            </div>
+
+            <div style="padding: 20px; height: calc(100% - 60px); display: flex; flex-direction: column;">
+              <label>Status:</label>
+              <div id="resultado-status" style="margin-bottom: 15px; font-weight: bold; color: #4caf50;">
+                Sucesso
+              </div>
+
+              <label>Saída (JSON/Log):</label>
+              <pre id="resultado-conteudo"
+                style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow: auto; flex: 1; font-family: monospace; border: 1px solid #333;">
+      Aguardando execução...
+          </pre>
+            </div>
+          </div>
+
+          <div id="comando-backdrop" class="backdrop hidden"></div>
 
           <!-- SNIPPETS -->
           <div class="snippets-panel">
@@ -412,9 +440,67 @@
   }
 
   function getColor(value) {
-   if (value >= 80) return "#ff4d4d";     // Vermelho
-   if (value >= 50) return "#f1c40f";     // Amarelo
-   return "#2ecc71";                      // Verde
-}
+    if (value >= 80) return "#ff4d4d";
+    if (value >= 50) return "#f1c40f";
+    return "#2ecc71";
+  }
+
+
+  const btnSalvar = document.getElementById("btnSalvarComando");
+
+  const modalResultado = document.getElementById("modal-resultado");
+  const closeResultado = document.getElementById("resultado-close");
+  const resultadoConteudo = document.getElementById("resultado-conteudo");
+  const resultadoStatus = document.getElementById("resultado-status");
+
+  let modo = "";
+  let idEditando = null;
+
+  function fecharQualquerModal() {
+    if (modalComando) {
+      modalComando.classList.remove("show");
+      modalComando.setAttribute("aria-hidden", "true");
+    }
+    if (modalResultado) {
+      modalResultado.classList.remove("show");
+      modalResultado.setAttribute("aria-hidden", "true");
+    }
+    if (backdropComando) backdropComando.classList.add("hidden");
+
+    modo = "";
+    idEditando = null;
+    if (inputName) inputName.value = "";
+    if (inputScript) inputScript.value = "";
+  }
+
+  function abrirModalComando(tipo, id) {
+    modo = tipo || "novo";
+    idEditando = id;
+    if (tituloComando) tituloComando.textContent = modo === "editar" ? "Editar Comando" : "Novo Comando";
+
+    modalComando.classList.add("show");
+    backdropComando.classList.remove("hidden");
+    modalComando.setAttribute("aria-hidden", "false");
+  }
+
+  function abrirModalResultado(dados, sucesso = true) {
+    const jsonBonito = JSON.stringify(dados, null, 2);
+
+    if (resultadoConteudo) resultadoConteudo.textContent = jsonBonito;
+
+    if (resultadoStatus) {
+      resultadoStatus.textContent = sucesso ? "Execução Concluída" : "Erro na Execução";
+      resultadoStatus.style.color = sucesso ? "#4caf50" : "#f44336"; 
+    }
+
+    modalResultado.classList.add("show");
+    backdropComando.classList.remove("hidden");
+    modalResultado.setAttribute("aria-hidden", "false");
+  }
+
+  if (closeComando) closeComando.addEventListener("click", fecharQualquerModal);
+  if (backdropComando) backdropComando.addEventListener("click", fecharQualquerModal);
+  if (closeResultado) closeResultado.addEventListener("click", fecharQualquerModal);
+  if (btnFecharResultado) btnFecharResultado.addEventListener("click", fecharQualquerModal);
 
 </script>
