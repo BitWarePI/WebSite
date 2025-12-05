@@ -281,6 +281,8 @@ function listenProcessSelection() {
 
 async function executarProcesso() {
    const fkEmpresa = sessionStorage.getItem('idEmpresa');
+   const params = new URLSearchParams(window.location.search);
+   const macDaMaquina = params.get('mac');
 
    const activeCard = document.querySelector('.snippet-card.active');
 
@@ -298,12 +300,15 @@ async function executarProcesso() {
       const el = document.getElementById("textoCarregamento");
       el.textContent = "Enviando comando para a máquina...";
 
-      const getIpPublico = await fetch(`/dashHistoricoSnippts/getUrlMachine/${fkEmpresa}`);
+      const getIpPublico = await fetch(`/dashHistoricoSnippts/getUrlMachine/${fkEmpresa}?mac=${macDaMaquina}`);
 
-      if (!getIpPublico.ok) throw new Error("Erro ao obter o endereço da máquina");
-      
+      if (!getIpPublico.ok) {
+         const erroMsg = await getIpPublico.text();
+         throw new Error(`Erro ao obter IP: ${erroMsg}`);
+      }
+
       const { ipPublico } = await getIpPublico.json();
-      console.log("IpPublico: ", ipPublico);
+      console.log("IpPublico pego: ", ipPublico);
 
       const url = `http://${ipPublico}:5050/run`;
       const conn = await fetch(url, {
@@ -315,14 +320,18 @@ async function executarProcesso() {
          })
       });
 
-      if (!conn.ok) throw new Error("Erro ao enviar comando para a máquina");
-      console.log("Comando enviado com sucesso:", textoParaCopiar);
-
-      el.textContent = "Comando executado com sucesso!";
-      setTimeout(() => esconderCarregando(), 3000);
 
       const resultado = await conn.json();
       console.log("Resposta da máquina:", resultado);
+
+      el.textContent = "Comando executado com sucesso!";
+      setTimeout(() => esconderCarregando(), 1000);
+
+      if (conn.ok) {
+         abrirModalResultado(resultado, true);
+      } else {
+         abrirModalResultado(resultado, false);
+      }
 
    } catch (err) {
       console.error("Erro ao copiar:", err);

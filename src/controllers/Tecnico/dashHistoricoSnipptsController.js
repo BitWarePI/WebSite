@@ -203,11 +203,16 @@ async function getUrlMachine(req, res) {
    try {
       const pathFileKey = `${fkEmpresa}/hardware.csv`;
       const data = await getS3FileContent(pathFileKey);
+      console.log("Olhe aqui",data);
+      console.log("Olhe aqui",pathFileKey);
       
-      data = data.filter(item => item.ipPublico == macAddress);
-      console.log("data url machine ", data || 'Nenhum dado encontrado');
+      const machineEncontrada = data.find(item => item.macAddress == macAddress);      console.log("data url machine ", machineEncontrada || 'Nenhum dado encontrado');
       
-      return res.status(200).json({ ipPublico: data[0]?.ipPublico || null });
+      if (!machineEncontrada) {
+         return res.status(404).json({ erro: "Máquina não encontrada" });
+      }
+
+      return res.status(200).json({ ipPublico: machineEncontrada.ipPublico || null });
 
    } catch (error) {
       console.log("Houve um erro na captura dos dados!", error.sqlMessage || error);
