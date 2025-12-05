@@ -222,4 +222,162 @@ async function buscarArquivoS3(req, res) {
     }
 }
 
+async function pegarLeiturasFormatadas(req, res) {
+    try {
+        const idEmpresa = req.params.idEmpresa;
+        const periodo = Number(req.query.periodo) || 1;
+
+        const bucket = "bucket-client-2111"; //dar uma olhada depois
+        const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
+
+        const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
+        const text = data.Body.toString("utf-8").trim();
+
+        let content;
+        if (text.startsWith("[") || text.startsWith("{")) { //nada haver essa validacao aq se eu to recebendo um csv
+            content = JSON.parse(text);
+        } else {
+            const parsed = Papa.parse(text, {
+                header: true,
+                delimiter: text.includes(";") ? ";" : ",",
+                skipEmptyLines: true
+            });
+            content = parsed.data;
+        }
+
+        let inicio = new Date();
+        let fim = new Date();
+
+        switch (periodo) {
+            case 1: // últimas 24h
+                inicio.setHours(inicio.getHours() - 24);
+                break;
+
+            case 2: // semanal
+                inicio.setDate(inicio.getDate() - 7);
+                break;
+
+            case 3: // mensal
+                inicio.setMonth(inicio.getMonth() - 1);
+                break;
+
+            case 4: // 1º semestre
+                inicio = new Date(fim.getFullYear(), 0, 1);
+                fim = new Date(fim.getFullYear(), 5, 30);
+                break;
+
+            case 5: // 2º semestre
+                inicio = new Date(fim.getFullYear(), 6, 1);
+                fim = new Date(fim.getFullYear(), 11, 31);
+                break;
+
+            case 6: // anual
+                inicio = new Date(fim.getFullYear(), 0, 1);
+                fim = new Date(fim.getFullYear(), 11, 31);
+                break;
+        }
+
+        function parseDate(dateStr) {
+            const [day, month, yearHour] = dateStr.split("/")
+            const [year, time] = yearHour.split(" ");
+            const [hour, minute] = time.split(":");
+            return new Date(year, month - 1, day, hour, minute);
+        }
+
+        console.log(inicio, fim);
+
+        const filtrados = content.filter(item => { //isso aq é um foreach que faz a validacao se a data ta dentro do periodo selecionado
+            if (!item.datetime) return false;
+            const d = parseDate(item.datetime);
+            return d.getTime() >= inicio.getTime() && d.getTime() <= fim.getTime()
+        })
+
+        function calcularMedias(lista) {
+            const soma = {
+                cpu_percent: 0,
+                gpu_percent: 0,
+                cpu_temperature: 0,
+                gpu_temperature: 0
+            };
+            let count = 0;
+
+            for (const item of lista) {
+                soma.cpu_percent += Number(item.cpu_percent);
+                soma.gpu_percent += Number(item.gpu_percent);
+                soma.cpu_temperature += Number(item.cpu_temperature);
+                soma.gpu_temperature += Number(item.gpu_temperature);
+                count++;
+            }
+
+            return {
+                media_cpu_percent: soma.cpu_percent / count,
+                media_gpu_percent: soma.gpu_percent / count,
+                media_cpu_temperature: soma.cpu_temperature / count,
+                media_gpu_temperature: soma.gpu_temperature / count,
+            };
+        }
+        function agrupar(lista, chaveFn) {
+            const grupos = {};
+
+            lista.forEach(item => {
+                const chave = chaveFn(item);
+                if (!grupos[chave]) grupos[chave] = [];
+                grupos[chave].push(item);
+            });
+
+            const resultado = [];
+
+            for (const chave of Object.keys(grupos)) {
+                resultado.push({
+                    periodo: chave,
+                    ...calcularMedias(grupos[chave]) //esses tres pontinhos significam concatenando os objetos do calcularMedias com o objeto periodo :O
+                }) //o nome desses tres pontinhos é operador spread
+            }
+
+            return resultado;
+        }
+        let resultado;
+
+        if (periodo === 1) {
+            resultado = agrupar(filtrados, item => {
+                const d = parseDate(item.datetime);
+                console.log(d.toISOString())
+                return d.toISOString().split("T")[1];
+            })
+
+
+        } else if (periodo === 2) {
+            // semanal
+            resultado = agrupar(filtrados, item => {
+                const d = parseDate(item.datetime);
+                return d.toISOString().slice(0, 10);
+            });
+
+        } else if (periodo === 3) {
+            // mensal
+            resultado = agrupar(filtrados, item => {
+                const d = parseDate(item.datetime);
+                return `Semana ${Math.ceil(d.getDate() / 7)}`;
+            });
+
+        } else {
+            // semestres e anual
+            resultado = agrupar(filtrados, item => {
+                const d = parseDate(item.datetime);
+                return d.getMonth() + 1; // 1–12
+            });
+        }
+
+        return res.json({
+            periodoSelecionado: periodo,
+            registrosConsiderados: filtrados.length,
+            resultado
+        });
+
+    } catch (erro) {
+        console.error("Erro ao ler leituras formatadas :( ", erro);
+        return res.status(500).send("Erro ao ler leituras formatadas.");
+    }
+}
+
 module.exports = { buscarArquivoS3 };
