@@ -87,6 +87,16 @@ CREATE TABLE Chamado (
     ON DELETE CASCADE
 );
 
+CREATE TABLE comando_personalizado (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    comando TEXT NOT NULL, 
+    qtdExec INT default 0,
+    fk_empresa INT,                    
+    FOREIGN KEY (fk_empresa) REFERENCES Empresa(idEmpresa) 
+);
+
+select * from comando_personalizado;
 INSERT INTO Cargo (descricao) VALUES 
 ('Admin'), 
 ('Empresa'), 
@@ -106,19 +116,26 @@ VALUES
 ('Marina', 'Costa', 'marina.costa@techvision.com', '12345678', 4, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', '12345678', 2, 3);
 
+INSERT INTO comando_personalizado (nome, comando, fk_empresa) VALUES 
+('Matar Processo (PID)', 'kill -9 {pid}', 2),
+('Limpar Cache de RAM', 'sync; echo 3 > /proc/sys/vm/drop_caches', 2),
+('Matar Processos (Nome)', 'pkill -f {nome_processo}', 2),
+('Visualizar processos nivel adm', 'ps aux', 2),
+('Reiniciar Serviço (PID)', 'systemctl restart {PID}', 2);
+
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
-('f4:6a:dd:7b:03:0d', 'Servidor Principal', 1),
+('f4:6a:dd:7b:03:1d', 'Servidor Principal', 1),
 ('a1:b2:c3:d4:e5:f6', 'Setor A', 2),
 ('ff:ee:dd:cc:bb:aa', 'Setor B', 2),
-('e8:5c:5f:1e:b4:1d', 'Setor C', 2),
+('e7:5c:5f:1e:b4:1d', 'Setor C', 2),
 ('11:22:33:44:55:66', 'Setor Logístico', 3);
 
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES
-('aa:bb:cc:dd:ee:ff', 'Setor D', 2),
-('77:88:99:aa:bb:cc', 'Setor E', 2);
-
+('e8:5c:5f:1e:b4:1d', 'Setor D', 1),
+('12:2a:0a:85:5e:47', 'Setor A', 2), 
+('f4:6a:dd:7b:03:0d', 'Setor E', 2);
 
 INSERT INTO Componente (descricao)
 VALUES 
