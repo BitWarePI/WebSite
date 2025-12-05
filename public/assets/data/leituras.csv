@@ -17,7 +17,7 @@ datetime;cpu_percent;gpu_percent;cpu_temperature;gpu_temperature;motivo_chamado;
 2025-05-17 00:00:00;46;46;62.5;56.5;Temperatura da CPU (°C) acima do esperado;2;a1:b2:c3:d4:e5:f6
 2025-05-18 00:00:00;79;67;60.5;59.6;Uso de CPU (%) abaixo do esperado;2;ff:ee:dd:cc:bb:aa
 2025-05-18 00:00:00;44;49;68.6;54.0;Temperatura da GPU (°C) acima do esperado;2;e8:5c:5f:1e:b4:1d
-2025-05-19 00:00:00;41;79;61.7;60.0;Uso de GPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6
+2025-05-19 00:00:00;41;79;61.7;60.0;Uso de GPU (%) abaixo do esperado;2;a1:b2:c3:d4:e5:f6   
 2025-05-20 00:00:00;72;47;62.0;65.8;Temperatura da CPU (°C) acima do esperado;2;ff:ee:dd:cc:bb:aa
 2025-05-21 00:00:00;43;67;63.7;54.0;Uso de CPU (%) abaixo do esperado;2;e8:5c:5f:1e:b4:1d
 2025-05-21 00:00:00;52;89;55.8;67.7;Temperatura da GPU (°C) acima do esperado;2;a1:b2:c3:d4:e5:f6

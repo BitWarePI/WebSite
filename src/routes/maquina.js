@@ -30,4 +30,6 @@ router.get("/qtdMaquina/:idEmpresa", maquinaController.qtdMaquinas);
 
 router.get('/maquina/:empresaId', maquinaController.listarMacs);
 
+router.get("/buscarOcorrencias", maquinaController.buscarOcorrencias)
+
 module.exports = router;

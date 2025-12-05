@@ -28,10 +28,12 @@ var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
 var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
-//var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
-var s3Router = require('./src/routes/dadosBucket');
+var s3BucketRouter = require('./src/routes/dadosBucket');
+var s3Router = require("./src/routes/s3");
+
+
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,7 +41,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
-app.use('/dadosBucket', s3Router);
+app.use('/dadosBucket', s3BucketRouter);
 app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
@@ -49,7 +51,7 @@ app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
-//app.use("/emails", emailRouter);
+app.use('/s3', s3Router);
 
 // Inicia o servidor
 app.listen(PORTA_APP, HOST_APP, function () {

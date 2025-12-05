@@ -1,0 +1,208 @@
+section nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  background-color: #1e1e2f;
+  border-right: 2px solid #3b3b3b;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+section nav:hover {
+  width: 240px;
+}
+
+#tudo {
+  margin-left: 80px;
+  flex-grow: 1;
+  transition: all 0.3s ease;
+  padding: 6px 40px;
+  width: calc(100% - 80px);
+  color: black;
+}
+
+section nav:hover ~ #tudo {
+  margin-left: 240px;
+  width: calc(100% - 240px);
+  transform: scale(0.92); 
+  transform-origin: center;
+  filter: brightness(0.95);
+}
+
+select{
+  background-color: #4B2B85;
+}
+
+.alternar_hardware{
+  background-color: #4B2B85;
+}
+
+#tudo * {
+  transition: all 0.3s ease;
+}
+
+.kpi-card{
+    background-color: #4B2B85;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+#btn_aplicar:hover {
+  background-color: #4B2B85;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.kpi-container {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+}
+
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+select {
+  border: 2px solid #dddddd;
+  color: white;
+  padding: 10px;
+  transition: 0.4s;
+}
+select::picker-icon {
+  color: #24033f;
+  transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+::picker(select) {
+  border: none;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  border: 2px solid #dddddd;
+  background: #eeeeee;
+  padding: 10px;
+  transition: 0.4s;
+}
+
+option:first-of-type {
+  border-radius: 8px 8px 0 0;
+}
+
+option:last-of-type {
+  border-radius: 0 0 8px 8px;
+}
+
+::picker(select) {
+  border-radius: 8px;
+}
+
+option:not(option:last-of-type) {
+  border-bottom: none;
+}
+
+option:nth-of-type(odd) {
+  background: white;
+}
+
+option:hover,
+option:focus {
+  background: #4B2B85;
+  color: white;
+}
+
+option .icon {
+  font-size: 1.6rem;
+  text-box: trim-both cap alphabetic;
+}
+
+option:checked {
+  font-weight: bold;
+}
+
+::picker(select) {
+  opacity: 0;
+  transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+  opacity: 1;
+}
+
+section nav:hover ~ #tudo .kpi-card {
+  transform: scale(0.9);
+  opacity: 0.9;
+}
+
+section nav:hover ~ #tudo .kpi-container {
+  gap: 30px;
+}
+
+.graficos {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 20px;
+  flex-wrap: nowrap;
+  transition: all 0.3s ease;
+}
+
+.grafico {
+  flex: 1; 
+  min-width: 0;
+  transition: all 0.3s ease;
+  background-color: white;
+  padding: 5px 20px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.div-grafico{
+  background-color: white;
+  border-start-start-radius: 10px;
+  border-start-end-radius: 10px;
+}
+
+section nav:hover ~ #tudo .grafico {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+#btn_aplicar {
+  position: relative;
+  z-index: 10;
+}
+
+.div-grafico canvas {
+  pointer-events: none;
+}
+
+#btn_aplicar {
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto !important;
+}
+
+.graficos, .grafico, .div-grafico, .grafico canvas {
+  overflow: visible !important;
+}

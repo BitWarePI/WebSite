@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dash Técnico — Manutenção Preditiva | Bitware</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="../css/dashboard/dashTecnico/dashManutencaoPreditiva.css">
+  <link rel="icon" href="../assets/icon/favicon2.png">
+  <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="global">
+    <div id="tela-carregando">
+      <div class="caixa-carregando">
+        <div class="animacao-roda"></div>
+        <p>Carregando dados...</p>
+      </div>
+    </div>
+
+    <div class="navDiv">
+      <nav>
+        <div class="main-nav">
+          <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
+          <ul class="links nav-links-pc">
+            <li><a class="link " href="dashAnalista.html">
+                <span class="material-symbols-outlined icon">analytics</span>
+                <span class="titulo">Dash analista</span>
+              </a>
+            </li>
+            <li><a class="link" href="dashTecnico.html">
+                <span class="material-symbols-outlined icon">handyman</span>
+                <span class="titulo">Dash técnico</span>
+              </a>
+            </li>
+            <li>
+              <a class="link" href="dashFuncionario.html">
+                <span class="material-symbols-outlined icon">apartment</span>
+                <span class="titulo">Funcionários</span>
+              </a>
+            </li>
+            <li>
+              <a class="link " href="dashInfoMaquinas.html">
+                <span class="material-symbols-outlined icon">Computer</span>
+                <span class="titulo">Informações máquinas</span>
+              </a>
+            </li>
+            <li>
+              <a class="link" href="dashMaquinas.html">
+                <span class="material-symbols-outlined icon">settings_applications</span>
+                <span class="titulo">Parametros máquinas</span>
+              </a>
+            </li>
+            <li>
+              <a class="link ativo" href="dashManutencaoPreditiva.html">
+                <span class="material-symbols-outlined icon">radar</span>
+                <span class="titulo">Manutenção Preditiva</span>
+              </a>
+            </li>
+            <li>
+              <a class="link" href="atualizar-senha.html">
+                <span class="material-symbols-outlined icon">lock</span>
+                <span class="titulo">Atualizar senha</span>
+              </a>
+            </li>
+            <li>
+              <a class="link" href="desativarEmpresa.html">
+                <span class="material-symbols-outlined icon">cancel</span>
+                <span class="titulo">Inativar empresa</span>
+              </a>
+            </li>
+          </ul>
+          <a href="../index.html" class="btn btn-sair nav-links-pc">
+            Sair
+          </a>
+          <div id="nav-menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="sectionDiv">
+      <section class="geral">
+        <main class="container">
+          <div class="top-row">
+            <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
+            <div class="filters">
+              <div class="periods">
+                <button class="btn ghost" id="24hBtn" onclick="buscarOcorrencias('24h', fkEmpresa)">24h</button>
+                <button class="btn ghost" id="semanaBtn" onclick="buscarOcorrencias('semana', fkEmpresa)">7d</button>
+                <button class="btn ghost" id="mesBtn" onclick="buscarOcorrencias('mes', fkEmpresa)">30d</button>
+                <button class="btn ghost" id="segundoSemestreBtn"
+                  onclick="buscarOcorrencias('segundoSemestre', fkEmpresa)">2º semestre</button>
+                <button class="btn ghost" id="primeiroSemestreBtn"
+                  onclick="buscarOcorrencias('primeiroSemestre', fkEmpresa)">1º semestre</button>
+                <button class="btn ghost" id="anoBtn" onclick="buscarOcorrencias('ano', fkEmpresa)">1y</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPIs -->
+          <section class="kpi-row">
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Total de ocorrências (período)</div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipTotal').style.display='block'"
+                  onmouseout="document.getElementById('tooltipTotal').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+                  <span id="tooltipTotal" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Total de chamados contabilizados dentro do período filtrado.
+                  </span>
+                </span>
+              </div>
+              <div class="value kpi-total">0</div>
+            </div>
+
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Componente com mais ocorrências</div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipComponente').style.display='block'"
+                  onmouseout="document.getElementById('tooltipComponente').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+
+                  <span id="tooltipComponente" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Componente (CPU/GPU) com maior número de ocorrências no período filtrado.
+                  </span>
+                </span>
+              </div>
+              <div class="value kpi-component">—</div>
+            </div>
+
+            <div class="kpi">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="label">Tipo de problema mais frequente</div>
+                <span style="
+                    position: relative;
+                    display: inline-block;
+                    cursor: pointer;
+                    font-size: 18px;
+                    margin-left: auto;
+                  " onmouseover="document.getElementById('tooltipTipo').style.display='block'"
+                  onmouseout="document.getElementById('tooltipTipo').style.display='none'">
+                  <i class="fa-solid fa-circle-info" style="color: black;"></i>
+
+                  <span id="tooltipTipo" style="
+                      display: none;
+                      position: absolute;
+                      top: 25px;
+                      left: 0;
+                      background-color: #1e1e1e;
+                      color: white;
+                      padding: 8px 12px;
+                      border-radius: 6px;
+                      font-size: 14px;
+                      width: 260px;
+                      z-index: 10;
+                      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    ">
+                    Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.
+                  </span>
+                </span>
+              </div>
+              <div class="value kpi-type">—</div>
+            </div>
+          </section>
+
+          <section class="charts">
+            <div class="card">
+              <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
+              <div class="chart-container">
+                <canvas id="chartComponent"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Comparativo: Tipo de problema (Uso vs Temperatura)</h3>
+              <div class="chart-container">
+                <canvas id="chartType"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <section style="margin-top:18px">
+            <div class="card">
+              <h3>Máquinas com ocorrências (período)</h3>
+              <div style="overflow:auto;margin-top:8px">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Endereço MAC</th>
+                      <th>Total ocorrências</th>
+                      <th>Risco</th>
+                      <th>Sugestão</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="machinesTbody">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </main>
+      </section>
+    </div>
+  </div>
+  <div class="modal" id="modalDetails">
+    <div class="inner">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="modalTitle">Detalhes da máquina</h3>
+        <button class="btn ghost" id="closeModal">Fechar</button>
+      </div>
+      <canvas id="chartMachineScore" height="120"></canvas>
+      <div id="modalBody" style="margin-top:10px;max-height:320px;overflow:auto">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fkEmpresa = sessionStorage.getItem('idEmpresa')
+    let maquinasProcessadas = [];
+    let chartMachineScore = null;
+    let Componente = null;
+    let TipoProblema = null;
+
+    window.onload = function () {
+      buscarOcorrencias('mes', fkEmpresa);
+    }
+
+    function formatarDataParaBanco(data) {
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+      const hora = String(data.getHours()).padStart(2, '0');
+      const minuto = String(data.getMinutes()).padStart(2, '0');
+      const segundo = String(data.getSeconds()).padStart(2, '0');
+
+      return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+    }
+
+    function buscarOcorrencias(periodo, fkEmpresa) {
+      mostrarCarregando()
+      let dataAbertura, dataFechamento;
+
+      document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
+
+      dataFechamento = new Date();
+
+      if (periodo === '24h') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getDate() - 1);
+        document.getElementById('24hBtn').classList.remove('ghost');
+      } else if (periodo === 'semana') {
+        dataAbertura = new Date();
+        dataAbertura.setDate(dataAbertura.getDate() - 7);
+        document.getElementById('semanaBtn').classList.remove('ghost');
+      } else if (periodo === 'mes') {
+        dataAbertura = new Date();
+        dataAbertura.setMonth(dataAbertura.getMonth() - 1);
+        document.getElementById('mesBtn').classList.remove('ghost');
+      } else if (periodo === 'primeiroSemestre') {
+        const anoAtual = new Date().getFullYear();
+        dataAbertura = new Date(`${anoAtual}-01-01`);
+        dataFechamento = new Date(`${anoAtual}-06-30 23:59:59`);
+        document.getElementById('primeiroSemestreBtn').classList.remove('ghost');
+      } else if (periodo === 'segundoSemestre') {
+        const anoAtual = new Date().getFullYear();
+        dataAbertura = new Date(`${anoAtual}-07-01`);
+        dataFechamento = new Date(`${anoAtual}-12-31 23:59:59`);
+        document.getElementById('segundoSemestreBtn').classList.remove('ghost');
+      } else if (periodo === 'ano') {
+        dataAbertura = new Date();
+        dataAbertura.setFullYear(dataAbertura.getFullYear() - 1);
+        document.getElementById('anoBtn').classList.remove('ghost');
+      }
+
+      const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
+      const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
+      const caminho = `chamados.csv`
+      const empresa = fkEmpresa;
+
+      fetch(`/s3/arquivo/${empresa}/${caminho}`)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Falha na requisição');
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log("Ocorrências buscadas:", data);
+          chamadosFiltrados = data.filter(chamado => {
+            const dataChamado = new Date(chamado.dataAbertura);
+            const inicio = new Date(dataAberturaFormatado);
+            const fim = new Date(dataFechamentoFormatado);
+
+            return dataChamado >= inicio && dataChamado <= fim;
+          });
+          console.log("Ocorrências filtradas:", chamadosFiltrados);
+          processarDados(chamadosFiltrados);
+          esconderCarregando()
+        })
+        .catch(error => console.error("Error ao buscar ocorrências", error))
+    }
+
+    function processarDados(ocorrencias) {
+      console.log(ocorrencias);
+      const dados = tratarOcorrencias(ocorrencias);
+
+      document.querySelector('.kpi-total').textContent = dados.total;
+
+      let componenteMaior;
+      if (dados.componentes.gpu >= dados.componentes.cpu) {
+        componenteMaior = ['GPU', dados.componentes.gpu];
+      } else {
+        componenteMaior = ['CPU', dados.componentes.cpu];
+      }
+      document.querySelector('.kpi-component').textContent = `${componenteMaior[0]} — ${componenteMaior[1]}`;
+
+      let tipoProblemaMaior;
+      if (dados.tipoProblema.temperatura >= dados.tipoProblema.uso) {
+        tipoProblemaMaior = ['Temperatura', dados.tipoProblema.temperatura];
+      } else {
+        tipoProblemaMaior = ['Uso', dados.tipoProblema.uso];
+      }
+      document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
+
+      atualizarGraficos(dados);
+
+      maquinasProcessadas = dados.cadaMaquina;
+      atualizarListaMaquinas(dados.cadaMaquina);
+    }
+
+    function tratarOcorrencias(ocorrencias) {
+      const componentes = { cpu: 0, gpu: 0 };
+      const tipoProblema = { uso: 0, temperatura: 0 };
+      let total = ocorrencias.length;
+
+      ocorrencias.forEach(ocorrencia => {
+        const problema = ocorrencia.problema.toLowerCase();
+
+        if (problema.includes('gpu')) {
+          componentes.gpu++;
+        }
+        if (problema.includes('cpu')) {
+          componentes.cpu++;
+        }
+        if (problema.includes('uso')) {
+          tipoProblema.uso++;
+        }
+        if (problema.includes('temperatura')) {
+          tipoProblema.temperatura++;
+        }
+      });
+
+      let componenteMaior;
+      if (componentes.gpu >= componentes.cpu) {
+        componenteMaior = ['GPU', componentes.gpu];
+      } else {
+        componenteMaior = ['CPU', componentes.cpu];
+      }
+
+      let tipoProblemaMaior;
+      if (tipoProblema.temperatura >= tipoProblema.uso) {
+        tipoProblemaMaior = ['Temperatura', tipoProblema.temperatura];
+      } else {
+        tipoProblemaMaior = ['Uso', tipoProblema.uso];
+      }
+
+      const cadaMaquina = {};
+
+      ocorrencias.forEach(ocorrencia => {
+        const machineId = ocorrencia.fkMaquina;
+
+        if (!cadaMaquina[machineId]) {
+          cadaMaquina[machineId] = {
+            id: machineId,
+            nome: ocorrencia.nomeMaquina,
+            enderecoMac: ocorrencia.enderecoMac,
+            total: 0,
+            chamados: []
+          };
+        }
+
+        cadaMaquina[machineId].total++;
+        cadaMaquina[machineId].chamados.push(ocorrencia);
+      });
+
+      const cadaMaquinaComRisco = [];
+
+      Object.values(cadaMaquina).forEach(maquina => {
+        const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);
+
+        const [risco, css] = riscoTexto(pontuacao);
+
+        cadaMaquinaComRisco.push({
+          ...maquina,
+          pontuacao,
+          risco,
+          css
+        });
+      });
+
+      return {
+        total,
+        componentes: { gpu: componentes.gpu, cpu: componentes.cpu },
+        tipoProblema: { uso: tipoProblema.uso, temperatura: tipoProblema.temperatura },
+        cadaMaquina: cadaMaquinaComRisco
+      };
+    }
+
+    function atualizarGraficos(dados) {
+      const graficoComponente = document.getElementById('chartComponent').getContext('2d');
+      const graficoTipoProblema = document.getElementById('chartType').getContext('2d');
+
+      if (!Componente) {
+        Componente = new Chart(graficoComponente, {
+          type: 'bar',
+          data: {
+            labels: ['CPU', 'GPU'],
+            datasets: [{
+              label: ['CPU', 'GPU'],
+              data: [dados.componentes.cpu, dados.componentes.gpu],
+              backgroundColor: ['#4B2B85', '#4B2B85']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      } else {
+        Componente.data.datasets[0].data = [dados.componentes.cpu, dados.componentes.gpu];
+        Componente.update();
+      }
+
+      if (!TipoProblema) {
+        TipoProblema = new Chart(graficoTipoProblema, {
+          type: 'bar',
+          data: {
+            labels: ['Uso', 'Temperatura'],
+            datasets: [{
+              label: ['Perc. Uso', 'Temperatura'],
+              data: [dados.tipoProblema.temperatura, dados.tipoProblema.uso],
+              backgroundColor: ['#4B2B85', '#4B2B85']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      } else {
+        TipoProblema.data.datasets[0].data = [dados.tipoProblema.uso, dados.tipoProblema.temperatura];
+        TipoProblema.update();
+      }
+    }
+
+    function atualizarListaMaquinas(cadaMaquina) {
+      const tbody = document.getElementById('machinesTbody');
+      tbody.innerHTML = '';
+
+      cadaMaquina.forEach(maquina => {
+        const chamados = maquina.chamados;
+        const pontuacao = calcularPontuacao(maquina.id, chamados);
+        const [risco, css] = riscoTexto(pontuacao);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td>${maquina.nome}</td>
+        <td>${maquina.enderecoMac}</td>
+        <td>${chamados.length}</td>
+        <td><span class="risk ${css}" title="Score: ${pontuacao}">${risco}</span></td>
+        <td class="suggestion">${pegarSugestao(chamados, pontuacao)}</td>
+        <td class="actions"><button class="btn btn-details" data-mid="${maquina.id}">Detalhes</button></td>
+      `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'))));
+    }
+
+    function pegarSugestao(chamados, pontuacao) {
+      let cpu = 0, gpu = 0;
+      chamados.forEach(c => {
+        const txt = c.problema.toLowerCase();
+        if (txt.includes("cpu")) cpu++;
+        if (txt.includes("gpu")) gpu++;
+      });
+
+      const componente = cpu >= gpu ? "CPU" : "GPU";
+
+      if (pontuacao >= 67) {
+        return `Risco alto — Alta chance de avaria na ${componente}. Revisão imediata recomendada.`;
+      }
+
+      if (pontuacao >= 34) {
+        return `Risco médio — Monitorar a ${componente}. Inspeção preventiva sugerida.`;
+      }
+
+      return `Risco baixo — ${componente} estável. Sem ações urgentes.`;
+    }
+
+    function abrirDetalhes(mid) {
+      const machine = maquinasProcessadas.find(m => m.id == mid);
+      console.log(machine);
+      if (!machine) return;
+
+      const modal = document.querySelector('#modalDetails');
+
+      document.querySelector('#modalTitle').textContent =
+        `Máquina: ${machine.nome} — ${machine.enderecoMac}`;
+
+      const body = document.querySelector('#modalBody');
+      body.innerHTML = '';
+
+      const chamados = machine.chamados.sort(
+        (a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura)
+      );
+
+      chamados.forEach(c => {
+        const div = document.createElement('div');
+        div.style.padding = '8px';
+        div.style.borderBottom = '1px solid #eee';
+        div.innerHTML = `
+      <strong>${new Date(c.dataAbertura).toLocaleString()}</strong> —
+      ${c.problema}
+      <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>
+    `;
+        body.appendChild(div);
+      });
+
+      const ctx = document.getElementById("chartMachineScore").getContext("2d");
+
+      // destruir grafico anterior se existir
+      if (chartMachineScore) {
+        chartMachineScore.destroy();
+      }
+
+      // gerar labels (datas)
+      const labels = chamados.map(c =>
+        new Date(c.dataAbertura).toLocaleDateString('pt-BR')
+      );
+
+      // gerar pontos (pontuação recalculada a cada chamado)
+      const pontuacoes = [];
+      chamados.forEach((_, indice) => {
+        const subconjunto = chamados.slice(0, indice + 1);
+        const pontuacaoParcial = calcularPontuacao(machine.id, subconjunto);
+        pontuacoes.push(pontuacaoParcial);
+      });
+
+      chartMachineScore = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Evolução do Score",
+            data: pontuacoes,
+            borderWidth: 3,
+            borderColor: "#4B2B85",
+            backgroundColor: "rgba(75, 43, 133, .2)",
+            tension: 0.25,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      modal.classList.add('open');
+    }
+
+    const el = selector => document.querySelector(selector);
+    const els = selector => Array.from(document.querySelectorAll(selector));
+
+    // scoring heuristic (0-100)
+    function calcularPontuacao(maquinaId, chamados) {
+
+      console.log("Chamados pontuacao:", chamados);
+
+      // Quantidade total de chamados da máquina
+      const totalChamados = chamados.length;
+      if (totalChamados === 0) return 0;
+
+      // Contadores para identificar qual componente aparece mais nos problemas
+      const contadorComponentes = {
+        cpu: 0,
+        gpu: 0
+      };
+
+      // Acumulador que mede quão recentes os chamados são
+      let somaRecencia = 0;
+      const agora = new Date();
+
+      // Processa os chamados
+      chamados.forEach(chamado => {
+        const descricao = chamado.problema.toLowerCase();
+
+        // Verifica se o texto menciona CPU ou GPU
+        if (descricao.includes("gpu")) contadorComponentes.gpu++;
+        if (descricao.includes("cpu")) contadorComponentes.cpu++;
+
+        // Calcula há quantos dias o chamado foi aberto
+        const dataAbertura = new Date(chamado.dataAbertura);
+        const diasDesdeAbertura = Math.max(
+          1,
+          (agora - dataAbertura) / (1000 * 60 * 60 * 24)
+        );
+
+        // Recência: chamados mais novos valem mais
+        somaRecencia += 1 / Math.log(diasDesdeAbertura + 1);
+      });
+
+      // Parte 1 — normaliza o número total de chamados (até 10 vira 100%)
+      const fatorOcorencias = Math.min(1, totalChamados / 10);
+
+      // Parte 2 — divide quantos chamados pertencem ao componente mais problemático
+      const maiorComponente = Math.max(
+        contadorComponentes.cpu,
+        contadorComponentes.gpu
+      );
+      const fatorComponente = maiorComponente / totalChamados;
+
+      // Parte 3 — quanto mais recentes os chamados, maior a nota
+      const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
+
+      // tendência baseada no próprio período filtrado
+      const fatorTendencia = Math.min(
+        1,
+        totalChamados > 0 ? totalChamados / 10 : 0
+      );
+
+      // Calculo da pontuação final
+      const pontuacao = Math.round(
+        40 * fatorOcorencias +  // peso 40%
+        25 * fatorComponente +  // peso 25%
+        20 * fatorRecencia +    // peso 20%
+        15 * fatorTendencia     // peso 15%
+      );
+
+      // Garante que a pontuação fique entre 0 e 100
+      return Math.max(0, Math.min(100, pontuacao));
+    }
+
+    function riscoTexto(pontuacao) {
+      if (pontuacao >= 67) return ['Alto', 'risk--high'];
+      if (pontuacao >= 34) return ['Médio', 'risk--med'];
+      return ['Baixo', 'risk--low'];
+    }
+
+    el('#closeModal').addEventListener('click', () => el('#modalDetails').classList.remove('open'));
+
+    function mostrarCarregando() {
+      document.getElementById("tela-carregando").style.display = "flex";
+    }
+
+    function esconderCarregando() {
+      document.getElementById("tela-carregando").style.display = "none";
+    }
+
+  </script>
+</body>
+
+</html>
