@@ -1,9 +1,7 @@
 const { getS3FileContent } = require('../utilits/getCsvBucket');
 const { parse } = require('path');
 
-AWS.config.update({ region: "us-east-1" });
 
-const s3 = new AWS.S3();
 
 async function pegarCsvPorMaquina(req, res) {
     try {
@@ -222,4 +220,4 @@ async function buscarArquivoS3(req, res) {
     }
 }
 
-module.exports = { buscarArquivoS3 };
+module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas};
