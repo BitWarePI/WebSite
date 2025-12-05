@@ -37,6 +37,49 @@ function listarChamadosPorEmpresa(idEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function buscarPrincipalProblema(fkEmpresa) {
+    var instrucaoSql = `
+        SELECT 
+            c.problema,
+            COUNT(*) AS ocorrencias
+        FROM Chamado c
+        JOIN Maquina m ON c.fkMaquina = m.idMaquina
+        WHERE m.fkEmpresa = ${fkEmpresa}
+        GROUP BY c.problema
+        ORDER BY ocorrencias DESC
+        LIMIT 1;
+    `;
+
+    console.log("Executando SQL (buscarPrincipalProblema):\n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+async function totalErros(idEmpresa) {
+    const sql = `
+   SELECT COUNT(*) AS total_erros
+    FROM Chamado c
+    JOIN Maquina m ON c.fkMaquina = m.idMaquina
+    WHERE m.fkEmpresa = ${idEmpresa}
+      AND c.status <> 'Resolvido';
+  `;
+
+    const resultado = await database.executar(sql);
+    return resultado[0];
+}
+
+function maquinasComErro(idEmpresa) {
+  const sql = `
+    SELECT COUNT(DISTINCT m.idMaquina) AS maquinas_com_erro
+    FROM Chamado c
+    JOIN Maquina m ON c.fkMaquina = m.idMaquina
+    WHERE m.fkEmpresa = ${idEmpresa}
+      AND c.status <> 'Resolvido';
+  `;
+  
+  return database.executar(sql);
+}
+
+
 function buscarKPIs(idEmpresa) {
     var instrucaoSql = `
         SELECT 
@@ -80,6 +123,20 @@ function buscarKPIsTecnico(idTecnico) {
     return database.executar(instrucaoSql);
 }
 
+function buscarChamadosCriticos(fkEmpresa) {
+    var instrucaoSql = `
+        SELECT COUNT(*) AS totalCriticos
+        FROM Chamado c
+        JOIN Maquina m ON c.fkMaquina = m.idMaquina
+        WHERE c.prioridade = 'Critica'
+        AND m.fkEmpresa = ${fkEmpresa};
+    `;
+
+    console.log("Executando SQL (buscarChamadosCriticos):\n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function finalizarChamado(idChamado) {
     var instrucaoSql = `
         UPDATE Chamado 
@@ -106,5 +163,9 @@ module.exports = {
     buscarKPIs,
     buscarKPIsTecnico,
     finalizarChamado,
-    removerTecnico
+    removerTecnico,
+    buscarChamadosCriticos,
+    buscarPrincipalProblema,
+    totalErros,
+    maquinasComErro
 };

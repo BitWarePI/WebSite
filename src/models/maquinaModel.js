@@ -1,5 +1,12 @@
 const database = require("../database/config");
 
+async function buscarMacsDaEmpresa(idEmpresa) {
+  const instrucao =
+    `SELECT enderecoMac FROM Maquina WHERE fkEmpresa = ${idEmpresa}`;
+
+  return database.executar(instrucao);
+};
+
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
     SELECT 
@@ -221,5 +228,5 @@ module.exports = {
     definirParametrosMaquina,
     topMaquinas,
     qtdMaquinas,
-    buscarOcorrencias
+    buscarMacsDaEmpresa
 };
