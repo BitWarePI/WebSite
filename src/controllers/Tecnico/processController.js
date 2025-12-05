@@ -149,10 +149,10 @@ async function posListCommandSnippt(req, res) {
 }
 
 async function putListCommandSnippt(req, res) {
-  const { id } = req.params;
+  const { idEditando } = req.params;
   const { nameCommand, command } = req.body;
 
-  if (id === undefined || isNaN(id)) {
+  if (idEditando === undefined || isNaN(idEditando)) {
     return res.status(400).send("Valor inválido de id!");
   }
 
@@ -167,7 +167,7 @@ async function putListCommandSnippt(req, res) {
   console.log(`Rota acessada: ${req.method} | ${req.path}`);
 
   try {
-    const resultado = await model.updateCommandSnippt(id, nameCommand, command);
+    const resultado = await model.updateCommandSnippt(idEditando, nameCommand, command);
     console.log("Comando atualizado:", resultado);
 
     if (resultado.affectedRows === 0) {
@@ -175,7 +175,7 @@ async function putListCommandSnippt(req, res) {
     }
 
     return res.json({
-      id: id,
+      idEditando: idEditando,
       nameCommand: nameCommand,
       command: command,
       mensagem: "Comando atualizado com sucesso"

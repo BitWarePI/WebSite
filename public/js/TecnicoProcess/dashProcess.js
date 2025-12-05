@@ -137,7 +137,9 @@ function adicionarComando() {
 
 function editarComando(id) {
   const tipo = "editar";
-  abrirModalComando(tipo, "", id);
+  console.log("fffffff",id);
+  
+  abrirModalComando(tipo, id);
 }
 
 

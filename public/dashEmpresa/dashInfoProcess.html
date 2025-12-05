@@ -162,7 +162,7 @@
             </div>
 
             <!-- Modal esquerdo para adicionar/editar comando -->
-            <div id="modal-comando" class="comando-slide" aria-hidden="true">
+            <div id="modal-comando" class="comando-slide">
               <div class="comando-header">
                 <h2 id="comando-titulo">Novo Comando</h2>
                 <button id="comando-close" class="comando-close" aria-label="Fechar">×</button>
@@ -443,22 +443,20 @@
   const inputScript = document.getElementById("comando-input-script");
   const btnSalvar = document.getElementById("btnSalvarComando");
 
-  let modo = "";         // "editar" ou "novo"
-  let idEditando = null; // id do comando quando editar
+  let modo = "";        
+  let idEditando = null;
 
-  function abrirModalComando(tipo, valorName = "", valorScript = "", id = null) {
+  function abrirModalComando(tipo, id) {
     modo = tipo || "novo";
-    idEditando = id ?? null;
-
-    if (inputName) inputName.value = valorName || "";
-    if (inputScript) inputScript.value = valorScript || "";
-
+    console.log("aqui",id);
+    idEditando = id;
+    
     if (tituloComando)
       tituloComando.textContent = modo === "editar" ? "Editar Comando" : "Novo Comando";
 
-    if (modalComando) modalComando.classList.add("show");
-    if (backdropComando) backdropComando.classList.remove("hidden");
-    if (modalComando) modalComando.setAttribute("aria-hidden", "false");
+    modalComando.classList.add("show");
+    backdropComando.classList.remove("hidden");
+    modalComando.setAttribute("aria-hidden", "false");
   }
 
   function mostrarCarregando() {
@@ -471,50 +469,19 @@
   }
 
   function fecharModalComando() {
-    if (modalComando) modalComando.classList.remove("show");
-    if (backdropComando) backdropComando.classList.add("hidden");
-    if (modalComando) modalComando.setAttribute("aria-hidden", "true");
+    modalComando.classList.remove("show");
+    backdropComando.classList.add("hidden");
+    modalComando.setAttribute("aria-hidden", "true");
 
-    // limpar estado opcional
     modo = "";
     idEditando = null;
     if (inputName) inputName.value = "";
     if (inputScript) inputScript.value = "";
   }
 
-  if (closeComando) closeComando.addEventListener("click", fecharModalComando);
-  if (backdropComando) backdropComando.addEventListener("click", fecharModalComando);
+  closeComando.addEventListener("click", fecharModalComando);
+  backdropComando.addEventListener("click", fecharModalComando);
 
-  // Função para abrir em modo editar: busca os dados do comando pelo ID e preenche modal
-  window.editarComando = async function (id) {
-    try {
-      // Tenta buscar os detalhes do comando. Assumo que GET /dashProcess/listendCommand/:id retorne o objeto.
-      const resp = await fetch(`/dashProcess/listendCommand/${id}`);
-      if (!resp.ok) {
-        // Se backend não suportar GET por id, abre o modal sem preencher
-        console.warn("Não foi possível buscar comando (GET). Abrindo modal vazio para edição.");
-        abrirModalComando("editar", "", "", id);
-        return;
-      }
-
-      const cmd = await resp.json(); // esperar objeto { id, nameCommand, command, ... }
-      const name = cmd.nameCommand ?? cmd.nome ?? "";
-      const script = cmd.command ?? cmd.comando ?? cmd.script ?? "";
-
-      abrirModalComando("editar", name, script, id);
-
-    } catch (e) {
-      console.error("Erro ao carregar comando para editar:", e);
-      abrirModalComando("editar", "", "", id); // fallback: abre vazio para editar
-    }
-  };
-
-  // Função para abrir modal novo
-  window.adicionarComando = function () {
-    abrirModalComando("novo", "", "", null);
-  };
-
-  // Salvar (POST ou PUT) — envia BOTH: nameCommand e command
   if (btnSalvar) {
     btnSalvar.addEventListener("click", async () => {
       const nameVal = inputName ? inputName.value.trim() : "";
@@ -525,8 +492,9 @@
 
       try {
         if (modo === "editar") {
+          console.log("olha aqui", idEditando);
           if (!idEditando) return alert("ID do comando não definido para edição.");
-
+          
           const resp = await fetch(`/dashProcess/listendCommand/${idEditando}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -537,10 +505,10 @@
           });
           if (!resp.ok) throw new Error("Erro no PUT ao atualizar comando.");
 
-        } else { // novo
+        } else {
           const fkEmpresa = sessionStorage.getItem("idEmpresa");
           if (!fkEmpresa) return alert("Empresa não definida. Faça login novamente.");
-
+          
           const resp = await fetch(`/dashProcess/listendCommand/${fkEmpresa}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -553,7 +521,7 @@
         }
 
         fecharModalComando();
-        if (typeof listendSnippts === "function") listendSnippts(); // atualizar lista
+        if (typeof listendSnippts === "function") listendSnippts();
 
       } catch (e) {
         console.error("Erro salvando comando:", e);
