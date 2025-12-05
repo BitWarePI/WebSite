@@ -1,4 +1,6 @@
 const { getS3FileContent } = require('../utilits/getCsvBucket');
+const AWS = require('aws-sdk')
+const Papa = require('papaparse')
 const { parse } = require('path');
 
 AWS.config.update({ region: "us-east-1" });
@@ -380,4 +382,4 @@ async function pegarLeiturasFormatadas(req, res) {
     }
 }
 
-module.exports = { buscarArquivoS3 };
+module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas};
