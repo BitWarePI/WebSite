@@ -169,13 +169,15 @@
               </div>
 
               <label>Nome/Descrição:</label>
-              <input type="text" id="comando-input-name" class="comando-input" placeholder="Ex: Matar processo pelo PID">
+              <input type="text" id="comando-input-name" class="comando-input"
+                placeholder="Ex: Matar processo pelo PID">
 
               <label style="margin-top:8px;">Script/Comando:</label>
               <textarea id="comando-input-script" class="comando-input" rows="4"
                 placeholder="Ex: kill -9 {pid}"></textarea>
 
-              <small style="color:#666">Use <code>{pid}</code> ou <code>{nome_processo}</code> no script quando necessário usalos em algum comando.</small>
+              <small style="color:#666">Use <code>{pid}</code> ou <code>{nome_processo}</code> no script quando
+                necessário usalos em algum comando.</small>
 
               <button class="comando-salvar" id="btnSalvarComando">Salvar</button>
             </div>
@@ -443,14 +445,14 @@
   const inputScript = document.getElementById("comando-input-script");
   const btnSalvar = document.getElementById("btnSalvarComando");
 
-  let modo = "";        
+  let modo = "";
   let idEditando = null;
 
   function abrirModalComando(tipo, id) {
     modo = tipo || "novo";
-    console.log("aqui",id);
+    console.log("aqui", id);
     idEditando = id;
-    
+
     if (tituloComando)
       tituloComando.textContent = modo === "editar" ? "Editar Comando" : "Novo Comando";
 
@@ -494,7 +496,7 @@
         if (modo === "editar") {
           console.log("olha aqui", idEditando);
           if (!idEditando) return alert("ID do comando não definido para edição.");
-          
+
           const resp = await fetch(`/dashProcess/listendCommand/${idEditando}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -508,7 +510,7 @@
         } else {
           const fkEmpresa = sessionStorage.getItem("idEmpresa");
           if (!fkEmpresa) return alert("Empresa não definida. Faça login novamente.");
-          
+
           const resp = await fetch(`/dashProcess/listendCommand/${fkEmpresa}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -529,5 +531,25 @@
       }
     });
   }
+
+  const openBtn = document.querySelector(".filter-btn");
+  const slide = document.getElementById("filtro-slide");
+  const backdrop = document.getElementById("filtro-backdrop");
+  const closeBtn = document.getElementById("filtro-close");
+
+  function abrirFiltro() {
+    slide.classList.add("show");
+    backdrop.classList.remove("hidden");
+  }
+
+  function fecharFiltro() {
+    slide.classList.remove("show");
+    backdrop.classList.add("hidden");
+  }
+
+  openBtn.addEventListener("click", abrirFiltro);
+  closeBtn.addEventListener("click", fecharFiltro);
+  backdrop.addEventListener("click", fecharFiltro);
+
 
 </script>
