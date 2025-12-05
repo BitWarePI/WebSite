@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
   <link rel="stylesheet" href="../css/dashboard/dashTecnico/modelFiltroHistorico.css">
   <link rel="stylesheet" href="../css/animacao.css">
-  <script src="../js/TecnicoProcess/dashHistoricoSnippts.js"></script>
 
   <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
 
@@ -23,7 +22,7 @@
   <title>Dashboard | BitWare</title>
 </head>
 
-<body onclick="listenProcessSelection()">
+<body>
   <section>
 
     <!-- NAV LATERAL -->
@@ -306,7 +305,7 @@
           <div id="modal-comando" class="comando-slide">
           </div>
 
-          <div id="modal-resultado" class="comando-slide">
+          <div id="modal-resultado" class="comando-slide" style="width: 390px !important;">
             <div class="comando-header">
               <h2 id="resultado-titulo">Resultado da Execução</h2>
               <button id="resultado-close" class="comando-close" aria-label="Fechar">×</button>
@@ -319,8 +318,7 @@
               </div>
 
               <label>Saída (JSON/Log):</label>
-              <pre id="resultado-conteudo"
-                style="background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow: auto; flex: 1; font-family: monospace; border: 1px solid #333;">
+              <pre id="resultado-conteudo" class="result-content">
       Aguardando execução...
           </pre>
             </div>
@@ -402,26 +400,25 @@
 <script src="../js/TecnicoProcess/dashHistoricoSnippts.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const openBtn = document.querySelector(".filter-btn");
-    const slide = document.getElementById("filtro-slide");
-    const backdrop = document.getElementById("filtro-backdrop");
-    const closeBtn = document.querySelector(".modal-close-btn");
+  const openBtn = document.querySelector(".filter-btn");
+  const slide = document.getElementById("filtro-slide");
+  const backdrop = document.getElementById("filtro-backdrop");
+  const closeBtn = document.querySelector(".modal-close-btn");
 
-    function abrirFiltro() {
-      if (slide) slide.classList.add("show");
-      if (backdrop) backdrop.classList.remove("hidden");
-    }
+  function abrirFiltro() {
+    if (slide) slide.classList.add("show");
+    if (backdrop) backdrop.classList.remove("hidden");
+  }
 
-    function fecharFiltro() {
-      if (slide) slide.classList.remove("show");
-      if (backdrop) backdrop.classList.add("hidden");
-    }
+  function fecharFiltro() {
+    if (slide) slide.classList.remove("show");
+    if (backdrop) backdrop.classList.add("hidden");
+  }
 
-    if (openBtn) openBtn.addEventListener("click", abrirFiltro);
-    if (closeBtn) closeBtn.addEventListener("click", fecharFiltro);
-    if (backdrop) backdrop.addEventListener("click", fecharFiltro);
-  });
+  if (openBtn) openBtn.addEventListener("click", abrirFiltro);
+  if (closeBtn) closeBtn.addEventListener("click", fecharFiltro);
+  if (backdrop) backdrop.addEventListener("click", fecharFiltro);
+
 
   function mostrarCarregando() {
     document.getElementById("tela-carregando2").style.display = "flex";
@@ -445,62 +442,31 @@
     return "#2ecc71";
   }
 
-
-  const btnSalvar = document.getElementById("btnSalvarComando");
-
   const modalResultado = document.getElementById("modal-resultado");
   const closeResultado = document.getElementById("resultado-close");
   const resultadoConteudo = document.getElementById("resultado-conteudo");
   const resultadoStatus = document.getElementById("resultado-status");
 
-  let modo = "";
-  let idEditando = null;
-
   function fecharQualquerModal() {
-    if (modalComando) {
-      modalComando.classList.remove("show");
-      modalComando.setAttribute("aria-hidden", "true");
-    }
-    if (modalResultado) {
-      modalResultado.classList.remove("show");
-      modalResultado.setAttribute("aria-hidden", "true");
-    }
-    if (backdropComando) backdropComando.classList.add("hidden");
-
-    modo = "";
-    idEditando = null;
-    if (inputName) inputName.value = "";
-    if (inputScript) inputScript.value = "";
+    modalResultado.classList.remove("show");
   }
 
-  function abrirModalComando(tipo, id) {
-    modo = tipo || "novo";
-    idEditando = id;
-    if (tituloComando) tituloComando.textContent = modo === "editar" ? "Editar Comando" : "Novo Comando";
+  function abrirModalResultado(dados, sucesso) {
+    if (dados.stdout && typeof dados.stdout === 'string') {
+      dados.stdout = dados.stdout.replace(/\n/g, '<br>');
+    }
 
-    modalComando.classList.add("show");
-    backdropComando.classList.remove("hidden");
-    modalComando.setAttribute("aria-hidden", "false");
-  }
-
-  function abrirModalResultado(dados, sucesso = true) {
     const jsonBonito = JSON.stringify(dados, null, 2);
 
-    if (resultadoConteudo) resultadoConteudo.textContent = jsonBonito;
+    resultadoConteudo.textContent = jsonBonito;
 
     if (resultadoStatus) {
       resultadoStatus.textContent = sucesso ? "Execução Concluída" : "Erro na Execução";
-      resultadoStatus.style.color = sucesso ? "#4caf50" : "#f44336"; 
+      resultadoStatus.style.color = sucesso ? "#4caf50" : "#f44336";
     }
 
     modalResultado.classList.add("show");
-    backdropComando.classList.remove("hidden");
-    modalResultado.setAttribute("aria-hidden", "false");
   }
 
-  if (closeComando) closeComando.addEventListener("click", fecharQualquerModal);
-  if (backdropComando) backdropComando.addEventListener("click", fecharQualquerModal);
-  if (closeResultado) closeResultado.addEventListener("click", fecharQualquerModal);
-  if (btnFecharResultado) btnFecharResultado.addEventListener("click", fecharQualquerModal);
-
+  closeResultado.addEventListener("click", fecharQualquerModal);
 </script>

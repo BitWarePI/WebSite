@@ -415,3 +415,16 @@ section {
 .barra-progress {
   margin-right: 20px;
 }
+
+.result-content {
+  max-height: 600px !important;
+  background: #1e1e1e; 
+  color: #d4d4d4; 
+  padding: 15px; 
+  border-radius: 5px; 
+  overflow: auto; 
+  flex: 1; 
+  font-family: monospace; 
+  border: 1px solid #333;
+  white-space: pre-wrap;
+}
