@@ -34,6 +34,7 @@ var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
 var s3BucketRouter = require('./src/routes/dadosBucket');
 var s3Router = require("./src/routes/s3");
+var custeAws = require("./src/routes/aws");
 
 
 // Middlewares
@@ -54,6 +55,7 @@ app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
 app.use('/s3', s3Router);
+app.use("/aws", custeAws);
 
 // Inicia o servidor
 app.listen(PORTA_APP, HOST_APP, function () {
