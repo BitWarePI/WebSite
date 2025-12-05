@@ -1,10 +1,14 @@
 // Define o ambiente: desenvolvimento ou produção
+
 var ambiente_processo = 'desenvolvimento';
 //var ambiente_processo = 'producao';
 
 // Define o arquivo de ambiente
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 require("dotenv").config({ path: caminho_env });
+
+
+console.log("BUCKET:", process.env.S3_BUCKET);
 
 // Importa pacotes
 var express = require("express");
@@ -28,6 +32,7 @@ var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
+var s3BucketRouter = require('./src/routes/dadosBucket');
 var s3Router = require("./src/routes/s3");
 
 
@@ -38,6 +43,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
+app.use('/dadosBucket', s3BucketRouter);
 app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);

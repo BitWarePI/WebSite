@@ -104,7 +104,8 @@
                     <h3 class="titulo" style="font-size: 25px;"><b>Máquinas <br>cadastradas</b></h3>
                     <p class="quantidade" id="qtdMaquinas" style="font-size: 5em;">0</p>
                 </div>
-                <div class="kpi-card" style="background-color: #4b2b85; color: white; border-radius: 0.5rem;">
+                <div id="idMaquinasUltrapassando" class="kpi-card"
+                    style="background-color: #4caf50; color: white; border-radius: 0.5rem;">
                     <h3 class="titulo" style="font-size: 25px;"><b>Máquinas ultrapassando os <br>parâmetros</b></h3>
                     <p class="quantidade" id="qtdForaParam" style="font-size: 5em;">0</p>
                 </div>
@@ -463,7 +464,6 @@
                                 mac: item.mac_address
                             }));
 
-                            document.getElementById("qtdMaquinas").innerHTML = `${maquinas.length}`;
                             let contadorQtdForaParam = 0;
                             let contadorQtdForaTempGpu = 0;
                             let contadorQtdForaTempCpu = 0;
@@ -482,7 +482,7 @@
                                 const registros = dadosCSV.filter(d => d.mac.trim().toLowerCase() === macMaquina);
                                 console.log("REGISTROS: " + JSON.stringify(registros, null, 2)); if (registros.length > 0) {
                                     const ultimo = registros[registros.length - 1];
-
+                                    console.log("ULTIMO REGISTRO: " + ultimo)
                                     let corCpuPercent = "#89be4d";
                                     let corGpuPercent = "#89be4d";
                                     let corCpuTemp = "#89be4d";
@@ -608,7 +608,21 @@
                                     }
                                 }
                             });
+                            var quantidadeMaquinas = maquinas.length;
+                            var dezPorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.10;
+                            var vintePorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.20;
 
+                            var corKpiQuantidadeForaParam = "#4caf50";
+                            if (contadorQtdForaParam >= dezPorCentoQuantidadeMaquinas && contadorQtdForaParam <=
+                                vintePorCentoQuantidadeMaquinas
+                            ) {
+                                corKpiQuantidadeForaParam = "#e4b131"
+                            } else if (contadorQtdForaParam > vintePorCentoQuantidadeMaquinas) {
+                                corKpiQuantidadeForaParam = "#ff4b4b"
+                            }
+
+                            document.getElementById("qtdMaquinas").innerHTML = `${quantidadeMaquinas}`;
+                            document.getElementById("idMaquinasUltrapassando").style.backgroundColor = corKpiQuantidadeForaParam;
                             document.getElementById("qtdForaParam").innerHTML = `${contadorQtdForaParam}`;
                             console.log("Máquinas fora do parâmetro:", contadorQtdForaParam);
                             console.log("Lista de máquinas:", listaMaquinas);
@@ -2243,4 +2257,5 @@
         }
     </script>
 </body>
+
 </html>
