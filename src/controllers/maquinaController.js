@@ -1,6 +1,19 @@
 const maquinaModel = require("../models/maquinaModel");
 
 module.exports = {
+    async listarMacs(req, res) {
+        try {
+            const empresaId = req.params.empresaId;
+
+            const macs = await maquinaModel.buscarMacsDaEmpresa(empresaId);
+
+            res.json({ macs });
+
+        } catch (err) {
+            res.status(500).json({ erro: err.message });
+        }
+    },
+
     async listarPorEmpresa(req, res) {
         const { idEmpresa } = req.params;
 
@@ -175,27 +188,6 @@ module.exports = {
             res.status(200).json(resultado);
         } catch (erro) {
             console.error("Erro ao buscar quantidade de maquinas:", erro);
-            res.status(500).json({ erro: "Erro interno:" });
-        }
-    },
-
-    async buscarOcorrencias(req, res) {
-        console.log("entrou")
-        const { dataAbertura, dataFechamento, fkEmpresa } = req.query;
-
-        console.log('Data Abertura:', dataAbertura);
-        console.log('Data Fechamento:', dataFechamento);
-
-        try {
-            const resultado = await maquinaModel.buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa);
-
-            if (resultado.length === 0) {
-                return res.status(200).json([]);
-            }
-
-            res.status(200).json(resultado);
-        } catch (erro) {
-            console.error("Erro ao buscar ocorrencias:", erro);
             res.status(500).json({ erro: "Erro interno:" });
         }
     }

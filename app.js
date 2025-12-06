@@ -1,10 +1,14 @@
 // Define o ambiente: desenvolvimento ou produção
+
 var ambiente_processo = 'desenvolvimento';
 //var ambiente_processo = 'producao';
 
 // Define o arquivo de ambiente
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 require("dotenv").config({ path: caminho_env });
+
+
+console.log("BUCKET:", process.env.S3_BUCKET);
 
 // Importa pacotes
 var express = require("express");
@@ -26,11 +30,14 @@ var usuarioRouter = require("./src/routes/usuarios");
 var cargoRouter = require("./src/routes/cargos");
 var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
-//var emailRouter = require("./src/routes/emails");
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
 var procesKpiRouter = require("./src/routes/Tecnico/dashProcess");
 var histSnippts = require("./src/routes/Tecnico/dashHistoricoSnippts");
+var s3BucketRouter = require('./src/routes/dadosBucket');
+var s3Router = require("./src/routes/s3");
+var custeAws = require("./src/routes/aws");
+
 
 // Middlewares
 app.use(express.json());
@@ -39,6 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
 // Rotas
+app.use('/dadosBucket', s3BucketRouter);
 app.use("/kpis", kpiRouter);
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
@@ -51,6 +59,8 @@ app.use("/chamados", chamadosRouter);
 app.use("/dashProcess", procesKpiRouter)
 app.use("/dashHistoricoSnippts", histSnippts)
 //app.use("/emails", emailRouter);
+app.use('/s3', s3Router);
+app.use("/aws", custeAws);
 
 // Inicia o servidor
 app.listen(PORTA_APP, HOST_APP, function () {

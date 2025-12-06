@@ -1,5 +1,12 @@
 const database = require("../database/config");
 
+async function buscarMacsDaEmpresa(idEmpresa) {
+  const instrucao =
+    `SELECT enderecoMac FROM Maquina WHERE fkEmpresa = ${idEmpresa}`;
+
+  return database.executar(instrucao);
+};
+
 function listarPorEmpresa(idEmpresa) {
     const instrucao = `
     SELECT 
@@ -169,13 +176,43 @@ async function topMaquinas(idEmpresa) {
 
 }
 
-function qtdMaquinas(idEmpresa){
+function qtdMaquinas(idEmpresa) {
     const instrucaoSQL = `
         SELECT COUNT(*) AS total
         FROM Maquina 
         WHERE fkempresa = ${idEmpresa}
     `
     return database.executar(instrucaoSQL)
+}
+
+function buscarOcorrencias(dataAbertura, dataFechamento, fkEmpresa) {
+    const instrucaoSQL = `
+        SELECT
+            Chamado.idChamado,
+            Chamado.fkMaquina,
+            Chamado.problema,
+            Chamado.prioridade,
+            Chamado.status,
+            Chamado.idTecnico,
+            Chamado.dataAbertura,
+            Chamado.sincronizado,
+            Maquina.nome AS nomeMaquina,
+            Maquina.enderecoMac AS macMaquina
+        FROM
+            Chamado
+        JOIN
+            Maquina ON Chamado.fkMaquina = Maquina.idMaquina
+        JOIN
+            Empresa ON Maquina.fkEmpresa = Empresa.idEmpresa
+        WHERE
+            Chamado.dataAbertura BETWEEN '${dataAbertura}' AND '${dataFechamento}'
+            AND Empresa.idEmpresa = ${fkEmpresa}
+        ORDER BY
+            Chamado.dataAbertura DESC;
+
+    `
+    return database.executar(instrucaoSQL)
+
 }
 
 module.exports = {
@@ -190,5 +227,6 @@ module.exports = {
     definirParametrosGerais,
     definirParametrosMaquina,
     topMaquinas,
-    qtdMaquinas
+    qtdMaquinas,
+    buscarMacsDaEmpresa
 };

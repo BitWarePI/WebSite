@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const maquinaController = require("../controllers/maquinasController");
+const maquinaController = require("../controllers/maquinaController");
 
 router.get("/empresa/:idEmpresa", maquinaController.listarPorEmpresa);
+
+router.get("/quantidade/:idEmpresa", maquinaController.qtdMaquinas)
 
 router.get("/top5/:idEmpresa", maquinaController.topMaquinas);
 
@@ -25,5 +27,7 @@ router.post("/parametros/gerais/:idEmpresa", maquinaController.definirParametros
 router.post("/parametros/maquina/:idMaquina", maquinaController.definirParametrosMaquina);
 
 router.get("/qtdMaquina/:idEmpresa", maquinaController.qtdMaquinas);
+
+router.get('/maquina/:empresaId', maquinaController.listarMacs);
 
 module.exports = router;

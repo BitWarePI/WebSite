@@ -14,7 +14,35 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="icon" href="../assets/icon/favicon2.png">
   <title>Dashboard | BitWare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
 </head>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          primary: {
+            DEFAULT: "#6D28D9",
+            light: "#8B5CF6",
+          },
+          "background-dark": "#111827",
+          "surface-dark": "#1F2937",
+          "border-dark": "#374151",
+        },
+        fontFamily: {
+          display: ["Inter", "sans-serif"],
+        },
+        borderRadius: {
+          DEFAULT: "0.75rem",
+        },
+      },
+    },
+  };
+</script>
 
 <body>
 
@@ -29,9 +57,9 @@
             </a>
           </li>
           <li>
-            <a class="link" href="dashInfoMaquinas.html">
-              <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Informações máquinas</span>
+            <a class="link" href="dashManutencaoPreditiva.html">
+              <span class="material-symbols-outlined icon">radar</span>
+              <span class="titulo">Manutenção Preditiva</span>
             </a>
           </li>
         </ul>
@@ -68,50 +96,108 @@
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
 
         <!-- GRAFICO -->
-        <div style="flex: 1; min-width: 400px; min-height: 600px;">
-          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Erros nas máquinas</p>
-          <div style="background-color: rgba(0,0,0,0.05); border-radius: 12px; padding: 20px; height: 480px;">
-            <canvas id="grafico1" style="height: 100%;"></canvas>
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-8">
+          <div class="xl:col-span-3 space-y-6">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Chamados pendentes</p>
+                <p class="text-3xl font-bold mt-1" id="totalErros"></p>
+              </div>
+              <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Máquinas com Erro</p>
+                <p class="text-3xl font-bold mt-1" id="maquinasComErro"></p>
+              </div>
+              <div class="bg-[#ff4b4b] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Chamados Críticos</p>
+                <p class="text-3xl font-bold mt-1" id="totalCriticos"></p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-9">
+
+              <!-- GRÁFICO PRINCIPAL (linha inteira) -->
+              <div class="lg:col-span-5 bg-neutral-300 p-4 rounded-lg shadow-sm h-[450px]">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Frequência de Erros</h2>
+                <div class="h-[380px]">
+                  <canvas id="grafico1"></canvas>
+                </div>
+              </div>
+
+              <!-- GRÁFICO DE BARRAS (5 colunas) -->
+              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
+                <div class="relative w-full h-[250px]">
+                  <canvas id="grafico2"></canvas>
+                </div>
+              </div>
+
+              <!-- CARD PRINCIPAL COMPONENTE (2 colunas) -->
+
+            </div>
+          </div>
+
+          <!-- LADO DIREITO -->
+          <div style="display: flex; flex-direction: column; gap: 15px; min-width: 150px;">
+            <!-- FILTRO -->
+            <div style="display: flex; flex-direction: column; gap: 60px; min-width: 150px;">
+              <div style="background-color: #111; border-radius: 12px; padding: 15px 20px; color: white;">
+                <p style="margin: 0 0 8px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
+                <select id="filtro"
+                  style="background-color: #4c1d95; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
+                  <option>Últimas 24h</option>
+                  <option>Semanal</option>
+                  <option>Mensal</option>
+                  <option value="Semestral1">1° Semestre</option>
+                  <option value="Semestral2">2° Semestre</option>
+                  <option>Anual</option>
+                </select>
+              </div>
+
+              <div id="top5-container" style="
+        font-weight: bold; 
+        background-color: #111; 
+        border-radius: 16px; 
+        padding: 15px; /* Aumentado de 15 para 25px para dar volume */
+        color: #f1f5f9; 
+        box-shadow: 0 0 12px rgba(255,255,255,0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      ">
+
+                <p style="font-size: 1.1rem; margin-bottom: 20px; text-align: center; color: #ffffff;">
+                  Top 5 Máquinas (24h)
+                </p>
+
+                <ul id="top5-lista" style="
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;">
+                  <li style="color: #ccc; text-align: center;">Carregando...</li>
+                </ul>
+              </div>
+              <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm h-[250px] flex flex-col justify-center">
+                <h3 class="text-gray-800 font-semibold mb-4">Principal Problema</h3>
+
+                <div class="flex items-center space-x-3">
+                  <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
+                    <span class="text-lg font-bold text-gray-800">GPU</span>
+                  </div>
+
+                  <p class="text-gray-800 text-lg leading-tight" id="principalProblema">
+                  </p>
+                </div>
+
+                <span class="text-gray-800 mt-3">Chamados em aberto</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- LADO DIREITO -->
-        <div style="display: flex; flex-direction: column; gap: 20px; min-width: 250px;">
-
-          <!-- FILTRO -->
-          <div style="margin-top: 45px; background-color: #111; border-radius: 12px; padding: 15px 25px; color: white;">
-            <p style="margin: 0 0 10px 0; font-size: 15px;">Filtro de Dados</p>
-            <select id="filtro"
-              style="background-color: #7e22ce; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%;">
-              <option>Últimas 24h</option>
-              <option>Semanal</option>
-              <option>Mensal</option>
-              <option value="Semestral1">1° Semestre</option>
-              <option value="Semestral2">2° Semestre</option>
-              <option>Anual</option>
-            </select>
-          </div>
-
-          <div id="top5-container"
-            style="font-weight: bold; background-color: #111; border-radius: 16px; padding: 20px 25px; color: #f1f5f9; box-shadow: 0 0 12px rgba(255,255,255,0.05);">
-            <p style="font-size: 1.3rem; margin-bottom: 15px; text-align: center; color: #7e0cac;">
-              Top 5 Máquinas com mais ocorrências (24horas)
-            </p>
-            <ul id="top5-lista" style="
-              list-style: none;
-              padding-left: 0;
-              margin: 0;
-              display: flex;
-              flex-direction: column;
-              gap: 10px;">
-              <li style="color: #ccc; text-align: center;">Carregando...</li>
-            </ul>
-          </div>
-
-
-        </div>
         <div class="chamado" style="margin: 0px;">
-          <p style="font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
+          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
           <table>
             <thead>
               <tr>
@@ -131,20 +217,20 @@
 
           </table>
         </div>
-      </div>
 
-      <div class="modal" id="modal_atribuir_tecnico">
-        <div class="modal-container" id="modal_container_atribuir">
-          <div class="header">
-            <h1>Atribuir Técnico ao Chamado</h1>
-            <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
-              close
-            </button>
-          </div>
-          <div class="body" id="lista_tecnicos_container">
+
+        <div class="modal" id="modal_atribuir_tecnico">
+          <div class="modal-container" id="modal_container_atribuir">
+            <div class="header">
+              <h1>Atribuir Técnico ao Chamado</h1>
+              <button class="material-symbols-outlined close-icon" onclick="fecharModalTecnicos()">
+                close
+              </button>
+            </div>
+            <div class="body" id="lista_tecnicos_container">
+            </div>
           </div>
         </div>
-      </div>
   </section>
 
   <script src="../js/nav.js"></script>
@@ -152,73 +238,219 @@
 
 </html>
 <script>
-  const ctx1 = document.getElementById('grafico1').getContext('2d');
+  async function carregarDadosEmpresa() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
 
-  // Definição inicial do gráfico
-  const graficoErros = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
-      datasets: [{
-        label: 'Erros Semanais',
-        data: [2, 4, 1, 7, 3, 4, 3, 1, 2],
-        backgroundColor: '#8b5cf6',
-        borderRadius: 8,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        x: { ticks: { color: '#000' } },
-        y: { beginAtZero: true, ticks: { color: '#000' } }
+    const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+    const dados = await response.json();
+
+    console.log("Dados do bucket:", dados);
+    return dados;
+  }
+
+  async function carregarErros() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
+
+    const response = await fetch(`/dadosBucket/empresa/${idEmpresa}`);
+    const listaArquivos = await response.json();
+
+    let todos = [];
+
+    listaArquivos.forEach(item => {
+      todos = todos.concat(item.dados);
+    });
+
+    return todos;
+  }
+
+  function contarErrosPorHorario(dados) {
+    const erros = {};
+
+    console.log("DADOS CONTAGM: ", dados);
+
+    dados.forEach(item => {
+      const hora = item.datetime.split(" ")[1].slice(0, 5);
+      if (!erros[hora]) erros[hora] = 0;
+
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
+
+      // seus critérios
+      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+        erros[hora]++;
       }
-    }
-  });
+    });
 
-  // Pega o select do filtro
-  const filtroSelect = document.getElementById('filtro');
+    return erros;
+  }
 
-  // Quando o filtro muda, atualiza o gráfico
-  filtroSelect.addEventListener('change', () => {
-    const valor = filtroSelect.value;
+  function contarErrosDashboard(dados, dtInicio, dtFim) {
+    const resultado = {};
+    const erros = [];
 
-    let novosLabels = [];
-    let novosDados = [];
-    if (valor === 'Últimas 24h') {
-      console.log("ENTROU NO IF")
-      novosLabels = ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'];
-      novosDados = [2, 4, 1, 7, 3, 4, 3, 1, 2];
-    }
-    else if (valor === 'Semanal') {
-      novosLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-      novosDados = [12, 9, 15, 11, 7, 4, 8];
-    }
-    else if (valor === 'Mensal') {
-      novosLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-      novosDados = [30, 45, 25, 10];
-    }
-    else if (valor === 'Semestral1') {
-      novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-      novosDados = [120, 150, 110, 130, 170, 140];
-    }
-    else if (valor === 'Semestral2') {
-      novosLabels = ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [170, 150, 110, 130, 120,];
-    }
-    else if (valor === 'Anual') {
-      novosLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      novosDados = [120, 150, 110, 130, 170, 140, 170, 150, 110, 130, 120,];
-    }
+    dados.forEach(item => {
+      const dataTeste = item.datetime.split(" ")[0]
 
-    // Atualiza os dados do gráfico
-    graficoErros.data.labels = novosLabels;
-    graficoErros.data.datasets[0].data = novosDados;
-    graficoErros.update();
-  });
+      if (!resultado[dataTeste]) resultado[dataTeste] = 0;
+      if (dtFim < dataTeste || dtInicio > dataTeste) { return }
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
+
+      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
+        resultado[dataTeste]++;
+      }
+    });
+    Object.keys(resultado).forEach(data => {
+      if (resultado[data] > 0) {
+        erros.push({
+          data,
+          erros: resultado[data]
+        });
+      }
+    });
+    return erros;
+  }
+
+
+  async function geraGrafico() {
+    const dados = await carregarErros();
+    console.log("Dados mesclados:", dados);
+
+    const teste = contarErrosDashboard(dados, "2025-12-29", "2025-12-31")
+    console.log("TESTE =", teste);
+
+
+    const errosPorHorario = contarErrosPorHorario(dados);
+    const labels = Object.keys(errosPorHorario);
+    const valores = Object.values(errosPorHorario);
+    const ctx1 = document.getElementById('grafico1').getContext('2d');
+
+    const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
+    gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Erros',
+          data: valores,
+          borderColor: "#6D28D9",
+          // backgroundColor: "#815eb8",
+          borderWidth: 2,
+          fill: true,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              color: "#6B7280",
+              font: { size: 10 }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function contarErrosPorTipo(dados) {
+    const erros = {
+      temperatura_cpu: 0,
+      temperatura_gpu: 0,
+      cpu_baixa: 0,
+      gpu_baixa: 0
+    };
+
+    dados.forEach(item => {
+      const cpuTemp = Number(item.cpu_temperature);
+      const gpuTemp = Number(item.gpu_temperature);
+      const cpuPercent = Number(item.cpu_percent);
+      const gpuPercent = Number(item.gpu_percent);
+
+      if (cpuTemp > 70) erros.temperatura_cpu++;
+      if (gpuTemp > 70) erros.temperatura_gpu++;
+      if (cpuPercent < 50) erros.cpu_baixa++;
+      if (gpuPercent < 50) erros.gpu_baixa++;
+    });
+
+    return erros;
+  }
+
+
+  async function gerarGraficoDistribuicao() {
+    const dados = await carregarErros();
+
+    const erros = contarErrosPorTipo(dados);
+
+    const labels = [
+      "Alta Temp CPU",
+      "Alta Temp GPU",
+      "Baixo Uso CPU",
+      "Baixo Uso GPU"
+    ];
+
+    const valores = [
+      erros.temperatura_cpu,
+      erros.temperatura_gpu,
+      erros.cpu_baixa,
+      erros.gpu_baixa
+    ];
+
+    const ctx2 = document.getElementById('grafico2').getContext('2d');
+
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: valores,
+          backgroundColor: [
+            "#8b5cf6",
+            "#7c3aed",
+            "#6d28d9",
+            "#5b21b6"
+          ],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        layout: {
+          padding: {
+            right: 0
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false }
+          },
+          y: {
+            ticks: { color: "#333" }
+          }
+        }
+      }
+    });
+  }
+
+
 </script>
 
 
@@ -246,48 +478,138 @@
       maquinas.forEach((m, index) => {
         const item = document.createElement("li");
         item.innerHTML = `
-          <div style="
-            background: #1a1a1a;
-            border-radius: 10px;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease;
-            border: 1px solid #222;
-          " onmouseover="this.style.background='#222'" onmouseout="this.style.background='#1a1a1a'">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="
-                background: linear-gradient(135deg, #7e0cac, #a94ee5);
-                color: #fff;
-                border-radius: 50%;
-                width: 30px;
-                height: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-              ">${index + 1}</span>
-              <div style="display:flex; flex-direction:column;">
-                <span style="font-size: 1rem; color: #fff;">${m.nome}</span>
-                <span style="font-size: 0.8rem; color: #aaa;">${m.maquina}</span>
-              </div>
-            </div>
-            <span style="color: #ccc; font-size: 0.95rem;">
-              ${m.total_ocorrencias} ocorrência${m.total_ocorrencias > 1 ? 's' : ''}
-            </span>
-          </div>`;
+    <div style="
+      background: #1a1a1a;
+      border-radius: 10px; 
+      padding: 12px 15px; /* Padding médio (confortável) */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      border: 1px solid #222;
+    " onmouseover="this.style.background='#222'" onmouseout="this.style.background='#1a1a1a'">
+      
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="
+          background: linear-gradient(135deg, #7e0cac, #a94ee5);
+          color: #fff;
+          border-radius: 50%;
+          width: 20px; 
+          height: 20px;
+          font-size: 0.9rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        ">${index + 1}</span>
+        
+        <div style="display:flex; flex-direction:column;">
+          <span style="font-size: 0.85rem; color: #fff; margin-bottom: 2px;">${m.nome}</span>
+          <span style="font-size: 0.65rem; color: #999;">${m.maquina}</span>
+        </div>
+      </div>
+      
+      <div style="text-align: right;">
+         <span style="color: #fff; font-size: 0.95rem; font-weight: bold;">
+           ${m.total_ocorrencias}
+         </span>
+         <span style="color: #666; font-size: 0.7rem; margin-left: 3px;">ocorr.</span>
+      </div>
+    </div>`;
         lista.appendChild(item);
       });
+
     } catch (erro) {
       console.error("Erro ao buscar top 5 máquinas:", erro);
       lista.innerHTML = "<li style='color:#f88; text-align:center;'>Erro ao carregar dados</li>";
     }
   }
+  async function totalCriticos() {
+    const criticos = document.getElementById("totalCriticos");
+
+    try {
+      const idEmpresa = sessionStorage.getItem("idEmpresa");
+
+      const resposta = await fetch(`/chamados/criticos/${idEmpresa}`);
+      console.log(resposta)
+      const dados = await resposta.json();
+
+
+      criticos.innerText = dados[0].totalCriticos;
+      console.log(dados)
+
+    } catch (erro) {
+      console.error("Erro ao buscar quantidade de críticos:", erro);
+      criticos.innerText = "0";
+    }
+  }
+
+  async function carregarPrincipalProblema() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
+
+    const resposta = await fetch(`/chamados/principalProblema/${idEmpresa}`);
+    const dados = await resposta.json();
+
+    document.getElementById("principalProblema").innerText =
+      (dados.problema ?? "Nenhum problema encontrado").replace("acima do esperado", "");
+  }
+
+  async function totalErros() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
+    const kpiErros = document.getElementById("totalErros");
+
+    try {
+      const resposta = await fetch(`/chamados/totalErros/${idEmpresa}`);
+      const dados = await resposta.json();
+
+      const total = dados?.total_erros ?? 0;
+
+      kpiErros.textContent = total;
+    } catch (erro) {
+      console.error("Erro ao buscar total de erros:", erro);
+    }
+  }
+
+
+  async function qtdMaquinas() {
+    const qtdMaq = document.getElementById("qtdMaquina");
+
+    try {
+      const idEmpresa = sessionStorage.getItem("idEmpresa")
+      const resposta = await fetch(`/maquina/quantidade/${idEmpresa}`)
+      const dados = await resposta.json
+      qtdMaq.innerHTML = dados[0].qtdMaquinas
+    } catch (erro) {
+      console.error("Erro ao buscar quantidade de máquinas", erro)
+      qtdMaquinas.innerText = "0"
+    }
+
+  }
+
+  async function maquinasComErro() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa");
+    const kpi = document.getElementById("maquinasComErro");
+
+    try {
+      const resp = await fetch(`/chamados/maquinasComErro/${idEmpresa}`);
+      const dados = await resp.json();
+      kpi.textContent = dados?.maquinas_com_erro ?? 0;
+    } catch (erro) {
+      console.error("Erro ao buscar máquinas com erro:", erro);
+      kpi.textContent = "--";
+    }
+  }
 
   window.onload = function () {
     carregarChamados(),
-      carregarTop5Maquinas();
+      carregarTop5Maquinas(),
+      totalCriticos(),
+      carregarPrincipalProblema(),
+      totalErros(),
+      maquinasComErro(),
+      geraGrafico(),
+      gerarGraficoDistribuicao();
+
   };
 
   function fecharModalTecnicos() {
@@ -495,53 +817,53 @@
       });
   }
 
-  function carregarKPIs() {
-    const userCargo = sessionStorage.getItem('FK_CARGO');
-    const idEmpresa = sessionStorage.getItem('idEmpresa');
-    const userId = sessionStorage.getItem('ID_USUARIO');
+  // function carregarKPIs() {
+  //   const userCargo = sessionStorage.getItem('FK_CARGO');
+  //   const idEmpresa = sessionStorage.getItem('idEmpresa');
+  //   const userId = sessionStorage.getItem('ID_USUARIO');
 
-    const kpiPendentes = document.getElementById('kpi_pendentes');
-    const kpiCriticos = document.getElementById('kpi_criticos');
-    const kpiMaquinas = document.getElementById('kpi_maquinas');
+  //   const kpiPendentes = document.getElementById('kpi_pendentes');
+  //   const kpiCriticos = document.getElementById('kpi_criticos');
+  //   const kpiMaquinas = document.getElementById('kpi_maquinas');
 
-    if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
-      console.log("KPIs não encontrados nesta página.");
-      return;
-    }
+  //   if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
+  //     console.log("KPIs não encontrados nesta página.");
+  //     return;
+  //   }
 
-    kpiPendentes.innerText = '...';
-    kpiCriticos.innerText = '...';
-    kpiMaquinas.innerText = '...';
+  //   kpiPendentes.innerText = '...';
+  //   kpiCriticos.innerText = '...';
+  //   kpiMaquinas.innerText = '...';
 
-    let kpiUrl = '';
+  //   let kpiUrl = '';
 
-    if (userCargo == '4') {
-      kpiUrl = `/chamados/kpi/tecnico/${userId}`;
-    }
-    else {
-      kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
-    }
+  //   if (userCargo == '4') {
+  //     kpiUrl = `/chamados/kpi/tecnico/${userId}`;
+  //   }
+  //   else {
+  //     kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
+  //   }
 
-    console.log("Buscando KPIs da URL:", kpiUrl);
+  //   console.log("Buscando KPIs da URL:", kpiUrl);
 
-    fetch(kpiUrl)
-      .then(res => {
-        if (!res.ok) throw new Error('Erro ao buscar KPIs');
-        return res.json();
-      })
-      .then(data => {
-        var kpis = data[0];
-        kpiPendentes.innerText = kpis.pendentes;
-        kpiCriticos.innerText = kpis.criticos;
-        kpiMaquinas.innerText = kpis.maquinasComProblema;
-      })
-      .catch(err => {
-        console.error(err);
-        kpiPendentes.innerText = 'Erro';
-        kpiCriticos.innerText = 'Erro';
-        kpiMaquinas.innerText = 'Erro';
-      });
-  }
+  //   fetch(kpiUrl)
+  //     .then(res => {
+  //       if (!res.ok) throw new Error('Erro ao buscar KPIs');
+  //       return res.json();
+  //     })
+  //     .then(data => {
+  //       var kpis = data[0];
+  //       kpiPendentes.innerText = kpis.pendentes;
+  //       kpiCriticos.innerText = kpis.criticos;
+  //       kpiMaquinas.innerText = kpis.maquinasComProblema;
+  //     })
+  //     .catch(err => {
+  //       console.error(err);
+  //       kpiPendentes.innerText = 'Erro';
+  //       kpiCriticos.innerText = 'Erro';
+  //       kpiMaquinas.innerText = 'Erro';
+  //     });
+  // }
 
   function carregarChamados() {
     const userCargo = sessionStorage.getItem('FK_CARGO');
@@ -693,6 +1015,15 @@
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
       });
   }  
+</script>
+
+<script>
+  fetch("/utils/getDadosBucket/").then(res => {
+    res.json().then(JSON => {
+      console.log(JSON)
+      document.getElementById("distErros")
+    })
+  })
 </script>
 
 </body>
