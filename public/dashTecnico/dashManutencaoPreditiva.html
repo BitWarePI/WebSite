@@ -11,6 +11,7 @@
   <link rel="icon" href="../assets/icon/favicon2.png">
   <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
 <body>
@@ -222,7 +223,18 @@
         <h3 id="modalTitle">Detalhes da máquina</h3>
         <button class="btn ghost" id="closeModal">Fechar</button>
       </div>
-      <canvas id="chartMachineScore" height="120"></canvas>
+      <div class="graficosContainer">
+        <div class="grafico-container">
+          <h3>Ocorrências – Últimas 24 horas</h3>
+          <div id="grafico24h"></div>
+        </div>
+        
+        <div class="grafico-container">
+          <h3>Ocorrências – Últimos 30 dias</h3>
+          <div id="grafico30d"></div>
+        </div>
+      </div>
+
       <div id="modalBody" style="margin-top:10px;max-height:320px;overflow:auto">
       </div>
     </div>
@@ -336,10 +348,113 @@
       }
       document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
 
+      // ===============================
+      // 1. Preparação das datas de corte
+      // ===============================
+      const agora = new Date();
+
+      const inicio24h = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
+      const inicio48h = new Date(agora.getTime() - 48 * 60 * 60 * 1000);
+
+      const inicio30d = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const inicio60d = new Date(agora.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+      // ===============================
+      // 2. Separação dos períodos
+      // ===============================
+      const ultimas24h = [];
+      const diaAnterior = [];
+
+      const ultimos30d = [];
+      const mesAnterior = [];
+
+      ocorrencias.forEach(c => {
+        const d = new Date(c.dataAbertura);
+
+        // --- 24H ---
+        if (d >= inicio24h) {
+          ultimas24h.push(c);
+        } else if (d >= inicio48h && d < inicio24h) {
+          diaAnterior.push(c);
+        }
+
+        // --- 30 DIAS ---
+        if (d >= inicio30d) {
+          ultimos30d.push(c);
+        } else if (d >= inicio60d && d < inicio30d) {
+          mesAnterior.push(c);
+        }
+      });
+
+      // ===============================
+      // 3. Gerar séries prontas
+      // ===============================
+      const serie24h = agruparPorHora(ultimas24h);
+      const serie24hAnterior = agruparPorHora(diaAnterior);
+
+      const serie30d = agruparPorDia(ultimos30d);
+      const serie30dAnterior = agruparPorDia(mesAnterior);
+
+      // ===============================
+      // 4. Desenhar gráficos ApexCharts
+      // ===============================
+      renderGrafico24h(serie24h, serie24hAnterior);
+      renderGrafico30d(serie30d, serie30dAnterior);
+
       atualizarGraficos(dados);
 
       maquinasProcessadas = dados.cadaMaquina;
       atualizarListaMaquinas(dados.cadaMaquina);
+    }
+
+    function renderGrafico24h(serieAtual, serieAnterior) {
+      var options = {
+        chart: { type: "line", height: 300 },
+        stroke: { width: 3 },
+        series: [
+          {
+            name: "Últimas 24h",
+            data: serieAtual
+          },
+          {
+            name: "Dia anterior",
+            data: serieAnterior,
+            opacity: 0.25
+          }
+        ],
+        xaxis: {
+          type: "category",
+          categories: [...Array(24).keys()], // 0–23 horas
+          title: { text: "Hora do dia" }
+        },
+        yaxis: { title: { text: "Qtd. Ocorrências" } },
+        legend: { position: "top" }
+      };
+
+      new ApexCharts(document.querySelector("#grafico24h"), options).render();
+    }
+
+    function renderGrafico30d(serieAtual, serieAnterior) {
+      var options = {
+        chart: { type: "line", height: 300 },
+        stroke: { width: 3 },
+        series: [
+          {
+            name: "Últimos 30 dias",
+            data: serieAtual
+          },
+          {
+            name: "Mês anterior",
+            data: serieAnterior,
+            opacity: 0.25
+          }
+        ],
+        xaxis: { type: "category" },
+        yaxis: { title: { text: "Qtd. Ocorrências" } },
+        legend: { position: "top" }
+      };
+
+      new ApexCharts(document.querySelector("#grafico30d"), options).render();
     }
 
     function tratarOcorrencias(ocorrencias) {
@@ -418,6 +533,51 @@
         tipoProblema: { uso: tipoProblema.uso, temperatura: tipoProblema.temperatura },
         cadaMaquina: cadaMaquinaComRisco
       };
+    }
+
+    function agruparPorHora(chamados) {
+      const contagem = {};
+
+      chamados.forEach(c => {
+        const data = new Date(c.dataAbertura);
+        const hora = data.getHours();
+
+        contagem[hora] = (contagem[hora] || 0) + 1;
+      });
+
+      const resultado = [];
+      for (let h = 0; h < 24; h++) {
+        resultado.push({ x: h, y: contagem[h] || 0 });
+      }
+
+      return resultado;
+    }
+
+    function agruparPorDia(chamados, dias = 30) {
+      const contagem = {};
+
+      chamados.forEach(c => {
+        const data = new Date(c.dataAbertura);
+        const dia = data.toISOString().slice(0, 10); // yyyy-mm-dd
+
+        contagem[dia] = (contagem[dia] || 0) + 1;
+      });
+
+      // gerar últimos X dias na ordem correta
+      const resultado = [];
+      for (let i = dias - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+
+        const chave = d.toISOString().slice(0, 10);
+
+        resultado.push({
+          x: chave,
+          y: contagem[chave] || 0
+        });
+      }
+
+      return resultado;
     }
 
     function atualizarGraficos(dados) {
@@ -549,55 +709,6 @@
       <br><small>Prioridade: ${c.prioridade} · Status: ${c.status}</small>
     `;
         body.appendChild(div);
-      });
-
-      const ctx = document.getElementById("chartMachineScore").getContext("2d");
-
-      // destruir grafico anterior se existir
-      if (chartMachineScore) {
-        chartMachineScore.destroy();
-      }
-
-      // gerar labels (datas)
-      const labels = chamados.map(c =>
-        new Date(c.dataAbertura).toLocaleDateString('pt-BR')
-      );
-
-      // gerar pontos (pontuação recalculada a cada chamado)
-      const pontuacoes = [];
-      chamados.forEach((_, indice) => {
-        const subconjunto = chamados.slice(0, indice + 1);
-        const pontuacaoParcial = calcularPontuacao(machine.id, subconjunto);
-        pontuacoes.push(pontuacaoParcial);
-      });
-
-      chartMachineScore = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: labels,
-          datasets: [{
-            label: "Evolução do Score",
-            data: pontuacoes,
-            borderWidth: 3,
-            borderColor: "#4B2B85",
-            backgroundColor: "rgba(75, 43, 133, .2)",
-            tension: 0.25,
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
       });
 
       modal.classList.add('open');
