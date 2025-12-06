@@ -21,6 +21,13 @@
 </head>
 
 <body>
+  <div id="tela-carregando" style="display: flex;">
+      <div class="caixa-carregando">
+            <div class="animacao-roda"></div>
+            <p>Carregando dados...</p>
+        </div>
+    </div>
+    
   <section>
     <nav>
       <div class="main-nav">
@@ -94,7 +101,6 @@
         </li>
       </ul>
     </nav>
-
     <div style="min-height: 100vh;  top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;" id="tudo">
       <div style="display: flex; margin: 0;">
         <p style="font-size: 40px; margin: 0; padding: 0; font-weight: bold; color: rgb(36, 3, 66);">Dashboard -
@@ -639,18 +645,26 @@
     desvioCpu.textContent = `${dados.cpu.toFixed(2)}%`
     desvioGpu.textContent = `${dados.gpu.toFixed(2)}%`
   }
+  const carregando = document.getElementById('tela-carregando');
+    
+  function toggleCarrregando(){
+    console.log(carregando.style.display)
+    carregando.style.display = carregando.style.display === 'flex' ? 'none' : 'flex';
+  }
 
-  alterar_data.addEventListener('change', (t) => {
-    pegarDados(t.target.value);
-    pegarDesvioPadrao(t.target.value);
+  alterar_data.addEventListener('change', async (t) => {
+    toggleCarrregando();
+    await pegarDados(t.target.value);
+    await pegarDesvioPadrao(t.target.value);
     aplicarCores()
-
+    toggleCarrregando();
   });
 
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     aplicarCores()
-    quantidadeMaquinas()
-    pegarDesvioPadrao(alterar_data.value);
-    pegarDados(alterar_data.value)
+    await quantidadeMaquinas()
+    await pegarDesvioPadrao(alterar_data.value);
+    await pegarDados(alterar_data.value)
+    toggleCarrregando();
   });
 </script>

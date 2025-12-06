@@ -1,16 +1,16 @@
 section nav {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 150px;
-    background-color: #111;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 100;
-    overflow-x: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 150px;
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  overflow-x: hidden;
 }
 
 section nav:hover {
@@ -26,19 +26,19 @@ section nav:hover {
   color: black;
 }
 
-section nav:hover ~ #tudo {
+section nav:hover~#tudo {
   margin-left: 320px;
   width: calc(100% - 240px);
-  transform: scale(0.92); 
+  transform: scale(0.92);
   transform-origin: center;
   filter: brightness(0.95);
 }
 
-select{
+select {
   background-color: #4B2B85;
 }
 
-.alternar_hardware{
+.alternar_hardware {
   background-color: #4B2B85;
 }
 
@@ -46,13 +46,13 @@ select{
   transition: all 0.3s ease;
 }
 
-.kpi-card{
-    background-color: #4B2B85;
+.kpi-card {
+  background-color: #4B2B85;
 }
 
 .kpi-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 #btn_aplicar:hover {
@@ -81,6 +81,7 @@ select {
   padding: 10px;
   transition: 0.4s;
 }
+
 select::picker-icon {
   color: #24033f;
   transition: 0.4s rotate;
@@ -92,6 +93,55 @@ select:open::picker-icon {
 
 ::picker(select) {
   border: none;
+}
+
+#tela-carregando {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caixa-carregando {
+  background: #fff;
+  padding: 20px 35px;
+  border-radius: 12px;
+  text-align: center;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.animacao-roda {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #d3d3d3;
+  border-top-color: #4caf50;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.caixa-carregando p {
+  margin-top: 12px;
+  font-size: 18px;
+  color: #333;
 }
 
 option {
@@ -148,12 +198,12 @@ option:checked {
   opacity: 1;
 }
 
-section nav:hover ~ #tudo .kpi-card {
+section nav:hover~#tudo .kpi-card {
   transform: scale(0.9);
   opacity: 0.9;
 }
 
-section nav:hover ~ #tudo .kpi-container {
+section nav:hover~#tudo .kpi-container {
   gap: 30px;
 }
 
@@ -167,7 +217,7 @@ section nav:hover ~ #tudo .kpi-container {
 }
 
 .grafico {
-  flex: 1; 
+  flex: 1;
   min-width: 0;
   transition: all 0.3s ease;
   background-color: white;
@@ -176,13 +226,13 @@ section nav:hover ~ #tudo .kpi-container {
   width: 100%;
 }
 
-.div-grafico{
+.div-grafico {
   background-color: white;
   border-start-start-radius: 10px;
   border-start-end-radius: 10px;
 }
 
-section nav:hover ~ #tudo .grafico {
+section nav:hover~#tudo .grafico {
   transform: scale(0.95);
   opacity: 0.9;
 }
@@ -202,6 +252,9 @@ section nav:hover ~ #tudo .grafico {
   pointer-events: auto !important;
 }
 
-.graficos, .grafico, .div-grafico, .grafico canvas {
+.graficos,
+.grafico,
+.div-grafico,
+.grafico canvas {
   overflow: visible !important;
 }
