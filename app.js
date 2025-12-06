@@ -32,6 +32,8 @@ var funcionariosRouter = require("./src/routes/funcionarios");
 var maquinaRouter = require("./src/routes/maquina")
 var cadastrarEmpresa = require("./src/routes/empresas");
 var chamadosRouter = require("./src/routes/chamados");
+var procesKpiRouter = require("./src/routes/Tecnico/dashProcess");
+var histSnippts = require("./src/routes/Tecnico/dashHistoricoSnippts");
 var s3BucketRouter = require('./src/routes/dadosBucket');
 var s3Router = require("./src/routes/s3");
 var custeAws = require("./src/routes/aws");
@@ -54,6 +56,9 @@ app.use("/empresas", cadastrarEmpresa);
 app.use("/solicitacoes", solicitacaoRouter);
 app.use("/maquina", maquinaRouter)
 app.use("/chamados", chamadosRouter);
+app.use("/dashProcess", procesKpiRouter)
+app.use("/dashHistoricoSnippts", histSnippts)
+//app.use("/emails", emailRouter);
 app.use('/s3', s3Router);
 app.use("/aws", custeAws);
 
