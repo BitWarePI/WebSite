@@ -87,6 +87,16 @@ CREATE TABLE Chamado (
     ON DELETE CASCADE
 );
 
+CREATE TABLE comando_personalizado (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    comando TEXT NOT NULL, 
+    qtdExec INT default 0,
+    fk_empresa INT,                    
+    FOREIGN KEY (fk_empresa) REFERENCES Empresa(idEmpresa) 
+);
+
+select * from comando_personalizado;
 INSERT INTO Cargo (descricao) VALUES 
 ('Admin'), 
 ('Empresa'), 
@@ -106,6 +116,13 @@ VALUES
 ('Marina', 'Costa', 'marina.costa@techvision.com', '12345678', 4, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', '12345678', 2, 3);
 
+INSERT INTO comando_personalizado (nome, comando, fk_empresa) VALUES 
+('Matar Processo (PID)', 'kill -9 {pid}', 2),
+('Limpar Cache de RAM', 'sync; echo 3 > /proc/sys/vm/drop_caches', 2),
+('Matar Processos (Nome)', 'pkill -f {nome_processo}', 2),
+('Visualizar processos nivel adm', 'ps aux', 2),
+('Reiniciar Serviço (PID)', 'systemctl restart {PID}', 2);
+
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
 ('f4:6a:dd:7b:03:1d', 'Servidor Principal', 1),
@@ -116,9 +133,11 @@ VALUES
 
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES
+('e8:5c:5f:1e:b4:1d', 'Setor D', 1),
+('12:2a:0a:85:5e:47', 'Setor A', 2), 
+('f4:6a:dd:7b:03:0d', 'Setor E', 2);
 ('e8:5c:5f:1e:b4:1d', 'Setor D', 2),
 ('f4:6a:dd:7b:03:0d', 'Setor E', 2);
-
 
 INSERT INTO Componente (descricao)
 VALUES 
@@ -129,41 +148,41 @@ VALUES
 
 INSERT INTO Parametro (fkMaquina, fkComponente, valor)
 VALUES
-(1, 1, 68),
-(1, 2, 68),
-(1, 3, 68),
-(1, 4, 68),
+(1, 1, 30),
+(1, 2, 30),
+(1, 3, 90),
+(1, 4, 90),
 
-(2, 1, 67),
-(2, 2, 67),
-(2, 3, 67),
-(2, 4, 67),
+(2, 1, 29),
+(2, 2, 29),
+(2, 3, 89),
+(2, 4, 89),
 
-(3, 1, 69),
-(3, 2, 69),
-(3, 3, 69),
-(3, 4, 69),
+(3, 1, 28),
+(3, 2, 28),
+(3, 3, 90),
+(3, 4, 90),
 
-(4, 1, 68),
-(4, 2, 68),
-(4, 3, 68),
-(4, 4, 68),
+(4, 1, 31),
+(4, 2, 31),
+(4, 3, 91),
+(4, 4, 91),
 
-(5, 1, 67),
-(5, 2, 67),
-(5, 3, 67),
-(5, 4, 67);
+(5, 1, 30),
+(5, 2, 30),
+(5, 3, 92),
+(5, 4, 92);
 
 INSERT INTO Parametro (fkMaquina, fkComponente, valor)
 VALUES
-(6, 1, 60), 
-(6, 2, 75), 
-(6, 3, 78),
-(6, 4, 70), 
-(7, 1, 45),  
-(7, 2, 55), 
-(7, 3, 65),
-(7, 4, 60);
+(6, 1, 30), 
+(6, 2, 30), 
+(6, 3, 90),
+(6, 4, 90), 
+(7, 1, 30),  
+(7, 2, 30), 
+(7, 3, 90),
+(7, 4, 90);
 
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES

@@ -734,15 +734,44 @@
                         mac: item.mac_address
                     }));
 
-                    const hoje = new Date();
-                    const diaHoje = hoje.toISOString().split("T")[0];
+                    const agora = new Date();
+                    //const agora = new Date(2025, 11, 9, 16, 0, 0);
 
+                    // 1. Filtra apenas dados que NÃO são do futuro
+                    const dadosAteAgora = dados.filter(reg => {
+                        const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
+                        return dataRegistro <= agora;
+                    });
+
+                    // 2. Se não tiver nenhum dado válido, evita erro
+                    if (dadosAteAgora.length === 0) {
+                        console.warn("Nenhum dado válido antes do horário atual.");
+                    }
+
+                    // 3. Ordena por data e pega o último registro REAL
+                    dadosAteAgora.sort((a, b) => {
+                        return new Date(a.datetime.replace(" ", "T")) - new Date(b.datetime.replace(" ", "T"));
+                    });
+
+                    const ultimaData = new Date(
+                        dadosAteAgora[dadosAteAgora.length - 1].datetime.replace(" ", "T")
+                    );
+
+                    // 4. Limite de 24 horas atrás
+                    const limite24h = new Date(ultimaData.getTime() - 24 * 60 * 60 * 1000);
+
+                    // 5. Agora sim, filtra o intervalo
                     dados.forEach(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
-                        const diaRegistro = reg.datetime.split(" ")[0];
 
-                        if (reg.mac === macAddress && diaRegistro === diaHoje) {
-                            eixo24hrs.push(dataRegistro.getHours());
+                        if (reg.mac === macAddress &&
+                            dataRegistro >= limite24h &&
+                            dataRegistro <= ultimaData) {
+
+                            // coloca o horário no eixo (com zero à esquerda quando necessário)
+                            const h = dataRegistro.getHours();
+                            eixo24hrs.push((h < 10 ? "0" + h : h) + "h");
+
                             registrosMaquina.push(reg);
                         }
                     });
@@ -924,10 +953,11 @@
 
             const valorFiltro = filtroSelect.value;
 
-            const agora = new Date();
+            //const agora = new Date();
+            const agora = new Date(2025, 11, 9, 11, 0, 0);
 
             if (valorFiltro == "Semanal") {
-                limite = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+                limite = new Date(agora.getTime() - 6 * 24 * 60 * 60 * 1000);
             } else if (valorFiltro == "Mensal") {
                 limite = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
             } else if (valorFiltro == "Semestral1") {
@@ -980,9 +1010,9 @@
                 const dataRegistro = new Date(item.datetime.replace(" ", "T"));
 
                 if (item.mac_address === macAddress && dataRegistro >= limite) {
-
+                    console.log("ITEM: " + item)
                     const dia = dataRegistro.toLocaleDateString("pt-BR", { weekday: "short" });
-
+                    console.log("dia: " + dia)
                     if (!eixoX.includes(dia)) {
                         eixoX.push(dia);
                     }
