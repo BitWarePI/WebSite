@@ -24,6 +24,13 @@
         font-family: 'Inter', Arial, Helvetica, sans-serif;
     }
 
+    .graficosContainer {
+        display: flex;
+        gap: 20px;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     #tela-carregando {
         display: none;
         position: fixed;
@@ -453,6 +460,10 @@
         cursor: help
     }
 
+    .grafico-container{
+        width: 50%;
+    }
+
     .charts {
         width: 100%;
         display: grid;
@@ -556,9 +567,12 @@
         color: #000;
         background: #fff;
         height: auto;
-        width: 800px;
+        max-width: 1200px;
+        width: calc(100% - 312px);
         margin-left: 156px;
         margin-top: 100px;
+        margin-bottom: 100px;
+        padding: 10px;
         border-radius: 12px;
         padding: 18px
     }
