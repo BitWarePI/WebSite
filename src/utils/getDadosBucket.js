@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const Papa = require('papaparse');
 const maquinaModel = require("../models/maquinaModel");
 
-AWS.config.update({ region: process.env.AWS_REGION });
+AWS.config.update({ region: process.env.AWS_REGION });  
 const s3 = new AWS.S3();
 
 async function lerCsv(bucket, key) {

@@ -143,12 +143,12 @@
                 <p style="margin: 0 0 8px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
                 <select id="filtro"
                   style="background-color: #4c1d95; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
-                  <option>Últimas 24h</option>
-                  <option>Semanal</option>
-                  <option>Mensal</option>
-                  <option value="Semestral1">1° Semestre</option>
-                  <option value="Semestral2">2° Semestre</option>
-                  <option>Anual</option>
+                  <option selected value="0">Últimas 24h</option>
+                  <option value="1">Semanal</option>
+                  <option value="2">Mensal</option>
+                  <option value="3">1° Semestre</option>
+                  <option value="4">2° Semestre</option>
+                  <option value="5">Anual</option>
                 </select>
               </div>
 
@@ -238,6 +238,9 @@
 
 </html>
 <script>
+
+  const filtroTempo = filtro.value
+
   async function carregarDadosEmpresa() {
     const idEmpresa = sessionStorage.getItem("idEmpresa");
 
@@ -291,17 +294,17 @@
     const erros = [];
 
     dados.forEach(item => {
-      const dataTeste = item.datetime.split(" ")[0]
+      const dataDados = item.datetime.split(" ")[0]
 
-      if (!resultado[dataTeste]) resultado[dataTeste] = 0;
-      if (dtFim < dataTeste || dtInicio > dataTeste) { return }
+      if (!resultado[dataDados]) resultado[dataDados] = 0;
+      if (dtFim < dataDados || dtInicio > dataDados) { return }
       const cpuTemp = Number(item.cpu_temperature);
       const gpuTemp = Number(item.gpu_temperature);
       const cpuPercent = Number(item.cpu_percent);
       const gpuPercent = Number(item.gpu_percent);
 
       if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-        resultado[dataTeste]++;
+        resultado[dataDados]++;
       }
     });
     Object.keys(resultado).forEach(data => {
@@ -319,8 +322,26 @@
   async function geraGrafico() {
     const dados = await carregarErros();
     console.log("Dados mesclados:", dados);
+    let dtFim = dados[dados.length - 1].datetime.split(" ")[0]
+    let dtInicio
 
-    const teste = contarErrosDashboard(dados, "2025-12-29", "2025-12-31")
+    if (filtroTempo == '0') {
+      dtInicio = dados[dados.length - 8].datetime.split(" ")[0]
+    } else if (filtroTempo == 1) {
+      dtInicio = dados[dados.length - 57].datetime.split(" ")[0]
+    } else if (filtroTempo == 2) {
+      dtInicio = dados[dados.length - 241].datetime.split(" ")[0]
+    } else if (filtroTempo == 3) {
+      dtInicio = dados[dados.length - 1441].datetime.split(" ")[0]
+    } else if (filtroTempo == 4) {
+      dtInicio = dados[dados.length - 2881].datetime.split(" ")[0]
+      dtFim = dados[dados.length - 1441].datetime.split(" ")[0]
+    }else if(filtroTempo == 5){
+      dtInicio = dados[0].datetime.split(" ")[0]
+    }
+
+
+    const teste = contarErrosDashboard(dados, dtInicio, dtFim)
     console.log("TESTE =", teste);
 
 
