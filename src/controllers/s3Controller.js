@@ -174,22 +174,22 @@ async function pegarCsvMedias(req, res) {
             return soma / arr.length;
         }
 
- function desvioPadrao(arr) {
-    if (arr.length < 2) return Math.random() + 1; // garante 1 a 2
+        function desvioPadrao(arr) {
+            if (arr.length < 2) return Math.random() + 1; // garante 1 a 2
 
-    const m = media(arr);
-    const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
-    const dp = Math.sqrt(variancia);
+            const m = media(arr);
+            const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
+            const dp = Math.sqrt(variancia);
 
-    if (dp === 0) {
-        const r = Math.random() + 1; 
-        console.log("Random (dp=0):", r);
-        return r;
-    }
+            if (dp === 0) {
+                const r = Math.random() + 1;
+                console.log("Random (dp=0):", r);
+                return r;
+            }
 
-    console.log("DP normal:", dp);
-    return dp;
-}
+            console.log("DP normal:", dp);
+            return dp;
+        }
 
         const result = {
             cpu: desvioPadrao(filtrados.map(item => Number(item.cpu_percent))),
@@ -249,7 +249,10 @@ async function pegarLeiturasFormatadas(req, res) {
         }
 
         let inicio = new Date();
+        inicio.setHours(inicio.getHours() - 3);
+
         let fim = new Date();
+        fim.setHours(fim.getHours() - 3);
 
         switch (periodo) {
             case 1: // últimas 24h
@@ -319,6 +322,7 @@ async function pegarLeiturasFormatadas(req, res) {
                 media_gpu_temperature: soma.gpu_temperature / count,
             };
         }
+
         function agrupar(lista, chaveFn) {
             const grupos = {};
 
@@ -339,23 +343,27 @@ async function pegarLeiturasFormatadas(req, res) {
 
             return resultado;
         }
+
+        function normalizarHora(date) {
+            const d = parseDate(date);
+            const hours = String(d.getHours()).padStart(2, "0");
+            const minutes = String(d.getMinutes()).padStart(2, "0");
+            return `${hours}:${minutes}`;
+        }
+
         let resultado;
+        const diasSemana = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
 
         if (periodo === 1) {
             resultado = agrupar(filtrados, item => {
-                const d = parseDate(item.datetime);
-                console.log(d.toISOString())
-                return d.toISOString().split("T")[1];
+                return normalizarHora(item.datetime);
             })
-
-
         } else if (periodo === 2) {
             // semanal
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                return d.toISOString().slice(0, 10);
+                return diasSemana[d.getDay()];
             });
-
         } else if (periodo === 3) {
             // mensal
             resultado = agrupar(filtrados, item => {
@@ -367,7 +375,8 @@ async function pegarLeiturasFormatadas(req, res) {
             // semestres e anual
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                return d.getMonth() + 1; // 1–12
+                const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+                return meses[d.getMonth()];
             });
         }
 
@@ -383,4 +392,4 @@ async function pegarLeiturasFormatadas(req, res) {
     }
 }
 
-module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas};
+module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas };
