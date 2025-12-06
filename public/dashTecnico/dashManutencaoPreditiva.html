@@ -180,14 +180,14 @@
             <div class="card">
               <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
               <div class="chart-container">
-                <canvas id="chartComponent"></canvas>
+                <canvas id="graficoComponente"></canvas>
               </div>
             </div>
 
             <div class="card">
               <h3>Comparativo: Tipo de problema (Uso vs Temperatura)</h3>
               <div class="chart-container">
-                <canvas id="chartType"></canvas>
+                <canvas id="graficoTipo"></canvas>
               </div>
             </div>
           </section>
@@ -225,16 +225,15 @@
       </div>
       <div class="graficosContainer">
         <div class="grafico-container">
-          <h3>Ocorrências – Últimas 24 horas</h3>
-          <div id="grafico24h"></div>
+          <h3>Score (pontuação) - Ultimas 24 horas</h3>
+          <canvas id="grafico24h" height="160"></canvas>
         </div>
-        
         <div class="grafico-container">
-          <h3>Ocorrências – Últimos 30 dias</h3>
-          <div id="grafico30d"></div>
+          <h3>Score (pontuação) – Últimos 30 dias</h3>
+          <canvas id="grafico30d" height="160"></canvas>
         </div>
       </div>
-
+      <br>
       <div id="modalBody" style="margin-top:10px;max-height:320px;overflow:auto">
       </div>
     </div>
@@ -246,6 +245,8 @@
     let chartMachineScore = null;
     let Componente = null;
     let TipoProblema = null;
+    let graficoDetalhes24h = null;
+    let graficoDetalhes30d = null;
 
     window.onload = function () {
       buscarOcorrencias('mes', fkEmpresa);
@@ -264,23 +265,26 @@
 
     function buscarOcorrencias(periodo, fkEmpresa) {
       mostrarCarregando()
-      let dataAbertura, dataFechamento;
+      let dataAbertura, dataFechamento, dataGraficoDetalhes;
 
       document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
 
       dataFechamento = new Date();
+      dataGraficoDetalhes = new Date();
 
       if (periodo === '24h') {
         dataAbertura = new Date();
-        dataAbertura.setDate(dataAbertura.getDate() - 1);
+        dataFechamento.setDate(dataFechamento.getDate() - 1);
+        dataGraficoDetalhes.setDate(dataGraficoDetalhes.getDate() - 2);
         document.getElementById('24hBtn').classList.remove('ghost');
       } else if (periodo === 'semana') {
         dataAbertura = new Date();
-        dataAbertura.setDate(dataAbertura.getDate() - 7);
+        dataFechamento.setDate(dataFechamento.getDate() - 7);
         document.getElementById('semanaBtn').classList.remove('ghost');
       } else if (periodo === 'mes') {
         dataAbertura = new Date();
-        dataAbertura.setMonth(dataAbertura.getMonth() - 1);
+        dataFechamento.setMonth(dataFechamento.getMonth() - 1);
+        dataGraficoDetalhes.setMonth(dataGraficoDetalhes.getMonth() - 2);
         document.getElementById('mesBtn').classList.remove('ghost');
       } else if (periodo === 'primeiroSemestre') {
         const anoAtual = new Date().getFullYear();
@@ -294,12 +298,13 @@
         document.getElementById('segundoSemestreBtn').classList.remove('ghost');
       } else if (periodo === 'ano') {
         dataAbertura = new Date();
-        dataAbertura.setFullYear(dataAbertura.getFullYear() - 1);
+        dataFechamento.setFullYear(dataFechamento.getFullYear() - 1);
         document.getElementById('anoBtn').classList.remove('ghost');
       }
 
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
+      const dataGraficoDetalhesFormatado = formatarDataParaBanco(dataGraficoDetalhes);
       const caminho = `chamados.csv`
       const empresa = fkEmpresa;
 
@@ -319,16 +324,25 @@
 
             return dataChamado >= inicio && dataChamado <= fim;
           });
-          console.log("Ocorrências filtradas:", chamadosFiltrados);
-          processarDados(chamadosFiltrados);
+
+          chamadosFiltradosGraficoDetalhes = data.filter(chamado => {
+            const dataChamado = new Date(chamado.dataFechamento);
+            const inicio = new Date(dataFechamentoFormatado);
+            const fim = new Date(dataGraficoDetalhesFormatado);
+
+            return dataChamado >= inicio && dataChamado <= fim;
+          });
+
+          processarDados(chamadosFiltrados, chamadosFiltradosGraficoDetalhes);
           esconderCarregando()
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
 
-    function processarDados(ocorrencias) {
+    function processarDados(ocorrencias, ocorrenciasGraficoDetalhes) {
       console.log(ocorrencias);
       const dados = tratarOcorrencias(ocorrencias);
+      const dadosGraficoDetalhes = tratarOcorrencias(ocorrenciasGraficoDetalhes);
 
       document.querySelector('.kpi-total').textContent = dados.total;
 
@@ -348,9 +362,7 @@
       }
       document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
 
-      // ===============================
-      // 1. Preparação das datas de corte
-      // ===============================
+      // Grafico de detalhes da máquina
       const agora = new Date();
 
       const inicio24h = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
@@ -368,7 +380,7 @@
       const ultimos30d = [];
       const mesAnterior = [];
 
-      ocorrencias.forEach(c => {
+      ocorrenciasGraficoDetalhes.forEach(c => {
         const d = new Date(c.dataAbertura);
 
         // --- 24H ---
@@ -408,53 +420,74 @@
     }
 
     function renderGrafico24h(serieAtual, serieAnterior) {
-      var options = {
-        chart: { type: "line", height: 300 },
-        stroke: { width: 3 },
-        series: [
-          {
-            name: "Últimas 24h",
-            data: serieAtual
-          },
-          {
-            name: "Dia anterior",
-            data: serieAnterior,
-            opacity: 0.25
-          }
-        ],
-        xaxis: {
-          type: "category",
-          categories: [...Array(24).keys()], // 0–23 horas
-          title: { text: "Hora do dia" }
-        },
-        yaxis: { title: { text: "Qtd. Ocorrências" } },
-        legend: { position: "top" }
-      };
+      const ctx = document.getElementById("grafico24h").getContext("2d");
 
-      new ApexCharts(document.querySelector("#grafico24h"), options).render();
+      // destrói grafico anterior para evitar erro de duplicação
+      if (graficoDetalhes24h) graficoDetalhes24h.destroy();
+
+      graficoDetalhes24h = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [...Array(24).keys()], // 0 a 23h
+          datasets: [
+            {
+              label: "Últimas 24h",
+              data: serieAtual.map(p => p.y),
+              borderWidth: 2,
+              tension: 0.3
+            },
+            {
+              label: "Dia anterior",
+              data: serieAnterior.map(p => p.y),
+              borderWidth: 2,
+              borderDash: [5, 5],
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: "Hora do dia" } },
+            y: { title: { display: true, text: "Score (Pontuação)" }, beginAtZero: true }
+          }
+        }
+      });
     }
 
     function renderGrafico30d(serieAtual, serieAnterior) {
-      var options = {
-        chart: { type: "line", height: 300 },
-        stroke: { width: 3 },
-        series: [
-          {
-            name: "Últimos 30 dias",
-            data: serieAtual
-          },
-          {
-            name: "Mês anterior",
-            data: serieAnterior,
-            opacity: 0.25
-          }
-        ],
-        xaxis: { type: "category" },
-        yaxis: { title: { text: "Qtd. Ocorrências" } },
-        legend: { position: "top" }
-      };
+      const ctx = document.getElementById("grafico30d").getContext("2d");
 
-      new ApexCharts(document.querySelector("#grafico30d"), options).render();
+      if (graficoDetalhes30d) graficoDetalhes30d.destroy();
+
+      graficoDetalhes30d = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: serieAtual.map(p => p.x), // dias yyyy-mm-dd
+          datasets: [
+            {
+              label: "Últimos 30 dias",
+              data: serieAtual.map(p => p.y),
+              borderWidth: 2,
+              tension: 0.3
+            },
+            {
+              label: "Mês anterior",
+              data: serieAnterior.map(p => p.y),
+              borderWidth: 2,
+              borderDash: [5, 5],
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { title: { display: true, text: "Dia" } },
+            y: { title: { display: true, text: "Score (Pontuação)" }, beginAtZero: true }
+          }
+        }
+      });
     }
 
     function tratarOcorrencias(ocorrencias) {
@@ -581,8 +614,8 @@
     }
 
     function atualizarGraficos(dados) {
-      const graficoComponente = document.getElementById('chartComponent').getContext('2d');
-      const graficoTipoProblema = document.getElementById('chartType').getContext('2d');
+      const graficoComponente = document.getElementById('graficoComponente').getContext('2d');
+      const graficoTipoProblema = document.getElementById('graficoTipo').getContext('2d');
 
       if (!Componente) {
         Componente = new Chart(graficoComponente, {
