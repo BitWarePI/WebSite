@@ -21,6 +21,12 @@
         <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
         <ul class="links nav-links-pc">
           <li>
+            <a class="link" href="dashHome.html">
+              <span class="material-symbols-outlined icon">paid</span>
+              <span class="titulo">AWS Cost</span>
+            </a>
+          </li>
+          <li>
             <a class="link ativo" href="dashEmpresa.html">
               <span class="material-symbols-outlined icon">apartment</span>
               <span class="titulo">Empresas</span>
@@ -181,7 +187,7 @@
               console.log("KPIS RECEBIDAS:", empresas);
 
               document.getElementById("quantidadeEmpresas").innerHTML = `<p>${empresas.qtdEmpresas - 1}</p>`;
-              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas -1}</p>`;
+              document.getElementById("quantidadeEmpresasAtivas").innerHTML = `<p>${empresas.empresasAtivas - 1}</p>`;
               document.getElementById("quantidadeSolicitacoes").innerHTML = `<p>${empresas.solicitacoes}</p>`;
             } else {
               console.error("Erro ao buscar empresas:", resposta.statusText);
@@ -306,7 +312,7 @@
 
 
         // Adiciona os dados na tabela
-        if(empresa.email != "admBitware@gmail.com"){
+        if (empresa.email != "admBitware@gmail.com") {
           corpoTabela.innerHTML += `
             <tr>
                 <td class="nome"><p>${empresa.nome}</p></td>
@@ -319,8 +325,8 @@
                 </td>
             </tr>
         `;
-        } 
-        
+        }
+
         const botoesToggle = document.querySelectorAll(".btn-toggle");
 
         botoesToggle.forEach(botao => {

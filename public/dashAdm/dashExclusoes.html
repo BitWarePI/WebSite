@@ -21,6 +21,12 @@
                 <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
                 <ul class="links nav-links-pc">
                     <li>
+                        <a class="link" href="dashHome.html">
+                            <span class="material-symbols-outlined icon">paid</span>
+                            <span class="titulo">AWS Cost</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="link" href="dashEmpresa.html">
                             <span class="material-symbols-outlined icon">apartment</span>
                             <span class="titulo">Empresas</span>
@@ -156,7 +162,7 @@
                 })
             }).then(resposta => {
                 if (resposta.ok) {
-                    window.location = "./dashExclusoes.html"; 
+                    window.location = "./dashExclusoes.html";
 
                 } else {
                     alert("Erro ao aprovar solicitação")
