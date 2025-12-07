@@ -393,8 +393,15 @@
       });
 
       const labels = Object.keys(agrupadoPorHora);
-      const pontuacoes = Object.values(agrupadoPorHora)
-        .map(lista => calcularPontuacao(machine.id, lista));
+
+      let acumulado = [];
+      const pontuacoes = labels.map(label => {
+        // adiciona chamados daquele dia ao acumulado
+        acumulado = acumulado.concat(agrupadoPorHora[label]);
+
+        // calcula score com todos os chamados até aqui
+        return calcularPontuacao(machine.id, acumulado);
+      });
 
       graficoDetalhes24h = new Chart(ctx, {
         type: "line",
@@ -419,25 +426,7 @@
               title: {
                 display: true,
                 text: "Hora do dia",
-                color: "#000",     
-                font: {
-                  size: 16,          
-                  weight: "bold",
-                  family: "Inter"
-                }
-              },
-              ticks: {
-                color: "#000",    
-                font: {
-                  size: 14            
-                }
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Score (Pontuação)",
-                color: "#000",     
+                color: "#000",
                 font: {
                   size: 16,
                   weight: "bold",
@@ -445,7 +434,25 @@
                 }
               },
               ticks: {
-                color: "#000",   
+                color: "#000",
+                font: {
+                  size: 14
+                }
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Score (Pontuação)",
+                color: "#000",
+                font: {
+                  size: 16,
+                  weight: "bold",
+                  family: "Inter"
+                }
+              },
+              ticks: {
+                color: "#000",
                 font: {
                   size: 14
                 }
@@ -478,9 +485,12 @@
         const [ano, mes, dia] = chave.split("-");
         return `${dia}/${mes}`;
       });
-      const pontuacoes = chavesOrdenadas.map(dia =>
-        calcularPontuacao(machine.id, agrupadoPorDia[dia])
-      );
+
+      let acumulado = [];
+      const pontuacoes = chavesOrdenadas.map(chave => {     // CORRIGIDO
+        acumulado = acumulado.concat(agrupadoPorDia[chave]);
+        return calcularPontuacao(machine.id, acumulado);
+      });
 
       graficoDetalhes30d = new Chart(ctx, {
         type: "line",
@@ -792,13 +802,18 @@
 
         // Calcula há quantos dias o chamado foi aberto
         const dataAbertura = new Date(chamado.dataAbertura);
-        const diasDesdeAbertura = Math.max(
-          1,
-          (agora - dataAbertura) / (1000 * 60 * 60 * 24)
-        );
+        const diffHoras = (agora - dataAbertura) / (1000 * 60 * 60);
 
-        // Recência: chamados mais novos valem mais
-        somaRecencia += 1 / Math.log(diasDesdeAbertura + 1);
+        let pesoRecencia;
+        if (diffHoras <= 3) {
+          pesoRecencia = 1.0;        
+        } else if (diffHoras <= 24) {
+          pesoRecencia = 0.6;        
+        } else {
+          pesoRecencia = 0.3;        
+        }
+
+        somaRecencia += pesoRecencia;
       });
 
       // Parte 1 — normaliza o número total de chamados (até 10 vira 100%)
@@ -815,10 +830,7 @@
       const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
 
       // tendência baseada no próprio período filtrado
-      const fatorTendencia = Math.min(
-        1,
-        totalChamados > 0 ? totalChamados / 10 : 0
-      );
+      const fatorTendencia = Math.min(1, totalChamados / 10);
 
       // Calculo da pontuação final
       const pontuacao = Math.round(
