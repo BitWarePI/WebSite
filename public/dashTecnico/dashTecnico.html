@@ -45,6 +45,12 @@
 </script>
 
 <body>
+  <div id="tela-carregando">
+    <div class="caixa-carregando">
+      <div class="animacao-roda"></div>
+      <p>Carregando dados...</p>
+    </div>
+  </div>
   <section>
     <nav>
       <div class="main-nav">
@@ -238,14 +244,51 @@
 </html>
 <script>
 
+  function mostrarCarregando() {
+    document.getElementById("tela-carregando").style.display = "flex";
+  }
+
+  function esconderCarregando() {
+    document.getElementById("tela-carregando").style.display = "none";
+  }
+
+
   let filtroTempo = '0';
   let grafico1 = null;
 
-  document.getElementById("filtro").addEventListener("change", function () {
+  document.getElementById("filtro").addEventListener("change", async function () {
     filtroTempo = this.value;
     console.log("Filtro mudou para:", filtroTempo);
-    geraGrafico();
-  });
+
+    mostrarCarregando();
+
+    await Promise.all([
+        geraGrafico()
+    ]);
+
+    esconderCarregando();
+}); 
+
+  window.onload = function () {
+      carregarDash();
+  };
+
+  async function carregarDash(){
+      mostrarCarregando();
+
+      await Promise.all([
+      carregarChamados(),
+      carregarTop5Maquinas(),
+      totalCriticos(),
+      carregarPrincipalProblema(),
+      totalErros(),
+      maquinasComErro(),
+      geraGrafico(),
+      gerarGraficoDistribuicao(),
+      qtdMaquinas()
+    ]);
+    esconderCarregando();
+  }
 
 
   async function carregarDadosEmpresa() {
@@ -1008,17 +1051,6 @@
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
       });
   }
-  window.onload = function () {
-    carregarChamados(),
-      carregarTop5Maquinas(),
-      totalCriticos(),
-      carregarPrincipalProblema(),
-      totalErros(),
-      maquinasComErro(),
-      geraGrafico(),
-      gerarGraficoDistribuicao(),
-      qtdMaquinas();
-  };
 
   fetch("/utils/getDadosBucket/").then(res => {
     res.json().then(JSON => {
