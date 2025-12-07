@@ -113,6 +113,7 @@ VALUES
 ('Admin', 'Bitware', 'admBitware@gmail.com', '87654321', 1, 1),
 ('techvision', 'Empresa', 'contato@techvision.com', '12345678', 2, 2),
 ('Marina', 'Costa', 'marina.costa@techvision.com', '12345678', 4, 2),
+('João', 'Silva', 'joao.silva@techvision.com', '12345678', 3, 2),
 ('João', 'Pereira', 'joao.pereira@ecodata.com', '12345678', 2, 3);
 
 INSERT INTO comando_personalizado (nome, comando, fk_empresa) VALUES 
@@ -124,18 +125,11 @@ INSERT INTO comando_personalizado (nome, comando, fk_empresa) VALUES
 
 INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES 
-('f4:6a:dd:7b:03:1d', 'Servidor Principal', 1),
 ('a1:b2:c3:d4:e5:f6', 'Setor A', 2),
 ('ff:ee:dd:cc:bb:aa', 'Setor B', 2),
 ('e7:5c:5f:1e:b4:1d', 'Setor C', 2),
-('11:22:33:44:55:66', 'Setor Logístico', 3);
-
-INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
-VALUES
-('e8:5c:5f:1e:b4:1d', 'Setor D', 1),
-('12:2a:0a:85:5e:47', 'Setor A', 2), 
-('f4:6a:dd:7b:03:0d', 'Setor E', 2),
-('e8:5c:5f:1e:b4:1d', 'Setor D', 2),
+('11:22:33:44:55:66', 'Setor Logístico', 3),
+('e8:5c:5f:1e:b4:1d', 'Setor A', 2), 
 ('f4:6a:dd:7b:03:0d', 'Setor E', 2);
 
 INSERT INTO Componente (descricao)
@@ -167,66 +161,21 @@ VALUES
 (4, 3, 91),
 (4, 4, 91),
 
+(6, 1, 30), 
+(6, 2, 30),  
+(6, 3, 90),   
+(6, 4, 90),
+
 (5, 1, 30),
 (5, 2, 30),
 (5, 3, 92),
 (5, 4, 92);
-
-INSERT INTO Parametro (fkMaquina, fkComponente, valor)
-VALUES
-(6, 1, 30), 
-(6, 2, 30), 
-(6, 3, 90),
-(6, 4, 90), 
-(7, 1, 30),  
-(7, 2, 30), 
-(7, 3, 90),
-(7, 4, 90);
 
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
 (1, 35, 20, 48, 42),
 (2, 60, 70, 75, 65),
 (3, 40, 30, 55, 50);
-
-INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
-VALUES
--- Maquina 2
-(2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(2, 'Uso de GPU (%) acima do parametro - Atencao', 'Critica', 'Aberto', 3),
-(2, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(2, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-
--- Maquina 3
-(3, 'Temperatura da CPU (C) abaixo do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(3, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(3, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) acima do parametro - Atencao', 'Media', 'Aberto', 3),
-
--- Maquina 4
-(4, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(4, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(4, 'Temperatura da GPU (C) acima do esperado', 'Media', 'Aberto', 3),
-(4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
-
--- Maquina 6
-(6, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
-(6, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(6, 'Temperatura da CPU (C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(6, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
-
--- Maquina 7
-(7, 'Uso de CPU (%) abaixo do esperado', 'Critica', 'Aberto', 3),
-(7, 'Temperatura da GPU (C) acima do esperado', 'Critica', 'Em andamento', 3),
-(7, 'Temperatura da CPU (C) abaixo do esperado', 'Media', 'Aberto', 3),
-(7, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
-(7, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
 
 
 # Cadastro
