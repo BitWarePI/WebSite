@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../css/dashboard/dashTecnico/histSnippts.css">
+  <link rel="stylesheet" href="../css/default.css">
+  <link rel="stylesheet" href="../css/dashboard/dashTecnico/dashProcess.css">
+  <link rel="stylesheet" href="../css/dashboard/defaultDash.css">
+  <link rel="stylesheet" href="../css/dashboard/dashTecnico/modelFiltroHistorico.css">
+  <link rel="stylesheet" href="../css/animacao.css">
+
+  <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <link rel="icon" href="../assets/icon/favicon2.png">
+
+  <title>Dashboard | BitWare</title>
+</head>
+
+<body>
+  <section>
+    <nav>
+      <div class="main-nav">
+        <h1 class="logo"><img src="../assets/imgs/Logo.svg" alt=""></h1>
+        <ul class="links nav-links-pc">
+          <li><a class="link" href="dashTecnico.html">
+              <span class="material-symbols-outlined icon">handyman</span>
+              <span class="titulo">Dash técnico</span>
+            </a>
+          </li>
+          <li>
+            <a class="link ativo" href="dashInfoProcess.html">
+              <span class="material-symbols-outlined icon">terminal</span>
+              <span class="titulo">Gestão de Processos</span>
+            </a>
+          </li>
+          <li>
+            <a class="link " href="dashManutencaoPreditiva.html">
+              <span class="material-symbols-outlined icon">radar</span>
+              <span class="titulo">Manutenção Preditiva</span>
+            </a>
+          </li>
+        </ul>
+        <a href="../index.html" class="btn btn-sair nav-links-pc">
+          Sair
+        </a>
+        <div id="nav-menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="content">
+
+      <div class="top-bar">
+        <h1>Monitoramento de Processos: <i id="Mac-Address-title">Machine-ID-001</i></h1>
+      </div>
+
+      <div class="new-dashboard-wrapper">
+        <div class="dashboard-grid">
+
+          
+          <div>
+
+            <div style="display:flex; gap:12px; align-items:flex-end; width:100%;">
+              <div class="search-box" style="flex:1; display:flex; align-items:center;">
+                <i class="fas fa-search"></i>
+                <input type="text" id="inp_filterProcess" oninput="filterProcess()"
+                  placeholder="Filtrar por nome do processo ou PID..." style="flex:1; margin-left:8px;" />
+              </div>
+
+              <div style="display:flex; align-items:flex-end;">
+                <button class="filter-btn">Detalhes</button>
+
+
+                <div id="filtro-slide" class="filtro-slide">
+
+                  <div class="modal-header">
+                    <h2 class="modal-title">Detalhes da Máquina</h2>
+                    <button class="modal-close-btn">×</button>
+                  </div>
+
+                  <div class="detail-section">
+                    <div class="detail-row">
+                      <span class="detail-label">MAC/ID</span>
+                      <span class="detail-value" id="model-macAddress">00:1B:44:11:3A:B7</span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">Status</span>
+                      <span class="detail-value status-indicator" id="model-status">
+                        <span class="status-dot offline"></span> Offline
+                      </span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">Sistema Operacional</span>
+                      <span class="detail-value" id="model-so">Indisponível (Offline)</span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">Nome</span>
+                      <span class="detail-value" id="model-setor">Indisponível (Offline)</span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">Última Atualização</span>
+                      <span class="detail-value" id="model-ultimoUpdate">Indisponível (Offline)</span>
+                    </div>
+                  </div>
+
+                  <hr class="divider">
+
+                  <div class="detail-section">
+                    <h3 class="section-title">Especificações do Sistema</h3>
+
+                    <div class="detail-row">
+                      <span class="detail-label">RAM</span>
+                      <span class="detail-value" id="model-ram">Indisponível (Offline)</span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">CPU</span>
+                      <span class="detail-value" id="model-cpu">Indisponível (Offline)</span>
+                    </div>
+
+                    <div class="detail-row">
+                      <span class="detail-label">Disco</span>
+                      <span class="detail-value" id="model-disco">Indisponível (Offline)</span>
+                    </div>
+                  </div>
+
+                  <hr class="divider">
+
+                  <div class="detail-section">
+                    <h3 class="section-title">Especificações Gráficas</h3>
+
+                    <div class="detail-row">
+                      <span class="detail-label">VRAM GPU</span>
+                      <span class="detail-value" id="model-gpu">Indisponível (Offline)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">
+                    <p></p>
+                  </th>
+                  <th>PID</th>
+                  <th>Process Name</th>
+                  <th>Status</th>
+                  <th>CPU %</th>
+                  <th>GPU %</th>
+                  <th>Memory %</th>
+                </tr>
+              </thead>
+
+              <tbody id="body_process">
+                <tr>
+                  <td><input type="radio" name="processo" class="radio" data-pid="${pid}"></td>
+                  <td style="color: #8b92a5;">1024</td>
+                  <td style="color: white;">miner_proc</td>
+                  <td><span class="status-badge status-running">Running</span></td>
+                  <td>
+                    <div class="chart-circle" style="--percent: 85; --chart-color: #ff4d4d;">
+                      <span>85%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="chart-circle" style="--percent: 92; --chart-color: #ff4d4d;">
+                      <span>92%</span>
+                    </div>
+                  </td>
+                  <td class="barra-progress">
+                    <div class="progress-wrapper">
+                      <div class="progress-bg">
+                        <div class="progress-fill" style="width: 65%; background-color: #f1c40f;"></div>
+                      </div>
+                      <span style="font-size: 0.75rem;">65%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="row-selected">
+                  <td><input type="radio" name="processo" class="radio"></td>
+                  <td style="color: #8b92a5;">1028</td>
+                  <td style="color: white;">watchdog</td>
+                  <td><span class="status-badge status-running">Running</span></td>
+
+                  <td>
+                    <div class="chart-circle" style="--percent: 5; --chart-color: #2ecc71;">
+                      <span>5%</span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="chart-circle" style="--percent: 2; --chart-color: #2ecc71;">
+                      <span>2%</span>
+                    </div>
+                  </td>
+
+                  <td class="barra-progress">
+                    <div class="progress-wrapper">
+                      <div class="progress-bg">
+                        <div class="progress-fill" style="width: 10%; background-color: #2ecc71;"></div>
+                      </div>
+                      <span style="font-size: 0.75rem;">10%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><input type="radio" name="processo" class="radio"></td>
+                  <td style="color: #8b92a5;">1032</td>
+                  <td style="color: white;">gpu_temp_mon</td>
+                  <td><span class="status-badge status-Idle">Idle</span></td>
+
+                  <td>
+                    <div class="chart-circle" style="--percent: 1; --chart-color: #2ecc71;">
+                      <span>1%</span>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="chart-circle" style="--percent: 15; --chart-color: #2ecc71;">
+                      <span>15%</span>
+                    </div>
+                  </td>
+
+                  <td class="barra-progress">
+                    <div class="progress-wrapper">
+                      <div class="progress-bg">
+                        <div class="progress-fill" style="width: 8%; background-color: #2ecc71;"></div>
+                      </div>
+                      <span style="font-size: 0.75rem;">8%</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tela de status pop -->
+          <div id="tela-popStatus">
+            <div class="tela-popStatus">
+              <div class="statusResposta"></div>
+              <p id="textoStatus">Carregando dados...</p>
+            </div>
+          </div>
+
+          <!-- Tela de Loading -->
+          <div id="tela-carregando2">
+            <div class="caixa-carregando2">
+              <div class="animacao-roda2"></div>
+              <p id="textoCarregamento">Carregando dados...</p>
+            </div>
+          </div>
+
+          <!-- Mostra resultado do url -->
+          <div id="modal-comando" class="comando-slide">
+          </div>
+
+          <div id="modal-resultado" class="comando-slide" style="width: 390px !important;">
+            <div class="comando-header">
+              <h2 id="resultado-titulo">Resultado da Execução</h2>
+              <button id="resultado-close" class="comando-close" aria-label="Fechar">×</button>
+            </div>
+
+            <div style="padding: 20px; height: calc(100% - 60px); display: flex; flex-direction: column;">
+              <label>Status:</label>
+              <div id="resultado-status" style="margin-bottom: 15px; font-weight: bold; color: #4caf50;">
+                Sucesso
+              </div>
+
+              <label>Saída (JSON/Log):</label>
+              <pre id="resultado-conteudo" class="result-content">
+      Aguardando execução...
+          </pre>
+            </div>
+          </div>
+
+          <div id="comando-backdrop" class="backdrop hidden"></div>
+
+          <!-- SNIPPETS -->
+          <div class="snippets-panel">
+            <h3 class="panel-title">Snippets Úteis</h3>
+            <p class="panel-subtitle">Selecione processos na tabela e escolha um comando.</p>
+
+            <div class="accordion-group">
+              <div class="accordion-header">
+                <span>Controle de Processos</span>
+              </div>
+
+              <div class="scroll-barSnippet" id="scroll-barSnippet">
+
+                <div class="snippet-card active">
+                  <input type="radio" name="snnipt" value="${s.id}">
+                  <strong>Forçar Encerramento (kill)</strong>
+                </div>
+
+                <div class="snippet-card">
+                  <input type="radio" name="snnipt" value="${s.id}">
+                  <strong>Reiniciar Processo</strong>
+                </div>
+
+                <div class="snippet-card">
+                  <input type="radio" name="snnipt" value="${s.id}">
+                  <strong>Reiniciar Processo</strong>
+                </div>
+
+                <div class="snippet-card">
+                  <input type="radio" name="snnipt" value="${s.id}">
+                  <strong>Reiniciar Processo</strong>
+                </div>
+
+                <div class="snippet-card">
+                  <input type="radio" name="snnipt" value="${s.id}">
+                  <strong>Reiniciar Processo</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="execution-footer">
+              <label style="font-size: 1rem; color: #000000;">Comando selecionado:</label>
+
+              <div id="code-box" class="code-box">
+                kill -9 {PID_1028}
+              </div>
+
+              <button class="btn-primary" onclick="executarProcesso()">
+                <i class="fas fa-play-circle"></i> Executar Processo
+              </button>
+
+              <button class="btn-secondary" onclick="copiarComando()">
+                <i class="far fa-copy"></i>Copiar Comando
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+</body>
+
+</html>
+<script src="../js/TecnicoProcess/dashHistoricoSnippts.js"></script>
+
+<script>
+  const openBtn = document.querySelector(".filter-btn");
+  const slide = document.getElementById("filtro-slide");
+  const backdrop = document.getElementById("filtro-backdrop");
+  const closeBtn = document.querySelector(".modal-close-btn");
+
+  function abrirFiltro() {
+    if (slide) slide.classList.add("show");
+    if (backdrop) backdrop.classList.remove("hidden");
+  }
+
+  function fecharFiltro() {
+    if (slide) slide.classList.remove("show");
+    if (backdrop) backdrop.classList.add("hidden");
+  }
+
+  if (openBtn) openBtn.addEventListener("click", abrirFiltro);
+  if (closeBtn) closeBtn.addEventListener("click", fecharFiltro);
+  if (backdrop) backdrop.addEventListener("click", fecharFiltro);
+
+
+  function mostrarCarregando() {
+    document.getElementById("tela-carregando2").style.display = "flex";
+  }
+
+  function esconderCarregando() {
+    document.getElementById("tela-carregando2").style.display = "none";
+  }
+
+  function mostrarStatusPop() {
+    document.getElementById("tela-popStatus").style.display = "flex";
+  }
+
+  function esconderStatusPop() {
+    document.getElementById("tela-popStatus").style.display = "none";
+  }
+
+  function getColor(value) {
+    if (value >= 80) return "#ff4d4d";
+    if (value >= 50) return "#f1c40f";
+    return "#2ecc71";
+  }
+
+  const modalResultado = document.getElementById("modal-resultado");
+  const closeResultado = document.getElementById("resultado-close");
+  const resultadoConteudo = document.getElementById("resultado-conteudo");
+  const resultadoStatus = document.getElementById("resultado-status");
+
+  function fecharQualquerModal() {
+    modalResultado.classList.remove("show");
+  }
+
+  function abrirModalResultado(dados, sucesso) {
+    if (dados.stdout && typeof dados.stdout === 'string') {
+      dados.stdout = dados.stdout.replace(/\n/g, '<br>');
+    }
+
+    const jsonBonito = JSON.stringify(dados, null, 2);
+
+    resultadoConteudo.textContent = jsonBonito;
+
+    if (resultadoStatus) {
+      resultadoStatus.textContent = sucesso ? "Execução Concluída" : "Erro na Execução";
+      resultadoStatus.style.color = sucesso ? "#4caf50" : "#f44336";
+    }
+
+    modalResultado.classList.add("show");
+  }
+
+  closeResultado.addEventListener("click", fecharQualquerModal);
+</script>
