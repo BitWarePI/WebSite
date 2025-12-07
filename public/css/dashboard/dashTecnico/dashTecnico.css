@@ -390,3 +390,35 @@ td.acao button.ver-mais {
   z-index: 10000; /* opcional, mas garante que o conteúdo fique na frente */
   position: relative;
 }
+#tela-carregando {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caixa-carregando {
+  background: #fff;
+  padding: 20px 35px;
+  border-radius: 12px;
+  text-align: center;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.caixa-carregando p {
+  margin-top: 12px;
+  font-size: 18px;
+  color: #333;
+}
