@@ -738,18 +738,15 @@
                     const agora = new Date();
                     //const agora = new Date(2025, 11, 9, 16, 0, 0);
 
-                    // 1. Filtra apenas dados que NÃO são do futuro
                     const dadosAteAgora = dados.filter(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
                         return dataRegistro <= agora;
                     });
 
-                    // 2. Se não tiver nenhum dado válido, evita erro
                     if (dadosAteAgora.length === 0) {
                         console.warn("Nenhum dado válido antes do horário atual.");
                     }
 
-                    // 3. Ordena por data e pega o último registro REAL
                     dadosAteAgora.sort((a, b) => {
                         return new Date(a.datetime.replace(" ", "T")) - new Date(b.datetime.replace(" ", "T"));
                     });
@@ -758,10 +755,8 @@
                         dadosAteAgora[dadosAteAgora.length - 1].datetime.replace(" ", "T")
                     );
 
-                    // 4. Limite de 24 horas atrás
                     const limite24h = new Date(ultimaData.getTime() - 24 * 60 * 60 * 1000);
 
-                    // 5. Agora sim, filtra o intervalo
                     dados.forEach(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
 
@@ -769,7 +764,6 @@
                             dataRegistro >= limite24h &&
                             dataRegistro <= ultimaData) {
 
-                            // coloca o horário no eixo (com zero à esquerda quando necessário)
                             const h = dataRegistro.getHours();
                             eixo24hrs.push((h < 10 ? "0" + h : h) + "h");
 
@@ -954,8 +948,8 @@
 
             const valorFiltro = filtroSelect.value;
 
-            //const agora = new Date();
-            const agora = new Date(2025, 11, 9, 11, 0, 0);
+            const agora = new Date();
+            //const agora = new Date(2025, 11, 9, 11, 0, 0);
 
             if (valorFiltro == "Semanal") {
                 limite = new Date(agora.getTime() - 6 * 24 * 60 * 60 * 1000);
