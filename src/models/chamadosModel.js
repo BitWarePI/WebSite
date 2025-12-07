@@ -30,11 +30,16 @@ LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
 WHERE 
     m.fkEmpresa = ${idEmpresa}
     AND c.status != 'Resolvido'
-    AND c.dataAbertura >= DATE_SUB(NOW(), INTERVAL 7 DAY)
 ORDER BY 
-    CASE c.prioridade WHEN 'Critica' THEN 1 WHEN 'Alta' THEN 2 WHEN 'Media' THEN 3 WHEN 'Baixa' THEN 4 ELSE 5 END,
+    CASE c.prioridade WHEN 'Critica' THEN 1 
+                       WHEN 'Alta' THEN 2 
+                       WHEN 'Media' THEN 3 
+                       WHEN 'Baixa' THEN 4 
+                       ELSE 5 END,
     CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END,
-    c.dataAbertura DESC;
+    c.dataAbertura DESC
+LIMIT 50;
+
 
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -64,8 +69,7 @@ SELECT COUNT(*) AS total_erros
 FROM Chamado c
 JOIN Maquina m ON c.fkMaquina = m.idMaquina
 WHERE m.fkEmpresa = ${idEmpresa}
-  AND c.status <> 'Resolvido'
-  AND c.dataAbertura >= DATE_SUB(NOW(), INTERVAL 7 DAY);
+  AND c.status <> 'Resolvido';
 
   `;
 
