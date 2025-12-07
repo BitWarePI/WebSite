@@ -16,7 +16,7 @@ async function pegarCsvPorMaquina(req, res) {
             return res.status(400).send("O endereço MAC está undefined!");
         }
         const key = `${idEmpresa}/maquinas/${macAddress}.csv`;
-        const bucket = "s3-client-bitwarepi-isaak";
+        const bucket = "s3-client-bitwarepi";
 
         const data = await s3.getObject({
             Bucket: bucket,
@@ -63,7 +63,7 @@ async function pegarCsvMaquinas(req, res) {
         //const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
         const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
 
-        const bucket = "s3-client-bitwarepi777";
+        const bucket = "s3-client-bitwarepi";
 
         console.log("Lendo do S3:", key);
 
@@ -105,7 +105,7 @@ async function pegarCsvMedias(req, res) {
         }
         const key = `${idEmpresa}/medias/medias.csv`;
 
-        const bucket = "s3-client-bitwarepi777"
+        const bucket = "s3-client-bitwarepi"
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
@@ -230,14 +230,14 @@ async function pegarLeiturasFormatadas(req, res) {
         const idEmpresa = req.params.idEmpresa;
         const periodo = Number(req.query.periodo) || 1;
 
-        const bucket = "s3-client-bitwarepi777"; 
+        const bucket = "s3-client-bitwarepi";
         const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
 
         const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
         const text = data.Body.toString("utf-8").trim();
 
         let content;
-        if (text.startsWith("[") || text.startsWith("{")) { //nada haver essa validacao aq se eu to recebendo um csv
+        if (text.startsWith("[") || text.startsWith("{")) {
             content = JSON.parse(text);
         } else {
             const parsed = Papa.parse(text, {
@@ -284,10 +284,15 @@ async function pegarLeiturasFormatadas(req, res) {
         }
 
         function parseDate(dateStr) {
-            const [day, month, yearHour] = dateStr.split("/")
-            const [year, time] = yearHour.split(" ");
-            const [hour, minute] = time.split(":");
-            return new Date(year, month - 1, day, hour, minute);
+            if (!dateStr) return null;
+
+            const [datePart, timePart] = dateStr.split(" ");
+            if (!datePart || !timePart) return null;
+
+            const [year, month, day] = datePart.split("-");
+            const [hour, minute, second] = timePart.split(":");
+
+            return new Date(year, month - 1, day, hour, minute, second);
         }
 
         console.log(inicio, fim);
