@@ -118,6 +118,19 @@ function verificarParametrosGerais(idEmpresa) {
     return database.executar(instrucao);
 }
 
+function buscarParametrosEmpresa(idEmpresa) {
+  const instrucao = `
+    SELECT 
+      cpu_percent,
+      gpu_percent,
+      cpu_temperature,
+      gpu_temperature
+    FROM ParametrosGeraisEmpresa
+    WHERE fkEmpresa = ${idEmpresa}
+  `;
+  return database.executar(instrucao);
+}
+
 function definirParametrosGerais(idEmpresa, uso_cpu, uso_gpu, temp_cpu, temp_gpu) {
     const instrucao = `
         INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
@@ -228,5 +241,6 @@ module.exports = {
     definirParametrosMaquina,
     topMaquinas,
     qtdMaquinas,
-    buscarMacsDaEmpresa
+    buscarMacsDaEmpresa,
+    buscarParametrosEmpresa
 };
