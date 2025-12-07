@@ -230,7 +230,7 @@ async function pegarLeiturasFormatadas(req, res) {
         const idEmpresa = req.params.idEmpresa;
         const periodo = Number(req.query.periodo) || 1;
 
-        const bucket = "s3-client-bitwarepi";
+        const bucket = "s3-client-bitwarepi777"; 
         const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
 
         const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
