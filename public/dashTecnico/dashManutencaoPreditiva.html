@@ -782,27 +782,22 @@
     // scoring heuristic (0-100)
     function calcularPontuacao(maquinaId, chamados) {
 
-      console.log("Chamados pontuacao:", chamados);
-
-      // Quantidade total de chamados da máquina
       const totalChamados = chamados.length;
       if (totalChamados === 0) return 0;
 
-      // Contadores para identificar qual componente aparece mais nos problemas
+      // Contadores de ocorrências por componente
       const contadorComponentes = {
         cpu: 0,
         gpu: 0
       };
 
-      // Acumulador que mede quão recentes os chamados são
+      // Contador para a recência dos chamados
       let somaRecencia = 0;
       const agora = new Date();
 
-      // Processa os chamados
       chamados.forEach(chamado => {
         const descricao = chamado.problema.toLowerCase();
 
-        // Verifica se o texto menciona CPU ou GPU
         if (descricao.includes("gpu")) contadorComponentes.gpu++;
         if (descricao.includes("cpu")) contadorComponentes.cpu++;
 
