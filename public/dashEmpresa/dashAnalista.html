@@ -22,12 +22,12 @@
 
 <body>
   <div id="tela-carregando" style="display: flex;">
-      <div class="caixa-carregando">
-            <div class="animacao-roda"></div>
-            <p>Carregando dados...</p>
-        </div>
+    <div class="caixa-carregando">
+      <div class="animacao-roda"></div>
+      <p>Carregando dados...</p>
     </div>
-    
+  </div>
+
   <section>
     <nav>
       <div class="main-nav">
@@ -50,21 +50,27 @@
             </a>
           </li>
           <li>
-            <a class="link " href="dashInfoMaquinas.html">
-              <span class="material-symbols-outlined icon">Computer</span>
-              <span class="titulo">Informações máquinas</span>
+            <a class="link" href="dashInfoProcess.html">
+              <span class="material-symbols-outlined icon">terminal</span>
+              <span class="titulo">Gestão de Processos</span>
             </a>
           </li>
           <li>
-            <a class="link" href="dashMaquinas.html">
-              <span class="material-symbols-outlined icon">settings_applications</span>
-              <span class="titulo">Parametros máquinas</span>
+            <a class="link" href="dashInfoMaquinas.html">
+              <span class="material-symbols-outlined icon">Computer</span>
+              <span class="titulo">Informações máquinas</span>
             </a>
           </li>
           <li>
             <a class="link" href="dashManutencaoPreditiva.html">
               <span class="material-symbols-outlined icon">radar</span>
               <span class="titulo">Manutenção Preditiva</span>
+            </a>
+          </li>
+          <li>
+            <a class="link" href="dashMaquinas.html">
+              <span class="material-symbols-outlined icon">settings_applications</span>
+              <span class="titulo">Parâmetros máquina</span>
             </a>
           </li>
           <li>
@@ -91,9 +97,6 @@
         </div>
       </div>
       <ul class="links nav-links-cell">
-        <li><a class="link" href="dashHome.html"><span class="material-symbols-outlined icon">home</span>Inicio</a></li>
-        <li><a class="link ativo" href="dashFuncionario.html"><span
-              class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
         <li>
           <a href="../index.html" class="btn btn-sair">
             Sair
@@ -101,6 +104,7 @@
         </li>
       </ul>
     </nav>
+
     <div style="min-height: 100vh;  top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;" id="tudo">
       <div style="display: flex; margin: 0;">
         <p style="font-size: 40px; margin: 0; padding: 0; font-weight: bold; color: rgb(36, 3, 66);">Dashboard -
@@ -646,8 +650,8 @@
     desvioGpu.textContent = `${dados.gpu.toFixed(2)}%`
   }
   const carregando = document.getElementById('tela-carregando');
-    
-  function toggleCarrregando(){
+
+  function toggleCarrregando() {
     console.log(carregando.style.display)
     carregando.style.display = carregando.style.display === 'flex' ? 'none' : 'flex';
   }
