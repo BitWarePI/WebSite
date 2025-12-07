@@ -117,7 +117,22 @@ module.exports = {
                 res.status(500).send("Erro ao editar máquina.");
             });
     },
+    async buscarParametros(req, res) {
+        const { idEmpresa } = req.params;
 
+        try {
+            const resultado = await maquinaModel.buscarParametrosEmpresa(idEmpresa);
+
+            if (resultado.length === 0) {
+                return res.status(404).json({ erro: "Nenhum parâmetro encontrado." });
+            }
+
+            res.json(resultado[0]);
+        } catch (erro) {
+            console.error(erro);
+            res.status(500).json({ erro: "Erro ao buscar parâmetros" });
+        }
+    },
 
     async verificarParametrosGerais(req, res) {
         const { idEmpresa } = req.params;

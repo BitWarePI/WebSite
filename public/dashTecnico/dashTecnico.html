@@ -98,7 +98,7 @@
         <!-- GRAFICO -->
         <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-8">
           <div class="xl:col-span-3 space-y-6">
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
                 <p class="text-sm font-bold">Chamados pendentes</p>
                 <p class="text-3xl font-bold mt-1" id="totalErros"></p>
@@ -106,6 +106,10 @@
               <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
                 <p class="text-sm font-bold">Máquinas com Erro</p>
                 <p class="text-3xl font-bold mt-1" id="maquinasComErro"></p>
+              </div>
+              <div class="bg-[#4c1d95] p-6 rounded-lg text-white">
+                <p class="text-sm font-bold">Total Máquinas</p>
+                <p class="text-3xl font-bold mt-1" id="qtdMaquina"></p>
               </div>
               <div class="bg-[#ff4b4b] p-6 rounded-lg text-white">
                 <p class="text-sm font-bold">Chamados Críticos</p>
@@ -239,7 +243,15 @@
 </html>
 <script>
 
-  const filtroTempo = filtro.value
+  let filtroTempo = '0';
+  let grafico1 = null;
+
+  document.getElementById("filtro").addEventListener("change", function () {
+    filtroTempo = this.value;
+    console.log("Filtro mudou para:", filtroTempo);
+    geraGrafico();
+  });
+
 
   async function carregarDadosEmpresa() {
     const idEmpresa = sessionStorage.getItem("idEmpresa");
@@ -266,95 +278,132 @@
     return todos;
   }
 
-  function contarErrosPorHorario(dados) {
-    const erros = {};
-
-    console.log("DADOS CONTAGM: ", dados);
-
-    dados.forEach(item => {
-      const hora = item.datetime.split(" ")[1].slice(0, 5);
-      if (!erros[hora]) erros[hora] = 0;
-
-      const cpuTemp = Number(item.cpu_temperature);
-      const gpuTemp = Number(item.gpu_temperature);
-      const cpuPercent = Number(item.cpu_percent);
-      const gpuPercent = Number(item.gpu_percent);
-
-      // seus critérios
-      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-        erros[hora]++;
-      }
-    });
-
-    return erros;
+  async function getParametrosEmpresa() {
+    const idEmpresa = sessionStorage.getItem("idEmpresa")
+    const response = await fetch(`/maquina/parametros/${idEmpresa}`);
+    return response.json();
   }
 
-  function contarErrosDashboard(dados, dtInicio, dtFim) {
-    const resultado = {};
-    const erros = [];
+
+  async function agruparErros(dados, filtroTempo, dtInicio, dtFim) {
+    const params = await getParametrosEmpresa(); // <<< pega do banco
+
+    const grupos = {};
+    const di = new Date(dtInicio);
+    const df = new Date(dtFim);
 
     dados.forEach(item => {
-      const dataDados = item.datetime.split(" ")[0]
+      const [data, horaCompleta] = item.datetime.split(" ");
+      const hora = horaCompleta.slice(0, 2);
+      const d = new Date(data);
 
-      if (!resultado[dataDados]) resultado[dataDados] = 0;
-      if (dtFim < dataDados || dtInicio > dataDados) { return }
+      if (d < di || d > df) return;
+
       const cpuTemp = Number(item.cpu_temperature);
       const gpuTemp = Number(item.gpu_temperature);
       const cpuPercent = Number(item.cpu_percent);
       const gpuPercent = Number(item.gpu_percent);
 
-      if (cpuTemp > 70 || gpuTemp > 70 || cpuPercent < 50) {
-        resultado[dataDados]++;
+      // usa os parâmetros do BD
+      const deuErro =
+        cpuTemp > params.cpu_temperature ||
+        gpuTemp > params.gpu_temperature ||
+        cpuPercent < params.cpu_percent ||
+        gpuPercent < params.gpu_percent;
+
+      if (!deuErro) return;
+
+      let chave = null;
+
+      if (filtroTempo == 0) chave = `${hora}:00`;
+      else if (filtroTempo == 1) {
+        const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+        chave = dias[d.getDay()];
       }
-    });
-    Object.keys(resultado).forEach(data => {
-      if (resultado[data] > 0) {
-        erros.push({
-          data,
-          erros: resultado[data]
-        });
+      else if (filtroTempo == 2) chave = `Semana ${Math.ceil(d.getDate() / 7)}`;
+      else if (filtroTempo == 3 && d.getMonth() <= 5) {
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+        chave = meses[d.getMonth()];
       }
+      else if (filtroTempo == 4 && d.getMonth() >= 6) {
+        const meses = ["Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        chave = meses[d.getMonth() - 6];
+      }
+      else if (filtroTempo == 5) {
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        chave = meses[d.getMonth()];
+      }
+
+      if (!grupos[chave]) grupos[chave] = 0;
+      grupos[chave]++;
     });
-    return erros;
+
+    return grupos;
+  }
+
+
+  function obterPeriodo(filtroTempo) {
+    const hoje = new Date();
+    let inicio, fim;
+
+    if (filtroTempo == 0) { // últimas 24h
+      fim = new Date();
+      inicio = new Date(fim);
+      inicio.setDate(inicio.getDate() - 1);
+
+    } else if (filtroTempo == 1) { // última semana
+      fim = new Date();
+      inicio = new Date(fim);
+      inicio.setDate(inicio.getDate() - 7);
+
+    } else if (filtroTempo == 2) { // último mês (30 dias)
+      fim = new Date();
+      inicio = new Date(fim);
+      inicio.setDate(inicio.getDate() - 30);
+
+    } else if (filtroTempo == 3) { // 1º semestre
+      inicio = new Date(hoje.getFullYear(), 0, 1);   // jan 1
+      fim = new Date(hoje.getFullYear(), 5, 30);  // jun 30
+
+    } else if (filtroTempo == 4) { // 2º semestre
+      inicio = new Date(hoje.getFullYear(), 6, 1);   // jul 1
+      fim = new Date(hoje.getFullYear(), 11, 31); // dez 31
+
+    } else if (filtroTempo == 5) { // ano inteiro
+      inicio = new Date(hoje.getFullYear(), 0, 1);
+      fim = new Date(hoje.getFullYear(), 11, 31);
+    }
+
+    return {
+      dtInicio: inicio.toISOString().split("T")[0],
+      dtFim: fim.toISOString().split("T")[0]
+    };
   }
 
 
   async function geraGrafico() {
     const dados = await carregarErros();
-    console.log("Dados mesclados:", dados);
-    let dtFim = dados[dados.length - 1].datetime.split(" ")[0]
-    let dtInicio
+    const { dtInicio, dtFim } = obterPeriodo(filtroTempo);
 
-    if (filtroTempo == '0') {
-      dtInicio = dados[dados.length - 8].datetime.split(" ")[0]
-    } else if (filtroTempo == 1) {
-      dtInicio = dados[dados.length - 57].datetime.split(" ")[0]
-    } else if (filtroTempo == 2) {
-      dtInicio = dados[dados.length - 241].datetime.split(" ")[0]
-    } else if (filtroTempo == 3) {
-      dtInicio = dados[dados.length - 1441].datetime.split(" ")[0]
-    } else if (filtroTempo == 4) {
-      dtInicio = dados[dados.length - 2881].datetime.split(" ")[0]
-      dtFim = dados[dados.length - 1441].datetime.split(" ")[0]
-    }else if(filtroTempo == 5){
-      dtInicio = dados[0].datetime.split(" ")[0]
+    const filtrados = dados.filter(item => {
+      const dataItem = item.datetime.split(" ")[0];
+      return dataItem >= dtInicio && dataItem <= dtFim;
+    });
+
+    const agrupado = await agruparErros(filtrados, filtroTempo, dtInicio, dtFim);
+    const labels = Object.keys(agrupado);
+    const valores = Object.values(agrupado);
+
+    if (labels.length === 0) {
+      console.warn("Nenhum dado encontrado para este filtro.");
+      return;
     }
 
-
-    const teste = contarErrosDashboard(dados, dtInicio, dtFim)
-    console.log("TESTE =", teste);
-
-
-    const errosPorHorario = contarErrosPorHorario(dados);
-    const labels = Object.keys(errosPorHorario);
-    const valores = Object.values(errosPorHorario);
     const ctx1 = document.getElementById('grafico1').getContext('2d');
 
-    const gradient = ctx1.createLinearGradient(0, 0, 0, 250);
-    gradient.addColorStop(0, "rgba(109, 40, 217, 1.0)");
-    gradient.addColorStop(1, "rgba(109, 40, 217, 0)");
+    if (grafico1) grafico1.destroy();
 
-    new Chart(ctx1, {
+    grafico1 = new Chart(ctx1, {
       type: 'line',
       data: {
         labels,
@@ -362,7 +411,6 @@
           label: 'Erros',
           data: valores,
           borderColor: "#6D28D9",
-          // backgroundColor: "#815eb8",
           borderWidth: 2,
           fill: true,
           pointRadius: 0
@@ -371,23 +419,14 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: {
-              color: "#6B7280",
-              font: { size: 10 }
-            }
-          }
-        }
+        plugins: { legend: { display: false } }
       }
     });
   }
 
-  function contarErrosPorTipo(dados) {
+  async function contarErrosPorTipo(dados) {
+    const params = await getParametrosEmpresa();
+
     const erros = {
       temperatura_cpu: 0,
       temperatura_gpu: 0,
@@ -401,20 +440,21 @@
       const cpuPercent = Number(item.cpu_percent);
       const gpuPercent = Number(item.gpu_percent);
 
-      if (cpuTemp > 70) erros.temperatura_cpu++;
-      if (gpuTemp > 70) erros.temperatura_gpu++;
-      if (cpuPercent < 50) erros.cpu_baixa++;
-      if (gpuPercent < 50) erros.gpu_baixa++;
+      if (cpuTemp > params.cpu_temperature) erros.temperatura_cpu++;
+      if (gpuTemp > params.gpu_temperature) erros.temperatura_gpu++;
+      if (cpuPercent < params.cpu_percent) erros.cpu_baixa++;
+      if (gpuPercent < params.gpu_percent) erros.gpu_baixa++;
     });
 
     return erros;
   }
 
 
+
   async function gerarGraficoDistribuicao() {
     const dados = await carregarErros();
 
-    const erros = contarErrosPorTipo(dados);
+    const erros = await contarErrosPorTipo(dados);
 
     const labels = [
       "Alta Temp CPU",
@@ -598,11 +638,11 @@
     try {
       const idEmpresa = sessionStorage.getItem("idEmpresa")
       const resposta = await fetch(`/maquina/quantidade/${idEmpresa}`)
-      const dados = await resposta.json
-      qtdMaq.innerHTML = dados[0].qtdMaquinas
+      const dados = await resposta.json()
+      qtdMaq.innerHTML = dados[0].total
     } catch (erro) {
       console.error("Erro ao buscar quantidade de máquinas", erro)
-      qtdMaquinas.innerText = "0"
+      qtdMaq.innerText = "0"
     }
 
   }
@@ -629,8 +669,8 @@
       totalErros(),
       maquinasComErro(),
       geraGrafico(),
-      gerarGraficoDistribuicao();
-
+      gerarGraficoDistribuicao(),
+      qtdMaquinas();
   };
 
   function fecharModalTecnicos() {
@@ -838,53 +878,6 @@
       });
   }
 
-  // function carregarKPIs() {
-  //   const userCargo = sessionStorage.getItem('FK_CARGO');
-  //   const idEmpresa = sessionStorage.getItem('idEmpresa');
-  //   const userId = sessionStorage.getItem('ID_USUARIO');
-
-  //   const kpiPendentes = document.getElementById('kpi_pendentes');
-  //   const kpiCriticos = document.getElementById('kpi_criticos');
-  //   const kpiMaquinas = document.getElementById('kpi_maquinas');
-
-  //   if (!kpiPendentes || !kpiCriticos || !kpiMaquinas) {
-  //     console.log("KPIs não encontrados nesta página.");
-  //     return;
-  //   }
-
-  //   kpiPendentes.innerText = '...';
-  //   kpiCriticos.innerText = '...';
-  //   kpiMaquinas.innerText = '...';
-
-  //   let kpiUrl = '';
-
-  //   if (userCargo == '4') {
-  //     kpiUrl = `/chamados/kpi/tecnico/${userId}`;
-  //   }
-  //   else {
-  //     kpiUrl = `/chamados/kpi/empresa/${idEmpresa}`;
-  //   }
-
-  //   console.log("Buscando KPIs da URL:", kpiUrl);
-
-  //   fetch(kpiUrl)
-  //     .then(res => {
-  //       if (!res.ok) throw new Error('Erro ao buscar KPIs');
-  //       return res.json();
-  //     })
-  //     .then(data => {
-  //       var kpis = data[0];
-  //       kpiPendentes.innerText = kpis.pendentes;
-  //       kpiCriticos.innerText = kpis.criticos;
-  //       kpiMaquinas.innerText = kpis.maquinasComProblema;
-  //     })
-  //     .catch(err => {
-  //       console.error(err);
-  //       kpiPendentes.innerText = 'Erro';
-  //       kpiCriticos.innerText = 'Erro';
-  //       kpiMaquinas.innerText = 'Erro';
-  //     });
-  // }
 
   function carregarChamados() {
     const userCargo = sessionStorage.getItem('FK_CARGO');
