@@ -227,7 +227,7 @@
     <div class="inner">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <h3 id="modalTitle">Detalhes da máquina</h3>
-        <button class="btn ghost" id="closeModal">Fechar</button>
+        <button class="btn" id="closeModal">Fechar</button>
       </div>
       <div class="graficosContainer">
         <div class="grafico-container">
@@ -276,21 +276,22 @@
       document.querySelectorAll('.periods .btn').forEach(btn => btn.classList.add('ghost'));
 
       dataFechamento = new Date();
-      dataGraficoDetalhes = new Date();
+      dataGraficoDetalhes24h = new Date();
+      dataGraficoDetalhes30d = new Date();
+      dataGraficoDetalhes24h.setDate(dataGraficoDetalhes24h.getDate() - 1);
+      dataGraficoDetalhes30d.setMonth(dataGraficoDetalhes30d.getMonth() - 1);
 
       if (periodo === '24h') {
         dataAbertura = new Date();
-        dataFechamento.setDate(dataFechamento.getDate() - 1);
-        dataGraficoDetalhes.setDate(dataGraficoDetalhes.getDate() - 2);
+        dataAbertura.setDate(dataAbertura.getDate() - 1);
         document.getElementById('24hBtn').classList.remove('ghost');
       } else if (periodo === 'semana') {
         dataAbertura = new Date();
-        dataFechamento.setDate(dataFechamento.getDate() - 7);
+        dataAbertura.setDate(dataAbertura.getDate() - 7);
         document.getElementById('semanaBtn').classList.remove('ghost');
       } else if (periodo === 'mes') {
         dataAbertura = new Date();
-        dataFechamento.setMonth(dataFechamento.getMonth() - 1);
-        dataGraficoDetalhes.setMonth(dataGraficoDetalhes.getMonth() - 2);
+        dataAbertura.setMonth(dataAbertura.getMonth() - 1);
         document.getElementById('mesBtn').classList.remove('ghost');
       } else if (periodo === 'primeiroSemestre') {
         const anoAtual = new Date().getFullYear();
@@ -304,13 +305,14 @@
         document.getElementById('segundoSemestreBtn').classList.remove('ghost');
       } else if (periodo === 'ano') {
         dataAbertura = new Date();
-        dataFechamento.setFullYear(dataFechamento.getFullYear() - 1);
+        dataAbertura.setFullYear(dataAbertura.getFullYear() - 1);
         document.getElementById('anoBtn').classList.remove('ghost');
       }
 
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
-      const dataGraficoDetalhesFormatado = formatarDataParaBanco(dataGraficoDetalhes);
+      const dataGraficoDetalhes24hFormatado = formatarDataParaBanco(dataGraficoDetalhes24h);
+      const dataGraficoDetalhes30dFormatado = formatarDataParaBanco(dataGraficoDetalhes30d);
       const caminho = `chamados.csv`
       const empresa = fkEmpresa;
 
@@ -331,25 +333,34 @@
             return dataChamado >= inicio && dataChamado <= fim;
           });
 
-          chamadosFiltradosGraficoDetalhes = data.filter(chamado => {
-            const dataChamado = new Date(chamado.dataFechamento);
-            const inicio = new Date(dataFechamentoFormatado);
-            const fim = new Date(dataGraficoDetalhesFormatado);
+          chamadosFiltradosDetalhes24h = data.filter(chamado => {
+            const dataChamado = new Date(chamado.dataAbertura);
+            const inicio = new Date(dataGraficoDetalhes24hFormatado);
+            const fim = new Date(dataFechamentoFormatado);
 
             return dataChamado >= inicio && dataChamado <= fim;
           });
 
-          processarDados(chamadosFiltrados, chamadosFiltradosGraficoDetalhes);
+          chamadosFiltradosDetalhes30d = data.filter(chamado => {
+            const dataChamado = new Date(chamado.dataAbertura);
+            const inicio = new Date(dataGraficoDetalhes30dFormatado);
+            const fim = new Date(dataFechamentoFormatado);
+
+            return dataChamado >= inicio && dataChamado <= fim;
+          });
+
+          processarDados(chamadosFiltrados, chamadosFiltradosDetalhes24h, chamadosFiltradosDetalhes30d);
           esconderCarregando()
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
 
-    function processarDados(ocorrencias, ocorrenciasGraficoDetalhes) {
-      console.log(ocorrencias);
+    function processarDados(ocorrencias, ocorrencias24h, ocorrencias30d) {
       const dados = tratarOcorrencias(ocorrencias);
-      const dadosGraficoDetalhes = tratarOcorrencias(ocorrenciasGraficoDetalhes);
+      const dados24h = tratarOcorrencias(ocorrencias24h);
+      const dados30d = tratarOcorrencias(ocorrencias30d);
 
+      console.log("Dados processados:", dados);
       document.querySelector('.kpi-total').textContent = dados.total;
 
       let componenteMaior;
@@ -368,129 +379,181 @@
       }
       document.querySelector('.kpi-type').textContent = `${tipoProblemaMaior[0]} — ${tipoProblemaMaior[1]}`;
 
-      // Grafico de detalhes da máquina
-      const agora = new Date();
-
-      const inicio24h = new Date(agora.getTime() - 24 * 60 * 60 * 1000);
-      const inicio48h = new Date(agora.getTime() - 48 * 60 * 60 * 1000);
-
-      const inicio30d = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
-      const inicio60d = new Date(agora.getTime() - 60 * 24 * 60 * 60 * 1000);
-
-      // ===============================
-      // 2. Separação dos períodos
-      // ===============================
-      const ultimas24h = [];
-      const diaAnterior = [];
-
-      const ultimos30d = [];
-      const mesAnterior = [];
-
-      ocorrenciasGraficoDetalhes.forEach(c => {
-        const d = new Date(c.dataAbertura);
-
-        // --- 24H ---
-        if (d >= inicio24h) {
-          ultimas24h.push(c);
-        } else if (d >= inicio48h && d < inicio24h) {
-          diaAnterior.push(c);
-        }
-
-        // --- 30 DIAS ---
-        if (d >= inicio30d) {
-          ultimos30d.push(c);
-        } else if (d >= inicio60d && d < inicio30d) {
-          mesAnterior.push(c);
-        }
-      });
-
-      // ===============================
-      // 3. Gerar séries prontas
-      // ===============================
-      const serie24h = agruparPorHora(ultimas24h);
-      const serie24hAnterior = agruparPorHora(diaAnterior);
-
-      const serie30d = agruparPorDia(ultimos30d);
-      const serie30dAnterior = agruparPorDia(mesAnterior);
-
-      // ===============================
-      // 4. Desenhar gráficos ApexCharts
-      // ===============================
-      renderGrafico24h(serie24h, serie24hAnterior);
-      renderGrafico30d(serie30d, serie30dAnterior);
-
       atualizarGraficos(dados);
 
       maquinasProcessadas = dados.cadaMaquina;
-      atualizarListaMaquinas(dados.cadaMaquina);
+      atualizarListaMaquinas(dados.cadaMaquina, dados24h.cadaMaquina, dados30d.cadaMaquina);
     }
 
-    function renderGrafico24h(serieAtual, serieAnterior) {
+    function criarGraficoDetalhes24h(machine, dadosGraficoPeriodoAtual) {
       const ctx = document.getElementById("grafico24h").getContext("2d");
 
-      // destrói grafico anterior para evitar erro de duplicação
       if (graficoDetalhes24h) graficoDetalhes24h.destroy();
+
+      const agrupadoPorHora = {};
+
+      dadosGraficoPeriodoAtual.forEach(c => {
+        const h = new Date(c.dataAbertura).getHours();
+        agrupadoPorHora[h] = agrupadoPorHora[h] || [];
+        agrupadoPorHora[h].push(c);
+      });
+
+      const labels = Object.keys(agrupadoPorHora);
+
+      let acumulado = [];
+      const pontuacoes = labels.map(label => {
+        // adiciona chamados daquele dia ao acumulado
+        acumulado = acumulado.concat(agrupadoPorHora[label]);
+
+        // calcula score com todos os chamados até aqui
+        return calcularPontuacao(machine.id, acumulado);
+      });
 
       graficoDetalhes24h = new Chart(ctx, {
         type: "line",
         data: {
-          labels: [...Array(24).keys()], // 0 a 23h
+          labels: labels,
           datasets: [
             {
               label: "Últimas 24h",
-              data: serieAtual.map(p => p.y),
+              data: pontuacoes,
               borderWidth: 2,
-              tension: 0.3
-            },
-            {
-              label: "Dia anterior",
-              data: serieAnterior.map(p => p.y),
-              borderWidth: 2,
-              borderDash: [5, 5],
-              tension: 0.3
+              tension: 0.3,
+              borderColor: "#4B2B85",
+              backgroundColor: "#4B2B85",
+              color: "#ff8800"
             }
           ]
         },
         options: {
           responsive: true,
           scales: {
-            x: { title: { display: true, text: "Hora do dia" } },
-            y: { title: { display: true, text: "Score (Pontuação)" }, beginAtZero: true }
+            x: {
+              title: {
+                display: true,
+                text: "Hora do dia",
+                color: "#000",
+                font: {
+                  size: 16,
+                  weight: "bold",
+                  family: "Inter"
+                }
+              },
+              ticks: {
+                color: "#000",
+                font: {
+                  size: 14
+                }
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Score (Pontuação)",
+                color: "#000",
+                font: {
+                  size: 16,
+                  weight: "bold",
+                  family: "Inter"
+                }
+              },
+              ticks: {
+                color: "#000",
+                font: {
+                  size: 14
+                }
+              },
+              beginAtZero: true
+            }
           }
         }
       });
     }
 
-    function renderGrafico30d(serieAtual, serieAnterior) {
+    function criarGraficoDetalhes30d(machine, dadosGraficoPeriodoAtual) {
       const ctx = document.getElementById("grafico30d").getContext("2d");
 
       if (graficoDetalhes30d) graficoDetalhes30d.destroy();
 
+      const agrupadoPorDia = {};
+
+      dadosGraficoPeriodoAtual.forEach(c => {
+        const d = new Date(c.dataAbertura);
+        const chave = d.toISOString().split("T")[0];
+
+        agrupadoPorDia[chave] = agrupadoPorDia[chave] || [];
+        agrupadoPorDia[chave].push(c);
+      });
+
+      const chavesOrdenadas = Object.keys(agrupadoPorDia).sort();
+
+      const labels = chavesOrdenadas.map(chave => {
+        const [ano, mes, dia] = chave.split("-");
+        return `${dia}/${mes}`;
+      });
+
+      let acumulado = [];
+      const pontuacoes = chavesOrdenadas.map(chave => {     // CORRIGIDO
+        acumulado = acumulado.concat(agrupadoPorDia[chave]);
+        return calcularPontuacao(machine.id, acumulado);
+      });
+
       graficoDetalhes30d = new Chart(ctx, {
         type: "line",
         data: {
-          labels: serieAtual.map(p => p.x), // dias yyyy-mm-dd
+          labels: labels,
           datasets: [
             {
               label: "Últimos 30 dias",
-              data: serieAtual.map(p => p.y),
-              borderWidth: 2,
-              tension: 0.3
-            },
-            {
-              label: "Mês anterior",
-              data: serieAnterior.map(p => p.y),
-              borderWidth: 2,
-              borderDash: [5, 5],
-              tension: 0.3
+              data: pontuacoes,
+              borderWidth: 3,
+              tension: 0.3,
+              borderColor: "#4B2B85",
+              backgroundColor: "#4B2B85",
+              color: "#ff8800"
             }
           ]
         },
         options: {
           responsive: true,
           scales: {
-            x: { title: { display: true, text: "Dia" } },
-            y: { title: { display: true, text: "Score (Pontuação)" }, beginAtZero: true }
+            x: {
+              title: {
+                display: true,
+                text: "Hora do dia",
+                color: "#000",
+                font: {
+                  size: 16,
+                  weight: "bold",
+                  family: "Inter"
+                }
+              },
+              ticks: {
+                color: "#000",
+                font: {
+                  size: 14
+                }
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Score (Pontuação)",
+                color: "#000",
+                font: {
+                  size: 16,
+                  weight: "bold",
+                  family: "Inter"
+                }
+              },
+              ticks: {
+                color: "#000",
+                font: {
+                  size: 14
+                }
+              },
+              beginAtZero: true
+            }
           }
         }
       });
@@ -574,51 +637,6 @@
       };
     }
 
-    function agruparPorHora(chamados) {
-      const contagem = {};
-
-      chamados.forEach(c => {
-        const data = new Date(c.dataAbertura);
-        const hora = data.getHours();
-
-        contagem[hora] = (contagem[hora] || 0) + 1;
-      });
-
-      const resultado = [];
-      for (let h = 0; h < 24; h++) {
-        resultado.push({ x: h, y: contagem[h] || 0 });
-      }
-
-      return resultado;
-    }
-
-    function agruparPorDia(chamados, dias = 30) {
-      const contagem = {};
-
-      chamados.forEach(c => {
-        const data = new Date(c.dataAbertura);
-        const dia = data.toISOString().slice(0, 10); // yyyy-mm-dd
-
-        contagem[dia] = (contagem[dia] || 0) + 1;
-      });
-
-      // gerar últimos X dias na ordem correta
-      const resultado = [];
-      for (let i = dias - 1; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-
-        const chave = d.toISOString().slice(0, 10);
-
-        resultado.push({
-          x: chave,
-          y: contagem[chave] || 0
-        });
-      }
-
-      return resultado;
-    }
-
     function atualizarGraficos(dados) {
       const graficoComponente = document.getElementById('graficoComponente').getContext('2d');
       const graficoTipoProblema = document.getElementById('graficoTipo').getContext('2d');
@@ -676,13 +694,13 @@
       }
     }
 
-    function atualizarListaMaquinas(cadaMaquina) {
+    function atualizarListaMaquinas(cadaMaquina, cadaMaquina24h, cadaMaquina30d) {
       const tbody = document.getElementById('machinesTbody');
       tbody.innerHTML = '';
 
       cadaMaquina.forEach(maquina => {
         const chamados = maquina.chamados;
-        const pontuacao = calcularPontuacao(maquina.id, chamados);
+        const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);
         const [risco, css] = riscoTexto(pontuacao);
 
         const tr = document.createElement('tr');
@@ -697,7 +715,7 @@
         tbody.appendChild(tr);
       });
 
-      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'))));
+      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'), cadaMaquina24h, cadaMaquina30d)));
     }
 
     function pegarSugestao(chamados, pontuacao) {
@@ -721,10 +739,15 @@
       return `Risco baixo — ${componente} estável. Sem ações urgentes.`;
     }
 
-    function abrirDetalhes(mid) {
+    function abrirDetalhes(mid, cadaMaquina24h, cadaMaquina30d) {
       const machine = maquinasProcessadas.find(m => m.id == mid);
+      const machine24h = cadaMaquina24h.find(m => m.id == mid);
+      const machine30d = cadaMaquina30d.find(m => m.id == mid);
       console.log(machine);
       if (!machine) return;
+
+      criarGraficoDetalhes24h(machine24h, machine24h.chamados);
+      criarGraficoDetalhes30d(machine30d, machine30d.chamados);
 
       const modal = document.querySelector('#modalDetails');
 
@@ -785,13 +808,18 @@
 
         // Calcula há quantos dias o chamado foi aberto
         const dataAbertura = new Date(chamado.dataAbertura);
-        const diasDesdeAbertura = Math.max(
-          1,
-          (agora - dataAbertura) / (1000 * 60 * 60 * 24)
-        );
+        const diffHoras = (agora - dataAbertura) / (1000 * 60 * 60);
 
-        // Recência: chamados mais novos valem mais
-        somaRecencia += 1 / Math.log(diasDesdeAbertura + 1);
+        let pesoRecencia;
+        if (diffHoras <= 3) {
+          pesoRecencia = 1.0;        
+        } else if (diffHoras <= 24) {
+          pesoRecencia = 0.6;        
+        } else {
+          pesoRecencia = 0.3;        
+        }
+
+        somaRecencia += pesoRecencia;
       });
 
       // Parte 1 — normaliza o número total de chamados (até 10 vira 100%)
@@ -808,10 +836,7 @@
       const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
 
       // tendência baseada no próprio período filtrado
-      const fatorTendencia = Math.min(
-        1,
-        totalChamados > 0 ? totalChamados / 10 : 0
-      );
+      const fatorTendencia = Math.min(1, totalChamados / 10);
 
       // Calculo da pontuação final
       const pontuacao = Math.round(
