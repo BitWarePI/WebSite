@@ -1,0 +1,379 @@
+section>div {
+  margin-right: 100px;
+}
+
+section {
+  align-items: start !important;
+}
+
+.inicio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dateTime {
+  font-size: 20px;
+  font-style: italic;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+.process-container {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-metrica {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  padding: 10px 50px 10px 20px;
+  border-radius: 10px;
+  background-color: #7e0cac;
+  color: #fff;
+}
+
+.card-metrica>h3 {
+  font-size: 1.6rem;
+}
+
+.metrica-qtdMaquinas {
+  font-size: 30px;
+}
+
+
+/* ======== Fim das KPI's========== */
+
+h2 {
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+
+/* fsdcsasc */
+
+.lista_Maquinas_Snippts {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.left {
+  flex: 2;
+}
+
+.filter-btn {
+  background: #7e0cac;
+  color: #fff;
+  border: none;
+  height: 50px;
+  width: 150px;
+  font-size: larger;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+table {
+  margin-top: 20px;
+  max-height: 520px !important;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.online {
+  background: #1fa64a;
+}
+
+.offline {
+  background: #5a6270;
+}
+
+.section-title {
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.input {
+  background: var(--bg-inverse-color);
+  color: var(--main-text-inverse-color);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--low-bg-color);
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+  min-width: 200px;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px var(--low-primary-color);
+}
+
+.filter-btn {
+  background: var(--primary-color);
+  color: var(--main-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: var(--low-primary-color);
+}
+
+/* DROPDOWN */
+.status-filter {
+  cursor: pointer;
+}
+
+/* fdsasrsdc */
+
+.command-container {
+  margin-top: 38px;
+  flex: 1;
+
+}
+
+.command-wrapper {
+  background: #bdbdbd;
+  padding: 20px;
+  min-height: 480px;
+  border-radius: 12px;
+  overflow: auto;
+  scrollbar-color: #ccc #f4f4f7;
+}
+
+/* Cards dos comandos */
+.command-item {
+  background: #e8e8e8;
+  border: 1px solid #d8d8d8;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s ease;
+}
+
+.command-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.command-header h3 {
+  margin: 0;
+  font-size: 23px;
+}
+
+.cmd-add-btn {
+  background: var(--primary-color);
+  color: var(--main-text-color);
+  border: none;
+  padding: 8px 16px;
+  height: 50px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.cmd-add-btn:hover {
+  background: var(--low-primary-color);
+}
+
+
+.command-item:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 10px var(--low-primary-color);
+}
+
+.cmd-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cmd-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.cmd-title {
+  color: black;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.cmd-actions a {
+  margin-left: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.cmd-actions .edit {
+  color: var(--primary-color);
+}
+
+.cmd-actions .delete {
+  color: var(--error-color);
+}
+
+/*  Loading de tela */
+
+#tela-carregando2 {
+  display: none; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caixa-carregando2 {
+  background: #fff;
+  padding: 20px 35px;
+  border-radius: 12px;
+  text-align: center;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.animacao-roda2 {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #d3d3d3;
+  border-top-color: #4caf50; 
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+      transform: rotate(360deg);
+  }
+}
+
+#textoCarregamento {
+  margin-top: 12px;
+  font-size: 18px;
+  color: black !important;
+}
+
+/* Painel lateral esquerdo */
+.comando-slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 330px;
+  height: 100%;
+  background: #e8e8e8;
+  color: #1a1a1a;
+  padding: 25px;
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform .3s ease;
+  box-shadow: 4px 0px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comando-slide.show {
+  transform: translateX(0);
+}
+
+/* Header */
+.comando-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comando-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.comando-close {
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #555;
+}
+
+.comando-input {
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.comando-salvar {
+  background: #7b2cbf;
+  border: none;
+  padding: 12px;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comando-salvar:hover {
+  background: #6924a6;
+}
+
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.45);
+  z-index: 99;
+}
+
+.hidden {
+  display: none;
+}

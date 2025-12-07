@@ -211,3 +211,11 @@ table tr:hover{
     width: 24%;
 
 }
+
+.selectFiltro select {
+    background-color: white ;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+}

@@ -1,6 +1,6 @@
-const AWS = require('aws-sdk');
-const Papa = require('papaparse');
 const { getS3FileContent } = require('../utilits/getCsvBucket');
+const AWS = require('aws-sdk')
+const Papa = require('papaparse')
 const { parse } = require('path');
 
 AWS.config.update({ region: "us-east-1" });
@@ -16,7 +16,7 @@ async function pegarCsvPorMaquina(req, res) {
             return res.status(400).send("O endereço MAC está undefined!");
         }
         const key = `${idEmpresa}/maquinas/${macAddress}.csv`;
-        const bucket = "s3-client-bitwarepi777";
+        const bucket = "s3-client-bitwarepi-isaak";
 
         const data = await s3.getObject({
             Bucket: bucket,
@@ -60,7 +60,8 @@ async function pegarCsvMaquinas(req, res) {
 
         const dataAtual = `${dia}-${mes}-${ano}`;
 
-        const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
+        //const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
+        const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
 
         const bucket = "s3-client-bitwarepi777";
 
@@ -104,7 +105,7 @@ async function pegarCsvMedias(req, res) {
         }
         const key = `${idEmpresa}/medias/medias.csv`;
 
-        const bucket = "bucket-client-2111"
+        const bucket = "s3-client-bitwarepi777"
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
@@ -173,22 +174,22 @@ async function pegarCsvMedias(req, res) {
             return soma / arr.length;
         }
 
- function desvioPadrao(arr) {
-    if (arr.length < 2) return Math.random() + 1; // garante 1 a 2
+        function desvioPadrao(arr) {
+            if (arr.length < 2) return Math.random() + 1; // garante 1 a 2
 
-    const m = media(arr);
-    const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
-    const dp = Math.sqrt(variancia);
+            const m = media(arr);
+            const variancia = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / arr.length;
+            const dp = Math.sqrt(variancia);
 
-    if (dp === 0) {
-        const r = Math.random() + 1; 
-        console.log("Random (dp=0):", r);
-        return r;
-    }
+            if (dp === 0) {
+                const r = Math.random() + 1;
+                console.log("Random (dp=0):", r);
+                return r;
+            }
 
-    console.log("DP normal:", dp);
-    return dp;
-}
+            console.log("DP normal:", dp);
+            return dp;
+        }
 
         const result = {
             cpu: desvioPadrao(filtrados.map(item => Number(item.cpu_percent))),
@@ -229,7 +230,7 @@ async function pegarLeiturasFormatadas(req, res) {
         const idEmpresa = req.params.idEmpresa;
         const periodo = Number(req.query.periodo) || 1;
 
-        const bucket = "bucket-client-2111"; //dar uma olhada depois
+        const bucket = "s3-client-bitwarepi777"; 
         const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
 
         const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
@@ -248,7 +249,10 @@ async function pegarLeiturasFormatadas(req, res) {
         }
 
         let inicio = new Date();
+        inicio.setHours(inicio.getHours() - 3);
+
         let fim = new Date();
+        fim.setHours(fim.getHours() - 3);
 
         switch (periodo) {
             case 1: // últimas 24h
@@ -318,6 +322,7 @@ async function pegarLeiturasFormatadas(req, res) {
                 media_gpu_temperature: soma.gpu_temperature / count,
             };
         }
+
         function agrupar(lista, chaveFn) {
             const grupos = {};
 
@@ -338,24 +343,27 @@ async function pegarLeiturasFormatadas(req, res) {
 
             return resultado;
         }
+
+        function normalizarHora(date) {
+            const d = parseDate(date);
+            const hours = String(d.getHours()).padStart(2, "0");
+            const minutes = String(d.getMinutes()).padStart(2, "0");
+            return `${hours}:${minutes}`;
+        }
+
         let resultado;
+        const diasSemana = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
 
         if (periodo === 1) {
             resultado = agrupar(filtrados, item => {
-                const d = parseDate(item.datetime);
-
-                const horas = String(d.getHours()).padStart(2, "0");
-                const minutos = String(d.getMinutes()).padStart(2, "0");
-
-                return `${horas}:${minutos}`;
-            });
+                return normalizarHora(item.datetime);
+            })
         } else if (periodo === 2) {
             // semanal
             resultado = agrupar(filtrados, item => {
                 const d = parseDate(item.datetime);
-                return d.toISOString().slice(0, 10);
+                return diasSemana[d.getDay()];
             });
-
         } else if (periodo === 3) {
             // mensal
             resultado = agrupar(filtrados, item => {
@@ -384,10 +392,4 @@ async function pegarLeiturasFormatadas(req, res) {
     }
 }
 
-module.exports = {
-    buscarArquivoS3,
-    pegarCsvPorMaquina,
-    pegarCsvMaquinas,
-    pegarLeiturasFormatadas,
-    pegarCsvMedias
-};
+module.exports = { buscarArquivoS3, pegarCsvMaquinas, pegarCsvMedias, pegarCsvPorMaquina, pegarLeiturasFormatadas };
