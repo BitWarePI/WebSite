@@ -45,7 +45,6 @@
 </script>
 
 <body>
-
   <section>
     <nav>
       <div class="main-nav">
@@ -657,17 +656,6 @@
     }
   }
 
-  window.onload = function () {
-    carregarChamados(),
-      carregarTop5Maquinas(),
-      totalCriticos(),
-      carregarPrincipalProblema(),
-      totalErros(),
-      maquinasComErro(),
-      geraGrafico(),
-      gerarGraficoDistribuicao(),
-      qtdMaquinas();
-  };
 
   function fecharModalTecnicos() {
     modalTecnicos.classList.remove("fade-in");
@@ -1024,7 +1012,19 @@
         console.error(err);
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
       });
-  }  
+  }
+  window.onload = function () {
+    carregarChamados(),
+      carregarTop5Maquinas(),
+      totalCriticos(),
+      carregarPrincipalProblema(),
+      totalErros(),
+      maquinasComErro(),
+      geraGrafico(),
+      gerarGraficoDistribuicao(),
+      qtdMaquinas();
+  };
+
 </script>
 
 <script>
