@@ -16,7 +16,7 @@ async function pegarCsvPorMaquina(req, res) {
             return res.status(400).send("O endereço MAC está undefined!");
         }
         const key = `${idEmpresa}/maquinas/${macAddress}.csv`;
-        const bucket = "s3-client-bitwarepi";
+        const bucket = "s3-client-bitwarepi777";
 
         const data = await s3.getObject({
             Bucket: bucket,
@@ -63,7 +63,7 @@ async function pegarCsvMaquinas(req, res) {
         //const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
         const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
 
-        const bucket = "s3-client-bitwarepi";
+        const bucket = "s3-client-bitwarepi777";
 
         console.log("Lendo do S3:", key);
 
@@ -105,7 +105,7 @@ async function pegarCsvMedias(req, res) {
         }
         const key = `${idEmpresa}/medias/medias.csv`;
 
-        const bucket = "s3-client-bitwarepi"
+        const bucket = "s3-client-bitwarepi777"
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
