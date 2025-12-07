@@ -189,46 +189,6 @@ VALUES
 (2, 60, 70, 75, 65),
 (3, 40, 30, 55, 50);
 
-INSERT INTO Chamado (fkMaquina, problema, prioridade, status, idTecnico)
-VALUES
--- Maquina 2
-(2, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(2, 'Uso de GPU (%) acima do parametro - Atencao', 'Critica', 'Aberto', 3),
-(2, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(2, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(2, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-
--- Maquina 3
-(3, 'Temperatura da CPU (C) abaixo do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(3, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(3, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(3, 'Uso de GPU (%) acima do parametro - Atencao', 'Media', 'Aberto', 3),
-
--- Maquina 4
-(4, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(4, 'Temperatura da CPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(4, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(4, 'Temperatura da GPU (C) acima do esperado', 'Media', 'Aberto', 3),
-(4, 'Uso de CPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
-
--- Maquina 6
-(6, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
-(6, 'Uso de CPU (%) abaixo do esperado', 'Media', 'Em andamento', 3),
-(6, 'Temperatura da CPU (C) abaixo do esperado', 'Baixa', 'Resolvido', 3),
-(6, 'Temperatura da GPU (C) acima do esperado', 'Alta', 'Aberto', 3),
-(6, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Aberto', 3),
-
--- Maquina 7
-(7, 'Uso de CPU (%) abaixo do esperado', 'Critica', 'Aberto', 3),
-(7, 'Temperatura da GPU (C) acima do esperado', 'Critica', 'Em andamento', 3),
-(7, 'Temperatura da CPU (C) abaixo do esperado', 'Media', 'Aberto', 3),
-(7, 'Uso de GPU (%) acima do parametro - Atencao', 'Alta', 'Aberto', 3),
-(7, 'Uso de CPU (%) acima do parametro - Atencao', 'Critica', 'Em andamento', 3),
-(7, 'Uso de GPU (%) abaixo do esperado', 'Baixa', 'Resolvido', 3);
-
-
 # Cadastro
 CREATE USER 'empresa'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
 GRANT INSERT ON bitware_db.Funcionario TO 'empresa'@'%';
