@@ -14,24 +14,33 @@ function atribuirTecnico(idChamado, idTecnico) {
 
 function listarChamadosPorEmpresa(idEmpresa) {
     var instrucaoSql = `
-        SELECT 
-            c.idChamado, 
-            m.enderecoMac,
-            c.problema, 
-            c.prioridade, 
-            DATE_FORMAT(c.dataAbertura, "%d/%m/%Y") AS data_abertura, -- <-- A LINHA CORRETA ESTÁ AQUI
-            c.status,
-            f.nome AS nomeTecnico,
-            f.sobrenome AS sobrenomeTecnico,
-            c.idTecnico
-        FROM Chamado c
-            JOIN Maquina m ON c.fkMaquina = m.idMaquina
-            LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
-        WHERE m.fkEmpresa = ${idEmpresa}
-        ORDER BY 
-            CASE c.prioridade WHEN 'Critica' THEN 1 WHEN 'Alta' THEN 2 WHEN 'Media' THEN 3 WHEN 'Baixa' THEN 4 ELSE 5 END,
-            CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END, 
-            c.dataAbertura DESC;
+     SELECT 
+    c.idChamado, 
+    m.enderecoMac,
+    c.problema, 
+    c.prioridade, 
+    DATE_FORMAT(c.dataAbertura, "%d/%m/%Y") AS data_abertura,
+    c.status,
+    f.nome AS nomeTecnico,
+    f.sobrenome AS sobrenomeTecnico,
+    c.idTecnico
+FROM Chamado c
+JOIN Maquina m ON c.fkMaquina = m.idMaquina
+LEFT JOIN Funcionario f ON c.idTecnico = f.idFuncionario
+WHERE 
+    m.fkEmpresa = ${idEmpresa}
+    AND c.status != 'Resolvido'
+ORDER BY 
+    CASE c.prioridade WHEN 'Critica' THEN 1 
+                       WHEN 'Alta' THEN 2 
+                       WHEN 'Media' THEN 3 
+                       WHEN 'Baixa' THEN 4 
+                       ELSE 5 END,
+    CASE c.status WHEN 'Aberto' THEN 1 ELSE 2 END,
+    c.dataAbertura DESC
+LIMIT 50;
+
+
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -56,11 +65,12 @@ function buscarPrincipalProblema(fkEmpresa) {
 
 async function totalErros(idEmpresa) {
     const sql = `
-   SELECT COUNT(*) AS total_erros
-    FROM Chamado c
-    JOIN Maquina m ON c.fkMaquina = m.idMaquina
-    WHERE m.fkEmpresa = ${idEmpresa}
-      AND c.status <> 'Resolvido';
+SELECT COUNT(*) AS total_erros
+FROM Chamado c
+JOIN Maquina m ON c.fkMaquina = m.idMaquina
+WHERE m.fkEmpresa = ${idEmpresa}
+  AND c.status <> 'Resolvido';
+
   `;
 
     const resultado = await database.executar(sql);
@@ -68,15 +78,15 @@ async function totalErros(idEmpresa) {
 }
 
 function maquinasComErro(idEmpresa) {
-  const sql = `
+    const sql = `
     SELECT COUNT(DISTINCT m.idMaquina) AS maquinas_com_erro
     FROM Chamado c
     JOIN Maquina m ON c.fkMaquina = m.idMaquina
     WHERE m.fkEmpresa = ${idEmpresa}
       AND c.status <> 'Resolvido';
   `;
-  
-  return database.executar(sql);
+
+    return database.executar(sql);
 }
 
 

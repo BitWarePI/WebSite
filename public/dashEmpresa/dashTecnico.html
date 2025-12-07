@@ -45,7 +45,12 @@
 </script>
 
 <body>
-
+  <div id="tela-carregando">
+    <div class="caixa-carregando">
+      <div class="animacao-roda"></div>
+      <p>Carregando dados...</p>
+    </div>
+  </div>
   <section>
     <nav class="slide-in-left">
       <div class="main-nav">
@@ -236,7 +241,7 @@
         </div>
 
         <div class="chamado" style="margin: 0px;">
-          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
+          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">50 Mais Critícos</p>
           <table>
             <thead>
               <tr>
@@ -278,14 +283,29 @@
 </html>
 <script>
 
+  function mostrarCarregando() {
+    document.getElementById("tela-carregando").style.display = "flex";
+  }
+
+  function esconderCarregando() {
+    document.getElementById("tela-carregando").style.display = "none";
+  }
+
   let filtroTempo = '0';
   let grafico1 = null;
 
-  document.getElementById("filtro").addEventListener("change", function () {
+  document.getElementById("filtro").addEventListener("change", async function () {
     filtroTempo = this.value;
     console.log("Filtro mudou para:", filtroTempo);
-    geraGrafico();
-  });
+
+    mostrarCarregando();
+
+    await Promise.all([
+        geraGrafico()
+    ]);
+
+    esconderCarregando();
+}); 
 
 
   async function carregarDadosEmpresa() {
@@ -546,13 +566,30 @@
     });
   }
 
-
-</script>
-
-
-<script>
   const modalTecnicos = document.getElementById('modal_atribuir_tecnico');
   const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
+
+  window.onload = function () {
+      carregarDash();
+  };
+
+  async function carregarDash() {
+    mostrarCarregando();
+
+    await Promise.all([
+      carregarChamados(),
+      carregarTop5Maquinas(),
+      totalCriticos(),
+      carregarPrincipalProblema(),
+      totalErros(),
+      maquinasComErro(),
+      geraGrafico(),
+      gerarGraficoDistribuicao(),
+      qtdMaquinas()
+    ]);
+
+    esconderCarregando();
+  }
 
   async function carregarTop5Maquinas() {
     const lista = document.getElementById("top5-lista");
@@ -696,17 +733,6 @@
     }
   }
 
-  window.onload = function () {
-    carregarChamados(),
-      carregarTop5Maquinas(),
-      totalCriticos(),
-      carregarPrincipalProblema(),
-      totalErros(),
-      maquinasComErro(),
-      geraGrafico(),
-      gerarGraficoDistribuicao(),
-      qtdMaquinas();
-  };
 
   function fecharModalTecnicos() {
     modalTecnicos.classList.remove("fade-in");
@@ -1063,10 +1089,8 @@
         console.error(err);
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar chamados. Tente novamente.</td></tr>';
       });
-  }  
-</script>
+  }
 
-<script>
   fetch("/utils/getDadosBucket/").then(res => {
     res.json().then(JSON => {
       console.log(JSON)

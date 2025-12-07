@@ -40,6 +40,12 @@
                         </a>
                     </li>
                     <li>
+                        <a class="link" href="dashInfoProcess.html">
+                            <span class="material-symbols-outlined icon">terminal</span>
+                            <span class="titulo">Gestão de Processos</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="link" href="dashInfoMaquinas.html">
                             <span class="material-symbols-outlined icon">Computer</span>
                             <span class="titulo">Informações máquinas</span>
@@ -52,9 +58,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="link" href="dashInfoMaquinas.html">
+                        <a class="link" href="dashMaquinas.html">
                             <span class="material-symbols-outlined icon">settings_applications</span>
-                            <span class="titulo">Máquina Parâmetros</span>
+                            <span class="titulo">Parâmetros máquina</span>
                         </a>
                     </li>
                     <li>
@@ -81,10 +87,6 @@
                 </div>
             </div>
             <ul class="links nav-links-cell">
-                <li><a class="link" href="dashHome.html"><span
-                            class="material-symbols-outlined icon">home</span>Inicio</a></li>
-                <li><a class="link ativo" href="dashFuncionario.html"><span
-                            class="material-symbols-outlined icon">apartment</span>Empresas</a></li>
                 <li>
                     <a href="../index.html" class="btn btn-sair">
                         Sair
@@ -111,7 +113,7 @@
                     </div>
                     <div class="selectFiltro">
                         <span class="material-symbols-outlined icon">filter_alt</span>
-                        <select id="filtroPesquisa" onchange="pesquisarFuncionario()">
+                        <select id="filtroPesquisa" style="background: none;" onchange="pesquisarFuncionario()">
                             <option value="todos">Todos</option>
                             <option value="analista">Analista</option>
                             <option value="técnico">Técnico</option>

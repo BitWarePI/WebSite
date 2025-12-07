@@ -32,7 +32,7 @@ async function listendModelMachine(req, res) {
          const diaT = String(tentativa.getDate()).padStart(2, "0");
          const mesT = String(tentativa.getMonth() + 1).padStart(2, "0");
          const anoT = tentativa.getFullYear();
-         const pathFileKeyHorario = `${fkEmpresa}/${diaT}-${mesT}-${anoT}/processos.csv`;
+         const pathFileKeyHorario = `${fkEmpresa}/datas/${diaT}-${mesT}-${anoT}/processos.csv`;
 
          try {
             const tentativaConteudo = await getS3FileContent(pathFileKeyHorario);
@@ -82,6 +82,7 @@ async function listendModelMachine(req, res) {
             };
          }
       });
+      console.log("AAAAAAAAAAA")
       console.log("Resul Final:", listaDeMaquinasProntas);
       return res.json(listaDeMaquinasProntas);
 
@@ -144,8 +145,7 @@ async function listendProcessMachine(req, res) {
       const mesT = String((dataTentativa.getMonth() + 1)).padStart(2, "0");
       const anoT = dataTentativa.getFullYear();
 
-      const pathFileKeyProcessos = `${fkEmpresa}/${diaT}-${mesT}-${anoT}/processos.csv`;
-      console.log(`✝️✝️✝️✝️ Tentando acessar arquivo: ${pathFileKeyProcessos}`);
+      const pathFileKeyProcessos = `${fkEmpresa}/datas/${diaT}-${mesT}-${anoT}/processos.csv`;
 
       try {
          const tentativaConteudo = await getS3FileContent(pathFileKeyProcessos);

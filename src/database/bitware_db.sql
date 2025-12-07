@@ -96,7 +96,6 @@ CREATE TABLE comando_personalizado (
     FOREIGN KEY (fk_empresa) REFERENCES Empresa(idEmpresa) 
 );
 
-select * from comando_personalizado;
 INSERT INTO Cargo (descricao) VALUES 
 ('Admin'), 
 ('Empresa'), 
@@ -135,7 +134,7 @@ INSERT INTO Maquina (enderecoMac, nome, fkEmpresa)
 VALUES
 ('e8:5c:5f:1e:b4:1d', 'Setor D', 1),
 ('12:2a:0a:85:5e:47', 'Setor A', 2), 
-('f4:6a:dd:7b:03:0d', 'Setor E', 2);
+('f4:6a:dd:7b:03:0d', 'Setor E', 2),
 ('e8:5c:5f:1e:b4:1d', 'Setor D', 2),
 ('f4:6a:dd:7b:03:0d', 'Setor E', 2);
 
