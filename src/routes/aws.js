@@ -4,7 +4,7 @@ var { getS3FileContent } = require("../utils/getGastosAws");
 
 router.get("/buscar-dados-csv", async function (req, res) {
 
-    const fileKey = 'teste.csv'; 
+    const fileKey = 'aws_custo/custo.csv'; 
 
     try {
         const dados = await getS3FileContent(fileKey);
