@@ -801,47 +801,53 @@
         if (descricao.includes("gpu")) contadorComponentes.gpu++;
         if (descricao.includes("cpu")) contadorComponentes.cpu++;
 
-        // Calcula há quantos dias o chamado foi aberto
+        // Nesse ponto calculo a recência do chamado baseado na diferença da hora de abertura para agora
         const dataAbertura = new Date(chamado.dataAbertura);
-        const diffHoras = (agora - dataAbertura) / (1000 * 60 * 60);
+        const diferencaHoras = (agora - dataAbertura) / (1000 * 60 * 60);
 
+        // Se a diferença for até 3 horas, peso 1.0
+        // Se for entre 3 e 24 horas, peso 0.6 
+        // Se for mais de 24 horas, peso 0.3
         let pesoRecencia;
-        if (diffHoras <= 3) {
-          pesoRecencia = 1.0;        
-        } else if (diffHoras <= 24) {
-          pesoRecencia = 0.6;        
+        if (diferencaHoras <= 3) {
+          pesoRecencia = 1.0;
+        } else if (diferencaHoras <= 24) {
+          pesoRecencia = 0.6;
         } else {
-          pesoRecencia = 0.3;        
+          pesoRecencia = 0.3;
         }
 
         somaRecencia += pesoRecencia;
       });
 
-      // Parte 1 — normaliza o número total de chamados (até 10 vira 100%)
+      // Nesse ponto normalizo o número total de chamados (até 10 vira 100%)
       const fatorOcorencias = Math.min(1, totalChamados / 10);
 
-      // Parte 2 — divide quantos chamados pertencem ao componente mais problemático
+      // Nesse ponto calculo o componente com mais ocorrências e normalizo ele pelo total de chamados abertos da respectiva máquina
       const maiorComponente = Math.max(
         contadorComponentes.cpu,
         contadorComponentes.gpu
       );
       const fatorComponente = maiorComponente / totalChamados;
 
-      // Parte 3 — quanto mais recentes os chamados, maior a nota
+      // Nesse ponto calculo a recência média dos chamados a partir da soma dos pesos de recência e normalizo ela pelo total de chamados abertos da respectiva máquina
       const fatorRecencia = Math.min(1, somaRecencia / totalChamados);
 
-      // tendência baseada no próprio período filtrado
-      const fatorTendencia = Math.min(1, totalChamados / 10);
+      // Nesse ponto calculo a tendencia do aumento de chamados, basicamente filtro os chamados dos últimos 3 dias e vejo a proporção deles em relação ao total
+      // e assim determino o fator de tendência
+      const recentes3dias = chamados.filter(c => (agora - new Date(c.dataAbertura)) <= 72 * 60 * 60 * 1000).length;
+      const fatorTendencia = Math.min(1, recentes3dias / totalChamados);
+
 
       // Calculo da pontuação final
       const pontuacao = Math.round(
-        40 * fatorOcorencias +  // peso 40%
-        25 * fatorComponente +  // peso 25%
-        20 * fatorRecencia +    // peso 20%
-        15 * fatorTendencia     // peso 15%
+        40 * fatorOcorencias +  // peso 40%. Por que? basicamente mais chamados = mais problemas. 
+        25 * fatorComponente +  // peso 25%. Por que? Toda vez que é registrado um problema quer dizer que um componente foi afetado. Com o tempo, mais problemas em um componente específico indicam maior risco de falha.
+        20 * fatorRecencia +    // peso 20%. Por que? Quão mais recentes são os chamados indica que mais indica que o problema está ativo e pode piorar.
+        15 * fatorTendencia     // peso 15%. Por que? Se os chamados estão aumentando recentemente, isso sugere que o problema está se agravando.
       );
 
-      // Garante que a pontuação fique entre 0 e 100
+      // Retorno a pontuação de 0 a 100
       return Math.max(0, Math.min(100, pontuacao));
     }
 
