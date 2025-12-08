@@ -48,15 +48,23 @@ LIMIT 50;
 
 function buscarPrincipalProblema(fkEmpresa) {
     var instrucaoSql = `
-        SELECT 
-            c.problema,
-            COUNT(*) AS ocorrencias
-        FROM Chamado c
-        JOIN Maquina m ON c.fkMaquina = m.idMaquina
-        WHERE m.fkEmpresa = ${fkEmpresa}
-        GROUP BY c.problema
-        ORDER BY ocorrencias DESC
-        LIMIT 1;
+        SELECT tipo_problema, COUNT(*) AS ocorrencias
+FROM (
+    SELECT 
+        CASE
+            WHEN c.problema LIKE '%Temperatura da CPU%' THEN 'Temperatura da CPU'
+            WHEN c.problema LIKE '%Temperatura da GPU%' THEN 'Temperatura da GPU'
+            WHEN c.problema LIKE '%Uso de CPU%' THEN 'Uso de CPU'
+            WHEN c.problema LIKE '%Uso de GPU%' THEN 'Uso de GPU'
+            ELSE 'Outro'
+        END AS tipo_problema
+    FROM Chamado c
+    JOIN Maquina m ON c.fkMaquina = m.idMaquina
+    WHERE m.fkEmpresa = 2
+) AS agrupado
+GROUP BY tipo_problema
+ORDER BY ocorrencias DESC
+LIMIT 1;
     `;
 
     console.log("Executando SQL (buscarPrincipalProblema):\n" + instrucaoSql);
