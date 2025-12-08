@@ -735,8 +735,8 @@
                         mac: item.mac_address
                     }));
 
-                    const agora = new Date();
-                    //const agora = new Date(2025, 11, 9, 16, 0, 0);
+                    //const agora = new Date();
+                    const agora = new Date(2025, 11, 9, 11, 0, 0);
 
                     const dadosAteAgora = dados.filter(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
@@ -747,17 +747,26 @@
                         console.warn("Nenhum dado válido antes do horário atual.");
                     }
 
+
                     dadosAteAgora.sort((a, b) => {
                         return new Date(a.datetime.replace(" ", "T")) - new Date(b.datetime.replace(" ", "T"));
                     });
+
+                    console.log("DADOS ATÉ AGORA: ", dadosAteAgora)
 
                     const ultimaData = new Date(
                         dadosAteAgora[dadosAteAgora.length - 1].datetime.replace(" ", "T")
                     );
 
+                    console.log("ULTIMA DATA: " + ultimaData)
+
                     const limite24h = new Date(ultimaData.getTime() - 24 * 60 * 60 * 1000);
 
-                    dados.forEach(reg => {
+                    console.log("LIMITE 24H: ", limite24h)
+                    let listaRegistrosUltimas24 = [];
+                    let eixo24hrs = [];
+
+                    dadosAteAgora.forEach(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
 
                         if (reg.mac === macAddress &&
@@ -767,30 +776,32 @@
                             const h = dataRegistro.getHours();
                             eixo24hrs.push((h < 10 ? "0" + h : h) + "h");
 
-                            registrosMaquina.push(reg);
+                            console.log("REGISTRO SENDO SALVO", reg);
+                            listaRegistrosUltimas24.push(reg);
                         }
                     });
 
-                    console.log("CHEGOU NA CONSTRUÇÃO DOS GRÁFICOS")
-                    console.log("TAMANHO DO EIXO: " + eixo24hrs.length)
+                    var listaGpuPercent = listaRegistrosUltimas24.map(r => r.gpu_percent);
+                    var listaGpuTemp = listaRegistrosUltimas24.map(r => r.gpu_temp);
+                    var listaCpuPercent = listaRegistrosUltimas24.map(r => r.cpu_percent);
+                    var listaCpuTemp = listaRegistrosUltimas24.map(r => r.cpu_temp);
 
-                    var listaGpuPercent = registrosMaquina.map(r => r.gpu_percent);
-                    var listaGpuTemp = registrosMaquina.map(r => r.gpu_temp);
-                    var listaCpuPercent = registrosMaquina.map(r => r.cpu_percent);
-                    var listaCpuTemp = registrosMaquina.map(r => r.cpu_temp);
-                    console.log("LISTA GPU PERCENT: ")
-                    console.log(listaGpuPercent)
-                    var mediaGpuPercent = calcularMedia(listaGpuPercent);
-                    var medianaGpuPercent = calcularMediana(listaGpuPercent);
+                    console.log("EIXO 24HRS:", eixo24hrs);
+                    console.log("LISTA CPU PERCENT:", listaCpuPercent);
+                    console.log("LISTA GPU PERCENT:", listaGpuPercent);
 
-                    var mediaGpuTemp = calcularMedia(listaGpuTemp);
-                    var medianaGpuTemp = calcularMediana(listaGpuTemp);
+                    // Criar cópias ANTES de chamar as funções
+                    var mediaGpuPercent = calcularMedia([...listaGpuPercent]);
+                    var medianaGpuPercent = calcularMediana([...listaGpuPercent]);
 
-                    var mediaCpuPercent = calcularMedia(listaCpuPercent);
-                    var medianaCpuPercent = calcularMediana(listaCpuPercent);
+                    var mediaGpuTemp = calcularMedia([...listaGpuTemp]);
+                    var medianaGpuTemp = calcularMediana([...listaGpuTemp]);
 
-                    var mediaCpuTemp = calcularMedia(listaCpuTemp);
-                    var medianaCpuTemp = calcularMediana(listaCpuTemp);
+                    var mediaCpuPercent = calcularMedia([...listaCpuPercent]);
+                    var medianaCpuPercent = calcularMediana([...listaCpuPercent]);
+
+                    var mediaCpuTemp = calcularMedia([...listaCpuTemp]);
+                    var medianaCpuTemp = calcularMediana([...listaCpuTemp]);
 
                     var corKpiTempGpu = corTemperatura(mediaGpuTemp, parametroGpuTemp);
                     var corKpiTempCpu = corTemperatura(mediaCpuTemp, parametroCpuTemp);
@@ -835,7 +846,7 @@
                     `;
 
 
-
+                    console.log("LISTA CPU PERCENT: ", listaCpuPercent)
                     graficoUso24Hrs = new Chart(ctx1, {
                         type: 'bar',
                         data: {
@@ -2042,16 +2053,15 @@
         }
 
         function calcularMediana(lista) {
-            lista.sort(function (a, b) {
-                return a - b;
-            });
-            console.log("LISTA MEDIANA: " + lista)
-            let meio = Math.floor(lista.length / 2);
+            const listaOrdenada = [...lista].sort((a, b) => a - b);
+            console.log("LISTA MEDIANA: " + listaOrdenada);
 
-            if (lista.length % 2 !== 0) {
-                return parseFloat(lista[meio].toFixed(0));
+            let meio = Math.floor(listaOrdenada.length / 2);
+
+            if (listaOrdenada.length % 2 !== 0) {
+                return parseFloat(listaOrdenada[meio].toFixed(0));
             } else {
-                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(0));
+                return parseFloat(((listaOrdenada[meio - 1] + listaOrdenada[meio]) / 2).toFixed(0));
             }
         }
 
