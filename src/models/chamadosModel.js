@@ -46,31 +46,6 @@ LIMIT 50;
     return database.executar(instrucaoSql);
 }
 
-function buscarPrincipalProblema(fkEmpresa) {
-    var instrucaoSql = `
-        SELECT tipo_problema, COUNT(*) AS ocorrencias
-FROM (
-    SELECT 
-        CASE
-            WHEN c.problema LIKE '%Temperatura da CPU%' THEN 'Temperatura da CPU'
-            WHEN c.problema LIKE '%Temperatura da GPU%' THEN 'Temperatura da GPU'
-            WHEN c.problema LIKE '%Uso de CPU%' THEN 'Uso de CPU'
-            WHEN c.problema LIKE '%Uso de GPU%' THEN 'Uso de GPU'
-            ELSE 'Outro'
-        END AS tipo_problema
-    FROM Chamado c
-    JOIN Maquina m ON c.fkMaquina = m.idMaquina
-    WHERE m.fkEmpresa = 2
-) AS agrupado
-GROUP BY tipo_problema
-ORDER BY ocorrencias DESC
-LIMIT 1;
-    `;
-
-    console.log("Executando SQL (buscarPrincipalProblema):\n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
 async function totalErros(idEmpresa) {
     const sql = `
 SELECT COUNT(*) AS total_erros
@@ -143,11 +118,12 @@ function buscarKPIsTecnico(idTecnico) {
 
 function buscarChamadosCriticos(fkEmpresa) {
     var instrucaoSql = `
-        SELECT COUNT(*) AS totalCriticos
+            SELECT COUNT(*) AS totalCriticos
         FROM Chamado c
         JOIN Maquina m ON c.fkMaquina = m.idMaquina
         WHERE c.prioridade = 'Critica'
-        AND m.fkEmpresa = ${fkEmpresa};
+        AND m.fkEmpresa = ${fkEmpresa}
+        AND c.status != 'Resolvido';
     `;
 
     console.log("Executando SQL (buscarChamadosCriticos):\n" + instrucaoSql);
@@ -183,7 +159,6 @@ module.exports = {
     finalizarChamado,
     removerTecnico,
     buscarChamadosCriticos,
-    buscarPrincipalProblema,
     totalErros,
     maquinasComErro
 };

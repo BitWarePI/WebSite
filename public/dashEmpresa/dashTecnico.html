@@ -136,7 +136,7 @@
     <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
-      <h1 style="font-size: 42px; margin-bottom: 40px;">Dashboard - Técnico</h1>
+      <h1 style="font-size: 42px; margin-bottom: 40px;">Dashboard - Chamados Máquina</h1>
 
       <!-- TOPO DO DASHBOARD: gráfico + filtros + top máquinas -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
@@ -173,7 +173,7 @@
               </div>
 
               <!-- GRÁFICO DE BARRAS (5 colunas) -->
-              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm">
+              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm min-w-[1290px]">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
                 <div class="relative w-full h-[250px]">
                   <canvas id="grafico2"></canvas>
@@ -190,7 +190,7 @@
             <!-- FILTRO -->
             <div style="display: flex; flex-direction: column; gap: 60px; min-width: 150px;">
               <div style="background-color: #111; border-radius: 12px; padding: 15px 20px; color: white;">
-                <p style="margin: 0 0 8px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
+                <p style="margin: 0 0 5px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
                 <select id="filtro"
                   style="background-color: #4c1d95; color: white; border: none; border-radius: 8px; padding: 8px 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
                   <option selected value="0">Últimas 24h</option>
@@ -215,7 +215,7 @@
       ">
 
                 <p style="font-size: 1.1rem; margin-bottom: 20px; text-align: center; color: #ffffff;">
-                  Top 5 Máquinas (24h)
+                  Top 5 Máquinas com mais ocorrências (24h)
                 </p>
 
                 <ul id="top5-lista" style="
@@ -228,26 +228,12 @@
                   <li style="color: #ccc; text-align: center;">Carregando...</li>
                 </ul>
               </div>
-              <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm h-[250px] flex flex-col justify-center">
-                <h3 class="text-gray-800 font-semibold mb-4">Principal Problema</h3>
-
-                <div class="flex items-center space-x-3">
-                  <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
-                    <span class="text-lg font-bold text-gray-800">GPU</span>
-                  </div>
-
-                  <p class="text-gray-800 text-lg leading-tight" id="principalProblema">
-                  </p>
-                </div>
-
-                <span class="text-gray-800 mt-3">Chamados em aberto</span>
-              </div>
             </div>
           </div>
         </div>
 
         <div class="chamado" style="margin: 0px;">
-          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">50 Mais Critícos</p>
+          <p style="width: 500px;font-weight: bold; margin-bottom: 10px; font-size: 22px;">Chamados</p>
           <table>
             <thead>
               <tr>
@@ -394,6 +380,8 @@
         const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         chave = meses[d.getMonth()];
       }
+
+      if (chave === null) return;
 
       if (!grupos[chave]) grupos[chave] = 0;
       grupos[chave]++;
@@ -586,7 +574,6 @@
       carregarChamados(),
       carregarTop5Maquinas(),
       totalCriticos(),
-      carregarPrincipalProblema(),
       totalErros(),
       maquinasComErro(),
       geraGrafico(),
@@ -681,16 +668,6 @@
       console.error("Erro ao buscar quantidade de críticos:", erro);
       criticos.innerText = "0";
     }
-  }
-
-  async function carregarPrincipalProblema() {
-    const idEmpresa = sessionStorage.getItem("idEmpresa");
-
-    const resposta = await fetch(`/chamados/principalProblema/${idEmpresa}`);
-    const dados = await resposta.json();
-
-    document.getElementById("principalProblema").innerText =
-      (dados.problema ?? "Nenhum problema encontrado").replace("acima do esperado", "");
   }
 
   async function totalErros() {
