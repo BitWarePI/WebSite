@@ -12,7 +12,6 @@
   <script src="https://kit.fontawesome.com/6921956092.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
   <div class="global">
     <div id="tela-carregando">
@@ -103,7 +102,7 @@
       <section class="geral">
         <main class="container">
           <div class="top-row">
-            <h1 style="margin:0;font-size:28px">Manutenção Preventiva</h1>
+            <h1 style="margin:0;font-size:28px">Manutenção Preditiva</h1>
             <div class="filters">
               <div class="periods">
                 <button class="btn ghost" id="24hBtn" onclick="buscarOcorrencias('24h', fkEmpresa)">24h</button>
@@ -118,7 +117,6 @@
             </div>
           </div>
 
-          <!-- KPIs -->
           <section class="kpi-row">
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
@@ -165,12 +163,11 @@
                   " onmouseover="document.getElementById('tooltipComponente').style.display='block'"
                   onmouseout="document.getElementById('tooltipComponente').style.display='none'">
                   <i class="fa-solid fa-circle-info" style="color: black;"></i>
-
                   <span id="tooltipComponente" style="
                       display: none;
                       position: absolute;
                       top: 25px;
-                      left: 0;
+                      right: 0;
                       background-color: #1e1e1e;
                       color: white;
                       padding: 8px 12px;
@@ -199,12 +196,11 @@
                   " onmouseover="document.getElementById('tooltipTipo').style.display='block'"
                   onmouseout="document.getElementById('tooltipTipo').style.display='none'">
                   <i class="fa-solid fa-circle-info" style="color: black;"></i>
-
                   <span id="tooltipTipo" style="
                       display: none;
                       position: absolute;
                       top: 25px;
-                      left: 0;
+                      right: 0;
                       background-color: #1e1e1e;
                       color: white;
                       padding: 8px 12px;
@@ -812,8 +808,6 @@
     function esconderCarregando() {
       document.getElementById("tela-carregando").style.display = "none";
     }
-
   </script>
 </body>
-
 </html>
