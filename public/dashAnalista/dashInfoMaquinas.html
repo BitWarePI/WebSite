@@ -1995,8 +1995,6 @@
 
         }
 
-
-
         function calcularMedia(lista) {
             let soma = 0;
             for (let i = 0; i < lista.length; i++) {
@@ -2007,16 +2005,15 @@
         }
 
         function calcularMediana(lista) {
-            lista.sort(function (a, b) {
-                return a - b;
-            });
-            console.log("LISTA MEDIANA: " + lista)
-            let meio = Math.floor(lista.length / 2);
+            const listaOrdenada = [...lista].sort((a, b) => a - b);
+            console.log("LISTA MEDIANA: " + listaOrdenada);
 
-            if (lista.length % 2 !== 0) {
-                return parseFloat(lista[meio].toFixed(0));
+            let meio = Math.floor(listaOrdenada.length / 2);
+
+            if (listaOrdenada.length % 2 !== 0) {
+                return parseFloat(listaOrdenada[meio].toFixed(0));
             } else {
-                return parseFloat(((lista[meio - 1] + lista[meio]) / 2).toFixed(0));
+                return parseFloat(((listaOrdenada[meio - 1] + listaOrdenada[meio]) / 2).toFixed(0));
             }
         }
 
