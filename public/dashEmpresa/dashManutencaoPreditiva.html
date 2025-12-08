@@ -523,6 +523,38 @@
           }
         }
       });
+
+      graficoDetalhes24h.data.datasets.push(
+      {
+        label: 'Baixo risco',
+        type: 'line',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(graficoDetalhes24h.data.labels.length).fill(25),
+        order: 1
+      },
+      {
+        label: 'Médio risco',
+        type: 'line',
+        borderColor: '#e4b131',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(graficoDetalhes24h.data.labels.length).fill(59)
+      },
+      {
+        label: 'Alto risco',
+        type: 'line',
+        borderColor: '#ff4b4b',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(graficoDetalhes24h.data.labels.length).fill(100)
+      }
+    );
+    graficoDetalhes24h.update();
     }
 
     function tratarOcorrencias(ocorrencias) {
