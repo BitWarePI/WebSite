@@ -7,7 +7,7 @@ async function getS3FileContent(pathFileKey) {
   });
 
 
-  const BucketClient = 's3-client-bitwarepi777';
+  const BucketClient = 's3-client-bitwarepi';
  
   if (!pathFileKey) {   
     throw new Error('Path é obrigatório.');
