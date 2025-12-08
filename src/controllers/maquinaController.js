@@ -33,6 +33,7 @@ module.exports = {
             console.log("VAI PEGAR AS INFORMAÇÕES DA MÁQUINA");
 
             const maquinas = await maquinaModel.infoMaquinas(idEmpresa);
+            console.log("MAQUINAS:", maquinas);
             console.log("Resultado da query:", maquinas);
 
             res.status(200).json(maquinas);
