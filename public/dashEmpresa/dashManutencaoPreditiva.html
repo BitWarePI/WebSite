@@ -120,7 +120,7 @@
           <section class="kpi-row">
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
-                <div class="label">Total de ocorrências (período)</div>
+                <div class="label">Total de chamados (período)</div>
                 <span style="
                     position: relative;
                     display: inline-block;
@@ -153,7 +153,7 @@
 
             <div class="kpi">
               <div style="display:flex;align-items:center;gap:8px">
-                <div class="label">Componente com mais ocorrências</div>
+                <div class="label">Componente com mais chamados</div>
                 <span style="
                     position: relative;
                     display: inline-block;
@@ -177,7 +177,7 @@
                       z-index: 10;
                       box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                     ">
-                    Componente (CPU/GPU) com maior número de ocorrências no período filtrado.
+                    Componente (CPU/GPU) com maior número de chamados no período filtrado.
                   </span>
                 </span>
               </div>
@@ -210,7 +210,7 @@
                       z-index: 10;
                       box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                     ">
-                    Tipo de ocorrência mais comum (Temperatura / Uso) no período filtrado.
+                    Tipo de chamado mais comum (Temperatura / Uso) no período filtrado.
                   </span>
                 </span>
               </div>
@@ -220,7 +220,7 @@
 
           <section class="charts">
             <div class="card">
-              <h3>Comparativo: CPU vs GPU (ocorrências)</h3>
+              <h3>Comparativo: CPU vs GPU (Qtd. chamados)</h3>
               <div class="chart-container">
                 <canvas id="graficoComponente"></canvas>
               </div>
@@ -236,14 +236,14 @@
 
           <section style="margin-top:18px">
             <div class="card">
-              <h3>Máquinas com ocorrências (período)</h3>
+              <h3>Máquinas com chamados (24h)</h3>
               <div style="overflow:auto;margin-top:8px">
                 <table>
                   <thead>
                     <tr>
                       <th>Nome</th>
                       <th>Endereço MAC</th>
-                      <th>Total ocorrências (24h)</th>
+                      <th>Total chamados (24h)</th>
                       <th>Risco</th>
                       <th>Sugestão</th>
                       <th>Ações</th>
@@ -267,7 +267,7 @@
       </div>
       <div class="graficosContainer">
         <div class="grafico-container">
-          <h3>Pontuação(score) nas últimas 24 horas</h3>
+          <h3>Pontuação nas últimas 24 horas</h3>
           <canvas id="grafico24h" height="200"></canvas>
         </div>
         <div class="grafico-container">
@@ -300,7 +300,7 @@
           "></span><strong>Risco Alto:</strong> 60 - 100 (Revisão imediata necessária)</p>
             <p>A pontuação é baseada em:</p>
             <ul>
-              <li>O número total de ocorrências</li>
+              <li>O número total de chamados</li>
               <li>Componente afetado (CPU ou GPU)</li>
               <li>Recência das falhas</li>
               <li>Tendência de aumento de chamados</li>
