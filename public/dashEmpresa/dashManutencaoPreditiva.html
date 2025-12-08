@@ -136,7 +136,7 @@
                       display: none;
                       position: absolute;
                       top: 25px;
-                      left: 0;
+                      right: 0;
                       background-color: #1e1e1e;
                       color: white;
                       padding: 8px 12px;
@@ -247,7 +247,7 @@
                     <tr>
                       <th>Nome</th>
                       <th>Endereço MAC</th>
-                      <th>Total ocorrências</th>
+                      <th>Total ocorrências (24h)</th>
                       <th>Risco</th>
                       <th>Sugestão</th>
                       <th>Ações</th>
@@ -271,12 +271,24 @@
       </div>
       <div class="graficosContainer">
         <div class="grafico-container">
-          <h3>Score (pontuação) - Ultimas 24 horas</h3>
-          <canvas id="grafico24h" height="160"></canvas>
+          <h3>Pontuação(score) nas últimas 24 horas</h3>
+          <canvas id="grafico24h" height="200"></canvas>
         </div>
         <div class="grafico-container">
-          <h3>Score (pontuação) – Últimos 30 dias</h3>
-          <canvas id="grafico30d" height="160"></canvas>
+          <div class="score-legend ">
+            <h4>Legenda pontuação</h4>
+            <p>A pontuação indica o risco de falha da máquina. Quanto maior a pontuação, maior o risco de falha iminente.</p>
+            <p><span></span><strong>Risco Baixo:</strong> 0 - 25 (Máquina estável, sem necessidade de ações urgentes)</p>
+            <p><span></span><strong>Risco Médio:</strong> 26 - 59 (Monitoramento e inspeção preventiva recomendados)</p>
+            <p><span></span><strong>Risco Alto:</strong> 60 - 100 (Revisão imediata necessária)</p>
+            <p>A pontuação é baseada em:</p>
+            <ul>
+              <li>O número total de ocorrências</li>
+              <li>Componente afetado (CPU ou GPU)</li>
+              <li>Recência das falhas</li>
+              <li>Tendência de aumento de chamados</li>
+            </ul>
+          </div>
         </div>
       </div>
       <br>
@@ -292,10 +304,9 @@
     let Componente = null;
     let TipoProblema = null;
     let graficoDetalhes24h = null;
-    let graficoDetalhes30d = null;
 
     window.onload = function () {
-      buscarOcorrencias('mes', fkEmpresa);
+      buscarOcorrencias('24h', fkEmpresa);
     }
 
     function formatarDataParaBanco(data) {
@@ -317,9 +328,7 @@
 
       dataFechamento = new Date();
       dataGraficoDetalhes24h = new Date();
-      dataGraficoDetalhes30d = new Date();
       dataGraficoDetalhes24h.setDate(dataGraficoDetalhes24h.getDate() - 1);
-      dataGraficoDetalhes30d.setMonth(dataGraficoDetalhes30d.getMonth() - 1);
 
       if (periodo === '24h') {
         dataAbertura = new Date();
@@ -352,7 +361,6 @@
       const dataAberturaFormatado = formatarDataParaBanco(dataAbertura);
       const dataFechamentoFormatado = formatarDataParaBanco(dataFechamento);
       const dataGraficoDetalhes24hFormatado = formatarDataParaBanco(dataGraficoDetalhes24h);
-      const dataGraficoDetalhes30dFormatado = formatarDataParaBanco(dataGraficoDetalhes30d);
       const caminho = `chamados.csv`
       const empresa = fkEmpresa;
 
@@ -381,26 +389,16 @@
             return dataChamado >= inicio && dataChamado <= fim;
           });
 
-          chamadosFiltradosDetalhes30d = data.filter(chamado => {
-            const dataChamado = new Date(chamado.dataAbertura);
-            const inicio = new Date(dataGraficoDetalhes30dFormatado);
-            const fim = new Date(dataFechamentoFormatado);
-
-            return dataChamado >= inicio && dataChamado <= fim;
-          });
-
-          processarDados(chamadosFiltrados, chamadosFiltradosDetalhes24h, chamadosFiltradosDetalhes30d);
+          processarDados(chamadosFiltrados, chamadosFiltradosDetalhes24h);
           esconderCarregando()
         })
         .catch(error => console.error("Error ao buscar ocorrências", error))
     }
 
-    function processarDados(ocorrencias, ocorrencias24h, ocorrencias30d) {
+    function processarDados(ocorrencias, ocorrencias24h) {
       const dados = tratarOcorrencias(ocorrencias);
       const dados24h = tratarOcorrencias(ocorrencias24h);
-      const dados30d = tratarOcorrencias(ocorrencias30d);
 
-      console.log("Dados processados:", dados);
       document.querySelector('.kpi-total').textContent = dados.total;
 
       let componenteMaior;
@@ -422,7 +420,7 @@
       atualizarGraficos(dados);
 
       maquinasProcessadas = dados.cadaMaquina;
-      atualizarListaMaquinas(dados.cadaMaquina, dados24h.cadaMaquina, dados30d.cadaMaquina);
+      atualizarListaMaquinas(dados.cadaMaquina, dados24h.cadaMaquina);
     }
 
     function criarGraficoDetalhes24h(machine, dadosGraficoPeriodoAtual) {
@@ -455,98 +453,9 @@
           labels: labels,
           datasets: [
             {
-              label: "Últimas 24h",
+              label: "Pontuação (Score)",
               data: pontuacoes,
               borderWidth: 2,
-              tension: 0.3,
-              borderColor: "#4B2B85",
-              backgroundColor: "#4B2B85",
-              color: "#ff8800"
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: "Hora do dia",
-                color: "#000",
-                font: {
-                  size: 16,
-                  weight: "bold",
-                  family: "Inter"
-                }
-              },
-              ticks: {
-                color: "#000",
-                font: {
-                  size: 14
-                }
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Score (Pontuação)",
-                color: "#000",
-                font: {
-                  size: 16,
-                  weight: "bold",
-                  family: "Inter"
-                }
-              },
-              ticks: {
-                color: "#000",
-                font: {
-                  size: 14
-                }
-              },
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    }
-
-    function criarGraficoDetalhes30d(machine, dadosGraficoPeriodoAtual) {
-      const ctx = document.getElementById("grafico30d").getContext("2d");
-
-      if (graficoDetalhes30d) graficoDetalhes30d.destroy();
-
-      const agrupadoPorDia = {};
-
-      dadosGraficoPeriodoAtual.forEach(c => {
-        const d = new Date(c.dataAbertura);
-        const chave = d.toISOString().split("T")[0];
-
-        agrupadoPorDia[chave] = agrupadoPorDia[chave] || [];
-        agrupadoPorDia[chave].push(c);
-      });
-
-      const chavesOrdenadas = Object.keys(agrupadoPorDia).sort();
-
-      const labels = chavesOrdenadas.map(chave => {
-        const [ano, mes, dia] = chave.split("-");
-        return `${dia}/${mes}`;
-      });
-
-      let acumulado = [];
-      const pontuacoes = chavesOrdenadas.map(chave => {     // CORRIGIDO
-        acumulado = acumulado.concat(agrupadoPorDia[chave]);
-        return calcularPontuacao(machine.id, acumulado);
-      });
-
-      graficoDetalhes30d = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Últimos 30 dias",
-              data: pontuacoes,
-              borderWidth: 3,
               tension: 0.3,
               borderColor: "#4B2B85",
               backgroundColor: "#4B2B85",
@@ -734,11 +643,11 @@
       }
     }
 
-    function atualizarListaMaquinas(cadaMaquina, cadaMaquina24h, cadaMaquina30d) {
+    function atualizarListaMaquinas(cadaMaquina, cadaMaquina24h) {
       const tbody = document.getElementById('machinesTbody');
       tbody.innerHTML = '';
 
-      cadaMaquina.forEach(maquina => {
+      cadaMaquina24h.forEach(maquina => {
         const chamados = maquina.chamados;
         const pontuacao = calcularPontuacao(maquina.id, maquina.chamados);
         const [risco, css] = riscoTexto(pontuacao);
@@ -755,7 +664,7 @@
         tbody.appendChild(tr);
       });
 
-      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'), cadaMaquina24h, cadaMaquina30d)));
+      document.querySelectorAll('.btn-details').forEach(b => b.addEventListener('click', () => abrirDetalhes(b.getAttribute('data-mid'), cadaMaquina24h)));
     }
 
     function pegarSugestao(chamados, pontuacao) {
@@ -768,26 +677,23 @@
 
       const componente = cpu >= gpu ? "CPU" : "GPU";
 
-      if (pontuacao >= 67) {
+      if (pontuacao >= 60) {
         return `Risco alto — Alta chance de avaria na ${componente}. Revisão imediata recomendada.`;
       }
 
-      if (pontuacao >= 34) {
+      if (pontuacao >= 26) {
         return `Risco médio — Monitorar a ${componente}. Inspeção preventiva sugerida.`;
       }
 
       return `Risco baixo — ${componente} estável. Sem ações urgentes.`;
     }
 
-    function abrirDetalhes(mid, cadaMaquina24h, cadaMaquina30d) {
+    function abrirDetalhes(mid, cadaMaquina24h) {
       const machine = maquinasProcessadas.find(m => m.id == mid);
       const machine24h = cadaMaquina24h.find(m => m.id == mid);
-      const machine30d = cadaMaquina30d.find(m => m.id == mid);
-      console.log(machine);
       if (!machine) return;
 
       criarGraficoDetalhes24h(machine24h, machine24h.chamados);
-      criarGraficoDetalhes30d(machine30d, machine30d.chamados);
 
       const modal = document.querySelector('#modalDetails');
 
@@ -797,7 +703,7 @@
       const body = document.querySelector('#modalBody');
       body.innerHTML = '';
 
-      const chamados = machine.chamados.sort(
+      const chamados = machine24h.chamados.sort(
         (a, b) => new Date(b.dataAbertura) - new Date(a.dataAbertura)
       );
 
@@ -892,8 +798,8 @@
     }
 
     function riscoTexto(pontuacao) {
-      if (pontuacao >= 67) return ['Alto', 'risk--high'];
-      if (pontuacao >= 34) return ['Médio', 'risk--med'];
+      if (pontuacao >= 60) return ['Alto', 'risk--high'];
+      if (pontuacao >= 26) return ['Médio', 'risk--med'];
       return ['Baixo', 'risk--low'];
     }
 
