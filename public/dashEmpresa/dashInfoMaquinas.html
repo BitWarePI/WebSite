@@ -237,14 +237,17 @@
                         </div>
                         <div class="header-grafico" style="margin-right: 16px;">
                             <div>
-                                <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
-                                    <div><b>Uso % (CPU/GPU)</b></div>
-                                    <div ><b style="color: #4caf50;">IDEAL</b> >= <span id="parametroUsoCpu"></span> & <span id="parametroUsoGpu"></span></div>
+                                <div style="display: flex; flex-direction: column; padding-bottom: 18px;">
+                                    <div style=""><b>Uso % (CPU/GPU)</b></div>
+                                    <div><b style="color: #4caf50;">IDEAL</b> >= <span id="parametroUsoCpu"></span> &
+                                        <span id="parametroUsoGpu"></span></div>
                                 </div>
 
                                 <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
                                     <div><b>Temperatura °C (CPU/GPU)</b></div>
-                                    <div><b style="color: #4caf50;">IDEAL</b> <= <span id="parametroTempCpu"></span> & <span id="parametroTempGpu"></span></div>
+                                    <div><b style="color: #4caf50;">IDEAL</b>
+                                        <= <span id="parametroTempCpu"></span> & <span id="parametroTempGpu"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -688,7 +691,7 @@
             document.getElementById("parametroUsoCpu").innerText = parametroCpuPercent + "%";
             document.getElementById("parametroUsoGpu").innerText = parametroGpuPercent + "%";
             document.getElementById("parametroTempCpu").innerText = parametroCpuTemp + "°C";
-            document.getElementById("parametroTempGpu").innerText = parametroGpuTemp + "°C";   
+            document.getElementById("parametroTempGpu").innerText = parametroGpuTemp + "°C";
 
             if (graficoTemp24Hrs != null) {
                 graficoUso24Hrs.destroy();
