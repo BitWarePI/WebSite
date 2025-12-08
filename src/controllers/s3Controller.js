@@ -60,8 +60,8 @@ async function pegarCsvMaquinas(req, res) {
 
         const dataAtual = `${dia}-${mes}-${ano}`;
 
-        //const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
-        const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
+        const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
+        //const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
 
         const bucket = "s3-client-bitwarepi777";
 

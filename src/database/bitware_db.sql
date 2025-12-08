@@ -130,7 +130,9 @@ VALUES
 ('e7:5c:5f:1e:b4:1d', 'Setor C', 2),
 ('11:22:33:44:55:66', 'Setor Logístico', 3),
 ('e8:5c:5f:1e:b4:1d', 'Setor A', 2), 
-('f4:6a:dd:7b:03:0d', 'Setor E', 2);
+('f4:6a:dd:7b:03:0d', 'Setor E', 2),
+('12:2a:0a:85:5e:47', 'Setor A', 2), -- maquina offline
+('69:7a:4c:69:8h:44', 'Setor A', 2); -- maquina offline;
 
 INSERT INTO Componente (descricao)
 VALUES 
@@ -169,7 +171,17 @@ VALUES
 (5, 1, 30),
 (5, 2, 30),
 (5, 3, 92),
-(5, 4, 92);
+(5, 4, 92),
+
+(7, 1, 10),
+(7, 2, 10),
+(7, 3, 96),
+(7, 4, 98),
+
+(8, 1, 05),
+(8, 2, 05),
+(8, 3, 98),
+(8, 4, 97);
 
 INSERT INTO ParametrosGeraisEmpresa (fkEmpresa, cpu_percent, gpu_percent, cpu_temperature, gpu_temperature)
 VALUES
