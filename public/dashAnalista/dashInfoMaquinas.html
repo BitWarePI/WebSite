@@ -79,7 +79,8 @@
                     <canvas id="graficoComponentes"></canvas>
                 </div>
                 <div class="kpi-card" style="border-radius: 0.5rem">
-                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho</b>
+                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho
+                            (Registros recentes)</b>
                     </h3>
 
                     <div style="display: flex; align-items: center; margin-bottom: 4px;">
@@ -118,6 +119,7 @@
                         <span><b style="color: #ff4b4b;">Vermelho</b>: crítico</span>
                     </div>
                 </div>
+
             </div>
 
             <div class="listaEmpresa">
@@ -196,6 +198,22 @@
                                 </select>
                                 <div id="botaoFiltro">
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="header-grafico" style="margin-right: 16px;">
+                            <div>
+                                <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
+                                    <div><b>Uso % (CPU/GPU)</b></div>
+                                    <div><b style="color: #4caf50;">IDEAL</b> >= <span id="parametroUsoCpu"></span> &
+                                        <span id="parametroUsoGpu"></span></div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
+                                    <div><b>Temperatura °C (CPU/GPU)</b></div>
+                                    <div><b style="color: #4caf50;">IDEAL</b>
+                                        <= <span id="parametroTempCpu"></span> & <span id="parametroTempGpu"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -574,6 +592,7 @@
                                     }
                                 }
                             });
+
                             var quantidadeMaquinas = maquinas.length;
                             var dezPorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.10;
                             var vintePorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.20;
@@ -634,6 +653,11 @@
             const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
             const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
             const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            document.getElementById("parametroUsoCpu").innerText = parametroCpuPercent + "%";
+            document.getElementById("parametroUsoGpu").innerText = parametroGpuPercent + "%";
+            document.getElementById("parametroTempCpu").innerText = parametroCpuTemp + "°C";
+            document.getElementById("parametroTempGpu").innerText = parametroGpuTemp + "°C";   
 
             if (graficoTemp24Hrs != null) {
                 graficoUso24Hrs.destroy();
@@ -700,8 +724,8 @@
                         mac: item.mac_address
                     }));
 
-                    const agora = new Date();
-                    //const agora = new Date(2025, 11, 9, 16, 0, 0);
+                    //const agora = new Date();
+                    const agora = new Date(2025, 11, 9, 11, 0, 0);
 
                     const dadosAteAgora = dados.filter(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
@@ -712,17 +736,26 @@
                         console.warn("Nenhum dado válido antes do horário atual.");
                     }
 
+
                     dadosAteAgora.sort((a, b) => {
                         return new Date(a.datetime.replace(" ", "T")) - new Date(b.datetime.replace(" ", "T"));
                     });
+
+                    console.log("DADOS ATÉ AGORA: ", dadosAteAgora)
 
                     const ultimaData = new Date(
                         dadosAteAgora[dadosAteAgora.length - 1].datetime.replace(" ", "T")
                     );
 
+                    console.log("ULTIMA DATA: " + ultimaData)
+
                     const limite24h = new Date(ultimaData.getTime() - 24 * 60 * 60 * 1000);
 
-                    dados.forEach(reg => {
+                    console.log("LIMITE 24H: ", limite24h)
+                    let listaRegistrosUltimas24 = [];
+                    let eixo24hrs = [];
+
+                    dadosAteAgora.forEach(reg => {
                         const dataRegistro = new Date(reg.datetime.replace(" ", "T"));
 
                         if (reg.mac === macAddress &&
@@ -732,30 +765,31 @@
                             const h = dataRegistro.getHours();
                             eixo24hrs.push((h < 10 ? "0" + h : h) + "h");
 
-                            registrosMaquina.push(reg);
+                            console.log("REGISTRO SENDO SALVO", reg);
+                            listaRegistrosUltimas24.push(reg);
                         }
                     });
 
-                    console.log("CHEGOU NA CONSTRUÇÃO DOS GRÁFICOS")
-                    console.log("TAMANHO DO EIXO: " + eixo24hrs.length)
+                    var listaGpuPercent = listaRegistrosUltimas24.map(r => r.gpu_percent);
+                    var listaGpuTemp = listaRegistrosUltimas24.map(r => r.gpu_temp);
+                    var listaCpuPercent = listaRegistrosUltimas24.map(r => r.cpu_percent);
+                    var listaCpuTemp = listaRegistrosUltimas24.map(r => r.cpu_temp);
 
-                    var listaGpuPercent = registrosMaquina.map(r => r.gpu_percent);
-                    var listaGpuTemp = registrosMaquina.map(r => r.gpu_temp);
-                    var listaCpuPercent = registrosMaquina.map(r => r.cpu_percent);
-                    var listaCpuTemp = registrosMaquina.map(r => r.cpu_temp);
-                    console.log("LISTA GPU PERCENT: ")
-                    console.log(listaGpuPercent)
-                    var mediaGpuPercent = calcularMedia(listaGpuPercent);
-                    var medianaGpuPercent = calcularMediana(listaGpuPercent);
+                    console.log("EIXO 24HRS:", eixo24hrs);
+                    console.log("LISTA CPU PERCENT:", listaCpuPercent);
+                    console.log("LISTA GPU PERCENT:", listaGpuPercent);
 
-                    var mediaGpuTemp = calcularMedia(listaGpuTemp);
-                    var medianaGpuTemp = calcularMediana(listaGpuTemp);
+                    var mediaGpuPercent = calcularMedia([...listaGpuPercent]);
+                    var medianaGpuPercent = calcularMediana([...listaGpuPercent]);
 
-                    var mediaCpuPercent = calcularMedia(listaCpuPercent);
-                    var medianaCpuPercent = calcularMediana(listaCpuPercent);
+                    var mediaGpuTemp = calcularMedia([...listaGpuTemp]);
+                    var medianaGpuTemp = calcularMediana([...listaGpuTemp]);
 
-                    var mediaCpuTemp = calcularMedia(listaCpuTemp);
-                    var medianaCpuTemp = calcularMediana(listaCpuTemp);
+                    var mediaCpuPercent = calcularMedia([...listaCpuPercent]);
+                    var medianaCpuPercent = calcularMediana([...listaCpuPercent]);
+
+                    var mediaCpuTemp = calcularMedia([...listaCpuTemp]);
+                    var medianaCpuTemp = calcularMediana([...listaCpuTemp]);
 
                     var corKpiTempGpu = corTemperatura(mediaGpuTemp, parametroGpuTemp);
                     var corKpiTempCpu = corTemperatura(mediaCpuTemp, parametroCpuTemp);
@@ -800,7 +834,7 @@
                     `;
 
 
-
+                    console.log("LISTA CPU PERCENT: ", listaCpuPercent)
                     graficoUso24Hrs = new Chart(ctx1, {
                         type: 'bar',
                         data: {
@@ -1994,6 +2028,8 @@
             });
 
         }
+
+
 
         function calcularMedia(lista) {
             let soma = 0;

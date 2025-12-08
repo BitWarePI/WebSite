@@ -114,7 +114,8 @@
                     <canvas id="graficoComponentes"></canvas>
                 </div>
                 <div class="kpi-card" style="border-radius: 0.5rem">
-                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho</b>
+                    <h3 class="titulo" style="font-size: 25px; padding-bottom: 8px;"><b>Legenda de <br>desempenho
+                            (Registros recentes)</b>
                     </h3>
 
                     <div style="display: flex; align-items: center; margin-bottom: 4px;">
@@ -234,10 +235,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="header-grafico" style="margin-right: 16px;">
+                            <div>
+                                <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
+                                    <div><b>Uso % (CPU/GPU)</b></div>
+                                    <div ><b style="color: #4caf50;">IDEAL</b> >= <span id="parametroUsoCpu"></span> & <span id="parametroUsoGpu"></span></div>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; margin-bottom: 4px;">
+                                    <div><b>Temperatura °C (CPU/GPU)</b></div>
+                                    <div><b style="color: #4caf50;">IDEAL</b> <= <span id="parametroTempCpu"></span> & <span id="parametroTempGpu"></span></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="header-grafico">
                             <div>
                                 <div style="padding-bottom: 16px;">
-                                    <strong>Legenda de desempenho:</strong><br>
+                                    <strong>Legenda de desempenho</strong><br>
                                 </div>
                                 <div style="display: flex; align-items: center; margin-bottom: 4px;">
                                     <span style="
@@ -609,6 +623,7 @@
                                     }
                                 }
                             });
+
                             var quantidadeMaquinas = maquinas.length;
                             var dezPorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.10;
                             var vintePorCentoQuantidadeMaquinas = quantidadeMaquinas * 0.20;
@@ -669,6 +684,11 @@
             const parametroCpuTemp = infoMaquina.parametros.cpu_temp;
             const parametroGpuPercent = infoMaquina.parametros.gpu_percent;
             const parametroGpuTemp = infoMaquina.parametros.gpu_temp;
+
+            document.getElementById("parametroUsoCpu").innerText = parametroCpuPercent + "%";
+            document.getElementById("parametroUsoGpu").innerText = parametroGpuPercent + "%";
+            document.getElementById("parametroTempCpu").innerText = parametroCpuTemp + "°C";
+            document.getElementById("parametroTempGpu").innerText = parametroGpuTemp + "°C";   
 
             if (graficoTemp24Hrs != null) {
                 graficoUso24Hrs.destroy();
@@ -790,7 +810,6 @@
                     console.log("LISTA CPU PERCENT:", listaCpuPercent);
                     console.log("LISTA GPU PERCENT:", listaGpuPercent);
 
-                    // Criar cópias ANTES de chamar as funções
                     var mediaGpuPercent = calcularMedia([...listaGpuPercent]);
                     var medianaGpuPercent = calcularMediana([...listaGpuPercent]);
 
