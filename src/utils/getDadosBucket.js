@@ -12,7 +12,7 @@ async function getS3FileContent(pathFileKey) {
     region: process.env.AWS_REGION
   });
 
-  const BucketClient = 's3-client-bitwarepi777';
+  const BucketClient = 's3-client-bitwarepi';
   
   if (!pathFileKey) {
     throw new Error('Path, caminho que se encontra o arquivo é obrigatório.');
