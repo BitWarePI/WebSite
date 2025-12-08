@@ -78,7 +78,7 @@ async function listendModelMachine(req, res) {
                cpuCor: 'Indisponível (Offline)',
                gpu: 'Indisponível (Offline)',
                disco: 'Indisponível (Offline)',
-               ultimoUpdate: lastDateTime
+               ultimoUpdate: "Nenhum dado encotrado no dia atual"
             };
          }
       });
