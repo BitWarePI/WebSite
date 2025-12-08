@@ -18,7 +18,13 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
 </head>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
+<style>
+  img,
+  video {
+    max-width: none !important;
+    height: auto !important;
+  }
+</style>
 <script>
   tailwind.config = {
     darkMode: "class",
@@ -301,11 +307,11 @@
     mostrarCarregando();
 
     await Promise.all([
-        geraGrafico()
+      geraGrafico()
     ]);
 
     esconderCarregando();
-}); 
+  });
 
 
   async function carregarDadosEmpresa() {
@@ -570,7 +576,7 @@
   const modalContainerTecnicos = document.getElementById('modal_container_atribuir');
 
   window.onload = function () {
-      carregarDash();
+    carregarDash();
   };
 
   async function carregarDash() {
