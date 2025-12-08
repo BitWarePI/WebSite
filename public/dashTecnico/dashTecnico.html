@@ -91,7 +91,7 @@
     <div
       style="overflow-y: scroll; max-height: 100vh;padding: 0px 80px; top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;">
 
-      <h1 style="font-size: 42px; margin-bottom: 40px;">Dashboard - Técnico</h1>
+      <h1 style="font-size: 42px; margin-bottom: 40px;">Dashboard - Chamados</h1>
 
       <!-- TOPO DO DASHBOARD: gráfico + filtros + top máquinas -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; flex-wrap: wrap;">
@@ -128,7 +128,7 @@
               </div>
 
               <!-- GRÁFICO DE BARRAS (5 colunas) -->
-              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm">
+              <div class="lg:col-span-5 bg-neutral-300 p-6 rounded-lg shadow-sm min-w-[1290px]">
                 <h2 class="text-lg font-semibold text-gray-800 mb-4">Distribuição de Erros</h2>
                 <div class="relative w-full h-[250px]">
                   <canvas id="grafico2"></canvas>
@@ -141,9 +141,9 @@
           </div>
 
           <!-- LADO DIREITO -->
-          <div style="display: flex; flex-direction: column; gap: 15px; min-width: 150px;">
+          <div style="display: flex; flex-direction: column; gap: 20px; min-width: 260px; align-self: flex-start;">
             <!-- FILTRO -->
-            <div style="display: flex; flex-direction: column; gap: 60px; min-width: 150px;">
+            <div style="display: flex;flex-direction: column; gap: 30px; min-width: 150px;">
               <div style="background-color: #111; border-radius: 12px; padding: 15px 20px; color: white;">
                 <p style="margin: 0 0 8px 0; font-size: 14px; color: #aaa;">Filtro de Dados</p>
                 <select id="filtro"
@@ -182,20 +182,6 @@
       gap: 8px;">
                   <li style="color: #ccc; text-align: center;">Carregando...</li>
                 </ul>
-              </div>
-              <div class="lg:col-span-2 bg-neutral-300 p-6 rounded-lg shadow-sm h-[250px] flex flex-col justify-center">
-                <h3 class="text-gray-800 font-semibold mb-4">Principal Problema</h3>
-
-                <div class="flex items-center space-x-3">
-                  <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
-                    <span class="text-lg font-bold text-gray-800">GPU</span>
-                  </div>
-
-                  <p class="text-gray-800 text-lg leading-tight" id="principalProblema">
-                  </p>
-                </div>
-
-                <span class="text-gray-800 mt-3">Chamados em aberto</span>
               </div>
             </div>
           </div>
@@ -280,7 +266,6 @@
       carregarChamados(),
       carregarTop5Maquinas(),
       totalCriticos(),
-      carregarPrincipalProblema(),
       totalErros(),
       maquinasComErro(),
       geraGrafico(),
@@ -352,7 +337,7 @@
       if (!deuErro) return;
 
       let chave = null;
-
+      
       if (filtroTempo == 0) chave = `${hora}:00`;
       else if (filtroTempo == 1) {
         const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
@@ -371,6 +356,8 @@
         const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         chave = meses[d.getMonth()];
       }
+
+      if (chave === null) return;
 
       if (!grupos[chave]) grupos[chave] = 0;
       grupos[chave]++;
@@ -636,16 +623,6 @@
       console.error("Erro ao buscar quantidade de críticos:", erro);
       criticos.innerText = "0";
     }
-  }
-
-  async function carregarPrincipalProblema() {
-    const idEmpresa = sessionStorage.getItem("idEmpresa");
-
-    const resposta = await fetch(`/chamados/principalProblema/${idEmpresa}`);
-    const dados = await resposta.json();
-
-    document.getElementById("principalProblema").innerText =
-      (dados.problema ?? "Nenhum problema encontrado").replace("acima do esperado", "");
   }
 
   async function totalErros() {

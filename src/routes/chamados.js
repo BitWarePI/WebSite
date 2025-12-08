@@ -15,10 +15,6 @@ router.get("/kpi/empresa/:idEmpresa", function (req, res) {
     chamadosController.buscarKPIs(req, res);
 });
 
-router.get("/principalProblema/:idEmpresa", function (req, res) {
-    chamadosController.buscarPrincipalProblema(req, res);
-});
-
 router.get("/totalErros/:idEmpresa", function (req, res){
     chamadosController.totalErros(req, res)
 });
