@@ -250,18 +250,20 @@
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
-                <p style="font-size: 15px; margin: 0; margin-bottom: 5px; padding: 0;">Pico de uso</p>
+                <p style="font-size: 15px; margin: 0; margin-bottom: 5px; padding: 0;">Pico de Temperatura</p>
                 <i class="fa-solid fa-arrow-trend-up"></i>
               </div>
               <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; gap: 6px;">
-                  <p style="font-size: 20px; margin: 0; padding: 0;">Máximo: </p>
-                  <p id="maximo_gpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">87%</p>
+                  <p id="maximo_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;"></p>
                 </div>
+
                 <div style="display: flex; gap: 6px;">
-                  <p style="font-size: 20px; margin: 0; padding: 0;">Minímo: </p>
-                  <p id="minimo_gpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">07%</p>
+                  <p style="font-size: 18px; margin: 0; padding: 0;">Período:</p>
+                  <p id="periodo_max_gpu" style="font-size: 18px; font-weight: 700; margin: 0; padding: 0;"></p>
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -336,17 +338,17 @@
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
-                <p style="font-size: 15px; margin: 0; margin-bottom: 5px; padding: 0;">Pico de uso</p>
+                <p style="font-size: 15px; margin: 0; margin-bottom: 5px; padding: 0;">Pico de Temperatura</p>
                 <i class="fa-solid fa-arrow-trend-up"></i>
               </div>
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; gap: 6px;">
-                  <p style="font-size: 20px; margin: 0; padding: 0;">Máximo: </p>
-                  <p id="maximo_cpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">87%</p>
+                  <p id="maximo_cpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;"></p>
                 </div>
+
                 <div style="display: flex; gap: 6px;">
-                  <p style="font-size: 20px; margin: 0; padding: 0;">Minímo: </p>
-                  <p id="minimo_cpu" style="font-size: 20px; font-weight: 800; margin: 0; padding: 0;">07%</p>
+                  <p style="font-size: 18px; margin: 0; padding: 0;">Período:</p>
+                  <p id="periodo_max_cpu" style="font-size: 18px; font-weight: 700; margin: 0; padding: 0;"></p>
                 </div>
               </div>
             </div>
@@ -354,13 +356,13 @@
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 10px; " class="graficos">
-          <div style="width: 100%; height: 300px;" class="div-grafico">
+          <div style="width: 100%; height: 550px;" class="div-grafico">
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Uso da CPU</p>
             <canvas id="grafico3" class="grafico" style="width: 100%; height: 100%; z-index: 20;"></canvas>
           </div>
-          <div style="width: 100%; height: 300px;" class="div-grafico">
+          <div style="width: 100%; height: 550px;" class="div-grafico">
             <p
               style="font-size: 22px; color: rgb(36, 3, 66); margin-bottom: 4px; padding-bottom: 0; padding-left: 10px;">
               Temperatura da CPU</p>
@@ -447,9 +449,7 @@
   const kpiMedianaUsoGpu = document.getElementsByClassName('kpi-gpu-uso-mediana')[0];
   const kpiMedianaTempGpu = document.getElementsByClassName('kpi-gpu-temp-mediana')[0];
 
-  const minimoCpu = document.getElementById('minimo_cpu')
   const maximoCpu = document.getElementById('maximo_cpu')
-  const minimoGpu = document.getElementById('minimo_gpu')
   const maximoGpu = document.getElementById('maximo_gpu')
 
   const desvioCpu = document.getElementById('desvio_cpu')
@@ -628,17 +628,28 @@
     kpiMedianaUsoCpu.textContent = `${kpis.mediana_cpu_percent}%`
     kpiMedianaTempCpu.textContent = `${kpis.mediana_cpu_temperature}°C`
 
-    const picos = {
-      maximo_gpu: Math.max(...hardwareDados.map(d => d.media_gpu_percent)).toFixed(1),
-      minimo_gpu: Math.min(...hardwareDados.map(d => d.media_gpu_percent)).toFixed(1),
-      maximo_cpu: Math.max(...hardwareDados.map(d => d.media_cpu_percent)).toFixed(1),
-      minimo_cpu: Math.min(...hardwareDados.map(d => d.media_cpu_percent)).toFixed(1),
-    }
+    // // GPU - temperatura
+    const maiorTempGpu = hardwareDados.reduce((max, item) =>
+      item.media_gpu_temperature > max.media_gpu_temperature ? item : max
+    );
 
-    maximoCpu.textContent = `${picos.maximo_cpu}%`
-    minimoCpu.textContent = `${picos.minimo_cpu}%`
-    maximoGpu.textContent = `${picos.maximo_gpu}%`
-    minimoGpu.textContent = `${picos.minimo_gpu}%`
+    // CPU - temperatura
+    const maiorTempCpu = hardwareDados.reduce((max, item) =>
+      item.media_cpu_temperature > max.media_cpu_temperature ? item : max
+    );
+
+    maximoGpu.textContent =
+      `${maiorTempGpu.media_gpu_temperature.toFixed(1)}°C`;
+
+    document.getElementById('periodo_max_gpu').textContent =
+      `${maiorTempGpu.periodo}`;
+
+
+    maximoCpu.textContent =
+      `${maiorTempCpu.media_cpu_temperature.toFixed(1)}°C`;
+
+    document.getElementById('periodo_max_cpu').textContent =
+      `${maiorTempCpu.periodo}`;
 
   }
 

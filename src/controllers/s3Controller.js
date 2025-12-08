@@ -105,7 +105,7 @@ async function pegarCsvMedias(req, res) {
         }
         const key = `${idEmpresa}/medias/medias.csv`;
 
-        const bucket = "s3-client-bitwarepi777"
+        const bucket = "s3-client-bitwarepi-reserva" //bucket-client-2111
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
@@ -230,8 +230,8 @@ async function pegarLeiturasFormatadas(req, res) {
         const idEmpresa = req.params.idEmpresa;
         const periodo = Number(req.query.periodo) || 1;
 
-        const bucket = "s3-client-bitwarepi777"; 
         const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
+        const bucket = "s3-client-bitwarepi-reserva"; 
 
         const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
         const text = data.Body.toString("utf-8").trim();
