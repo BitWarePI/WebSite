@@ -107,8 +107,9 @@
 
     <div style="min-height: 100vh;  top: 0; width: 100%; box-sizing: border-box; padding-bottom: 60px;" id="tudo">
       <div style="display: flex; margin: 0;">
-        <p style="font-size: 40px; margin: 0; padding: 0; font-weight: bold; color: rgb(36, 3, 66);">Dashboard -
-          Analista</p>
+        <p style="font-size: 40px; margin: 0; padding: 0; font-weight: bold; color: rgb(36, 3, 66);">
+          Hitórico de uso e temperatura (CPU/GPU)
+        </p>
       </div>
       <div style="display: flex; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 6px;">
@@ -152,6 +153,7 @@
           ">
               <p style="margin: 0; padding: 0; font-size: 18px;">Legenda das métricas</p><br>
               <div style="display: flex; flex-direction: column; gap: 4px;">
+                <p style="margin: 0;">KPI's de Uso e Temperatura</p>
                 <p style="margin: 0; padding: 0; display: flex; gap: 8px; align-items: center;"><b
                     style="color: #4caf50; font-weight: 500;">Verde</b><i class="fa-solid fa-arrow-right"></i> ideal<br>
                 </p>
@@ -161,6 +163,19 @@
                 <p style="margin: 0; padding: 0; display: flex; gap: 8px; align-items: center;"><b
                     style="color: #ff4b4b; font-weight: 500;">Vermelho</b><i class="fa-solid fa-arrow-right"></i>
                   crítico</p>
+              </div>
+
+              <div class="explicacaoDesvio">
+                <p style="margin: 0; margin-top: 2px; padding-top: 10px;">Desvio Padrão</p>
+                <p style="margin: 0; padding: 0; display: flex; gap: 8px; align-items: center;"><b
+                    style="color: #4caf50; font-weight: 500;">Verde</b><i class="fa-solid fa-arrow-right"></i> Entre 0% a 14%<br>
+                </p>
+                <p style="margin: 0; padding: 0; display: flex; gap: 8px; align-items: center;"><b
+                    style="color: #e4b131; font-weight: 500;">Amarelo</b><i class="fa-solid fa-arrow-right"></i>Entre 15% a 24%<br>
+                </p>
+                <p style="margin: 0; padding: 0; display: flex; gap: 8px; align-items: center;"><b
+                    style="color: #ff4b4b; font-weight: 500;">Vermelho</b><i class="fa-solid fa-arrow-right"></i>Maior que 25%<br>
+                  </p>
               </div>
             </span>
           </span>
@@ -234,7 +249,7 @@
             </div>
           </div>
 
-          <div class="kpi-card"
+          <div class="kpi-card" id="kpidesviogpu"
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
@@ -255,15 +270,15 @@
               </div>
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div style="display: flex; gap: 6px;">
-                  <p id="maximo_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;"></p>
-                </div>
+                  <div style="display: flex; gap: 6px;">
+                    <p id="maximo_gpu" style="font-size: 30px; font-weight: 800; margin: 0; padding: 0;"></p>
+                  </div>
 
-                <div style="display: flex; gap: 6px;">
-                  <p style="font-size: 18px; margin: 0; padding: 0;">Período:</p>
-                  <p id="periodo_max_gpu" style="font-size: 18px; font-weight: 700; margin: 0; padding: 0;"></p>
+                  <div style="display: flex; gap: 6px;">
+                    <p style="font-size: 18px; margin: 0; padding: 0;">Período:</p>
+                    <p id="periodo_max_gpu" style="font-size: 18px; font-weight: 700; margin: 0; padding: 0;"></p>
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
           </div>
@@ -322,7 +337,7 @@
             </div>
           </div>
 
-          <div class="kpi-card"
+          <div class="kpi-card" id="kpidesviocpu"
             style="display: flex; flex-direction: column; width: 100%; height: 150px; color: white; justify-content: center; align-items: flex-start; padding: 0px 20px; border-radius: 5px;">
             <div>
               <div style="display: flex; gap: 6px;">
@@ -388,10 +403,43 @@
       type: 'bar',
       data: {
         labels: eixoX,
-        datasets: [{ type: 'bar', label: 'Uso de GPU (%)', data: [50, 55, 54, 62, 56, 50, 55, 50, 58], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2 }]
+        datasets: [{ type: 'bar', label: 'Uso de GPU (%)', data: [50, 55, 54, 62, 56, 50, 55, 50, 58], borderColor: '#4C1D95', backgroundColor: '#5B21B6', borderWidth: 2, order: 2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
+
+    grafico1.data.datasets.push(
+      {
+        label: 'Ideal',
+        type: 'line',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico1.data.labels.length).fill(80), // limite ideal
+        order: 1
+      },
+      {
+        label: 'Alerta',
+        type: 'line',
+        borderColor: '#e4b131',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico1.data.labels.length).fill(70)
+      },
+      {
+        label: 'Crítico',
+        type: 'line',
+        borderColor: '#ff4b4b',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico1.data.labels.length).fill(60)
+      }
+    );
+    grafico1.update();
+
 
     const grafico2 = new Chart(ctx2, {
       type: 'bar',
@@ -402,16 +450,80 @@
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
+    grafico2.data.datasets.push(
+      {
+        label: 'Ideal',
+        type: 'line',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico2.data.labels.length).fill(65)
+      },
+      {
+        label: 'Alerta',
+        type: 'line',
+        borderColor: '#e4b131',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico2.data.labels.length).fill(75)
+      },
+      {
+        label: 'Crítico',
+        type: 'line',
+        borderColor: '#ff4b4b',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico2.data.labels.length).fill(85)
+      }
+    );
+    grafico2.update();
+
 
     const grafico3 = new Chart(ctx3, {
       type: 'bar',
       data: {
         labels: ['00h', '03h', '06h', '09h', '12h', '15h', '18h', '21h', '23h'],
         datasets:
-          [{ type: 'bar', label: 'Uso de CPU (%)', data: [80, 90, 75, 80, 85, 84, 86.5, 89.2, 70], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1 }]
+          [{ type: 'bar', label: 'Uso de CPU (%)', data: [80, 90, 75, 80, 85, 84, 86.5, 89.2, 70], backgroundColor: '#5B21B6', borderColor: '#4C1D95', borderWidth: 1, order:2 }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: true, ticks: { color: '#000' } } } }
     });
+
+    grafico3.data.datasets.push(
+      {
+        label: 'Ideal',
+        type: 'line',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico3.data.labels.length).fill(60),
+        order: 1
+      },
+      {
+        label: 'Alerta',
+        type: 'line',
+        borderColor: '#e4b131',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico3.data.labels.length).fill(70)
+      },
+      {
+        label: 'Crítico',
+        type: 'line',
+        borderColor: '#ff4b4b',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico3.data.labels.length).fill(75)
+      }
+    );
+    grafico3.update();
+
 
     const grafico4 = new Chart(ctx4, {
       type: 'bar',
@@ -422,6 +534,38 @@
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#000', font: { size: 12 } } } }, scales: { x: { ticks: { color: '#000' } }, y: { beginAtZero: false, ticks: { color: '#000' } } } }
     });
+
+    grafico4.data.datasets.push(
+      {
+        label: 'Ideal',
+        type: 'line',
+        borderColor: '#4caf50',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico4.data.labels.length).fill(65)
+      },
+      {
+        label: 'Alerta',
+        type: 'line',
+        borderColor: '#e4b131',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico4.data.labels.length).fill(75)
+      },
+      {
+        label: 'Crítico',
+        type: 'line',
+        borderColor: '#ff4b4b',
+        borderWidth: 2,
+        pointRadius: 0,
+        borderDash: [6, 6],
+        data: Array(grafico4.data.labels.length).fill(85)
+      }
+    );
+    grafico4.update();
+
   </script>
 
 </body>
@@ -451,6 +595,9 @@
 
   const maximoCpu = document.getElementById('maximo_cpu')
   const maximoGpu = document.getElementById('maximo_gpu')
+
+  const kpiDesvioCpu = document.getElementById('kpidesviocpu')
+  const kpiDesvioGpu = document.getElementById('kpidesviogpu')
 
   const desvioCpu = document.getElementById('desvio_cpu')
   const desvioGpu = document.getElementById('desvio_gpu')
@@ -496,15 +643,27 @@
 
   function definirCorPadrao(valor, tipo) {
     if (tipo.includes('uso')) {
-      if (valor < 50) return '#ff4b4b'; // vermelho
+      if (valor < 60) return '#ff4b4b'; // vermelho
       if (valor < 70) return '#e4b131'; // amarelo
       return '#4caf50'; // verde
     } else {
-      if (valor > 80) return '#ff4b4b'; // vermelho
+      if (valor > 75) return '#ff4b4b'; // vermelho
       if (valor > 70) return '#e4b131'; // amarelo
       return '#4caf50'; // verde
     }
   }
+
+  function corDesvioPadrao(valor) {
+    if (valor > 25) return '#ff4b4b'; // vermelho
+    if (valor > 14) return '#e4b131'; // amarelo
+    return '#4caf50'; // verde
+  }
+
+  function atualizarLinhasDoGrafico(grafico, ideal, alerta, critico){
+  grafico.data.datasets[1].data = Array(grafico.data.labels.length).fill(ideal)
+  grafico.data.datasets[2].data = Array(grafico.data.labels.length).fill(alerta)
+  grafico.data.datasets[3].data = Array(grafico.data.labels.length).fill(critico)
+}
 
   async function definirCorPersonalizada(valor, tipo) {
     const empresaId = sessionStorage.getItem('idEmpresa');
@@ -546,6 +705,9 @@
     kpitempgpu.style.backgroundColor = definirCorPadrao(gpuTemp, 'temp');
     kpiusocpu.style.backgroundColor = definirCorPadrao(cpuUso, 'uso');
     kpitempcpu.style.backgroundColor = definirCorPadrao(cpuTemp, 'temp');
+    kpiDesvioCpu.style.backgroundColor = corDesvioPadrao(parseFloat(desvioCpu.textContent));
+    kpiDesvioGpu.style.backgroundColor = corDesvioPadrao(parseFloat(desvioGpu.textContent));
+
   }
 
   let hardwareDados = []
@@ -617,6 +779,35 @@
     grafico3.update()
     grafico4.update()
 
+ 
+    //   if (valor < 60) return '#ff4b4b'; // vermelho
+    //   if (valor < 70) return '#e4b131'; // amarelo
+    //   return '#4caf50'; // verde
+    // } else {
+    //   if (valor > 75) return '#ff4b4b'; // vermelho
+    //   if (valor > 70) return '#e4b131'; // amarelo
+
+const idealUso = 100
+const alertaUso = 70
+const criticoUso = 60
+
+const idealTemp = 70
+const alertaTemp = 75
+const criticoTemp = 100
+
+
+atualizarLinhasDoGrafico(grafico1, idealUso, alertaUso, criticoUso)
+atualizarLinhasDoGrafico(grafico2, idealTemp, alertaTemp, criticoTemp)
+atualizarLinhasDoGrafico(grafico3, idealUso, alertaUso, criticoUso)
+atualizarLinhasDoGrafico(grafico4, idealTemp, alertaTemp, criticoTemp)
+
+grafico1.update()
+grafico2.update()
+grafico3.update()
+grafico4.update()
+
+
+
     const kpis = calcularKpi()
     kpiGpuUsoValor.textContent = `${kpis.media_gpu_percent}%`
     kpiGpuTempValor.textContent = `${kpis.media_gpu_temperature}°C`
@@ -676,10 +867,10 @@
   });
 
   window.addEventListener('DOMContentLoaded', async () => {
-    aplicarCores()
     await quantidadeMaquinas()
-    await pegarDesvioPadrao(alterar_data.value);
+    await pegarDesvioPadrao(alterar_data.value)
     await pegarDados(alterar_data.value)
-    toggleCarrregando();
+    aplicarCores()
+    toggleCarrregando()
   });
 </script>

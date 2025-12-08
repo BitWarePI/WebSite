@@ -60,8 +60,8 @@ async function pegarCsvMaquinas(req, res) {
 
         const dataAtual = `${dia}-${mes}-${ano}`;
 
-        const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
-        //const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
+        //const key = `${idEmpresa}/datas/${dataAtual}/LeiturasCLIENT.csv`;
+        const key = `${idEmpresa}/datas/09-12-2025/LeiturasCLIENT.csv`;
 
         const bucket = "s3-client-bitwarepi";
 
@@ -105,7 +105,7 @@ async function pegarCsvMedias(req, res) {
         }
         const key = `${idEmpresa}/medias/medias.csv`;
 
-        const bucket = "s3-client-bitwarepi" //bucket-client-2111
+        const bucket = "s3-client-bitwarepi" //s3-client-bitwarepi-reserva
         const data = await s3.getObject({
             Bucket: bucket,
             Key: key
@@ -231,7 +231,7 @@ async function pegarLeiturasFormatadas(req, res) {
         const periodo = Number(req.query.periodo) || 1;
 
         const key = `${idEmpresa}/leiturasFormatadas/leituras.csv`;
-        const bucket = "s3-client-bitwarepi"; 
+        const bucket = "s3-client-bitwarepi"; //s3-client-bitwarepi-reserva 
 
         const data = await s3.getObject({ Bucket: bucket, Key: key }).promise();
         const text = data.Body.toString("utf-8").trim();
