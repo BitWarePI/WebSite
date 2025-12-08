@@ -36,23 +36,6 @@ function listarChamadosPorEmpresa(req, res) {
     }
 }
 
-function buscarPrincipalProblema(req, res) {
-    var fkEmpresa = req.params.idEmpresa;
-
-    chamadosModel.buscarPrincipalProblema(fkEmpresa)
-        .then(resultado => {
-            if (resultado.length > 0) {
-                res.json(resultado[0]);
-            } else {
-                res.json({ problema: "Nenhum problema registrado", ocorrencias: 0 });
-            }
-        })
-        .catch(erro => {
-            console.log("Erro ao buscar principal problema: ", erro);
-            res.status(500).json(erro.sqlMessage);
-        });
-}
-
 async function totalErros(req, res) {
   const { idEmpresa } = req.params;
 
@@ -161,7 +144,6 @@ module.exports = {
     finalizarChamado,
     removerTecnico,
     buscarChamadosCriticos,
-    buscarPrincipalProblema,
     totalErros,
     maquinasComErro
 }
